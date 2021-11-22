@@ -1,0 +1,11 @@
+export const baseApiURL = 'http://localhost:8080/v1';
+export const loginURL = `${baseApiURL}/login`;
+export const checkAuthURL = `${baseApiURL}/checkuser`;
+export const baseBranchURL = param => `${baseApiURL}/branch${param}`;
+export const baseCompanyURL = param => `${baseApiURL}/company${param}`;
+export const baseRoleURL = param => `${baseApiURL}/role${param}`;
+export const baseUserAppsURL = param => `${baseApiURL}/userapps${param}`;
+export const baseCustomerTypeURL = param => `${baseApiURL}/customertype${param}`;
+export const baseCustomerURL = param => `${baseApiURL}/customer${param}`;
+export const baseUserMobileURL = param => `${baseApiURL}/usermobile${param}`;
+export const baseCallPlanURL = param => `${baseApiURL}/callplan${param}`;

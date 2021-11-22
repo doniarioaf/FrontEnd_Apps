@@ -1,0 +1,35 @@
+{
+    "label_REQUIRED": "harus diisi",
+    "label_BACK": "Kembali",
+    "label_OPTIONS": "Pilihan",
+    "label_BRANCH": "Cabang",
+    "label_COMPANY": "Perusahaan",
+    "label_NAME": "Nama",
+    "label_EDIT": "Ubah",
+    "label_IS_ACTIVE": "Apakah Aktif ?",
+    "label_ADD_BRANCH": "Tambah Cabang",
+    "label_EDIT_BRANCH": "Ubah Cabang",
+    "label_DISPLAY_NAME": "Nama Tampilan",
+    "label_CODE": "Kode",
+    "label_CONTACT_NUMBER": "Nomor Kontak",
+    "label_ADDRESS": "Alamat",
+    "label_CREATED": "Di Buat",
+    "label_MODIFIED": "Di Ubah",
+    "label_DIALOG_ALERT_SURE":"Apakah Kamu Yakin?",
+    "label_DESCRIPTION":"Keterangan",
+    "label_ADD_COMPANY": "Tambah Perusahaan",
+    "label_EDIT_COMPANY": "Ubah Perusahaan",
+    "label_USERNAME":"Nama Pengguna",
+    "label_INTERNAL_USER":"Tambah User Internal",
+    "label_PASSWORD":"Kata Sandi",
+    "label_CONFIRM_PASSWORD":"Konfirmasi Kata Sandi",
+    "dashboard": {
+        "WELCOME": "Selamat Datang Angle"
+      },
+    "select":{
+      "SELECT_OPTION":"- Silahkan Pilih -"
+    },
+    "label_ERROR":{
+      "username_is_exist":"Username Already Exists"
+    }
+}

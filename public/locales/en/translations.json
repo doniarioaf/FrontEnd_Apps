@@ -1,0 +1,106 @@
+{
+  "label_REQUIRED": "Field is required!",
+  "label_BACK": "Back",
+  "label_OPTIONS": "Options",
+  "label_BRANCH": "Branch",
+  "label_COMPANY": "Company",
+  "label_NAME": "Name",
+  "label_IS_ACTIVE": "Is Active ?",
+  "label_ADD_BRANCH": "Add Branch",
+  "label_EDIT_BRANCH": "Edit Branch",
+  "label_EDIT": "Edit",
+  "label_DISPLAY_NAME": "Display Name",
+  "label_CODE": "Code",
+  "label_CONTACT_NUMBER": "Contact Number",
+  "label_ADDRESS": "Address",
+  "label_CREATED": "Created",
+  "label_MODIFIED": "Modified",
+  "label_DIALOG_ALERT_SURE":"Are You Sure",
+  "label_DESCRIPTION":"Description",
+  "label_ADD_COMPANY": "Add Company",
+  "label_EDIT_COMPANY": "Edit Company",
+  "label_USERNAME":"UserName",
+  "label_INTERNAL_USER":"Add Internal User",
+  "label_CONFIRM_PASSWORD":"Confirm Password",
+  "label_PASSWORD":"Password",
+  "label_ERROR":{
+    "username_is_exist":"Username Already Exists"
+  },
+  "dashboard": {
+    "WELCOME": "Welcome to Angle!"
+  },
+  "select":{
+    "SELECT_OPTION":"- Please Select -"
+  },
+  "sidebar": {
+    "WELCOME": "Welcome",
+    "heading": {
+      "HEADER": "Main Navigation",
+      "COMPONENTS": "Components",
+      "MORE": "More"
+    },
+    "nav": {
+      "DASHBOARD": "Dashboard",
+      "WIDGETS": "Widgets",
+      "DOCUMENTATION": "Documentation",
+      "element": {
+        "ELEMENTS": "Elements",
+        "BUTTON": "Button",
+        "COLOR": "Colors",
+        "NOTIFICATION": "Notification",
+        "CAROUSEL": "Carousel",
+        "SPINNER": "Spinner",
+        "ANIMATION": "Animation",
+        "DROPDOWN": "Dropdown",
+        "CARD": "Cards",
+        "PORTLET": "Portlet",
+        "GRID": "Grid",
+        "GRID_MASONRY": "Grid Masonry",
+        "TYPO": "Typography",
+        "FONT_ICON": "Font Icons",
+        "WEATHER_ICON": "Weather Icons"
+      },
+      "form": {
+        "FORM": "Forms",
+        "STANDARD": "Standard",
+        "EXTENDED": "Extended",
+        "VALIDATION": "Validation"
+      },
+      "chart": {
+        "CHART": "Charts",
+        "FLOT": "Flot",
+        "RADIAL": "Radial"
+      },
+      "table": {
+        "TABLE": "Table",
+        "STANDARD": "Standard",
+        "EXTENDED": "Extended",
+        "DATATABLE": "Datatable"
+      },
+      "map": {
+        "MAP": "Maps",
+        "GOOGLE": "Google Map",
+        "VECTOR": "Vector Map"
+      },
+      "extra": {
+        "EXTRA": "Extras",
+        "MAILBOX": "Mailbox",
+        "TIMELINE": "Timeline",
+        "CALENDAR": "Calendar",
+        "INVOICE": "Invoice",
+        "SEARCH": "Search",
+        "TODO": "Todo List",
+        "PROFILE": "Profile"
+      },
+      "pages": {
+        "PAGES": "Pages",
+        "LOGIN": "Login",
+        "REGISTER": "Register",
+        "RECOVER": "Recover password",
+        "PROFILE": "Profile",
+        "LOCK": "Lock",
+        "STARTER": "Starter Template"
+      }
+    }
+  }
+}

@@ -1,0 +1,83 @@
+import React, {useState, useEffect} from 'react';
+import {Container, Card, CardBody}  from 'reactstrap';
+import {Trans, useTranslation}      from 'react-i18next';
+import ContentWrapper               from '../../../components/Layout/ContentWrapper';
+import {useDispatch}   from 'react-redux';
+import Swal                         from 'sweetalert2';
+import {useHistory}                 from 'react-router-dom';
+import * as actions                 from '../../../store/actions';
+import Grid                         from './grid';
+
+const UserMobileIndex = () => {
+    const history = useHistory();
+    const [rows, setRows] = useState([]);
+    const [t, i18n] = useTranslation('translations');
+    // const [hiddenColumns] = useState(['id']);
+    const [columns] = useState([
+        {name: 'id', title: 'id'},
+        {name: 'name', title: i18n.t('label_NAME')},
+        {name: 'username', title: i18n.t('label_USERNAME')},
+        {name: 'notelepon', title: i18n.t('label_CONTACT_NUMBER')},
+        {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
+    ]);
+    const [loading, setLoading] = useState(false);
+    const dispatch = useDispatch();
+    const [tableColumnExtensions] = useState([]);
+
+    useEffect(() => {
+        setLoading(true);
+        dispatch(actions.getUserMobileData('',successHandler, errorHandler));
+    }, []);
+
+    function successHandler(data) {
+        if(data.data){
+            const theData = data.data.reduce((obj, el) => [
+                ...obj,
+                {
+                    'id': el.id,
+                    'name': el.nama ?el.nama:'',
+                    'username':el.username?el.username:'',
+                    'notelepon':el.contactnumber?el.contactnumber:'',
+                    'isactive': el.isactive?el.isactive == true?'Yes':'No':'No'
+                }
+            ], []);
+            setRows(theData);
+        }
+        setLoading(false);
+    }
+
+    function errorHandler(error) {
+        setLoading(false);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: error
+        })
+    }
+
+    return (
+        <ContentWrapper>
+            <div className="content-heading">
+                <span><Trans t={t} i18nKey={'User Mobile'}>User Mobile</Trans></span>
+            </div>
+            <Container fluid>
+            <Card>
+            <CardBody>
+            <Container fluid className="center-parent">
+            <div className="table-responsive">
+            <Grid
+                rows={rows}
+                columns={columns}
+                totalCounts={rows.length}
+                loading={loading}
+                columnextension={tableColumnExtensions}
+            />
+            </div>
+            </Container>
+            </CardBody>
+            </Card>
+            </Container>
+        </ContentWrapper>
+    );
+};
+export default UserMobileIndex;
