@@ -24,6 +24,14 @@ const Menu = [
                 name: 'Role',
                 path: pathmenu.menuRole,
                 translate: 'Role',
+            },{
+                name: 'Product',
+                path: '',
+                translate: 'Product',
+            },{
+                name: 'Product Type',
+                path: '',
+                translate: 'Product Type',
             }
             
         ]
@@ -56,6 +64,30 @@ const Menu = [
                 name: 'Customer Type',
                 path: pathmenu.menucustomertype,
                 translate: 'Customer Type',
+            },{
+                name: 'Customer Call Plan',
+                path: '',
+                translate: 'Customer Call Plan',
+            }
+        ]
+    },{
+        name: 'Mobile',
+        icon: 'icon-user',
+        translate: 'Mobile',
+        submenu:[
+            {
+                name: 'Call Plan',
+                path: '',
+                translate: 'Call Plan',
+            },
+            {
+                name: 'Info',
+                path: '',
+                translate: 'Info',
+            },{
+                name: 'Monitoring',
+                path: '',
+                translate: 'Monitoring',
             }
         ]
     }

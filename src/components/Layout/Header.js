@@ -55,12 +55,16 @@ class Header extends Component {
                 <nav className="navbar topnavbar">
                     { /* START navbar header */ }
                     <div className="navbar-header">
-                        <a className="navbar-brand" href="#/">
+                        <a className="navbar-brand"  >
                             <div className="brand-logo">
+                            <Link to='/home'>
                                 <img className="img-fluid" src="img/logo.png" alt="App Logo" />
+                            </Link>  
                             </div>
                             <div className="brand-logo-collapsed">
+                            <Link to='/home'>
                                 <img className="img-fluid" src="img/logo-single.png" alt="App Logo" />
+                            </Link>  
                             </div>
                         </a>
                     </div>
