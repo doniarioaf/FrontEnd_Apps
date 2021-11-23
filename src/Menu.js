@@ -30,7 +30,7 @@ const Menu = [
                 translate: 'Product',
             },{
                 name: 'Product Type',
-                path: '',
+                path: pathmenu.menuproducttype,
                 translate: 'Product Type',
             }
             
