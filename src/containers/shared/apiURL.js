@@ -10,3 +10,4 @@ export const baseCustomerURL = param => `${baseApiURL}/customer${param}`;
 export const baseUserMobileURL = param => `${baseApiURL}/usermobile${param}`;
 export const baseCallPlanURL = param => `${baseApiURL}/callplan${param}`;
 export const baseProductTypeURL = param => `${baseApiURL}/producttype${param}`;
+export const baseProductURL = param => `${baseApiURL}/product${param}`;

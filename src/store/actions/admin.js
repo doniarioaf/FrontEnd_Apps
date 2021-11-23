@@ -196,3 +196,31 @@ export const submitEditProductType = (id,payload, successHandler, errorHandler) 
         errorHandler,
     }
 }
+
+export const getProductData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PRODUCT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddProduct = (payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PRODUCT,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditProduct = (id,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PRODUCT,
+        id:id,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}

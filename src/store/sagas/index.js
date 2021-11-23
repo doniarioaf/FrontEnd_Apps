@@ -13,9 +13,11 @@ import {
     getDataUserAppsSaga,
     getDataUserAppsWithParamSaga,
     getDataUserMobileSaga,
+    getProductSaga,
     getProductTypeSaga,
     submitAddBranchSaga,
     submitAddCompanySaga,
+    submitAddProductSaga,
     submitAddProductTypeSaga,
     submitAddRoleSaga,
     submitAddUserAppsSaga,
@@ -23,6 +25,7 @@ import {
     submitDeleteCompanySaga,
     submitEditBranchSaga,
     submitEditCompanySaga,
+    submitEditProductSaga,
     submitEditProductTypeSaga,
     submitEditRoleSaga,
     submitEditUserAppsSaga,
@@ -81,5 +84,8 @@ export function* watchAdmin() {
         takeEvery(actions.GET_PRODUCTTYPE_DATA, getProductTypeSaga),
         takeEvery(actions.SUBMIT_ADD_PRODUCTTYPE, submitAddProductTypeSaga),
         takeEvery(actions.SUBMIT_EDIT_PRODUCTTYPE, submitEditProductTypeSaga),
+        takeEvery(actions.GET_PRODUCT_DATA, getProductSaga),
+        takeEvery(actions.SUBMIT_ADD_PRODUCT, submitAddProductSaga),
+        takeEvery(actions.SUBMIT_EDIT_PRODUCT, submitEditProductSaga),
     ]);
 }

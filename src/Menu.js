@@ -26,7 +26,7 @@ const Menu = [
                 translate: 'Role',
             },{
                 name: 'Product',
-                path: '',
+                path: pathmenu.menuproduct,
                 translate: 'Product',
             },{
                 name: 'Product Type',

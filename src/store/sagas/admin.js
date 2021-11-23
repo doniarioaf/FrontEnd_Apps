@@ -1,5 +1,6 @@
 import axios        from '../../Axios-BizzApps';
-import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,baseProductTypeURL} from '../../containers/shared/apiURL';
+import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
+    baseProductTypeURL,baseProductURL} from '../../containers/shared/apiURL';
 
 export function* getDataBranchSaga(action) {
     try {
@@ -226,6 +227,40 @@ export function* submitAddProductTypeSaga(action) {
 export function* submitEditProductTypeSaga(action) {
     try {
         const response = yield axios.put(baseProductTypeURL('/'+action.id),action.payload).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* getProductSaga(action) {
+    try {
+        const response = yield axios.get(baseProductURL(action.param)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        console.log('error ',error);
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* submitAddProductSaga(action) {
+    try {
+        const response = yield axios.post(baseProductURL(''),action.payload).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* submitEditProductSaga(action) {
+    try {
+        const response = yield axios.put(baseProductURL('/'+action.id),action.payload).then(response => response.data);
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {

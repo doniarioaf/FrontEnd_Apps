@@ -1,6 +1,6 @@
 import React, {useState,
     useEffect} from 'react';
-  import ContentWrapper               from '../../../components/Layout/ContentWrapper';
+  import ContentWrapper               from '../../../../components/Layout/ContentWrapper';
   import {
   Container, Card, CardBody
   , Button, CardHeader
@@ -9,9 +9,9 @@ import React, {useState,
   import {useTranslation}             from 'react-i18next';
   import Swal             from "sweetalert2";
   import {useDispatch}    from 'react-redux';
-  import * as actions     from '../../../store/actions';
+  import * as actions     from '../../../../store/actions';
   import Skeleton         from 'react-loading-skeleton';
-  import * as pathmenu           from '../../shared/pathMenu';
+  import * as pathmenu           from '../../../shared/pathMenu';
   import ButtonMUI from '@material-ui/core/Button';
   import ClickAwayListener from '@material-ui/core/ClickAwayListener';
   import Grow from '@material-ui/core/Grow';
@@ -20,7 +20,7 @@ import React, {useState,
   import MenuItem from '@material-ui/core/MenuItem';
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
-  import {Loading}                    from '../../../components/Common/Loading';
+  import {Loading}                    from '../../../../components/Common/Loading';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,6 +30,7 @@ import React, {useState,
       marginRight: theme.spacing(2),
     },
   }));
+
 
   function Detail(props) {
     // reloadToHomeNotAuthorize(DetailInternalUser_Permission,'READ');
@@ -78,7 +79,7 @@ import React, {useState,
 
       useEffect(() => {
         setLoading(true);
-        dispatch(actions.getCustomerData('/'+id,successHandler, errorHandler));
+        dispatch(actions.getProductData('/'+id,successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
@@ -98,8 +99,9 @@ import React, {useState,
     return (
         <ContentWrapper>
             <div className="content-heading">
-            <span>{i18n.t('Customer')}</span>
+            <span>{i18n.t('Product')}</span>
             </div>
+
             <Container fluid>
             <Card>
             <CardBody>
@@ -150,66 +152,18 @@ import React, {useState,
                                 </strong>
                             </div>
 
+
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Phone')}</span>
+                            <span className="col-md-5">{i18n.t('label_DESCRIPTION')}</span>
                                 <strong className="col-md-7">
-                                {value.phone?value.phone:''}
+                                {value.description?value.description:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Address')}</span>
+                            <span className="col-md-5">{i18n.t('Product Type')}</span>
                                 <strong className="col-md-7">
-                                {value.address?value.address:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Provinsi')}</span>
-                                <strong className="col-md-7">
-                                {value.provinsi?value.provinsi:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('City')}</span>
-                                <strong className="col-md-7">
-                                {value.city?value.city:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Area')}</span>
-                                <strong className="col-md-7">
-                                {value.areaname?value.areaname:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Sub Area')}</span>
-                                <strong className="col-md-7">
-                                {value.subarename?value.subarename:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Latitude')}</span>
-                                <strong className="col-md-7">
-                                {value.latitude?value.latitude:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Longitude')}</span>
-                                <strong className="col-md-7">
-                                {value.longitude?value.longitude:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Customer Type')}</span>
-                                <strong className="col-md-7">
-                                {value.namecustomertype?value.namecustomertype:''}
+                                {value.nameproducttype?value.nameproducttype:''}
                                 </strong>
                             </div>
 
@@ -218,9 +172,8 @@ import React, {useState,
                 }
             </CardBody>
             </Card>
-            </div>    
             </div>
-
+            </div>
             </CardBody>
             </Card>
             </Container>
@@ -242,7 +195,7 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editcustomers+'/'+id)}>{i18n.t('label_EDIT')}</MenuItem>
+                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editproduct+'/'+id)}>{i18n.t('label_EDIT')}</MenuItem>
                             {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}

@@ -32,7 +32,10 @@ export {
     submitEditUserMobile,
     getProductType,
     submitAddProductType,
-    submitEditProductType
+    submitEditProductType,
+    getProductData,
+    submitAddProduct,
+    submitEditProduct
 } from './admin';
 
 export {

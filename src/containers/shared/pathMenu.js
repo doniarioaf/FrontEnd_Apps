@@ -28,3 +28,7 @@ export const editusermobile = `/user/edit/usermobile`;
 export const menuproducttype = `/admin/producttype`;
 export const addproducttype = `/admin/add/producttype`;
 export const editproducttype = `/admin/edit/producttype`;
+export const menuproduct = `/admin/product`;
+export const addproduct = `/admin/add/product`;
+export const detailproduct = `/admin/detail/product`;
+export const editproduct = `/admin/edit/product`;
