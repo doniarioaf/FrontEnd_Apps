@@ -147,6 +147,15 @@ const addUserMobile = lazy(() => import('./containers/Admin/UserMobile/addFormUs
 const editUserMobile = lazy(() => import('./containers/Admin/UserMobile/editFormUserMobileForm'));
 const detailUserMobile = lazy(() => import('./containers/Admin/UserMobile/detail'));
 
+const menuProductType = lazy(() => import('./containers/Admin/Product/ProductType'));
+const addProductType = lazy(() => import('./containers/Admin/Product/ProductType/addFormProductType'));
+const editProductType = lazy(() => import('./containers/Admin/Product/ProductType/editFormProductType'));
+
+const menuProduct = lazy(() => import('./containers/Admin/Product/Products'));
+const addProduct = lazy(() => import('./containers/Admin/Product/Products/addFormProduct'));
+const detailProduct = lazy(() => import('./containers/Admin/Product/Products/detail'));
+const editProduct = lazy(() => import('./containers/Admin/Product/Products/editFormProduct'));
+
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -300,6 +309,15 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addusermobile} component={waitFor(addUserMobile)}/>
                             <Route path={pathmenu.editusermobile+'/:id'} component={waitFor(editUserMobile)}/>
                             <Route path={pathmenu.detailusermobile+'/:id'} component={waitFor(detailUserMobile)}/>
+
+                            <Route path={pathmenu.menuproducttype} component={waitFor(menuProductType)}/>
+                            <Route path={pathmenu.addproducttype} component={waitFor(addProductType)}/>
+                            <Route path={pathmenu.editproducttype+'/:id'} component={waitFor(editProductType)}/>
+
+                            <Route path={pathmenu.menuproduct} component={waitFor(menuProduct)}/>
+                            <Route path={pathmenu.addproduct} component={waitFor(addProduct)}/>
+                            <Route path={pathmenu.detailproduct+'/:id'} component={waitFor(detailProduct)}/>
+                            <Route path={pathmenu.editproduct+'/:id'} component={waitFor(editProduct)}/>
                             
                                 {/*Dashboard*/}
                                 <Route path="/dashboardv1" component={waitFor(DashboardV1)}/>

@@ -174,7 +174,7 @@ export default function AddFormCustomerType(props) {
                             <div className="invalid-feedback-custom">{ErrInputName}</div>
 
                             <label className="mt-3 form-label required" htmlFor="description">
-                                {i18n.t('label_NAME')}
+                                {i18n.t('label_DESCRIPTION')}
                             </label>
                             <Input
                                 name="description"

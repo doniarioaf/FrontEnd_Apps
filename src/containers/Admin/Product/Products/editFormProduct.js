@@ -1,17 +1,19 @@
-import React, {useState}    from 'react';
+import React, {useState,useEffect}    from 'react';
 import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
-import ContentWrapper               from '../../../components/Layout/ContentWrapper';
-import {Input,Button,FormGroup,Label} from 'reactstrap';
-import * as actions                 from '../../../store/actions';
+import ContentWrapper               from '../../../../components/Layout/ContentWrapper';
+import {Input,Button} from 'reactstrap';
+import {DropdownList}      from 'react-widgets';
+import "react-widgets/dist/css/react-widgets.css";
+import * as actions                 from '../../../../store/actions';
 import {useDispatch}   from 'react-redux';
 // import { reloadToHomeNotAuthorize } from '../../../../shared/maskFunc';
-import { Loading } from '../../../components/Common/Loading';
+import { Loading } from '../../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 // import { AddInternalUser_Permission } from '../../../../shared/PermissionForFeatures';
 
-export default function AddFormCustomerType(props) {
+export default function AddFormProduct(props) {
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -22,6 +24,35 @@ export default function AddFormCustomerType(props) {
     const [InputDescription, setInputDescription] = useState('');
     const [ErrInputDescription, setErrInputDescription] = useState('');
 
+    const [ListProductType, setListProductType] = useState([]);
+    const [SelProductType, setSelProductType] = useState('');
+    const [ErrSelProductType, setErrSelProductType] = useState('');
+    const id = props.match.params.id;
+
+    useEffect(() => {
+        setLoading(true);
+        dispatch(actions.getProductData('/'+id,successHandlerDetail, errorHandler));
+        dispatch(actions.getProductType('',successHandlerProductType, errorHandler));
+    }, []);
+    function successHandlerDetail(data) {
+        if(data.data){
+            setInputName(data.data.nama);
+            setInputDescription(data.data.description);
+            setSelProductType(data.data.idproducttype);
+        }
+    }
+    function successHandlerProductType(data) {
+        if(data.data){
+            setListProductType(data.data.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama
+                }]
+            ), []));
+        }
+        setLoading(false);
+    }
+
     const handleInputName = (data) =>{
         let val = data.target.value;
         setInputName(val);
@@ -31,11 +62,16 @@ export default function AddFormCustomerType(props) {
         let val = data.target.value;
         setInputDescription(val);
     }
+    const handleChangeProductType = (data) =>{
+        let selValue = data?.value ? data.value : '';
+        setSelProductType(selValue);
+    }
 
     const checkColumnMandatory = () => {
         let flag = true;
         setErrInputName('');
         setErrInputDescription('');
+        setErrSelProductType('')
 
         if(InputName == ''){
             setErrInputName(i18n.t('label_REQUIRED'));
@@ -43,6 +79,10 @@ export default function AddFormCustomerType(props) {
         }
         if(InputDescription == ''){
             setErrInputDescription(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+        if(SelProductType == ''){
+            setErrSelProductType(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
@@ -56,7 +96,8 @@ export default function AddFormCustomerType(props) {
             let obj = new Object();
             obj.nama = InputName;
             obj.description = InputDescription;
-            dispatch(actions.submitAddCustomerType(obj,succesHandlerSubmit, errorHandler));
+            obj.idproducttype = SelProductType;
+            dispatch(actions.submitEditProduct(id,obj,succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -100,13 +141,13 @@ export default function AddFormCustomerType(props) {
         })
       }
 
-    
       return (
         <Formik
             initialValues={
                 {
                     nama:InputName,
                     description:InputDescription,
+                    producttype:SelProductType
                 }
             }
 
@@ -136,7 +177,7 @@ export default function AddFormCustomerType(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddBranch">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Add Customer Type')}</span>
+                            <span>{i18n.t('Add Product')}</span>
                             </div>
 
                             <label className="mt-3 form-label required" htmlFor="nama">
@@ -174,6 +215,31 @@ export default function AddFormCustomerType(props) {
                                 value={values.description}
                             />
                             <div className="invalid-feedback-custom">{ErrInputDescription}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="producttype">
+                                {i18n.t('Product type')}
+                            </label>
+
+                            <DropdownList
+                                className={
+                                    touched.producttype && errors.producttype
+                                        ? "w-50 input-error"
+                                        : "w-50"
+                                }
+                                name="producttype"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeProductType(val)}
+                                onBlur={val => setFieldTouched("producttype", val?.value ? val.value : '')}
+                                data={ListProductType}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.producttype}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelProductType}</div>
                             </ContentWrapper>
                             {loading && <Loading/>}
 
@@ -202,5 +268,4 @@ export default function AddFormCustomerType(props) {
         </Formik>
 
       )
-
 }

@@ -29,7 +29,13 @@ export {
     submitDeleteCompany,
     getUserMobileData,
     submitAddUserMobile,
-    submitEditUserMobile
+    submitEditUserMobile,
+    getProductType,
+    submitAddProductType,
+    submitEditProductType,
+    getProductData,
+    submitAddProduct,
+    submitEditProduct
 } from './admin';
 
 export {
