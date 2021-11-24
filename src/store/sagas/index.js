@@ -33,12 +33,13 @@ import {
     submitPostCompanySaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga } from './customer';
-import { getDataCallPlanSaga } from './mobile';
+import { getDataCallPlanSaga, getDataInfoSaga } from './mobile';
 
 
 export function* watchMobile() {
     yield all([
-        takeEvery(actions.GET_CALLPLAN_DATA, getDataCallPlanSaga)
+        takeEvery(actions.GET_CALLPLAN_DATA, getDataCallPlanSaga),
+        takeEvery(actions.GET_INFO_DATA, getDataInfoSaga),
     ]);
 }
 

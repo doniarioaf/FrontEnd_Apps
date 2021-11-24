@@ -48,5 +48,6 @@ export {
 } from './customer';
 
 export {
-    getCallPlanData
+    getCallPlanData,
+    getInfoData
 } from './mobile';

@@ -8,3 +8,12 @@ export const getCallPlanData = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getInfoData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_INFO_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

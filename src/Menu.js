@@ -82,7 +82,7 @@ const Menu = [
             },
             {
                 name: 'Info',
-                path: '',
+                path: pathmenu.menuinfo,
                 translate: 'Info',
             },{
                 name: 'Monitoring',
