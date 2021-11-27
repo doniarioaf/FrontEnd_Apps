@@ -24,7 +24,8 @@
   "label_CONFIRM_PASSWORD":"Confirm Password",
   "label_PASSWORD":"Password",
   "label_ERROR":{
-    "username_is_exist":"Username Already Exists"
+    "username_is_exist":"Username Already Exists",
+    "info_type_not_exist":"Jenis Info Tidak Diketahui"
   },
   "dashboard": {
     "WELCOME": "Welcome to Angle!"

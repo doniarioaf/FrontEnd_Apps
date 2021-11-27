@@ -156,6 +156,11 @@ const addProduct = lazy(() => import('./containers/Admin/Product/Products/addFor
 const detailProduct = lazy(() => import('./containers/Admin/Product/Products/detail'));
 const editProduct = lazy(() => import('./containers/Admin/Product/Products/editFormProduct'));
 
+const menuInfo = lazy(() => import('./containers/Mobile/Info'));
+const addInfo = lazy(() => import('./containers/Mobile/Info/addFormInfo'));
+const detailInfo = lazy(() => import('./containers/Mobile/Info/detail'));
+const editInfo = lazy(() => import('./containers/Mobile/Info/editFormInfo'));
+
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -318,6 +323,11 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addproduct} component={waitFor(addProduct)}/>
                             <Route path={pathmenu.detailproduct+'/:id'} component={waitFor(detailProduct)}/>
                             <Route path={pathmenu.editproduct+'/:id'} component={waitFor(editProduct)}/>
+
+                            <Route path={pathmenu.menuinfo} component={waitFor(menuInfo)}/>
+                            <Route path={pathmenu.addinfo} component={waitFor(addInfo)}/>
+                            <Route path={pathmenu.detailinfo+'/:id'} component={waitFor(detailInfo)}/>
+                            <Route path={pathmenu.editinfo+'/:id'} component={waitFor(editInfo)}/>
                             
                                 {/*Dashboard*/}
                                 <Route path="/dashboardv1" component={waitFor(DashboardV1)}/>
