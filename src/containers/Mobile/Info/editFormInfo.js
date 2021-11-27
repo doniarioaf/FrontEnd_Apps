@@ -14,9 +14,9 @@ import {useHistory}                 from 'react-router-dom';
 import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import Grid                         from './gridAnswer';
-// import { AddInternalUser_Permission } from '../../../../shared/PermissionForFeatures';
+import {mappingMessageError} from '../../../containers/shared/globalFunc';
 
-export default function AddFormInfo(props) {
+export default function EditFormInfo(props) {
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -49,11 +49,32 @@ export default function AddFormInfo(props) {
     const [StartdefaultHeight] = useState(150);
     const [defaultHeight, setdefaultHeight] = useState(StartdefaultHeight+'px');
 
+    const id = props.match.params.id;
 
     useEffect(() => {
         setLoading(true);
+        dispatch(actions.getInfoData('/'+id,successHandler, errorHandler));
         dispatch(actions.getInfoData('/template',successHandlerTemplate, errorHandler));
     }, []);
+
+    function successHandler(data) {
+        // setValue(data.data.infoheader);
+        let infoheader = data.data.infoheader;
+        setInputQuestion(infoheader.question);
+        setSelType(infoheader.type);
+        setInputSequence(infoheader.sequence);
+        setSelCustomerType(infoheader.idcustomertype);
+        if(data.data.detail){
+            setRowsAnswer(data.data.detail.reduce((obj, el) => (
+                [...obj, {
+                    id: el.id,
+                    answer: el.answer
+                }]
+            ), []));
+            setHeightGridListAnswer(data.data.detail);
+        }
+        // setLoading(false);
+    }
 
     function successHandlerTemplate(data) {
         if(data.data){
@@ -154,7 +175,7 @@ export default function AddFormInfo(props) {
             }
             obj.answer = listanswer;
             
-            dispatch(actions.submitAddInfo(obj,succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitEditInfo(id,obj,succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -189,12 +210,13 @@ export default function AddFormInfo(props) {
           })
     }
 
-    const errorHandler = (data) => {
+    const errorHandler = (error) => {
         setLoading(false);
+        let arrMsg = mappingMessageError(error);
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: '' + data
+            text: arrMsg.length > 0?i18n.t('label_ERROR.'+arrMsg[0].replaceAll('.','_')):'Error'
         })
       }
 
@@ -236,8 +258,7 @@ export default function AddFormInfo(props) {
         setHeightGridListAnswer(dataval);
     }
 
-    
-      return (
+    return (
         <Formik
             initialValues={
                 {
@@ -448,7 +469,5 @@ export default function AddFormInfo(props) {
             }
 
         </Formik>
-
-      )
-
+    )
 }

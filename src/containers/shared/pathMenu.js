@@ -34,3 +34,5 @@ export const detailproduct = `/admin/detail/product`;
 export const editproduct = `/admin/edit/product`;
 export const menuinfo = `/mobile/info`;
 export const addinfo = `/mobile/add/info`;
+export const detailinfo = `/mobile/detail/info`;
+export const editinfo = `/mobile/edit/info`;

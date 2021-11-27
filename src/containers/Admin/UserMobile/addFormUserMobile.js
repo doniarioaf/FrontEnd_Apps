@@ -234,7 +234,6 @@ export default function AddFormUserMobile(props) {
 
 
     function errorHandler(error) {
-        console.log('errorHandler ',error);
         setLoading(false);
         let arrMsg = mappingMessageError(error);
         Swal.fire({

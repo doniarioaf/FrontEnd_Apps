@@ -22,3 +22,26 @@ export function* getDataInfoSaga(action) {
         action.errorHandler(error);
     }
 }
+
+export function* submitAddInfoSaga(action) {
+    try {
+        const response = yield axios.post(baseInfoURL(''),action.payload).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* submitEditInfoSaga(action) {
+    try {
+        const response = yield axios.put(baseInfoURL('/'+action.id),action.payload).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        console.log('error ',error);
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}

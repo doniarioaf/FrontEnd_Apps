@@ -2,15 +2,10 @@ import React, {useState, useEffect} from 'react';
 import Paper                        from '@material-ui/core/Paper';
 import {
     PagingState,
-    SortingState,
-    IntegratedSorting,
     IntegratedPaging,
-    FilteringState,
-    IntegratedFiltering,
     EditingState,
     TableColumnVisibility
 }                                   from '@devexpress/dx-react-grid';
-
 import {
     Grid,
     TableHeaderRow,
@@ -21,100 +16,18 @@ import {
     VirtualTable,
 }                                   from '@devexpress/dx-react-grid-material-ui';
 import TableCell                    from "@material-ui/core/TableCell";
+import {Loading}                    from '../../../components/Common/Loading';
 import {useTranslation}             from 'react-i18next';
 import {useHistory}                 from 'react-router-dom';
 import Tooltip                      from '@material-ui/core/Tooltip';
 import IconButton                   from '@material-ui/core/IconButton';
-import IconView from '../../../components/Icons/iconView';
-import EditIcon from '@material-ui/icons/Edit';
-import IconAdd from '../../../components/Icons/IconAdd';
-import * as pathmenu           from '../../shared/pathMenu';
-import {Loading}                    from '../../../components/Common/Loading';
-
-const FilterIcon = ({type, ...restProps}) => {
-    return <TableFilterRow.Icon type={type} {...restProps} />;
-};
-const StatusFormatter = ({value}) => (
-    <b>
-        {value.id === 300 ? <span className="ml-auto circle bg-success circle-lg"/> : null}
-        {value.id === 100 ? <span className="ml-auto circle bg-warning circle-lg"/> : null}
-        {value.value}
-    </b>
-);
-
-const FilterCell = props => {
-    if (props.column.name === "statuss")
-        return <TableCell className={props.className}/>;
-    else return <TableFilterRow.Cell {...props} />;
-};
-
-const AddButton = ({onExecute}) => {
-    const history = useHistory();
-    const i18n = useTranslation('translations');
-    return (
-        <div style={{textAlign: 'center'}} title={i18n.t('Add')}>
-            <Tooltip title={i18n.t('Add')}>
-                <IconButton color={'primary'} onClick={() => history.push(pathmenu.addinfo)} >
-                    <IconAdd/>
-                </IconButton>
-            </Tooltip>
-            {/*<Button*/}
-                {/*color="primary"*/}
-                {/*onClick={() => history.push('/member/add')}*/}
-            {/*>*/}
-                {/*{i18n.t('grid.ADD')}*/}
-            {/*</Button>*/}
-        </div>
-    );
-};
-
-const CellComponent = ({children, row, ...restProps}) => {
-    const {i18n} = useTranslation('translations');
-    const history = useHistory();
-    // const dispatch = useDispatch();
-    return (
-        <TableEditColumn.Cell row={row} {...restProps}>
-            {children}
-            {/* <Tooltip title={i18n.t('tooltip.UNLOCKMOBILEUSER')}>
-            <IconButton color={'primary'}
-                onClick={() => isUnlockMobileUser(row.id,dispatch)}
-            >
-                    <LockOpen/>
-            </IconButton>
-            </Tooltip> */}
-            {/* <Tooltip title={i18n.t('tooltip.DELETEUSER')}>
-            <IconButton color={'primary'}
-                onClick={() => isDeleteAlert(row.id,row.name,dispatch,i18n)}
-            >
-                    <IconDelete/>
-            </IconButton>
-            </Tooltip> */}
-            <Tooltip title={i18n.t('Edit')}>
-                <IconButton color={'primary'} 
-                            onClick={() => history.push(pathmenu.detailinfo +'/'+ row.id)}
-                >
-                    <IconView/>
-                </IconButton>
-            </Tooltip>
-        </TableEditColumn.Cell>
-    );
-};
-
-const commandComponents = {
-    add: AddButton,
-};
-
-const Command = ({id, onExecute}) => {
-    const CommandButton = commandComponents[id];
-    return (
-        <CommandButton
-            onExecute={onExecute}
-        />
-    );
-};
+import {useDispatch}   from 'react-redux';
+// import { isGetPermissions } from '../../../../shared/maskFunc';
+// import { addSettingFrequentPosting } from '../../../../shared/PermissionForFeatures';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
-const InfoGrid = props => {
+const InfoAnswerListGrid = props => {
     const {i18n} = useTranslation();
     const [hiddenColumnNames] = useState(['id']);
     const [pageSize, setPageSize] = useState(10);
@@ -161,6 +74,40 @@ const InfoGrid = props => {
             : <VirtualTable.NoDataCell {...props} />;
     }
 
+    const CellComponent = ({children, row, ...restProps}) => {
+        const {i18n} = useTranslation('translations');
+        const history = useHistory();
+        const dispatch = useDispatch();
+        return (
+            <TableEditColumn.Cell row={row} {...restProps}>
+                {children}
+                {/* <Tooltip title={i18n.t('tooltip.UNLOCKMOBILEUSER')}>
+                <IconButton color={'primary'}
+                    onClick={() => isUnlockMobileUser(row.id,dispatch)}
+                >
+                        <LockOpen/>
+                </IconButton>
+                </Tooltip> */}
+                {/* <Tooltip title={i18n.t('tooltip.DELETEUSER')}>
+                <IconButton color={'primary'}
+                    onClick={() => isDeleteAlert(row.id,row.name,dispatch,i18n)}
+                >
+                        <IconDelete/>
+                </IconButton>
+                </Tooltip> */}
+                <Tooltip title={i18n.t('tooltip.VIEWUSER')}>
+                    <IconButton color={'primary'} ///MobileUser/detail
+                        onClick={() => props.handleSubstractList(row.id)}
+                        hidden={props.handleSubstractList?false:true}
+                                // onClick={() => history.push('/member/saving-data-detail/' + row.id)}
+                    >
+                        <DeleteIcon/>
+                    </IconButton>
+                </Tooltip>
+            </TableEditColumn.Cell>
+        );
+    };
+
     return (
         <Paper style={{position: 'relative'}}>
             <Grid
@@ -176,38 +123,39 @@ const InfoGrid = props => {
                     pageSize={pageSize}
                     onPageSizeChange={setPageSize}
                 />
-                <FilteringState defaultFilters={[]}/>
-                <IntegratedFiltering/>
-                <SortingState
+                {/* <FilteringState defaultFilters={[]}/>
+                <IntegratedFiltering/> */}
+                {/* <SortingState
                     sorting={sorting}
                     onSortingChange={setSorting}
                 />
                 <IntegratedSorting
                     columnExtensions={integratedSortingColumnExtensions}
-                />
+                /> */}
                 <IntegratedPaging/>
                 <VirtualTable
                     noDataCellComponent={noDataCell}
                     columnExtensions={tableColumnExtensions}
                 />
-                <TableHeaderRow showSortingControls/>
+                {/* <TableHeaderRow showSortingControls/> */}
+                <TableHeaderRow/>
                 <TableColumnVisibility
                     hiddenColumnNames={hiddenColumnNames}
                 />
-                <TableFilterRow
+                {/* <TableFilterRow
                     showFilterSelector
                     cellComponent={FilterCell}
                     iconComponent={FilterIcon}
                     messages={filterRowMessages}
-                />
+                /> */}
                 <TableEditRow/>
                 <TableEditColumn
-                    showAddCommand
+                    // showAddCommand
                     // showEditCommand
                     // showDeleteCommand
                     cellComponent={CellComponent}
-                    commandComponent={Command}
-                    width={70}
+                    // commandComponent={Command}
+                    width={props.handleSubstractList?100:0}
                     // messages={editColumnMessages}
                 />
                 <PagingPanel
@@ -215,9 +163,8 @@ const InfoGrid = props => {
                     messages={pagingPanelMessages}
                 />
             </Grid>
-            {props.loading && <Loading/>}            
+                    {props.loading && <Loading/>}
         </Paper>
-        
-    );
-};
-export default InfoGrid;
+    )
+}
+export default InfoAnswerListGrid;
