@@ -11,6 +11,8 @@ import React, {useState,
   import {useDispatch}    from 'react-redux';
   import * as actions     from '../../../store/actions';
   import Skeleton         from 'react-loading-skeleton';
+  import styled                       from "styled-components";
+  import Dialog                       from '@material-ui/core/Dialog';
   import * as pathmenu           from '../../shared/pathMenu';
   import ButtonMUI from '@material-ui/core/Button';
   import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -22,7 +24,7 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import moment                       from "moment/moment";
   import {Loading}                    from '../../../components/Common/Loading';
-  import Grid                         from './gridPermissions';
+  import Grid                         from './gridCustomer';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,6 +34,7 @@ import React, {useState,
       marginRight: theme.spacing(2),
     },
   }));
+
 
   function Detail(props) {
     // reloadToHomeNotAuthorize(DetailInternalUser_Permission,'READ');
@@ -44,13 +47,17 @@ import React, {useState,
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
-    const [RowsPermissions, setRowsPermissions] = useState([]);
+
+    const [RowsCustomer, setRowsCustomer] = useState([]);
     const [columns] = useState([
         {name: 'id', title: 'id'},
-        {name: 'descriptions', title: i18n.t('label_DESCRIPTION')},
+        {name: 'name', title: i18n.t('label_NAME')},
+        {name: 'address', title: i18n.t('label_ADDRESS')},
+        {name: 'phone', title: i18n.t('label_CONTACT_NUMBER')},
     ]);
-    const [StartdefaultHeight] = useState(150);
+    const [StartdefaultHeight] = useState(250);
     const [defaultHeight, setdefaultHeight] = useState(StartdefaultHeight+'px');
+
     const id = props.match.params.id;
 
     const handleToggle = (flag) => {
@@ -85,22 +92,28 @@ import React, {useState,
 
       useEffect(() => {
         setLoading(true);
-        dispatch(actions.getRoleData('/'+id,successHandler, errorHandler));
+        dispatch(actions.getCallPlanData('/'+id,successHandler, errorHandler));
     }, []);
 
-    function successHandler(data) {
-        if(data.data){
-            setValue(data.data.role);
-            const theData = data.data.permissions.reduce((obj, el) => [
-                ...obj,
-                {
-                    'id': el.id,
-                    'descriptions':el.descriptions?el.descriptions:''
+        function successHandler(data) {
+            setLoading(false);
+            if(data.data){
+                let obj = new Object();
+                obj.nama = data.data.nama;
+                obj.description = data.data.description;
+                setValue(obj);
+                if(data.data.customers){
+                    let listcustomers = data.data.customers;
+                    setRowsCustomer(listcustomers.reduce((obj, el) => (
+                        [...obj, {
+                            id: el.id,
+                            name: el.nama,
+                            address: el.address,
+                            phone: el.phone
+                        }]
+                    ), []));
                 }
-            ], []);
-            setRowsPermissions(theData);
-        }     
-        setLoading(false);
+            }
     }
 
     function errorHandler(error) {
@@ -108,14 +121,14 @@ import React, {useState,
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: error
+            text: 'error'
         })
     }
 
     return (
         <ContentWrapper>
             <div className="content-heading">
-            <span>{i18n.t('Role')}</span>
+            <span>{i18n.t('Call Plan')}</span>
             </div>
 
             <Container fluid>
@@ -146,20 +159,20 @@ import React, {useState,
                 <h2>
                     {
                         !loading  ?
-                            value.name :
+                            value.nama :
                             <Skeleton style={{maxWidth: 300}}/>
                     }
                 </h2>
             </div>
-
+            
             <div className="row mt-2">
             <div className="mt-2 col-lg-4 ft-detail mb-3">
             <Card outline color="primary" className="mb-3" style={{width:"125%"}}>
             <CardHeader className="text-white bg-primary" tag="h4" >{loading ? <Skeleton/> : 'Details'}</CardHeader>
             <CardBody>
                 {
-                    loading ?<Skeleton count={7} height={21} style={{marginTop: '1rem'}}/> :
-                    (
+                     loading ?<Skeleton count={7} height={21} style={{marginTop: '1rem'}}/> :
+                     (
                         <section>
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_NAME')}</span>
@@ -171,32 +184,18 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_DESCRIPTION')}</span>
                                 <strong className="col-md-7">
-                                {value.descriptions?value.descriptions:''}
+                                {value.description?value.description:''}
                                 </strong>
                             </div>
 
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_CREATED')}</span>
-                                <strong className="col-md-7">
-                                {value.created?moment (new Date(value.created)).format('DD MMMM YYYY'):''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_MODIFIED')}</span>
-                                <strong className="col-md-7">
-                                {value.created?moment (new Date(value.modified)).format('DD MMMM YYYY'):''}
-                                </strong>
-                            </div>
 
                         </section>
-                    )
+                     )
                 }
             </CardBody>
             </Card>
             </div>
             </div>
-
             </CardBody>
             </Card>
             </Container>
@@ -218,7 +217,10 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editrole+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editcallplan+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            {/* <MenuItem hidden={value.isactive?value.isactive == true?true:false:true}  onClick={() => submitHandlerActivated()}>{i18n.t('Activated')}</MenuItem>
+                            <MenuItem hidden={value.isactive?value.isactive == true?false:true:true}  onClick={() => submitHandlerUnActivated()}>{i18n.t('UnActivated')}</MenuItem> */}
+                            {/* <MenuItem hidden={false}  onClick={() => submitHandlerDelete()}>{i18n.t('Delete')}</MenuItem> */}
                             {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}
@@ -236,14 +238,14 @@ import React, {useState,
         </div>
         {props.loading && <Loading/>}
 
-        <div><p className="lead text-center"><h2>List Permissions</h2></p></div>
+        <div><p className="lead text-center"><h2>{i18n.t('label_CUSTOMER')}</h2></p></div>
         <Card>
         <CardBody>
         <div className="table-responsive" style={{height:defaultHeight}}>
             <Grid
-                rows={RowsPermissions}
+                rows={RowsCustomer}
                 columns={columns}
-                totalCounts={RowsPermissions.length}
+                totalCounts={RowsCustomer.length}
                 loading={loading}
                 columnextension={[]}
             />
@@ -252,8 +254,6 @@ import React, {useState,
         </Card>
 
         </ContentWrapper>
-
     )
-
   }
   export default Detail;

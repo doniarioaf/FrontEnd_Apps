@@ -230,7 +230,7 @@ export default function EditFormRole(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddPermissions">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Edit Role')}</span>
+                            <span>{i18n.t('label_EDIT_ROLE')}</span>
                             </div>
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">

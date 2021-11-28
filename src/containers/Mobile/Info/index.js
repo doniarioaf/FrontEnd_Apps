@@ -12,8 +12,8 @@ const InfoIndex = () => {
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
         {name: 'id', title: 'id'},
-        {name: 'question', title: i18n.t('Question')},
-        {name: 'type', title: i18n.t('Type')},
+        {name: 'question', title: i18n.t('label_QUESTION')},
+        {name: 'type', title: i18n.t('label_INFORMATION_TYPE')},
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -68,7 +68,7 @@ const InfoIndex = () => {
     return (
         <ContentWrapper>
             <div className="content-heading">
-                <span><Trans t={t} i18nKey={'Info'}>Info</Trans></span>
+                <span><Trans t={t} i18nKey={'label_INFORMATION'}>Info</Trans></span>
             </div>
             <Container fluid>
             <Card>

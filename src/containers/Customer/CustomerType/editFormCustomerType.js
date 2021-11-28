@@ -11,7 +11,7 @@ import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 // import { AddInternalUser_Permission } from '../../../../shared/PermissionForFeatures';
 
-export default function AddFormCustomerType(props) {
+export default function EditFormCustomerType(props) {
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -152,7 +152,7 @@ export default function AddFormCustomerType(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddBranch">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Edit Customer Type')}</span>
+                            <span>{i18n.t('label_EDIT_CUSTOMER_TYPE')}</span>
                             </div>
 
                             <label className="mt-3 form-label required" htmlFor="nama">

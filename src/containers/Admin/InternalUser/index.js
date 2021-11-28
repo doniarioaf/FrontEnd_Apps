@@ -59,7 +59,7 @@ const InternalUserIndex = () => {
     return (
         <ContentWrapper>
             <div className="content-heading">
-                <span><Trans t={t} i18nKey={'Internal User'}>Internal User</Trans></span>
+                <span><Trans t={t} i18nKey={'label_INTERNAL_USERR'}>Internal User</Trans></span>
             </div>
             <Container fluid>
             <Card>

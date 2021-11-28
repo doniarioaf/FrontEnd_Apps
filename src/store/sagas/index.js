@@ -33,7 +33,7 @@ import {
     submitPostCompanySaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga } from './customer';
-import { getDataCallPlanSaga, getDataInfoSaga, submitAddInfoSaga, submitEditInfoSaga } from './mobile';
+import { getDataCallPlanSaga, getDataInfoSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
 
 
 export function* watchMobile() {
@@ -42,6 +42,8 @@ export function* watchMobile() {
         takeEvery(actions.GET_INFO_DATA, getDataInfoSaga),
         takeEvery(actions.SUBMIT_ADD_INFO, submitAddInfoSaga),
         takeEvery(actions.SUBMIT_EDIT_INFO, submitEditInfoSaga),
+        takeEvery(actions.SUBMIT_ADD_CALLPLAN, submitAddCallPlanSaga),
+        takeEvery(actions.SUBMIT_EDIT_CALLPLAN, submitEditCallPlanSaga),
     ]);
 }
 

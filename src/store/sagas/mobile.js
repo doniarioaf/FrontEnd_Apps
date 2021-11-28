@@ -45,3 +45,26 @@ export function* submitEditInfoSaga(action) {
         action.errorHandler(error);
     }
 }
+
+export function* submitAddCallPlanSaga(action) {
+    try {
+        const response = yield axios.post(baseCallPlanURL(''),action.payload).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* submitEditCallPlanSaga(action) {
+    try {
+        const response = yield axios.put(baseCallPlanURL('/'+action.id),action.payload).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        console.log('error ',error);
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}

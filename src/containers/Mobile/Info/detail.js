@@ -11,8 +11,8 @@ import React, {useState,
   import {useDispatch}    from 'react-redux';
   import * as actions     from '../../../store/actions';
   import Skeleton         from 'react-loading-skeleton';
-  import styled                       from "styled-components";
-  import Dialog                       from '@material-ui/core/Dialog';
+//   import styled                       from "styled-components";
+//   import Dialog                       from '@material-ui/core/Dialog';
   import * as pathmenu           from '../../shared/pathMenu';
   import ButtonMUI from '@material-ui/core/Button';
   import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -50,7 +50,7 @@ import React, {useState,
     const [RowsAnswer, setRowsAnswer] = useState([]);
     const [columns] = useState([
         {name: 'id', title: 'id'},
-        {name: 'answer', title: i18n.t('Answer')},
+        {name: 'answer', title: i18n.t('label_ANSWER')},
     ]);
     const [StartdefaultHeight] = useState(150);
     const [defaultHeight, setdefaultHeight] = useState(StartdefaultHeight+'px');
@@ -144,7 +144,7 @@ import React, {useState,
     return (
         <ContentWrapper>
             <div className="content-heading">
-            <span>{i18n.t('Info')}</span>
+            <span>{i18n.t('label_INFORMATION')}</span>
             </div>
 
             <Container fluid>
@@ -191,28 +191,28 @@ import React, {useState,
                     (
                         <section>
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Question')}</span>
+                            <span className="col-md-5">{i18n.t('label_QUESTION')}</span>
                                 <strong className="col-md-7">
                                 {value.question?value.question:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Customer Type')}</span>
+                            <span className="col-md-5">{i18n.t('label_CUSTOMER_TYPE')}</span>
                                 <strong className="col-md-7">
                                 {value.customertypename?value.customertypename:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Info Type')}</span>
+                            <span className="col-md-5">{i18n.t('label_INFORMATION_TYPE')}</span>
                                 <strong className="col-md-7">
                                 {value.type?handleTeksType(value.type):''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Sequence')}</span>
+                            <span className="col-md-5">{i18n.t('label_SEQUENCE')}</span>
                                 <strong className="col-md-7">
                                 {value.sequence?value.sequence:''}
                                 </strong>
@@ -246,7 +246,7 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editinfo+'/'+id)}>{i18n.t('label_EDIT')}</MenuItem>
+                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editinfo+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             {/* <MenuItem hidden={value.isactive?value.isactive == true?true:false:true}  onClick={() => submitHandlerActivated()}>{i18n.t('Activated')}</MenuItem>
                             <MenuItem hidden={value.isactive?value.isactive == true?false:true:true}  onClick={() => submitHandlerUnActivated()}>{i18n.t('UnActivated')}</MenuItem> */}
                             {/* <MenuItem hidden={false}  onClick={() => submitHandlerDelete()}>{i18n.t('Delete')}</MenuItem> */}
@@ -267,7 +267,7 @@ import React, {useState,
         </div>
         {props.loading && <Loading/>}
 
-        <div><p className="lead text-center"><h2>Answer</h2></p></div>
+        <div><p className="lead text-center"><h2>{i18n.t('label_ANSWER')}</h2></p></div>
         <Card>
         <CardBody>
         <div className="table-responsive" style={{height:defaultHeight}}>

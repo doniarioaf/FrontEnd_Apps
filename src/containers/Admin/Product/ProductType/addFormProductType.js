@@ -135,7 +135,7 @@ export default function AddFormProductType(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddBranch">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Add Product Type')}</span>
+                            <span>{i18n.t('label_ADD_PRODUCT_TYPE')}</span>
                             </div>
 
                             <label className="mt-3 form-label required" htmlFor="nama">

@@ -36,3 +36,22 @@ export const submitEditInfo = (id,payload, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const submitAddCallPlan = (payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_CALLPLAN,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditCallPlan = (id,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_CALLPLAN,
+        id:id,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}

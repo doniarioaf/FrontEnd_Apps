@@ -169,7 +169,7 @@ export default function AddFormProduct(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddBranch">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Add Product')}</span>
+                            <span>{i18n.t('label_ADD_PRODUCT')}</span>
                             </div>
 
                             <label className="mt-3 form-label required" htmlFor="nama">
@@ -209,7 +209,7 @@ export default function AddFormProduct(props) {
                             <div className="invalid-feedback-custom">{ErrInputDescription}</div>
 
                             <label className="mt-3 form-label required" htmlFor="producttype">
-                                {i18n.t('Product type')}
+                                {i18n.t('label_PRODUCT_TYPE')}
                             </label>
 
                             <DropdownList

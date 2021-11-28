@@ -217,7 +217,7 @@ export default function AddFormProduct(props) {
                             <div className="invalid-feedback-custom">{ErrInputDescription}</div>
 
                             <label className="mt-3 form-label required" htmlFor="producttype">
-                                {i18n.t('Product type')}
+                                {i18n.t('label_PRODUCT_TYPE')}
                             </label>
 
                             <DropdownList

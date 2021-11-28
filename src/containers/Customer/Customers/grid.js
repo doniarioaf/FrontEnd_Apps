@@ -51,18 +51,13 @@ const AddButton = ({onExecute}) => {
     const history = useHistory();
     const i18n = useTranslation('translations');
     return (
-        <div style={{textAlign: 'center'}} title={i18n.t('Add')}>
-            <Tooltip title={i18n.t('Add')}>
+        <div style={{textAlign: 'center'}} title={i18n.t('grid.ADD')}>
+            <Tooltip title={i18n.t('grid.ADD')}>
                 <IconButton color={'primary'} onClick={() => history.push(pathmenu.addcustomers)} >
                     <IconAdd/>
                 </IconButton>
             </Tooltip>
-            {/*<Button*/}
-                {/*color="primary"*/}
-                {/*onClick={() => history.push('/member/add')}*/}
-            {/*>*/}
-                {/*{i18n.t('grid.ADD')}*/}
-            {/*</Button>*/}
+            
         </div>
     );
 };
@@ -74,21 +69,8 @@ const CellComponent = ({children, row, ...restProps}) => {
     return (
         <TableEditColumn.Cell row={row} {...restProps}>
             {children}
-            {/* <Tooltip title={i18n.t('tooltip.UNLOCKMOBILEUSER')}>
-            <IconButton color={'primary'}
-                onClick={() => isUnlockMobileUser(row.id,dispatch)}
-            >
-                    <LockOpen/>
-            </IconButton>
-            </Tooltip> */}
-            {/* <Tooltip title={i18n.t('tooltip.DELETEUSER')}>
-            <IconButton color={'primary'}
-                onClick={() => isDeleteAlert(row.id,row.name,dispatch,i18n)}
-            >
-                    <IconDelete/>
-            </IconButton>
-            </Tooltip> */}
-            <Tooltip title={i18n.t('View')}>
+           
+            <Tooltip title={i18n.t('grid.VIEW')}>
                 <IconButton color={'primary'} 
                             onClick={() => history.push(pathmenu.detailcustomers +'/'+ row.id)}
                 >

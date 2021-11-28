@@ -53,8 +53,8 @@ const AddButton = ({onExecute}) => {
     const history = useHistory();
     const i18n = useTranslation('translations');
     return (
-        <div style={{textAlign: 'center'}} title={i18n.t('Add')}>
-            <Tooltip title={i18n.t('Add')}>
+        <div style={{textAlign: 'center'}} title={i18n.t('grid.ADD')}>
+            <Tooltip title={i18n.t('grid.ADD')}>
                 <IconButton color={'primary'} onClick={() => history.push(pathmenu.addproduct)} >
                     <IconAdd/>
                 </IconButton>
@@ -90,7 +90,7 @@ const CellComponent = ({children, row, ...restProps}) => {
                     <IconDelete/>
             </IconButton>
             </Tooltip> */}
-            <Tooltip title={i18n.t('Edit')}>
+            <Tooltip title={i18n.t('grid.VIEW')}>
                 <IconButton color={'primary'} 
                             onClick={() => history.push(pathmenu.detailproduct +'/'+ row.id)}
                 >
