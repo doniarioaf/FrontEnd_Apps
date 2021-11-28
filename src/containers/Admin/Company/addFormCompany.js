@@ -34,7 +34,7 @@ export default function AddFormCompany(props) {
     const [InputEmail, setInputEmail] = useState('');
     const [ErrInputEmail, setErrInputEmail] = useState('');
     const [CheckIsActived, setCheckIsActived] = useState(true);
-    const [ListSelectedBranches, setListSelectedBranches] = useState([]);
+    // const [ListSelectedBranches, setListSelectedBranches] = useState([]);
     const [ListBranch, setListBranch] = useState([]);
     const [SelBranch, setSelBranch] = useState('');
     const [hiddenColumns] = useState(['id']);

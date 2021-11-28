@@ -282,7 +282,7 @@ export default function AddFormUserMobile(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddUser">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Add User Mobile')}</span>
+                            <span>{i18n.t('label_ADD_MOBILE_USER')}</span>
                             </div>
 
                             <div className="row mt-2">
@@ -431,7 +431,7 @@ export default function AddFormUserMobile(props) {
                             <div className="invalid-feedback-custom">{ErrRoles}</div>
 
                             <label className="mt-3 form-label required" htmlFor="role">
-                                {i18n.t('Call Plan')}
+                                {i18n.t('label_CALL_PLAN')}
                             </label>
                             <Select
                                 // defaultValue={[options[0], options[1]]}

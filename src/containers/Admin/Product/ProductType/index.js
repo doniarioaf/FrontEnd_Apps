@@ -51,7 +51,7 @@ const ProductTypeIndex = () => {
     return (
         <ContentWrapper>
             <div className="content-heading">
-                <span><Trans t={t} i18nKey={'Product Type'}>Product Type</Trans></span>
+                <span><Trans t={t} i18nKey={'label_PRODUCT_TYPE'}>Product Type</Trans></span>
             </div>
             <Container fluid>
             <Card>

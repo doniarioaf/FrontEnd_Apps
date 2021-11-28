@@ -13,8 +13,8 @@ const CustomerIndex = () => {
     const [columns] = useState([
         {name: 'id', title: 'id'},
         {name: 'name', title: i18n.t('label_NAME')},
-        {name: 'address', title: i18n.t('Address')},
-        {name: 'contactnumber', title: i18n.t('Contact Number')}
+        {name: 'address', title: i18n.t('label_ADDRESS')},
+        {name: 'contactnumber', title: i18n.t('label_CONTACT_NUMBER')}
         
     ]);
     const [tableColumnExtensions] = useState([]);
@@ -54,7 +54,7 @@ const CustomerIndex = () => {
     return (
         <ContentWrapper>
             <div className="content-heading">
-                <span><Trans t={t} i18nKey={'Customer'}>Customer</Trans></span>
+                <span><Trans t={t} i18nKey={'label_CUSTOMER'}>Customer</Trans></span>
             </div>
             <Container fluid>
             <Card>

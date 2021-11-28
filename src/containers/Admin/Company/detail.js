@@ -332,10 +332,10 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editcompany+'/'+id)}>{i18n.t('label_EDIT')}</MenuItem>
+                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editcompany+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             {/* <MenuItem hidden={value.isactive?value.isactive == true?true:false:true}  onClick={() => submitHandlerActivated()}>{i18n.t('Activated')}</MenuItem>
                             <MenuItem hidden={value.isactive?value.isactive == true?false:true:true}  onClick={() => submitHandlerUnActivated()}>{i18n.t('UnActivated')}</MenuItem> */}
-                            <MenuItem hidden={false}  onClick={() => submitHandlerDelete()}>{i18n.t('Delete')}</MenuItem>
+                            <MenuItem hidden={false}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}
@@ -353,7 +353,7 @@ import React, {useState,
         </div>
         {props.loading && <Loading/>}
 
-        <div><p className="lead text-center"><h2>List Branch</h2></p></div>
+        <div><p className="lead text-center"><h2>{i18n.t('label_LIST_BRANCH')}</h2></p></div>
         <Card>
         <CardBody>
         <div className="table-responsive" style={{height:defaultHeight}}>

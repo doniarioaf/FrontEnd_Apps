@@ -51,7 +51,7 @@ const CustomerTypeIndex = () => {
     return (
         <ContentWrapper>
             <div className="content-heading">
-                <span><Trans t={t} i18nKey={'Customer Type'}>Customer Type</Trans></span>
+                <span><Trans t={t} i18nKey={'label_CUSTOMER_TYPE'}>Customer Type</Trans></span>
             </div>
             <Container fluid>
             <Card>

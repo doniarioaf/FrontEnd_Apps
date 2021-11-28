@@ -25,23 +25,22 @@ import {useTranslation}             from 'react-i18next';
 import {useHistory}                 from 'react-router-dom';
 import Tooltip                      from '@material-ui/core/Tooltip';
 import IconButton                   from '@material-ui/core/IconButton';
-import IconView from '../../../../components/Icons/iconView';
-import EditIcon from '@material-ui/icons/Edit';
-import IconAdd from '../../../../components/Icons/IconAdd';
-import * as pathmenu           from '../../../shared/pathMenu';
-import {Loading}                    from '../../../../components/Common/Loading';
+import IconView from '../../../components/Icons/iconView';
+// import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import * as pathmenu           from '../../shared/pathMenu';
+import {Loading}                    from '../../../components/Common/Loading';
 
 const FilterIcon = ({type, ...restProps}) => {
     return <TableFilterRow.Icon type={type} {...restProps} />;
 };
-
-const StatusFormatter = ({value}) => (
-    <b>
-        {value.id === 300 ? <span className="ml-auto circle bg-success circle-lg"/> : null}
-        {value.id === 100 ? <span className="ml-auto circle bg-warning circle-lg"/> : null}
-        {value.value}
-    </b>
-);
+// const StatusFormatter = ({value}) => (
+//     <b>
+//         {value.id === 300 ? <span className="ml-auto circle bg-success circle-lg"/> : null}
+//         {value.id === 100 ? <span className="ml-auto circle bg-warning circle-lg"/> : null}
+//         {value.value}
+//     </b>
+// );
 
 const FilterCell = props => {
     if (props.column.name === "statuss")
@@ -49,52 +48,44 @@ const FilterCell = props => {
     else return <TableFilterRow.Cell {...props} />;
 };
 
-const AddButton = ({onExecute}) => {
-    const history = useHistory();
-    const i18n = useTranslation('translations');
-    return (
-        <div style={{textAlign: 'center'}} title={i18n.t('grid.ADD')}>
-            <Tooltip title={i18n.t('grid.ADD')}>
-                <IconButton color={'primary'} onClick={() => history.push(pathmenu.addproducttype)} >
-                    <IconAdd/>
-                </IconButton>
-            </Tooltip>
-        </div>
-    );
-};
+// const AddButton = ({onExecute}) => {
+//     const history = useHistory();
+//     const i18n = useTranslation('translations');
+//     return (
+//         <div style={{textAlign: 'center'}} title={i18n.t('Add')}>
+//             <Tooltip title={i18n.t('Add')}>
+//                 <IconButton color={'primary'} onClick={() => history.push(pathmenu.addcallplan)} >
+//                     <IconAdd/>
+//                 </IconButton>
+//             </Tooltip>
+//             {/*<Button*/}
+//                 {/*color="primary"*/}
+//                 {/*onClick={() => history.push('/member/add')}*/}
+//             {/*>*/}
+//                 {/*{i18n.t('grid.ADD')}*/}
+//             {/*</Button>*/}
+//         </div>
+//     );
+// };
 
-const CellComponent = ({children, row, ...restProps}) => {
-    const {i18n} = useTranslation('translations');
-    const history = useHistory();
-    // const dispatch = useDispatch();
-    return (
-        <TableEditColumn.Cell row={row} {...restProps}>
-            {children}
-            <Tooltip title={i18n.t('grid.EDIT')}>
-                <IconButton color={'primary'} 
-                            onClick={() => history.push(pathmenu.editproducttype +'/'+ row.id)}
-                >
-                    <EditIcon/>
-                </IconButton>
-            </Tooltip>
-        </TableEditColumn.Cell>
-    );
-};
 
-const commandComponents = {
-    add: AddButton,
-};
 
-const Command = ({id, onExecute}) => {
-    const CommandButton = commandComponents[id];
-    return (
-        <CommandButton
-            onExecute={onExecute}
-        />
-    );
-};
+// const commandComponents = {
+//     add: AddButton,
+// };
 
-const ProductTypeGrid = props => {
+// const Command = ({id, onExecute}) => {
+//     const CommandButton = commandComponents[id];
+//     return (
+//         <CommandButton
+//             onExecute={onExecute}
+//         />
+//     );
+// };
+
+
+
+const CallPlanCustomerGrid = props => {
     const {i18n} = useTranslation();
     const [hiddenColumnNames] = useState(['id']);
     const [pageSize, setPageSize] = useState(10);
@@ -122,6 +113,28 @@ const ProductTypeGrid = props => {
         lessThan: i18n.t('grid.LESSTHAN'),
         lessThanOrEqual: i18n.t('grid.LESSTHANOREQUAL')
     };
+
+    const CellComponent = ({children, row, ...restProps}) => {
+        const {i18n} = useTranslation('translations');
+        const history = useHistory();
+        // const dispatch = useDispatch();
+        return (
+            <TableEditColumn.Cell row={row} {...restProps}>
+                {children}
+               
+                <Tooltip title={i18n.t('grid.DELETE')}>
+                    <IconButton color={'primary'} ///MobileUser/detail
+                        onClick={() => props.handleSubstractList(row.id)}
+                        hidden={props.handleSubstractList?false:true}
+                                // onClick={() => history.push('/member/saving-data-detail/' + row.id)}
+                    >
+                        <DeleteIcon/>
+                    </IconButton>
+                </Tooltip>
+            </TableEditColumn.Cell>
+        );
+    };
+    
 
     useEffect(() => {
         if (props.loading !== loading) {
@@ -182,12 +195,12 @@ const ProductTypeGrid = props => {
                 />
                 <TableEditRow/>
                 <TableEditColumn
-                    showAddCommand
+                    // showAddCommand
                     // showEditCommand
                     // showDeleteCommand
                     cellComponent={CellComponent}
-                    commandComponent={Command}
-                    width={70}
+                    // commandComponent={Command}
+                    width={props.handleSubstractList?70:0}
                     // messages={editColumnMessages}
                 />
                 <PagingPanel
@@ -197,6 +210,7 @@ const ProductTypeGrid = props => {
             </Grid>
             {props.loading && <Loading/>}            
         </Paper>
+        
     );
 };
-export default ProductTypeGrid;
+export default CallPlanCustomerGrid;

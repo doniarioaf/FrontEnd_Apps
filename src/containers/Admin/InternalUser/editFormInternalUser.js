@@ -276,7 +276,7 @@ export default function EditFormInternalUser(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddUser">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Edit Internal User')}</span>
+                            <span>{i18n.t('label_EDIT_INTERNAL_USER')}</span>
                             </div>
 
                             <div className="row mt-2">

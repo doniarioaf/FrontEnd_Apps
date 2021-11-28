@@ -1,32 +1,27 @@
 import React, {useState, useEffect} from 'react';
 import {Container, Card, CardBody}  from 'reactstrap';
 import {Trans, useTranslation}      from 'react-i18next';
-import ContentWrapper               from '../../../components/Layout/ContentWrapper';
+import Grid                         from './grid';
+import ContentWrapper               from '../../../components/Layout/ContentWrapper'
 import {useDispatch}   from 'react-redux';
 import Swal                         from 'sweetalert2';
-import {useHistory}                 from 'react-router-dom';
 import * as actions                 from '../../../store/actions';
-import Grid                         from './grid';
 
-const UserMobileIndex = () => {
-    const history = useHistory();
+const CallPlanIndex = () => {
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
-    // const [hiddenColumns] = useState(['id']);
     const [columns] = useState([
         {name: 'id', title: 'id'},
         {name: 'name', title: i18n.t('label_NAME')},
-        {name: 'username', title: i18n.t('label_USERNAME')},
-        {name: 'notelepon', title: i18n.t('label_CONTACT_NUMBER')},
-        {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
+        {name: 'description', title: i18n.t('label_DESCRIPTION')},
     ]);
+    const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    const [tableColumnExtensions] = useState([]);
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getUserMobileData('',successHandler, errorHandler));
+        dispatch(actions.getCallPlanData('',successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
@@ -36,9 +31,7 @@ const UserMobileIndex = () => {
                 {
                     'id': el.id,
                     'name': el.nama ?el.nama:'',
-                    'username':el.username?el.username:'',
-                    'notelepon':el.notelepon?el.notelepon:'',
-                    'isactive': el.isactive?el.isactive == true?'Yes':'No':'No'
+                    'description':el.description,
                 }
             ], []);
             setRows(theData);
@@ -51,14 +44,14 @@ const UserMobileIndex = () => {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: error
+            text: 'error'
         })
     }
 
     return (
         <ContentWrapper>
             <div className="content-heading">
-                <span><Trans t={t} i18nKey={'label_MOBILE_USER'}>User Mobile</Trans></span>
+                <span><Trans t={t} i18nKey={'Info'}>Info</Trans></span>
             </div>
             <Container fluid>
             <Card>
@@ -80,4 +73,4 @@ const UserMobileIndex = () => {
         </ContentWrapper>
     );
 };
-export default UserMobileIndex;
+export default CallPlanIndex;

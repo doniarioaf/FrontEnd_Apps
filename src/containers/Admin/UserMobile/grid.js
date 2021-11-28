@@ -51,8 +51,8 @@ const AddButton = ({onExecute}) => {
     const history = useHistory();
     const i18n = useTranslation('translations');
     return (
-        <div style={{textAlign: 'center'}} title={i18n.t('Add')}>
-            <Tooltip title={i18n.t('Add')}>
+        <div style={{textAlign: 'center'}} title={i18n.t('grid.ADD')}>
+            <Tooltip title={i18n.t('grid.ADD')}>
                 <IconButton color={'primary'} onClick={() => history.push(pathmenu.addusermobile)} >
                     <IconAdd/>
                 </IconButton>
@@ -74,7 +74,7 @@ const CellComponent = ({children, row, ...restProps}) => {
     return (
         <TableEditColumn.Cell row={row} {...restProps}>
             {children}
-            <Tooltip title={i18n.t('View')}>
+            <Tooltip title={i18n.t('grid.VIEW')}>
                 <IconButton color={'primary'} 
                             onClick={() => history.push(pathmenu.detailusermobile +'/'+ row.id)}
                 >

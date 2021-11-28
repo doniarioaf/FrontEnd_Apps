@@ -44,7 +44,7 @@ export default function EditFormInfo(props) {
     const [RowsAnswer, setRowsAnswer] = useState([]);
     const [columns] = useState([
         {name: 'id', title: 'id'},
-        {name: 'answer', title: i18n.t('Answer')},
+        {name: 'answer', title: i18n.t('label_ANSWER')},
     ]);
     const [StartdefaultHeight] = useState(150);
     const [defaultHeight, setdefaultHeight] = useState(StartdefaultHeight+'px');
@@ -296,13 +296,13 @@ export default function EditFormInfo(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddBranch">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Add Info')}</span>
+                            <span>{i18n.t('label_EDIT_INFORMATION')}</span>
                             </div>
 
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="question">
-                                {i18n.t('Question')}
+                                {i18n.t('label_QUESTION')}
                             </label>
                             <Input
                                 name="question"
@@ -320,7 +320,7 @@ export default function EditFormInfo(props) {
                             <div className="invalid-feedback-custom">{ErrInputQuestion}</div>
 
                             <label className="mt-3 form-label required" htmlFor="description">
-                                {i18n.t('Sequence')}
+                                {i18n.t('label_SEQUENCE')}
                             </label>
                             <Input
                                 name="sequence"
@@ -340,7 +340,7 @@ export default function EditFormInfo(props) {
                             <div className="row mt-0" hidden={!ShowAnswer}>
                             <div className="mt-0 col-lg-11 ft-detail mb-5" style={{paddingRight:'0px'}}>
                             <label className="mt-3 form-label required" htmlFor="branch">
-                                {i18n.t('Answer')}
+                                {i18n.t('label_ANSWER')}
                             </label>
 
                             <Input
@@ -373,7 +373,7 @@ export default function EditFormInfo(props) {
 
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="infotype">
-                                {i18n.t('Info type')}
+                                {i18n.t('label_INFORMATION_TYPE')}
                             </label>
 
                             <DropdownList
@@ -398,7 +398,7 @@ export default function EditFormInfo(props) {
                             <div className="invalid-feedback-custom">{ErrSelType}</div>
 
                             <label className="mt-3 form-label required" htmlFor="customertype">
-                                {i18n.t('customer type')}
+                                {i18n.t('label_CUSTOMER_TYPE')}
                             </label>
 
                             <DropdownList

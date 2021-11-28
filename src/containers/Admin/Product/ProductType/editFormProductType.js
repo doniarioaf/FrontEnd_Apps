@@ -152,7 +152,7 @@ export default function EditFormProductType(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddBranch">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Edit Product Type')}</span>
+                            <span>{i18n.t('label_EDIT_PRODUCT_TYPE')}</span>
                             </div>
 
                             <label className="mt-3 form-label required" htmlFor="nama">

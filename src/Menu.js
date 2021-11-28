@@ -8,13 +8,13 @@ const Menu = [
     {
         name: 'Administrator',
         icon: 'icon-user',
-        translate: 'Administrator',
+        translate: 'label_ADMINISTRAOTR',
         // label: { value: 3, color: 'success' },
         submenu:[
             {
                 name: 'Company',
                 path: pathmenu.menucompany,
-                translate: 'Company',
+                translate: 'label_COMPANY',
             },
             {
                 name: 'Branch',
@@ -27,27 +27,27 @@ const Menu = [
             },{
                 name: 'Product',
                 path: pathmenu.menuproduct,
-                translate: 'Product',
+                translate: 'label_PRODUCT',
             },{
-                name: 'Product Type',
+                name: 'ProductType',
                 path: pathmenu.menuproducttype,
-                translate: 'Product Type',
+                translate: 'label_PRODUCT_TYPE',
             }
             
         ]
     },{
         name: 'User',
         icon: 'icon-user',
-        translate: 'User',
+        translate: 'label_USER',
         submenu:[
             {
                 name: 'Internal User',
                 path: pathmenu.menuInternalUser,
-                translate: 'Internal User',
+                translate: 'label_INTERNAL_USERR',
             },{
                 name: 'User Mobile',
                 path: pathmenu.menuusermobile,
-                translate: 'User Mobile',
+                translate: 'label_MOBILE_USER',
             }
         ]
     },{
@@ -58,16 +58,12 @@ const Menu = [
             {
                 name: 'Customer',
                 path: pathmenu.menucustomers,
-                translate: 'Customer',
+                translate: 'label_CUSTOMER',
             },
             {
                 name: 'Customer Type',
                 path: pathmenu.menucustomertype,
-                translate: 'Customer Type',
-            },{
-                name: 'Customer Call Plan',
-                path: '',
-                translate: 'Customer Call Plan',
+                translate: 'label_CUSTOMER_TYPE',
             }
         ]
     },{
@@ -77,13 +73,13 @@ const Menu = [
         submenu:[
             {
                 name: 'Call Plan',
-                path: '',
-                translate: 'Call Plan',
+                path: pathmenu.menucallplan,
+                translate: 'label_CALL_PLAN',
             },
             {
                 name: 'Info',
                 path: pathmenu.menuinfo,
-                translate: 'Info',
+                translate: 'label_INFORMATION',
             },{
                 name: 'Monitoring',
                 path: '',
@@ -126,86 +122,86 @@ const Menu = [
     //     heading: 'Components',
     //     translate: 'sidebar.heading.COMPONENTS'
     // },
-    ,{
-        name: 'Elements',
-        icon: 'icon-chemistry',
-        translate: 'sidebar.nav.element.ELEMENTS',
-        submenu: [{
-                name: 'Buttons',
-                path: '/buttons',
-                translate: 'sidebar.nav.element.BUTTON'
-            },
-            {
-                name: 'Notifications',
-                path: '/notifications',
-                translate: 'sidebar.nav.element.NOTIFICATION'
-            },
-            {
-                name: 'Sweetalert',
-                path: '/sweetalert'
-            },
-            {
-                name: 'Carousel',
-                path: '/carousel',
-                translate: 'sidebar.nav.element.INTERACTION'
-            },
-            {
-                name: 'Spinners',
-                path: '/spinners',
-                translate: 'sidebar.nav.element.SPINNER'
-            },
-            {
-                name: 'Dropdown',
-                path: '/dropdown',
-                translate: 'sidebar.nav.element.DROPDOWN'
-            },
-            {
-                name: 'Nestable',
-                path: '/nestable'
-            },
-            {
-                name: 'Sortable',
-                path: '/sortable'
-            },
-            {
-                name: 'Cards',
-                path: '/cards',
-                translate: 'sidebar.nav.element.CARD'
-            },
-            {
-                name: 'Grid',
-                path: '/grid',
-                translate: 'sidebar.nav.element.GRID'
-            },
-            {
-                name: 'Grid Masonry',
-                path: '/grid-masonry',
-                translate: 'sidebar.nav.element.GRID_MASONRY'
-            },
-            {
-                name: 'Typography',
-                path: '/typography',
-                translate: 'sidebar.nav.element.TYPO'
-            },
-            {
-                name: 'IconsFont',
-                path: '/icons-font',
-                translate: 'sidebar.nav.element.FONT_ICON',
-                label: { value: '+400', color: 'success' }
-            },
-            {
-                name: 'IconsWeather',
-                path: '/icons-weather',
-                translate: 'sidebar.nav.element.WEATHER_ICON',
-                label: { value: '+100', color: 'success' }
-            },
-            {
-                name: 'Colors',
-                path: '/colors',
-                translate: 'sidebar.nav.element.COLOR'
-            }
-        ]
-    },
+    // ,{
+    //     name: 'Elements',
+    //     icon: 'icon-chemistry',
+    //     translate: 'sidebar.nav.element.ELEMENTS',
+    //     submenu: [{
+    //             name: 'Buttons',
+    //             path: '/buttons',
+    //             translate: 'sidebar.nav.element.BUTTON'
+    //         },
+    //         {
+    //             name: 'Notifications',
+    //             path: '/notifications',
+    //             translate: 'sidebar.nav.element.NOTIFICATION'
+    //         },
+    //         {
+    //             name: 'Sweetalert',
+    //             path: '/sweetalert'
+    //         },
+    //         {
+    //             name: 'Carousel',
+    //             path: '/carousel',
+    //             translate: 'sidebar.nav.element.INTERACTION'
+    //         },
+    //         {
+    //             name: 'Spinners',
+    //             path: '/spinners',
+    //             translate: 'sidebar.nav.element.SPINNER'
+    //         },
+    //         {
+    //             name: 'Dropdown',
+    //             path: '/dropdown',
+    //             translate: 'sidebar.nav.element.DROPDOWN'
+    //         },
+    //         {
+    //             name: 'Nestable',
+    //             path: '/nestable'
+    //         },
+    //         {
+    //             name: 'Sortable',
+    //             path: '/sortable'
+    //         },
+    //         {
+    //             name: 'Cards',
+    //             path: '/cards',
+    //             translate: 'sidebar.nav.element.CARD'
+    //         },
+    //         {
+    //             name: 'Grid',
+    //             path: '/grid',
+    //             translate: 'sidebar.nav.element.GRID'
+    //         },
+    //         {
+    //             name: 'Grid Masonry',
+    //             path: '/grid-masonry',
+    //             translate: 'sidebar.nav.element.GRID_MASONRY'
+    //         },
+    //         {
+    //             name: 'Typography',
+    //             path: '/typography',
+    //             translate: 'sidebar.nav.element.TYPO'
+    //         },
+    //         {
+    //             name: 'IconsFont',
+    //             path: '/icons-font',
+    //             translate: 'sidebar.nav.element.FONT_ICON',
+    //             label: { value: '+400', color: 'success' }
+    //         },
+    //         {
+    //             name: 'IconsWeather',
+    //             path: '/icons-weather',
+    //             translate: 'sidebar.nav.element.WEATHER_ICON',
+    //             label: { value: '+100', color: 'success' }
+    //         },
+    //         {
+    //             name: 'Colors',
+    //             path: '/colors',
+    //             translate: 'sidebar.nav.element.COLOR'
+    //         }
+    //     ]
+    // },
     // {
     //     name: 'Forms',
     //     icon: 'icon-note',

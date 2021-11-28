@@ -36,3 +36,7 @@ export const menuinfo = `/mobile/info`;
 export const addinfo = `/mobile/add/info`;
 export const detailinfo = `/mobile/detail/info`;
 export const editinfo = `/mobile/edit/info`;
+export const menucallplan = `/mobile/callplan`;
+export const addcallplan = `/mobile/add/callplan`;
+export const detailcallplan = `/mobile/detail/callplan`;
+export const editcallplan = `/mobile/edit/callplan`;

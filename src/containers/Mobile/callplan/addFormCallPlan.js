@@ -3,7 +3,7 @@ import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
 import {Input,Button,Card, CardBody} from 'reactstrap';
-import Grid                         from './gridPermissions';
+import Grid                         from './gridCustomer';
 import * as actions                 from '../../../store/actions';
 import {DropdownList}      from 'react-widgets';
 import { IconButton } from '@material-ui/core';
@@ -14,57 +14,58 @@ import {useDispatch}   from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
+// import { AddInternalUser_Permission } from '../../../../shared/PermissionForFeatures';
 
-
-export default function AddFormRole(props) {
+export default function AddFormCallPlan(props) {
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
     const [InputName, setInputName] = useState('');
     const [ErrInputName, setErrInputName] = useState('');
-    const [InputDescriptions, setInputDescriptions] = useState('');
-    const [ErrInputDescriptions, setErrInputDescriptions] = useState('');
-    const [ListPermissions, setListPermissions] = useState([]);
-    const [SelPermissions, setSelPermissions] = useState('');
-    const [RowsPermissions, setRowsPermissions] = useState([]);
+    const [InputDescription, setInputDescription] = useState('');
+    const [ErrInputDescription, setErrInputDescription] = useState('');
+
+    const [ListCustomer, setListCustomer] = useState([]);
+    const [SelCustomer, setSelCustomer] = useState('');
+    const [hiddenColumns] = useState(['id']);
+    const [RowsCustomer, setRowsCustomer] = useState([]);
     const [columns] = useState([
         {name: 'id', title: 'id'},
-        {name: 'descriptions', title: i18n.t('label_DESCRIPTION')},
+        {name: 'name', title: i18n.t('label_NAME')},
+        {name: 'address', title: i18n.t('label_ADDRESS')},
+        {name: 'phone', title: i18n.t('label_CONTACT_NUMBER')},
     ]);
-    const [StartdefaultHeight] = useState(150);
+    const [StartdefaultHeight] = useState(250);
     const [defaultHeight, setdefaultHeight] = useState(StartdefaultHeight+'px');
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getRoleData('/template',successHandler, errorHandler));
+        dispatch(actions.getCallPlanData('/template',successHandlerTemplate, errorHandler));
     }, []);
 
-    function successHandler(data) {
+    function successHandlerTemplate(data) {
         if(data.data){
-            setListPermissions(data.data.reduce((obj, el) => (
+            setListCustomer(data.data.customerOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.descriptions
+                    label: el.nama,
+                    customer:el
                 }]
             ), []));
+
+            // let arr = [];
+            // for(let i=1; i < 2100; i++){
+            //     arr.push({value:i,label:'Urutan Ke - '+i});
+            // }
+            // setListCustomer(arr);
         }
         setLoading(false);
     }
 
-    const handleInputName = (data) =>{
-        let val = data.target.value;
-        setInputName(val);
-    }
-
-    const handleInputDescriptions = (data) =>{
-        let val = data.target.value;
-        setInputDescriptions(val);
-    }
-
-    const handleChangePermission = (data) =>{
+    const handleChangeCustomer = (data) =>{
         let id = data?.value ? data.value : '';
-        setSelPermissions(id);
+        setSelCustomer(id);
     }
 
     const setHeightGridList = (dataval) =>{
@@ -77,46 +78,78 @@ export default function AddFormRole(props) {
         }
     }
 
-    const handleAddListPermissions = () => {
+    const handleAddList = () => {
         let dataval = [];
-        let filterid = RowsPermissions.filter(output => output.id == SelPermissions);
+        let filterid = RowsCustomer.filter(output => output.id == SelCustomer);
         if(filterid.length == 0){
-            let listfilteroutput = ListPermissions.filter(output => output.value == SelPermissions);
+            let listfilteroutput = ListCustomer.filter(output => output.value == SelCustomer);
             if(listfilteroutput.length > 0){
-                dataval = [...RowsPermissions];
+                dataval = [...RowsCustomer];
                 let filter = listfilteroutput[0];
                 let obj = {
                     'id':filter.value,
-                    'descriptions':filter.label
+                    'name':filter.label,
+                    'address': '',//filter.customer.address,
+                    'phone':'',//filter.customer.phone,
                 };
                 dataval.push(obj);
-                setRowsPermissions(dataval);
+                setRowsCustomer(dataval);
                 setHeightGridList(dataval);
             }
-        }
-        
+        }   
     }
 
     const handleSubstractListDetailTrans = (id) =>{
-        let listfilter = RowsPermissions.filter(output => output.id !== id);
+        let listfilter = RowsCustomer.filter(output => output.id !== id);
         let dataval = [...listfilter];
-        setRowsPermissions(dataval);
+        setRowsCustomer(dataval);
         setHeightGridList(dataval);
     }
 
     const checkColumnMandatory = () => {
         let flag = true;
         setErrInputName('');
-        setErrInputDescriptions('');
+        setErrInputDescription('');
+        
         if(InputName == ''){
             setErrInputName(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(InputDescriptions == ''){
-            setErrInputDescriptions(i18n.t('label_REQUIRED'));
+        if(InputDescription == ''){
+            setErrInputDescription(i18n.t('label_REQUIRED'));
             flag = false;
         }
         return flag;
+    }
+
+    const executeSubmit = () => {
+        let flag = checkColumnMandatory();
+        if(flag){
+            setLoading(true);
+            let obj = new Object();
+            obj.nama = InputName;
+            obj.description = InputDescription;
+            let listcustomer= [];
+            for(let i=0; i < RowsCustomer.length > 0 ; i++){
+                let rows = RowsCustomer[i];
+                listcustomer.push(rows.id);
+            }
+            obj.customers = listcustomer;
+            dispatch(actions.submitAddCallPlan(obj,succesHandlerSubmit, errorHandler));
+        }
+    }
+
+    const succesHandlerSubmit = (data) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.goBack();
+            }
+        })
     }
 
     const submitHandler = () => {
@@ -137,34 +170,14 @@ export default function AddFormRole(props) {
           })
     }
 
-    const executeSubmit = () => {
-        let flag = checkColumnMandatory();
-        if(flag){
-            setLoading(true);
-            let obj = new Object();
-            obj.nama = InputName;
-            obj.descriptions = InputDescriptions;
-            let listpermissions = [];
-            for(let i=0; i < RowsPermissions.length > 0 ; i++){
-                let rows = RowsPermissions[i];
-                listpermissions.push(rows.id);
-            }
-            obj.permissions = listpermissions;
-            dispatch(actions.submitAddRole(obj,succesHandlerSubmit, errorHandler));
-        }
+    const handleInputName = (data) =>{
+        let val = data.target.value;
+        setInputName(val);
     }
 
-    const succesHandlerSubmit = (data) => {
-        setLoading(false);
-        Swal.fire({
-            icon: 'success',
-            title: 'SUCCESS',
-            text: i18n.t('label_SUCCESS')
-        }).then((result) => {
-            if (result.isConfirmed) {
-                history.goBack();
-            }
-        })
+    const handleInputDescription = (data) =>{
+        let val = data.target.value;
+        setInputDescription(val);
     }
 
     const errorHandler = (data) => {
@@ -180,10 +193,10 @@ export default function AddFormRole(props) {
         <Formik
         initialValues={
             {
-                nama:InputName,
-                descriptions:InputDescriptions,
-                permissions:SelPermissions,
-            }
+            nama:InputName,
+            description:InputDescription,
+            customer:SelCustomer
+            }   
         }
         validate={values => {
             const errors = {};
@@ -208,14 +221,15 @@ export default function AddFormRole(props) {
                     } = formikProps;
 
                     return(
-                        <form className="mb-6" onSubmit={handleSubmit}  name="FormAddPermissions">
+                        <form className="mb-6" onSubmit={handleSubmit}  name="FormAddCallPlan">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('label_ADD_ROLE')}</span>
+                            <span>{i18n.t('label_ADD_CALL_PLAN')}</span>
                             </div>
+
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
-                            <label className="mt-3 form-label required" htmlFor="name">
+                            <label className="mt-3 form-label required" htmlFor="namebranch">
                                 {i18n.t('label_NAME')}
                             </label>
                             <Input
@@ -233,28 +247,28 @@ export default function AddFormRole(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputName}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="descriptions">
+                            <label className="mt-3 form-label required" htmlFor="namebranch">
                                 {i18n.t('label_DESCRIPTION')}
                             </label>
                             <Input
-                                name="descriptions"
+                                name="description"
                                 // className={
                                 //     touched.namebranch && errors.namebranch
                                 //         ? "w-50 input-error"
                                 //         : "w-50"
                                 // }
                                 type="text"
-                                id="descriptions"
-                                onChange={val => handleInputDescriptions(val)}
+                                id="description"
+                                onChange={val => handleInputDescription(val)}
                                 onBlur={handleBlur}
-                                value={values.descriptions}
+                                value={values.description}
                             />
-                            <div className="invalid-feedback-custom">{ErrInputDescriptions}</div>
+                            <div className="invalid-feedback-custom">{ErrInputDescription}</div>
 
                             <div className="row mt-0">
                             <div className="mt-0 col-lg-11 ft-detail mb-5" style={{paddingRight:'0px'}}>
-                            <label className="mt-3 form-label required" htmlFor="Permissions">
-                                {i18n.t('Permissions')}
+                            <label className="mt-3 form-label required" htmlFor="customer">
+                                {i18n.t('label_CUSTOMER')}
                             </label>
 
                             <DropdownList
@@ -262,36 +276,34 @@ export default function AddFormRole(props) {
                                 //     touched.branch && errors.branch
                                 //         ? "input-error" : ""
                                 // }
-                                name="permissions"
+                                name="customer"
                                 filter='contains'
                                 placeholder={i18n.t('select.SELECT_OPTION')}
                                 
-                                onChange={val => handleChangePermission(val)}
-                                onBlur={val => setFieldTouched("permissions", val?.value ? val.value : '')}
-                                data={ListPermissions}
+                                onChange={val => handleChangeCustomer(val)}
+                                onBlur={val => setFieldTouched("customer", val?.value ? val.value : '')}
+                                data={ListCustomer}
                                 textField={'label'}
                                 valueField={'value'}
                                 // style={{width: '25%'}}
                                 // disabled={values.isdisabledcountry}
-                                value={values.permissions}
+                                value={values.customer}
                             />
                             </div>
 
                             <div className="mt-0 col-lg-1 ft-detail mb-5" style={{paddingLeft:'0px',paddingTop:'35px'}}>
                             <IconButton color={'primary'}
-                                onClick={() => handleAddListPermissions()}
+                                onClick={() => handleAddList()}
                             >
                                 <AddIcon style={{ fontSize: 30 }}/>
                             </IconButton>
                             </div>
 
-
                             </div>
 
                             </div>
-
                             </div>
-                            
+
                             <div className="row justify-content-center" style={{marginTop:'-30px',marginBottom:'20px'}}>
                             <Button
                             // disabled={props.activeStep === 0}
@@ -314,9 +326,9 @@ export default function AddFormRole(props) {
                             <CardBody>
                             <div className="table-responsive" style={{height:defaultHeight}}>
                                 <Grid
-                                    rows={RowsPermissions}
+                                    rows={RowsCustomer}
                                     columns={columns}
-                                    totalCounts={RowsPermissions.length}
+                                    totalCounts={RowsCustomer.length}
                                     loading={loading}
                                     columnextension={[]}
                                     handleSubstractList={handleSubstractListDetailTrans}
@@ -324,15 +336,14 @@ export default function AddFormRole(props) {
                             </div>
                             </CardBody>
                             </Card>
+
                             </ContentWrapper>
                             {loading && <Loading/>}
                         </form>
                     )
-
                 }
             }
         </Formik>
 
     )
-
 }

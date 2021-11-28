@@ -25,16 +25,15 @@ import {useTranslation}             from 'react-i18next';
 import {useHistory}                 from 'react-router-dom';
 import Tooltip                      from '@material-ui/core/Tooltip';
 import IconButton                   from '@material-ui/core/IconButton';
-import IconView from '../../../../components/Icons/iconView';
-import EditIcon from '@material-ui/icons/Edit';
-import IconAdd from '../../../../components/Icons/IconAdd';
-import * as pathmenu           from '../../../shared/pathMenu';
-import {Loading}                    from '../../../../components/Common/Loading';
+import IconView from '../../../components/Icons/iconView';
+// import EditIcon from '@material-ui/icons/Edit';
+import IconAdd from '../../../components/Icons/IconAdd';
+import * as pathmenu           from '../../shared/pathMenu';
+import {Loading}                    from '../../../components/Common/Loading';
 
 const FilterIcon = ({type, ...restProps}) => {
     return <TableFilterRow.Icon type={type} {...restProps} />;
 };
-
 const StatusFormatter = ({value}) => (
     <b>
         {value.id === 300 ? <span className="ml-auto circle bg-success circle-lg"/> : null}
@@ -55,10 +54,16 @@ const AddButton = ({onExecute}) => {
     return (
         <div style={{textAlign: 'center'}} title={i18n.t('grid.ADD')}>
             <Tooltip title={i18n.t('grid.ADD')}>
-                <IconButton color={'primary'} onClick={() => history.push(pathmenu.addproducttype)} >
+                <IconButton color={'primary'} onClick={() => history.push(pathmenu.addcallplan)} >
                     <IconAdd/>
                 </IconButton>
             </Tooltip>
+            {/*<Button*/}
+                {/*color="primary"*/}
+                {/*onClick={() => history.push('/member/add')}*/}
+            {/*>*/}
+                {/*{i18n.t('grid.ADD')}*/}
+            {/*</Button>*/}
         </div>
     );
 };
@@ -70,11 +75,25 @@ const CellComponent = ({children, row, ...restProps}) => {
     return (
         <TableEditColumn.Cell row={row} {...restProps}>
             {children}
-            <Tooltip title={i18n.t('grid.EDIT')}>
+            {/* <Tooltip title={i18n.t('tooltip.UNLOCKMOBILEUSER')}>
+            <IconButton color={'primary'}
+                onClick={() => isUnlockMobileUser(row.id,dispatch)}
+            >
+                    <LockOpen/>
+            </IconButton>
+            </Tooltip> */}
+            {/* <Tooltip title={i18n.t('tooltip.DELETEUSER')}>
+            <IconButton color={'primary'}
+                onClick={() => isDeleteAlert(row.id,row.name,dispatch,i18n)}
+            >
+                    <IconDelete/>
+            </IconButton>
+            </Tooltip> */}
+            <Tooltip title={i18n.t('grid.VIEW')}>
                 <IconButton color={'primary'} 
-                            onClick={() => history.push(pathmenu.editproducttype +'/'+ row.id)}
+                            onClick={() => history.push(pathmenu.detailcallplan +'/'+ row.id)}
                 >
-                    <EditIcon/>
+                    <IconView/>
                 </IconButton>
             </Tooltip>
         </TableEditColumn.Cell>
@@ -94,7 +113,8 @@ const Command = ({id, onExecute}) => {
     );
 };
 
-const ProductTypeGrid = props => {
+
+const CallPlanGrid = props => {
     const {i18n} = useTranslation();
     const [hiddenColumnNames] = useState(['id']);
     const [pageSize, setPageSize] = useState(10);
@@ -197,6 +217,7 @@ const ProductTypeGrid = props => {
             </Grid>
             {props.loading && <Loading/>}            
         </Paper>
+        
     );
 };
-export default ProductTypeGrid;
+export default CallPlanGrid;

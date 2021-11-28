@@ -81,21 +81,7 @@ const InfoAnswerListGrid = props => {
         return (
             <TableEditColumn.Cell row={row} {...restProps}>
                 {children}
-                {/* <Tooltip title={i18n.t('tooltip.UNLOCKMOBILEUSER')}>
-                <IconButton color={'primary'}
-                    onClick={() => isUnlockMobileUser(row.id,dispatch)}
-                >
-                        <LockOpen/>
-                </IconButton>
-                </Tooltip> */}
-                {/* <Tooltip title={i18n.t('tooltip.DELETEUSER')}>
-                <IconButton color={'primary'}
-                    onClick={() => isDeleteAlert(row.id,row.name,dispatch,i18n)}
-                >
-                        <IconDelete/>
-                </IconButton>
-                </Tooltip> */}
-                <Tooltip title={i18n.t('tooltip.VIEWUSER')}>
+                <Tooltip title={i18n.t('grid.DELETE')}>
                     <IconButton color={'primary'} ///MobileUser/detail
                         onClick={() => props.handleSubstractList(row.id)}
                         hidden={props.handleSubstractList?false:true}

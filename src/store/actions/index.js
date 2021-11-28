@@ -51,5 +51,7 @@ export {
     getCallPlanData,
     getInfoData,
     submitAddInfo,
-    submitEditInfo
+    submitEditInfo,
+    submitAddCallPlan,
+    submitEditCallPlan
 } from './mobile';
