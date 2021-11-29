@@ -35,7 +35,8 @@ export {
     submitEditProductType,
     getProductData,
     submitAddProduct,
-    submitEditProduct
+    submitEditProduct,
+    getReportData
 } from './admin';
 
 export {

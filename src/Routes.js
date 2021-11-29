@@ -166,6 +166,8 @@ const addCallPlan = lazy(() => import('./containers/Mobile/callplan/addFormCallP
 const detailCallPlan = lazy(() => import('./containers/Mobile/callplan/detail'));
 const editCallPlan = lazy(() => import('./containers/Mobile/callplan/editFormCallPlan'));
 
+const reportMonitoring = lazy(() => import('./containers/Report/Mobile/reportMobileMonitoring'));
+
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -338,6 +340,7 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addcallplan} component={waitFor(addCallPlan)}/>
                             <Route path={pathmenu.detailcallplan+'/:id'} component={waitFor(detailCallPlan)}/>
                             <Route path={pathmenu.editcallplan+'/:id'} component={waitFor(editCallPlan)}/>
+                            <Route path={pathmenu.reportmonitoring} component={waitFor(reportMonitoring)}/>
                             
                                 {/*Dashboard*/}
                                 <Route path="/dashboardv1" component={waitFor(DashboardV1)}/>
