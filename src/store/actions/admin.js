@@ -224,3 +224,22 @@ export const submitEditProduct = (id,payload, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getReportData = (param,typefile, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_REPORT_DATA,
+        param: param,
+        typefile:typefile,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getReportTemplateData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_REPORT_TEMPLATE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

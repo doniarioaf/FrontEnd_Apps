@@ -12,3 +12,4 @@ export const baseCallPlanURL = param => `${baseApiURL}/callplan${param}`;
 export const baseProductTypeURL = param => `${baseApiURL}/producttype${param}`;
 export const baseProductURL = param => `${baseApiURL}/product${param}`;
 export const baseInfoURL = param => `${baseApiURL}/info${param}`;
+export const baseReportURL = param => `${baseApiURL}/report${param}`;

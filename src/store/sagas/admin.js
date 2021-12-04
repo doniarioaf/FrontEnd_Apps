@@ -1,6 +1,6 @@
 import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
-    baseProductTypeURL,baseProductURL} from '../../containers/shared/apiURL';
+    baseProductTypeURL,baseProductURL,baseReportURL} from '../../containers/shared/apiURL';
 
 export function* getDataBranchSaga(action) {
     try {
@@ -264,6 +264,43 @@ export function* submitEditProductSaga(action) {
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+
+export function* getReportSaga(action) {
+    try {
+        let resType = '';
+        if(action.typefile === 'application/pdf' || action.typefile === 'application/vnd.ms-excel' || action.typefile === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+            resType = 'arraybuffer'
+        }
+        // const response = yield axios.get(baseReportURL(action.param)).then(response => response.data);
+        const response = yield axios.get(baseReportURL(action.param), {
+            //arraybuffer
+            responseType: resType,
+            headers: {
+                Accept: action.typefile,
+            },
+        }).then(response => response.data)
+
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        console.log('error ',error);
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* getReportTemplateSaga(action) {
+    try {
+        const response = yield axios.get(baseReportURL(action.param)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
         action.errorHandler(error);
     }

@@ -82,7 +82,7 @@ const Menu = [
                 translate: 'label_INFORMATION',
             },{
                 name: 'Monitoring',
-                path: '',
+                path: pathmenu.reportmonitoring,
                 translate: 'Monitoring',
             }
         ]

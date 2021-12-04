@@ -19,3 +19,14 @@ export const mappingMessageError = (error) =>{
     }
     return arrMsg
 }
+
+export const listTypeReport = () => {
+    var tempOutPut = [];
+    
+    // tempOutPut.push({"value":"HTML","label":"Normal Format","typeapi":"text/html"});
+    tempOutPut.push({"value":"XLSX","label":"Excel Format","typeapi":"application/vnd.ms-excel"});
+    // tempOutPut.push({"value":"XLS","label":"Excel 97-2003 Format","typeapi":"application/vnd.ms-excel"});
+    tempOutPut.push({"value":"PDF","label":"PDF Format","typeapi":"application/pdf"});
+
+    return tempOutPut;
+}
