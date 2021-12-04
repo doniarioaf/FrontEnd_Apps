@@ -293,3 +293,15 @@ export function* getReportSaga(action) {
         action.errorHandler(error);
     }
 }
+
+export function* getReportTemplateSaga(action) {
+    try {
+        const response = yield axios.get(baseReportURL(action.param)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        console.log('error ',error);
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}

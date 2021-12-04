@@ -234,3 +234,12 @@ export const getReportData = (param,typefile, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getReportTemplateData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_REPORT_TEMPLATE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
