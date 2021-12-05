@@ -68,15 +68,31 @@ export default function ReportMobileMonitoring(props) {
             let startDate = moment(start).format('YYYY-MM-DD');
             let thruDate = moment(end).format('YYYY-MM-DD');
             let listId = UserMobile.join(',');
-            let pathURL = '/monitoring?idusermobile='+listId+'&from='+startDate+'&thru='+thruDate
+            let typereport = output; 
+            let pathURL = '/monitoring?idusermobile='+listId+'&from='+startDate+'&thru='+thruDate+'&type='+typereport;
             if(output == 'XLSX'){
                 dispatch(actions.getReportData(pathURL,'application/vnd.ms-excel',succesHandlerSubmit, errorHandler));
+            }else{
+                dispatch(actions.getReportData(pathURL,'application/pdf',succesHandlerSubmitPDF, errorHandler));
             }
         }
-        
-        
     }
 
+
+    const succesHandlerSubmitPDF = (data) => {
+        var blob = new Blob([data,{ type: 'application/pdf' }]);
+        var dataUrl = URL.createObjectURL(blob);
+
+        // create <a> tag dinamically
+        var fileLink = document.createElement('a');
+        fileLink.href = dataUrl;//filedoc;
+
+        // it forces the name of the downloaded file
+        fileLink.download = 'ReportMonitoring.pdf';
+        fileLink.click();
+        fileLink.remove();
+        setLoading(false);
+    }
     const succesHandlerSubmit = (data) => {
         var blob = new Blob([data],{ type: 'application/vnd.ms-excel'});
         var dataUrl = URL.createObjectURL(blob);
