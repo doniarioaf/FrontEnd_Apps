@@ -1,6 +1,6 @@
 import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
-    baseProductTypeURL,baseProductURL,baseReportURL} from '../../containers/shared/apiURL';
+    baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL} from '../../containers/shared/apiURL';
 
 export function* getDataBranchSaga(action) {
     try {
@@ -301,6 +301,72 @@ export function* getReportTemplateSaga(action) {
         action.successHandler(response);
     }catch (error) {
         console.log('error ',error);
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* submitDeleteBranchSaga(action) {
+    try {
+        const response = yield axios.delete(baseBranchURL('/'+action.id)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* submitDeleteRoleSaga(action) {
+    try {
+        const response = yield axios.delete(baseRoleURL('/'+action.id)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* submitDeleteUserSaga(action) {
+    try {
+        const response = yield axios.delete(baseUserAppsURL('/'+action.id)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* submitDeleteUserMobileSaga(action) {
+    try {
+        const response = yield axios.delete(baseUserMobileURL('/'+action.id)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* submitDeleteCustomerSaga(action) {
+    try {
+        const response = yield axios.delete(baseCustomerURL('/'+action.id)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* submitDeleteCustomerTypeSaga(action) {
+    try {
+        const response = yield axios.delete(baseCustomerTypeURL('/'+action.id)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
         action.errorHandler(error);
     }

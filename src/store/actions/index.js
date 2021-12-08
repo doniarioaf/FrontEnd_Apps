@@ -37,7 +37,13 @@ export {
     submitAddProduct,
     submitEditProduct,
     getReportData,
-    getReportTemplateData
+    getReportTemplateData,
+    submitDeleteBranch,
+    submitDeleteRole,
+    submitDeleteUser,
+    submitDeleteUserMobile,
+    submitDeleteCustomer,
+    submitDeleteCustomerType
 } from './admin';
 
 export {
@@ -55,5 +61,7 @@ export {
     submitAddInfo,
     submitEditInfo,
     submitAddCallPlan,
-    submitEditCallPlan
+    submitEditCallPlan,
+    submitDeleteCallPlan,
+    submitDeleteInfo
 } from './mobile';
