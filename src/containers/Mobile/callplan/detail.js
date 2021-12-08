@@ -116,6 +116,37 @@ import React, {useState,
             }
     }
 
+    const submitHandlerDelete = () => {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                dispatch(actions.submitDeleteCallPlan(id,succesHandlerSubmit, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+    }
+
+    const succesHandlerSubmit = (data) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(pathmenu.menucallplan);
+            }
+        })
+    }
+
     function errorHandler(error) {
         setLoading(false);
         Swal.fire({
@@ -218,6 +249,7 @@ import React, {useState,
                         </div>)
                         :(<div>
                             <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editcallplan+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={false}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={value.isactive?value.isactive == true?true:false:true}  onClick={() => submitHandlerActivated()}>{i18n.t('Activated')}</MenuItem>
                             <MenuItem hidden={value.isactive?value.isactive == true?false:true:true}  onClick={() => submitHandlerUnActivated()}>{i18n.t('UnActivated')}</MenuItem> */}
                             {/* <MenuItem hidden={false}  onClick={() => submitHandlerDelete()}>{i18n.t('Delete')}</MenuItem> */}

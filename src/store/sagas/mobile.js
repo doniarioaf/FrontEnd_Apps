@@ -68,3 +68,27 @@ export function* submitEditCallPlanSaga(action) {
         action.errorHandler(error);
     }
 }
+
+export function* submitDeleteCallPlanSaga(action) {
+    try {
+        const response = yield axios.delete(baseCallPlanURL('/'+action.id)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        console.log('error ',error);
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* submitDeleteInfoSaga(action) {
+    try {
+        const response = yield axios.delete(baseInfoURL('/'+action.id)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        console.log('error ',error);
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}

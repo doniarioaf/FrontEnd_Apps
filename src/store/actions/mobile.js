@@ -55,3 +55,21 @@ export const submitEditCallPlan = (id,payload, successHandler, errorHandler) => 
         errorHandler,
     }
 }
+
+export const submitDeleteCallPlan = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_CALL_PLAN,
+        id:id,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteInfo = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_INFO,
+        id:id,
+        successHandler,
+        errorHandler,
+    }
+}

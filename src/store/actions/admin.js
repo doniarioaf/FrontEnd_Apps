@@ -28,6 +28,15 @@ export const submitEditBranch = (id,payload, successHandler, errorHandler) => {
     }
 }
 
+export const submitDeleteBranch = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_BRANCH,
+        id:id,
+        successHandler,
+        errorHandler,
+    }
+}
+
 export const getCompanyData = (param, successHandler, errorHandler) => {
     return {
         type: actions.GET_COMPANY_DATA,
@@ -239,6 +248,51 @@ export const getReportTemplateData = (param, successHandler, errorHandler) => {
     return {
         type: actions.GET_REPORT_TEMPLATE_DATA,
         param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteRole = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_ROLE,
+        id:id,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteUser = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_USER,
+        id:id,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteUserMobile = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_USER_MOBILE,
+        id:id,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteCustomer = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_CUSTOMER,
+        id:id,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteCustomerType = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_CUSTOMER_TYPE,
+        id:id,
         successHandler,
         errorHandler,
     }
