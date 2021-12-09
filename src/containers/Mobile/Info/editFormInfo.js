@@ -62,6 +62,11 @@ export default function EditFormInfo(props) {
         let infoheader = data.data.infoheader;
         setInputQuestion(infoheader.question);
         setSelType(infoheader.type);
+        if(infoheader.type === 'TA'){
+            setShowAnswer(false);
+        }else{
+            setShowAnswer(true);
+        }
         setInputSequence(infoheader.sequence);
         setSelCustomerType(infoheader.idcustomertype);
         if(data.data.detail){
@@ -171,9 +176,10 @@ export default function EditFormInfo(props) {
             obj.idcustomertype = SelCustomerType;
             let listanswer = [];
             for(let i=0; i < RowsAnswer.length; i++){
-                listanswer.push(RowsAnswer[i].answer);
+                let objList = {id:RowsAnswer[i].id,answer:RowsAnswer[i].answer};
+                listanswer.push(objList);
             }
-            obj.answer = listanswer;
+            obj.answers = listanswer;
             
             dispatch(actions.submitEditInfo(id,obj,succesHandlerSubmit, errorHandler));
         }
@@ -445,14 +451,36 @@ export default function EditFormInfo(props) {
                             <Card>
                             <CardBody>
                             <div className="table-responsive" style={{height:defaultHeight}}>
-                                <Grid
+                                {
+                                    values.infotype === 'TA'?
+                                    (
+                                        <Grid
+                                        rows={RowsAnswer}
+                                        columns={columns}
+                                        totalCounts={RowsAnswer.length}
+                                        loading={loading}
+                                        columnextension={[]}
+                                        // handleSubstractList={handleSubstractListDetailTrans}
+                                    />
+                                    ):(
+                                        <Grid
+                                        rows={RowsAnswer}
+                                        columns={columns}
+                                        totalCounts={RowsAnswer.length}
+                                        loading={loading}
+                                        columnextension={[]}
+                                        handleSubstractList={handleSubstractListDetailTrans}
+                                    />
+                                    )
+                                }
+                                {/* <Grid
                                     rows={RowsAnswer}
                                     columns={columns}
                                     totalCounts={RowsAnswer.length}
                                     loading={loading}
                                     columnextension={[]}
                                     handleSubstractList={handleSubstractListDetailTrans}
-                                />
+                                /> */}
                             </div>
                             </CardBody>
                             </Card>
