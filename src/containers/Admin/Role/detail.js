@@ -99,8 +99,19 @@ import React, {useState,
                 }
             ], []);
             setRowsPermissions(theData);
+            setHeightGridList(theData);
         }     
         setLoading(false);
+    }
+
+    const setHeightGridList = (dataval) =>{
+        if(dataval.length > 2){
+            let height = ( 50 * (dataval.length - 2) ) + StartdefaultHeight;
+            if(height > 600){
+                height = 600;
+            }
+            setdefaultHeight(height+'px');
+        }
     }
 
     const submitHandlerDelete = () => {

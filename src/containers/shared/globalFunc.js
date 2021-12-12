@@ -1,4 +1,6 @@
 import * as key from '../../containers/shared/constantKey';
+import * as permissionmenu from '../../containers/shared/permissionMenu';
+import CryptoJS from 'crypto-js';
 
 export const deleteSessionAndLocalStorage = () =>{
     localStorage.removeItem(key.token);
@@ -29,4 +31,85 @@ export const listTypeReport = () => {
     tempOutPut.push({"value":"PDF","label":"PDF Format","typeapi":"application/pdf"});
 
     return tempOutPut;
+}
+
+export const getPermissions = ()  =>{
+    const permissionenc = localStorage.getItem(key.permissions) ? localStorage.getItem(key.permissions):[];
+    try{
+        const bytes = CryptoJS.AES.decrypt(permissionenc, key.keyEcncrypt);
+        const permissionsuser = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        // let idx = permissionsuser.indexOf('');
+        return permissionsuser;
+    }catch(err){
+        // window.location.href = '/';
+        return [];
+    }
+}
+
+export const isGetPermissions = (listPermission,action)  =>{
+    // if(action === 'READ'){
+    //     if(getPermissions().indexOf('ALL_FUNCTIONS_READ') > -1 || getPermissions().indexOf('ALL_FUNCTIONS') > -1){
+    //         return false;
+    //     }
+    // }else if(action === 'TRANSACTION'){
+    //     if(getPermissions().indexOf('ALL_FUNCTIONS') > -1){
+    //         return false;
+    //     }
+    // }
+
+    if(getPermissions().indexOf('SUPERUSER') > -1){
+        return true;
+    }else if(listPermission.length > 0){
+        let countPermission = 0;
+        for (var i = 0; i < listPermission.length; i++) {
+            if(getPermissions().indexOf(listPermission[i]) > -1){
+                countPermission++;
+            }
+        }
+        return listPermission.length == countPermission;
+    }
+    return false;
+}
+
+export const handlePermissionMenu = (menu)  =>{
+    let listMenu = menu;
+    let retMenu = [];
+    if(listMenu.length > 0){
+        retMenu.push(listMenu[0]);
+    }
+    if(listMenu.length > 1){
+        // let menuHeader = [];
+        for(let i=1; i < listMenu.length; i++){
+            let valMenu = listMenu[i];
+            // if(valMenu.name === 'Administrator'){
+                if(valMenu.submenu){
+                    if(valMenu.submenu.length > 0){
+                        let listsubmenu = handleSubMenu(valMenu.submenu);
+                        if(listsubmenu.length > 0){
+                            let header = {
+                                name: valMenu.name,
+                                icon: valMenu.icon,
+                                translate: valMenu.translate,
+                                submenu:listsubmenu
+                            }
+                            retMenu.push(header);
+                        }
+                    }
+                }
+            // }
+        }
+    }
+    
+    return retMenu;
+}
+
+const handleSubMenu = (submenu)  =>{
+    let listsubmenu = [];
+    for(let ii=0; ii < submenu.length; ii++){
+        let permissionSubMenu = submenu[ii].permission;
+        if(isGetPermissions(permissionSubMenu,'')){
+            listsubmenu.push(submenu[ii]);
+        }
+    }
+    return listsubmenu;
 }

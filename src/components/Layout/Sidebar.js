@@ -12,6 +12,7 @@ import SidebarRun from './Sidebar.run';
 import SidebarUserBlock from './SidebarUserBlock';
 
 import Menu from '../../Menu.js';
+import {handlePermissionMenu}           from '../../containers/shared/globalFunc';
 
 /** Component to display headings on sidebar */
 const SidebarItemHeader = ({item}) => (
@@ -134,7 +135,7 @@ class Sidebar extends Component {
 
                             { /* Iterates over all sidebar items */ }
                             {
-                                Menu.map((item, i) => {
+                                handlePermissionMenu(Menu).map((item, i) => {
                                     // heading
                                     if(this.itemType(item) === 'heading')
                                         return (
