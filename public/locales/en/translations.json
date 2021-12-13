@@ -55,6 +55,8 @@
   "label_ADD_INFORMATION":"Add Information",
   "label_EDIT_INFORMATION":"Edit Information",
   "label_SEQUENCE":"Sequence",
+  "label_NOT_OPEN_THIS_PAGE":"Oopss, Can't Open This Page",
+  "label_AUTHORIZED":"User Is Not Authorized",
   "grid": {
     "ADD": "Add",
     "EDIT": "Edit",

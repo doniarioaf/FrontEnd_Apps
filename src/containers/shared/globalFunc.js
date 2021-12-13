@@ -1,5 +1,4 @@
 import * as key from '../../containers/shared/constantKey';
-import * as permissionmenu from '../../containers/shared/permissionMenu';
 import CryptoJS from 'crypto-js';
 
 export const deleteSessionAndLocalStorage = () =>{
@@ -31,6 +30,13 @@ export const listTypeReport = () => {
     tempOutPut.push({"value":"PDF","label":"PDF Format","typeapi":"application/pdf"});
 
     return tempOutPut;
+}
+
+export const reloadToHomeNotAuthorize = (listPermission,action)  =>{
+    const flag =  isGetPermissions(listPermission,action);
+    if(!flag){
+        window.location.href = '/unauthorized';
+    }
 }
 
 export const getPermissions = ()  =>{

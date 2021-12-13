@@ -29,6 +29,8 @@ import IconView from '../../../components/Icons/iconView';
 import IconAdd from '../../../components/Icons/IconAdd';
 import * as pathmenu           from '../../shared/pathMenu';
 import {Loading}                    from '../../../components/Common/Loading';
+import { isGetPermissions } from '../../shared/globalFunc';
+import { addInternalUser_Permission} from '../../shared/permissionMenu';
 
 const FilterIcon = ({type, ...restProps}) => {
     return <TableFilterRow.Icon type={type} {...restProps} />;
@@ -53,7 +55,9 @@ const AddButton = ({onExecute}) => {
     return (
         <div style={{textAlign: 'center'}} title={i18n.t('grid.ADD')}>
             <Tooltip title={i18n.t('grid.ADD')}>
-                <IconButton color={'primary'} onClick={() => history.push(pathmenu.addinternaluser)} >
+                <IconButton 
+                hidden={!isGetPermissions(addInternalUser_Permission,'TRANSACTION')}
+                color={'primary'} onClick={() => history.push(pathmenu.addinternaluser)} >
                     <IconAdd/>
                 </IconButton>
             </Tooltip>

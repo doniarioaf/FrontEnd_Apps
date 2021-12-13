@@ -24,6 +24,8 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import moment                       from "moment/moment";
   import {Loading}                    from '../../../components/Common/Loading';
+  import { isGetPermissions } from '../../shared/globalFunc';
+  import { editBranch_Permission,deleteBranch_Permission } from '../../shared/permissionMenu';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -276,8 +278,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editBranch+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={false}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editBranch_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editBranch+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteBranch_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}

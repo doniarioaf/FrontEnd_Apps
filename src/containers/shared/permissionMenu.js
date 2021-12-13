@@ -1,3 +1,39 @@
+export const addCompany_Permission = ['READ_COMPANY','CREATE_COMPANY'];
+export const editCompany_Permission = ['READ_COMPANY','EDIT_COMPANY'];
+export const deleteCompany_Permission = ['DELETE_COMPANY'];
+
+export const addBranch_Permission = ['READ_BRANCH','CREATE_BRANCH'];
+export const editBranch_Permission = ['READ_BRANCH','EDIT_BRANCH'];
+export const deleteBranch_Permission = ['DELETE_BRANCH'];
+
+export const addRole_Permission = ['READ_ROLE','CREATE_ROLE'];
+export const editRole_Permission = ['READ_ROLE','EDIT_ROLE'];
+export const deleteRole_Permission = ['DELETE_ROLE'];
+
+export const addInternalUser_Permission = ['READ_USER','CREATE_USER'];
+export const editInternalUser_Permission = ['READ_USER','EDIT_USER'];
+export const deleteInternalUser_Permission = ['DELETE_USER'];
+
+export const addUserMobile_Permission = ['READ_USER_MOBILE','CREATE_USER_MOBILE'];
+export const editUserMobile_Permission = ['READ_USER_MOBILE','EDIT_USER_MOBILE'];
+export const deleteUserMobile_Permission = ['DELETE_USER_MOBILE'];
+
+export const addCustomer_Permission = ['READ_CUSTOMER','CREATE_CUSTOMER'];
+export const editCustomer_Permission = ['READ_CUSTOMER','EDIT_CUSTOMER'];
+export const deleteCustomer_Permission = ['DELETE_CUSTOMER'];
+
+export const addCustomerType_Permission = ['READ_CUSTOMERTYPE','CREATE_CUSTOMERTYPE'];
+export const editCustomerType_Permission = ['READ_CUSTOMERTYPE','EDIT_CUSTOMERTYPE'];
+export const deleteCustomerType_Permission = ['DELETE_CUSTOMERTYPE'];
+
+export const addCallPlan_Permission = ['READ_CALLPLAN','CREATE_CALLPLAN'];
+export const editCallPlan_Permission = ['READ_CALLPLAN','EDIT_CALLPLAN'];
+export const deleteCallPlan_Permission = ['DELETE_CALL_PLAN'];
+
+export const addInfo_Permission = ['READ_INFO','CREATE_INFO'];
+export const editInfo_Permission = ['READ_INFO','EDIT_INFO'];
+export const deleteInfo_Permission = ['DELETE_INFO'];
+
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];

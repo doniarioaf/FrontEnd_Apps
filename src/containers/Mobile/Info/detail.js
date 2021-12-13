@@ -22,9 +22,10 @@ import React, {useState,
   import MenuItem from '@material-ui/core/MenuItem';
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
-  import moment                       from "moment/moment";
   import {Loading}                    from '../../../components/Common/Loading';
   import Grid                         from './gridAnswer';
+  import { reloadToHomeNotAuthorize,isGetPermissions } from '../../shared/globalFunc';
+import {MenuInformation, editInfo_Permission,deleteInfo_Permission } from '../../shared/permissionMenu';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,7 +37,7 @@ import React, {useState,
   }));
 
   function Detail(props) {
-    // reloadToHomeNotAuthorize(DetailInternalUser_Permission,'READ');
+    reloadToHomeNotAuthorize(MenuInformation,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
@@ -277,8 +278,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editinfo+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={false}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editInfo_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editinfo+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteInfo_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                         </div>)
                         
                     }

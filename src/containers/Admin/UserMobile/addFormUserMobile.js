@@ -11,8 +11,11 @@ import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import Select from 'react-select';
 import {mappingMessageError} from '../../../containers/shared/globalFunc';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { addUserMobile_Permission } from '../../shared/permissionMenu';
 
 export default function AddFormUserMobile(props) {
+    reloadToHomeNotAuthorize(addUserMobile_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -49,24 +52,31 @@ export default function AddFormUserMobile(props) {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getCallPlanData('',successHandlerCallPlan, errorHandler));
-        dispatch(actions.getRoleData('',successHandler, errorHandler));
+        // dispatch(actions.getCallPlanData('',successHandlerCallPlan, errorHandler));
+        dispatch(actions.getUserMobileData('/template',successHandler, errorHandler));
     }, []);
 
-    function successHandlerCallPlan(data) {
+    // function successHandlerCallPlan(data) {
+    //     if(data.data){
+    //         setListCallPlans(data.data.reduce((obj, el) => (
+    //             [...obj, {
+    //                 value: el.id,
+    //                 label: el.nama
+    //             }]
+    //         ), []));
+    //     }
+    // }
+
+    function successHandler(data) {
         if(data.data){
-            setListCallPlans(data.data.reduce((obj, el) => (
+            setListRoles(data.data.roleoptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama
                 }]
             ), []));
-        }
-    }
 
-    function successHandler(data) {
-        if(data.data){
-            setListRoles(data.data.reduce((obj, el) => (
+            setListCallPlans(data.data.callplanoptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama

@@ -10,13 +10,14 @@ import { IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import "react-widgets/dist/css/react-widgets.css";
 import {useDispatch}   from 'react-redux';
-// import { reloadToHomeNotAuthorize } from '../../../../shared/maskFunc';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { addCompany_Permission } from '../../shared/permissionMenu';
 import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-// import { AddInternalUser_Permission } from '../../../../shared/PermissionForFeatures';
 
 export default function AddFormCompany(props) {
+    reloadToHomeNotAuthorize(addCompany_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -48,12 +49,12 @@ export default function AddFormCompany(props) {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getBranchData('/getlistbranchnotexistincompany',successHandler, errorHandler));
+        dispatch(actions.getCompanyData('/template',successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
         if(data.data){
-            setListBranch(data.data.reduce((obj, el) => (
+            setListBranch(data.data.branchoptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.name

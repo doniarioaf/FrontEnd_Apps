@@ -4,13 +4,13 @@ import {Trans, useTranslation}      from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
 import {useDispatch}   from 'react-redux';
 import Swal                         from 'sweetalert2';
-import {useHistory}                 from 'react-router-dom';
 import * as actions                 from '../../../store/actions';
-import * as pathmenu           from '../../shared/pathMenu';
 import Grid                         from './grid';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { MenuRole } from '../../shared/permissionMenu';
 
 const RoleIndex = () => {
-    // const history = useHistory();
+    reloadToHomeNotAuthorize(MenuRole,'READ');
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
