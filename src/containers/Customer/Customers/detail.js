@@ -21,6 +21,8 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
+  import { reloadToHomeNotAuthorize,isGetPermissions } from '../../shared/globalFunc';
+  import { MenuCustomer, editCustomer_Permission,deleteCustomer_Permission } from '../../shared/permissionMenu';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,7 +34,7 @@ import React, {useState,
   }));
 
   function Detail(props) {
-    // reloadToHomeNotAuthorize(DetailInternalUser_Permission,'READ');
+    reloadToHomeNotAuthorize(MenuCustomer,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
@@ -273,8 +275,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editcustomers+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={false}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editCustomer_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editcustomers+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteCustomer_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}

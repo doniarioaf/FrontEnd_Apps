@@ -21,50 +21,50 @@ import {deleteSessionAndLocalStorage} from './containers/shared/globalFunc';
 /* Used to render a lazy component with react-router */
 const waitFor = Tag => props => <Tag {...props}/>;
 
-const DashboardV1 = lazy(() => import('./components/Dashboard/DashboardV1'));
-const DashboardV2 = lazy(() => import('./components/Dashboard/DashboardV2'));
-const DashboardV3 = lazy(() => import('./components/Dashboard/DashboardV3'));
+// const DashboardV1 = lazy(() => import('./components/Dashboard/DashboardV1'));
+// const DashboardV2 = lazy(() => import('./components/Dashboard/DashboardV2'));
+// const DashboardV3 = lazy(() => import('./components/Dashboard/DashboardV3'));
 
-const Widgets = lazy(() => import('./components/Widgets/Widgets'));
+// const Widgets = lazy(() => import('./components/Widgets/Widgets'));
 
-const Buttons = lazy(() => import('./components/Elements/Buttons'));
-const Notifications = lazy(() => import('./components/Elements/Notifications'));
-const SweetAlert = lazy(() => import('./components/Elements/SweetAlert'));
-const BsCarousel = lazy(() => import('./components/Elements/Carousel'));
-const Spinner = lazy(() => import('./components/Elements/Spinner'));
-const DropdownAnimation = lazy(() => import('./components/Elements/DropdownAnimation'));
-const Nestable = lazy(() => import('./components/Elements/Nestable'));
-const Sortable = lazy(() => import('./components/Elements/Sortable'));
-const Cards = lazy(() => import('./components/Elements/Cards'));
-const Grid = lazy(() => import('./components/Elements/Grid'));
-const GridMasonry = lazy(() => import('./components/Elements/GridMasonry'));
-const Typography = lazy(() => import('./components/Elements/Typography'));
-const FontIcons = lazy(() => import('./components/Elements/FontIcons'));
-const WeatherIcons = lazy(() => import('./components/Elements/WeatherIcons'));
-const Colors = lazy(() => import('./components/Elements/Colors'));
+// const Buttons = lazy(() => import('./components/Elements/Buttons'));
+// const Notifications = lazy(() => import('./components/Elements/Notifications'));
+// const SweetAlert = lazy(() => import('./components/Elements/SweetAlert'));
+// const BsCarousel = lazy(() => import('./components/Elements/Carousel'));
+// const Spinner = lazy(() => import('./components/Elements/Spinner'));
+// const DropdownAnimation = lazy(() => import('./components/Elements/DropdownAnimation'));
+// const Nestable = lazy(() => import('./components/Elements/Nestable'));
+// const Sortable = lazy(() => import('./components/Elements/Sortable'));
+// const Cards = lazy(() => import('./components/Elements/Cards'));
+// const Grid = lazy(() => import('./components/Elements/Grid'));
+// const GridMasonry = lazy(() => import('./components/Elements/GridMasonry'));
+// const Typography = lazy(() => import('./components/Elements/Typography'));
+// const FontIcons = lazy(() => import('./components/Elements/FontIcons'));
+// const WeatherIcons = lazy(() => import('./components/Elements/WeatherIcons'));
+// const Colors = lazy(() => import('./components/Elements/Colors'));
 
-const ChartFlot = lazy(() => import('./components/Charts/ChartFlot'));
-const ChartRadial = lazy(() => import('./components/Charts/ChartRadial'));
-const ChartChartJS = lazy(() => import('./components/Charts/ChartChartJS'));
-const ChartMorris = lazy(() => import('./components/Charts/ChartMorris'));
-const ChartChartist = lazy(() => import('./components/Charts/ChartChartist'));
+// const ChartFlot = lazy(() => import('./components/Charts/ChartFlot'));
+// const ChartRadial = lazy(() => import('./components/Charts/ChartRadial'));
+// const ChartChartJS = lazy(() => import('./components/Charts/ChartChartJS'));
+// const ChartMorris = lazy(() => import('./components/Charts/ChartMorris'));
+// const ChartChartist = lazy(() => import('./components/Charts/ChartChartist'));
 
-const MapsGoogle = lazy(() => import('./components/Maps/MapsGoogle'));
-const MapsVector = lazy(() => import('./components/Maps/MapsVector'));
+// const MapsGoogle = lazy(() => import('./components/Maps/MapsGoogle'));
+// const MapsVector = lazy(() => import('./components/Maps/MapsVector'));
 
-const TableStandard = lazy(() => import('./components/Tables/TableStandard'));
-const TableExtended = lazy(() => import('./components/Tables/TableExtended'));
-const Datatable = lazy(() => import('./components/Tables/DatatableView'));
-const DataGrid = lazy(() => import('./components/Tables/DataGrid'));
+// const TableStandard = lazy(() => import('./components/Tables/TableStandard'));
+// const TableExtended = lazy(() => import('./components/Tables/TableExtended'));
+// const Datatable = lazy(() => import('./components/Tables/DatatableView'));
+// const DataGrid = lazy(() => import('./components/Tables/DataGrid'));
 
-const FormStandard = lazy(() => import('./components/Forms/FormStandard'));
-const FormExtended = lazy(() => import('./components/Forms/FormExtended'));
-const FormValidation = lazy(() => import('./components/Forms/FormValidation'));
-const FormWizard = lazy(() => import('./components/Forms/FormWizard'));
-const FormUpload = lazy(() => import('./components/Forms/FormUpload'));
-const FormCropper = lazy(() => import('./components/Forms/FormCropper'));
+// const FormStandard = lazy(() => import('./components/Forms/FormStandard'));
+// const FormExtended = lazy(() => import('./components/Forms/FormExtended'));
+// const FormValidation = lazy(() => import('./components/Forms/FormValidation'));
+// const FormWizard = lazy(() => import('./components/Forms/FormWizard'));
+// const FormUpload = lazy(() => import('./components/Forms/FormUpload'));
+// const FormCropper = lazy(() => import('./components/Forms/FormCropper'));
 
-const Login = lazy(() => import('./components/Pages/Login'));
+// const Login = lazy(() => import('./components/Pages/Login'));
 const Register = lazy(() => import('./components/Pages/Register'));
 const Recover = lazy(() => import('./components/Pages/Recover'));
 const Lock = lazy(() => import('./components/Pages/Lock'));
@@ -72,40 +72,40 @@ const NotFound = lazy(() => import('./components/Pages/NotFound'));
 const Error500 = lazy(() => import('./components/Pages/Error500'));
 const Maintenance = lazy(() => import('./components/Pages/Maintenance'));
 
-const Mailbox = lazy(() => import('./components/Extras/Mailbox'));
-const Timeline = lazy(() => import('./components/Extras/Timeline'));
-const Calendar = lazy(() => import('./components/Extras/Calendar'));
-const Invoice = lazy(() => import('./components/Extras/Invoice'));
-const Search = lazy(() => import('./components/Extras/Search'));
-const Todo = lazy(() => import('./components/Extras/Todo'));
-const Profile = lazy(() => import('./components/Extras/Profile'));
-const BugTracker = lazy(() => import('./components/Extras/BugTracker'));
-const ContactDetails = lazy(() => import('./components/Extras/ContactDetails'));
-const Contacts = lazy(() => import('./components/Extras/Contacts'));
-const Faq = lazy(() => import('./components/Extras/Faq'));
-const FileManager = lazy(() => import('./components/Extras/FileManager'));
-const Followers = lazy(() => import('./components/Extras/Followers'));
-const HelpCenter = lazy(() => import('./components/Extras/HelpCenter'));
-const Plans = lazy(() => import('./components/Extras/Plans'));
-const ProjectDetails = lazy(() => import('./components/Extras/ProjectDetails'));
-const Projects = lazy(() => import('./components/Extras/Projects'));
-const Settings = lazy(() => import('./components/Extras/Settings'));
-const SocialBoard = lazy(() => import('./components/Extras/SocialBoard'));
-const TeamViewer = lazy(() => import('./components/Extras/TeamViewer'));
-const VoteLinks = lazy(() => import('./components/Extras/VoteLinks'));
+// const Mailbox = lazy(() => import('./components/Extras/Mailbox'));
+// const Timeline = lazy(() => import('./components/Extras/Timeline'));
+// const Calendar = lazy(() => import('./components/Extras/Calendar'));
+// const Invoice = lazy(() => import('./components/Extras/Invoice'));
+// const Search = lazy(() => import('./components/Extras/Search'));
+// const Todo = lazy(() => import('./components/Extras/Todo'));
+// const Profile = lazy(() => import('./components/Extras/Profile'));
+// const BugTracker = lazy(() => import('./components/Extras/BugTracker'));
+// const ContactDetails = lazy(() => import('./components/Extras/ContactDetails'));
+// const Contacts = lazy(() => import('./components/Extras/Contacts'));
+// const Faq = lazy(() => import('./components/Extras/Faq'));
+// const FileManager = lazy(() => import('./components/Extras/FileManager'));
+// const Followers = lazy(() => import('./components/Extras/Followers'));
+// const HelpCenter = lazy(() => import('./components/Extras/HelpCenter'));
+// const Plans = lazy(() => import('./components/Extras/Plans'));
+// const ProjectDetails = lazy(() => import('./components/Extras/ProjectDetails'));
+// const Projects = lazy(() => import('./components/Extras/Projects'));
+// const Settings = lazy(() => import('./components/Extras/Settings'));
+// const SocialBoard = lazy(() => import('./components/Extras/SocialBoard'));
+// const TeamViewer = lazy(() => import('./components/Extras/TeamViewer'));
+// const VoteLinks = lazy(() => import('./components/Extras/VoteLinks'));
 
-const EcommerceOrder = lazy(() => import('./components/Ecommerce/EcommerceOrders'));
-const EcommerceOrderView = lazy(() => import('./components/Ecommerce/EcommerceOrderView'));
-const EcommerceProduct = lazy(() => import('./components/Ecommerce/EcommerceProducts'));
-const EcommerceProductView = lazy(() => import('./components/Ecommerce/EcommerceProductView'));
-const EcommerceCheckout = lazy(() => import('./components/Ecommerce/EcommerceCheckout'));
+// const EcommerceOrder = lazy(() => import('./components/Ecommerce/EcommerceOrders'));
+// const EcommerceOrderView = lazy(() => import('./components/Ecommerce/EcommerceOrderView'));
+// const EcommerceProduct = lazy(() => import('./components/Ecommerce/EcommerceProducts'));
+// const EcommerceProductView = lazy(() => import('./components/Ecommerce/EcommerceProductView'));
+// const EcommerceCheckout = lazy(() => import('./components/Ecommerce/EcommerceCheckout'));
 
-const BlogList = lazy(() => import('./components/Blog/BlogList'));
-const BlogPost = lazy(() => import('./components/Blog/BlogPost'));
-const BlogArticle = lazy(() => import('./components/Blog/BlogArticles'));
-const BlogArticleView = lazy(() => import('./components/Blog/BlogArticleView'));
+// const BlogList = lazy(() => import('./components/Blog/BlogList'));
+// const BlogPost = lazy(() => import('./components/Blog/BlogPost'));
+// const BlogArticle = lazy(() => import('./components/Blog/BlogArticles'));
+// const BlogArticleView = lazy(() => import('./components/Blog/BlogArticleView'));
 
-const ForumHome = lazy(() => import('./components/Forum/ForumHome'));
+// const ForumHome = lazy(() => import('./components/Forum/ForumHome'));
 
 
 const LoginBizz = lazy(() => import('./containers/Page/Login'));
@@ -168,6 +168,7 @@ const editCallPlan = lazy(() => import('./containers/Mobile/callplan/editFormCal
 
 const reportMonitoring = lazy(() => import('./containers/Report/Mobile/reportMobileMonitoring'));
 
+const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -201,7 +202,7 @@ const Routes = ({ location, ...props }) => {
 
     useEffect(() => {
         // dispatch(checkUser());
-        console.log('typeaction ',typeaction);
+        // console.log('typeaction ',typeaction);
         // if(isfirst !== undefined && isfirst !== null){
         //     if(isfirst){
         //         dispatch(checkUser());
@@ -341,17 +342,18 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.detailcallplan+'/:id'} component={waitFor(detailCallPlan)}/>
                             <Route path={pathmenu.editcallplan+'/:id'} component={waitFor(editCallPlan)}/>
                             <Route path={pathmenu.reportmonitoring} component={waitFor(reportMonitoring)}/>
+                            <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             
                                 {/*Dashboard*/}
-                                <Route path="/dashboardv1" component={waitFor(DashboardV1)}/>
+                                {/* <Route path="/dashboardv1" component={waitFor(DashboardV1)}/>
                                 <Route path="/dashboardv2" component={waitFor(DashboardV2)}/>
-                                <Route path="/dashboardv3" component={waitFor(DashboardV3)}/>
+                                <Route path="/dashboardv3" component={waitFor(DashboardV3)}/> */}
 
                                 {/*Widgets*/}
-                                <Route path="/widgets" component={waitFor(Widgets)}/>
+                                {/* <Route path="/widgets" component={waitFor(Widgets)}/> */}
 
                                 {/*Elements*/}
-                                <Route path="/buttons" component={waitFor(Buttons)}/>
+                                {/* <Route path="/buttons" component={waitFor(Buttons)}/>
                                 <Route path="/notifications" component={waitFor(Notifications)}/>
                                 <Route path="/sweetalert" component={waitFor(SweetAlert)}/>
                                 <Route path="/carousel" component={waitFor(BsCarousel)}/>
@@ -365,35 +367,35 @@ const Routes = ({ location, ...props }) => {
                                 <Route path="/typography" component={waitFor(Typography)}/>
                                 <Route path="/icons-font" component={waitFor(FontIcons)}/>
                                 <Route path="/icons-weather" component={waitFor(WeatherIcons)}/>
-                                <Route path="/colors" component={waitFor(Colors)}/>
+                                <Route path="/colors" component={waitFor(Colors)}/> */}
 
                                 {/*Forms*/}
-                                <Route path="/form-standard" component={waitFor(FormStandard)}/>
+                                {/* <Route path="/form-standard" component={waitFor(FormStandard)}/>
                                 <Route path="/form-extended" component={waitFor(FormExtended)}/>
                                 <Route path="/form-validation" component={waitFor(FormValidation)}/>
                                 <Route path="/form-wizard" component={waitFor(FormWizard)}/>
                                 <Route path="/form-upload" component={waitFor(FormUpload)}/>
-                                <Route path="/form-cropper" component={waitFor(FormCropper)}/>
+                                <Route path="/form-cropper" component={waitFor(FormCropper)}/> */}
 
                                 {/*Charts*/}
-                                <Route path="/chart-flot" component={waitFor(ChartFlot)}/>
+                                {/* <Route path="/chart-flot" component={waitFor(ChartFlot)}/>
                                 <Route path="/chart-radial" component={waitFor(ChartRadial)}/>
                                 <Route path="/chart-chartjs" component={waitFor(ChartChartJS)}/>
                                 <Route path="/chart-morris" component={waitFor(ChartMorris)}/>
-                                <Route path="/chart-chartist" component={waitFor(ChartChartist)}/>
+                                <Route path="/chart-chartist" component={waitFor(ChartChartist)}/> */}
 
                                 {/*Table*/}
-                                <Route path="/table-standard" component={waitFor(TableStandard)}/>
+                                {/* <Route path="/table-standard" component={waitFor(TableStandard)}/>
                                 <Route path="/table-extended" component={waitFor(TableExtended)}/>
                                 <Route path="/table-datatable" component={waitFor(Datatable)}/>
-                                <Route path="/table-datagrid" component={waitFor(DataGrid)}/>
+                                <Route path="/table-datagrid" component={waitFor(DataGrid)}/> */}
 
                                 {/*Maps*/}
-                                <Route path="/map-google" component={waitFor(MapsGoogle)}/>
-                                <Route path="/map-vector" component={waitFor(MapsVector)}/>
+                                {/* <Route path="/map-google" component={waitFor(MapsGoogle)}/>
+                                <Route path="/map-vector" component={waitFor(MapsVector)}/> */}
 
                                 {/*Extras*/}
-                                <Route path="/mailbox" component={waitFor(Mailbox)}/>
+                                {/* <Route path="/mailbox" component={waitFor(Mailbox)}/>
                                 <Route path="/timeline" component={waitFor(Timeline)}/>
                                 <Route path="/calendar" component={waitFor(Calendar)}/>
                                 <Route path="/invoice" component={waitFor(Invoice)}/>
@@ -424,7 +426,7 @@ const Routes = ({ location, ...props }) => {
                                 <Route path="/team-viewer" component={waitFor(TeamViewer)}/>
                                 <Route path="/vote-links" component={waitFor(VoteLinks)}/>
 
-                                <Route path="/forum" component={waitFor(ForumHome)}/>
+                                <Route path="/forum" component={waitFor(ForumHome)}/> */}
 
                                 <Redirect to="/login"/>
                             </Switch>

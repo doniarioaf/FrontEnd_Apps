@@ -29,6 +29,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import IconAdd from '../../../components/Icons/IconAdd';
 import * as pathmenu           from '../../shared/pathMenu';
 import {Loading}                    from '../../../components/Common/Loading';
+import { isGetPermissions, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { editCustomerType_Permission,addCustomerType_Permission } from '../../shared/permissionMenu';
 
 const FilterIcon = ({type, ...restProps}) => {
     return <TableFilterRow.Icon type={type} {...restProps} />;
@@ -53,7 +55,9 @@ const AddButton = ({onExecute}) => {
     return (
         <div style={{textAlign: 'center'}} title={i18n.t('grid.ADD')}>
             <Tooltip title={i18n.t('grid.ADD')}>
-                <IconButton color={'primary'} onClick={() => history.push(pathmenu.addcustomertype)} >
+                <IconButton 
+                hidden={!isGetPermissions(addCustomerType_Permission,'TRANSACTION')}
+                color={'primary'} onClick={() => history.push(pathmenu.addcustomertype)} >
                     <IconAdd/>
                 </IconButton>
             </Tooltip>
@@ -72,6 +76,7 @@ const CellComponent = ({children, row, ...restProps}) => {
             
             <Tooltip title={i18n.t('grid.EDIT')}>
                 <IconButton color={'primary'} 
+                hidden={!isGetPermissions(editCustomerType_Permission,'TRANSACTION')}
                             onClick={() => history.push(pathmenu.editcustomertype +'/'+ row.id)}
                 >
                     <EditIcon/>

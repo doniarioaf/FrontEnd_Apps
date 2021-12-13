@@ -26,10 +26,11 @@ import {useHistory}                 from 'react-router-dom';
 import Tooltip                      from '@material-ui/core/Tooltip';
 import IconButton                   from '@material-ui/core/IconButton';
 import IconView from '../../../components/Icons/iconView';
-import EditIcon from '@material-ui/icons/Edit';
 import IconAdd from '../../../components/Icons/IconAdd';
 import * as pathmenu           from '../../shared/pathMenu';
 import {Loading}                    from '../../../components/Common/Loading';
+import { isGetPermissions } from '../../shared/globalFunc';
+import { addInfo_Permission } from '../../shared/permissionMenu';
 
 const FilterIcon = ({type, ...restProps}) => {
     return <TableFilterRow.Icon type={type} {...restProps} />;
@@ -54,7 +55,9 @@ const AddButton = ({onExecute}) => {
     return (
         <div style={{textAlign: 'center'}} title={i18n.t('grid.ADD')}>
             <Tooltip title={i18n.t('grid.ADD')}>
-                <IconButton color={'primary'} onClick={() => history.push(pathmenu.addinfo)} >
+                <IconButton 
+                hidden={!isGetPermissions(addInfo_Permission,'TRANSACTION')}
+                color={'primary'} onClick={() => history.push(pathmenu.addinfo)} >
                     <IconAdd/>
                 </IconButton>
             </Tooltip>

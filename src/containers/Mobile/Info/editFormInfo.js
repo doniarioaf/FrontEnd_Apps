@@ -15,8 +15,11 @@ import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import Grid                         from './gridAnswer';
 import {mappingMessageError} from '../../../containers/shared/globalFunc';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { editInfo_Permission } from '../../shared/permissionMenu';
 
 export default function EditFormInfo(props) {
+    reloadToHomeNotAuthorize(editInfo_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();

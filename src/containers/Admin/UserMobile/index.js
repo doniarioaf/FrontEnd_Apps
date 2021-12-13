@@ -7,8 +7,11 @@ import Swal                         from 'sweetalert2';
 import {useHistory}                 from 'react-router-dom';
 import * as actions                 from '../../../store/actions';
 import Grid                         from './grid';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { MenuUserMobile } from '../../shared/permissionMenu';
 
 const UserMobileIndex = () => {
+    reloadToHomeNotAuthorize(MenuUserMobile,'READ');
     const history = useHistory();
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');

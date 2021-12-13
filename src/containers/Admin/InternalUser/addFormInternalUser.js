@@ -10,8 +10,11 @@ import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import Select from 'react-select';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { addInternalUser_Permission } from '../../shared/permissionMenu';
 
 export default function AddFormInternalUser(props) {
+    reloadToHomeNotAuthorize(addInternalUser_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -43,12 +46,12 @@ export default function AddFormInternalUser(props) {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getRoleData('',successHandler, errorHandler));
+        dispatch(actions.getUserAppsData('/template',successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
         if(data.data){
-            setListRoles(data.data.reduce((obj, el) => (
+            setListRoles(data.data.roleoptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama

@@ -10,8 +10,11 @@ import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import Select from 'react-select';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { editInternalUser_Permission } from '../../shared/permissionMenu';
 
 export default function EditFormInternalUser(props) {
+    reloadToHomeNotAuthorize(editInternalUser_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -45,13 +48,13 @@ export default function EditFormInternalUser(props) {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getRoleData('',successHandler, errorHandler));
+        dispatch(actions.getUserAppsData('/template',successHandler, errorHandler));
         
     }, []);
 
     function successHandler(data) {
         if(data.data){
-            dispatch(actions.getUserAppsDataWithParam('/'+id,data.data,successHandlerDetail, errorHandler));
+            dispatch(actions.getUserAppsDataWithParam('/'+id,data.data.roleoptions,successHandlerDetail, errorHandler));
         }
         
     }

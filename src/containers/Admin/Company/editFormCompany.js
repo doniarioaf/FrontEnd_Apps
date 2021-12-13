@@ -51,7 +51,7 @@ export default function EditFormCompany(props) {
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getCompanyData('/'+id,successHandlerDetail, errorHandler));
-        dispatch(actions.getBranchData('/getlistbranchnotexistincompany',successHandler, errorHandler));
+        dispatch(actions.getCompanyData('/template',successHandler, errorHandler));
     }, []);
 
     function successHandlerDetail(data) {
@@ -76,14 +76,14 @@ export default function EditFormCompany(props) {
 
     function successHandler(data) {
         if(data.data){
-            let listbranch = data.data;
-            setListBranch(data.data.reduce((obj, el) => (
+            // let listbranch = data.data.branchoptions;
+            setListBranch(data.data.branchoptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.name
                 }]
             ), []));
-            setHeightGridListCharges(listbranch);
+            // setHeightGridListCharges(listbranch);
         }
         setLoading(false);
     }

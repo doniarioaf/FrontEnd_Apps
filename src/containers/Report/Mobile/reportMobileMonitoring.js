@@ -6,7 +6,6 @@ import {Input,Button} from 'reactstrap';
 import * as actions                 from '../../../store/actions';
 import "react-widgets/dist/css/react-widgets.css";
 import {useDispatch}   from 'react-redux';
-// import { reloadToHomeNotAuthorize } from '../../../../shared/maskFunc';
 import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
@@ -15,9 +14,11 @@ import momentLocalizer                 from 'react-widgets-moment';
 import {DropdownList, DatePicker}      from 'react-widgets';
 import { listTypeReport } from '../../shared/globalFunc';
 import Select from 'react-select';
-// import { AddInternalUser_Permission } from '../../../../shared/PermissionForFeatures';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { MenuMonitoring } from '../../shared/permissionMenu';
 
 export default function ReportMobileMonitoring(props) {
+    reloadToHomeNotAuthorize(MenuMonitoring,'READ');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();

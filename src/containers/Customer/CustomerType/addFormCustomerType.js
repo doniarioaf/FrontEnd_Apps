@@ -5,13 +5,14 @@ import ContentWrapper               from '../../../components/Layout/ContentWrap
 import {Input,Button} from 'reactstrap';
 import * as actions                 from '../../../store/actions';
 import {useDispatch}   from 'react-redux';
-// import { reloadToHomeNotAuthorize } from '../../../../shared/maskFunc';
 import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-// import { AddInternalUser_Permission } from '../../../../shared/PermissionForFeatures';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { addCustomerType_Permission } from '../../shared/permissionMenu';
 
 export default function AddFormCustomerType(props) {
+    reloadToHomeNotAuthorize(addCustomerType_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
