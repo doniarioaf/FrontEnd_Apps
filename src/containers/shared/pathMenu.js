@@ -42,3 +42,4 @@ export const detailcallplan = `/mobile/detail/callplan`;
 export const editcallplan = `/mobile/edit/callplan`;
 export const reportmonitoring = `/report/monitoring`;
 export const unauthorized = `/unauthorized`;
+export const monitoringmaps = `/mobile/monitoringmaps`;
