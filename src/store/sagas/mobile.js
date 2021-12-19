@@ -1,5 +1,5 @@
 import axios        from '../../Axios-BizzApps';
-import {baseCallPlanURL,baseInfoURL} from '../../containers/shared/apiURL';
+import {baseCallPlanURL,baseInfoURL,baseReportURL} from '../../containers/shared/apiURL';
 
 export function* getDataCallPlanSaga(action) {
     try {
@@ -88,6 +88,17 @@ export function* submitDeleteInfoSaga(action) {
         action.successHandler(response);
     }catch (error) {
         console.log('error ',error);
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(error);
+    }
+}
+
+export function* getMonitoringDataSaga(action) {
+    try {
+        const response = yield axios.get(baseReportURL(action.param)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
         action.errorHandler(error);
     }

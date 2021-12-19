@@ -48,3 +48,4 @@ export const MenuCustomerType = ['READ_CUSTOMERTYPE'];
 export const MenuCallPlan = ['READ_CALLPLAN'];
 export const MenuInformation = ['READ_INFO'];
 export const MenuMonitoring = ['READ_REPORT_MONITORING'];
+export const MenuMonitoringMaps = ['READ_MAPS_MONITORING'];

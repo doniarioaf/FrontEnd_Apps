@@ -98,6 +98,11 @@ const handleMenu = () => {
                     path: pathmenu.reportmonitoring,
                     translate: 'Monitoring',
                     permission:permissionmenu.MenuMonitoring,
+                },{
+                    name: 'Monitoring Maps',
+                    path: pathmenu.monitoringmaps,
+                    translate: 'Monitoring Maps',
+                    permission:permissionmenu.MenuMonitoringMaps,
                 }
             ]
         }

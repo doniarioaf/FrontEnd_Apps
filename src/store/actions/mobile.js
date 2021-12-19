@@ -73,3 +73,12 @@ export const submitDeleteInfo = (id, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getMonitoringData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_MONITORING_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

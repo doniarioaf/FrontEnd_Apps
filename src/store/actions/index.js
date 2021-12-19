@@ -63,5 +63,6 @@ export {
     submitAddCallPlan,
     submitEditCallPlan,
     submitDeleteCallPlan,
-    submitDeleteInfo
+    submitDeleteInfo,
+    getMonitoringData
 } from './mobile';
