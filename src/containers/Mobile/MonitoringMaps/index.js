@@ -14,7 +14,10 @@ import {Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
 import ParameterMaps from './paramaterMaps';
 import { Loading } from '../../../components/Common/Loading';
 
-const GOOGLE_MAPS_JS_API_KEY='AIzaSyA8-XM3CcTcdgDTp-ktzPzr0ALnQAO8JCE';
+// const GOOGLE_MAPS_JS_API_KEY='AIzaSyA8-XM3CcTcdgDTp-ktzPzr0ALnQAO8JCE';
+
+//Free AIzaSyBDMT7fFcVZK2CNl71pfQnigldGB1-pdK0
+const GOOGLE_MAPS_JS_API_KEY='AIzaSyBDMT7fFcVZK2CNl71pfQnigldGB1-pdK0';
 
 const mapStyles = {
     width: '100%',
