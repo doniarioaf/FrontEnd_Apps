@@ -5,12 +5,13 @@ import * as actions                from '../actions';
 import CryptoJS from 'crypto-js';
 import {loginURL,checkAuthURL} from '../../containers/shared/apiURL';
 import * as key from '../../containers/shared/constantKey';
-
+import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* loginUserSaga(action) {
     try {
-        const response = yield AxiosLogin.post(loginURL,action.payload).then(response => response.data);
-        console.log('loginUserSaga ',response);
+        const response = yield AxiosLogin.post(loginURL,action.payload,{timeout:4000})
+        .then(response => response.data ?response.data:[] );
+        // console.log('loginUserSaga ',response);
         let flag = false;
         let responflag = response.data?.token?true:false;
         if(response.message == 'SUCCESS' && responflag){
@@ -29,9 +30,7 @@ export function* loginUserSaga(action) {
         }
         action.successHandler(flag);
     }catch (error) {
-        // toLogout(error);
-        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
