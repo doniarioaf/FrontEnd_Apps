@@ -21,6 +21,50 @@ export const mappingMessageError = (error) =>{
     return arrMsg
 }
 
+export const handleMessageError = (error) =>{
+    let arrMsg = [];
+    let msgcode = '';
+    let msg = '';
+    let msgObj = new Object();
+    
+    let val = [];
+
+    console.log('error.code '+error.code);
+    if(error.data){
+        val = error.data;
+    }else if(sessionStorage.getItem(key.messageError) !== null){
+        if(sessionStorage.getItem(key.messageError) == 'timeout'){
+            msg = 'Mohon maaf, system kami sedang dalam pemeliharaan, Mohon tunggu beberapa saat lagi dan pastikan Anda terhubung ke jaringan internet';
+            msgcode = msg;
+            arrMsg.push(msgcode);
+        }else{
+            val = JSON.parse(sessionStorage.getItem(key.messageError).toString());
+        }
+        
+        sessionStorage.removeItem(key.messageError);
+    }
+    if(msg == ''){
+    //     let val = error.data;
+        if(val.messagecode == 'data.validation'){
+            for(let i=0; i < val.validations.length; i++){
+                let valid = val.validations[i];
+                arrMsg.push(valid.messageCode);
+
+                msgcode = valid.messageCode;
+                msg = valid.message;
+            }
+        }else{
+            msgcode = val.messageCode;
+            msg = val.message;
+        }
+    }
+    msgObj.msgcode = msgcode;
+    msgObj.msg = msg;
+    msgObj.msglist = arrMsg;
+
+    return msgObj
+}
+
 export const listTypeReport = () => {
     var tempOutPut = [];
     
