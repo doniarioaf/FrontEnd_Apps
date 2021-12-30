@@ -42,8 +42,20 @@ export default function FormLogin(props) {
     const succesHandlerSubmit = (data) => {
         // console.log('succesHandlerSubmit ',data);
         setLoading(false);
-        if(data){
-            history.push('/home');
+        if(data.flag){
+            if(data.msg !== ''){
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Information',
+                    text: data.msg
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        history.push('/home');
+                    }
+                })
+            }else{
+                history.push('/home');
+            }
         }
         // alert('succesHandlerSubmit '+data);
     }

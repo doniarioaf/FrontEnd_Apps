@@ -14,7 +14,13 @@ export function* loginUserSaga(action) {
         // console.log('loginUserSaga ',response);
         let flag = false;
         let responflag = response.data?.token?true:false;
+        let message = '';
         if(response.message == 'SUCCESS' && responflag){
+            if(response.validations){
+                if(response.validations.length > 0){
+                    message = response.validations[0].message;
+                }
+            }
             const permissions = CryptoJS.AES.encrypt(JSON.stringify(response.data.permissions),key.keyEcncrypt).toString();
 
             localStorage.setItem(key.token,response.data.token);
@@ -28,7 +34,10 @@ export function* loginUserSaga(action) {
             yield put(actions.authSuccess(obj));
             flag = true;
         }
-        action.successHandler(flag);
+        let obj = new Object();
+        obj.flag = flag;
+        obj.msg = message;
+        action.successHandler(obj);
     }catch (error) {
         action.errorHandler(handleMessageError(error).msg);
     }
