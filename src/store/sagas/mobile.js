@@ -1,5 +1,6 @@
 import axios        from '../../Axios-BizzApps';
 import {baseCallPlanURL,baseInfoURL,baseReportURL} from '../../containers/shared/apiURL';
+import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataCallPlanSaga(action) {
     try {
@@ -8,7 +9,7 @@ export function* getDataCallPlanSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -19,7 +20,7 @@ export function* getDataInfoSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -30,7 +31,7 @@ export function* submitAddInfoSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -40,9 +41,9 @@ export function* submitEditInfoSaga(action) {
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
-        console.log('error ',error);
+        // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -53,7 +54,7 @@ export function* submitAddCallPlanSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -63,9 +64,9 @@ export function* submitEditCallPlanSaga(action) {
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
-        console.log('error ',error);
+        // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -75,9 +76,9 @@ export function* submitDeleteCallPlanSaga(action) {
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
-        console.log('error ',error);
+        // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -87,9 +88,9 @@ export function* submitDeleteInfoSaga(action) {
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
-        console.log('error ',error);
+        // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -100,6 +101,6 @@ export function* getMonitoringDataSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }

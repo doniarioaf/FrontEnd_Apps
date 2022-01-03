@@ -297,11 +297,11 @@ export default function EditFormUserMobile(props) {
 
     function errorHandler(error) {
         setLoading(false);
-        let arrMsg = mappingMessageError(error);
+        // let arrMsg = mappingMessageError(error);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: arrMsg.length > 0?i18n.t('label_ERROR.'+arrMsg[0].replaceAll('.','_')):'Error'
+            text: error
         })
     }
 

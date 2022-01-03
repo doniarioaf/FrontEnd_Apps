@@ -9,7 +9,6 @@ import Swal             from "sweetalert2";
 import {useDispatch}   from 'react-redux';
 import {useHistory}                 from 'react-router-dom';
 
-
 export default function FormLogin(props) {
     const dispatch = useDispatch();
     const history = useHistory();

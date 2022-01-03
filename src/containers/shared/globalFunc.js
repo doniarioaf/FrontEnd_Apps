@@ -28,8 +28,6 @@ export const handleMessageError = (error) =>{
     let msgObj = new Object();
     
     let val = [];
-
-    console.log('error.code '+error.code);
     if(error.data){
         val = error.data;
     }else if(sessionStorage.getItem(key.messageError) !== null){
@@ -54,9 +52,12 @@ export const handleMessageError = (error) =>{
                 msg = valid.message;
             }
         }else{
-            msgcode = val.messageCode;
+            msgcode = val.messagecode;
             msg = val.message;
         }
+    }
+    if(msgcode == 'security.login.not.authorized' || msgcode == 'security.token.password'){
+        window.location.href = '/logout';
     }
     msgObj.msgcode = msgcode;
     msgObj.msg = msg;

@@ -64,7 +64,7 @@ const InfoIndex = () => {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'error'
+            text: error
         })
     }
 

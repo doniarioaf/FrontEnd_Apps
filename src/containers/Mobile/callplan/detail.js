@@ -151,7 +151,7 @@ import { MenuCallPlan, editCallPlan_Permission,deleteCallPlan_Permission } from 
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'error'
+            text: error
         })
     }
 

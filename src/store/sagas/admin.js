@@ -1,6 +1,7 @@
 import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
     baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL} from '../../containers/shared/apiURL';
+import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
     try {
@@ -9,7 +10,7 @@ export function* getDataBranchSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -20,7 +21,7 @@ export function* submitAddBranchSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -31,7 +32,7 @@ export function* submitEditBranchSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -42,7 +43,7 @@ export function* getDataCompanySaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -52,7 +53,7 @@ export function* submitAddCompanySaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -62,7 +63,7 @@ export function* submitEditCompanySaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -72,9 +73,9 @@ export function* getDataRoleSaga(action) {
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
-        console.log('error ',error);
+        // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -85,7 +86,7 @@ export function* submitAddRoleSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -96,7 +97,7 @@ export function* submitEditRoleSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -106,9 +107,9 @@ export function* getDataUserAppsSaga(action) {
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
-        console.log('error ',error);
+        // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -119,7 +120,7 @@ export function* submitAddUserAppsSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -129,9 +130,9 @@ export function* getDataUserAppsWithParamSaga(action) {
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response,action.valueparam);
     }catch (error) {
-        console.log('error ',error);
+        // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -142,7 +143,7 @@ export function* submitEditUserAppsSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -152,7 +153,7 @@ export function* submitPostCompanySaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -163,7 +164,7 @@ export function* submitDeleteCompanySaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -173,9 +174,9 @@ export function* getDataUserMobileSaga(action) {
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
-        console.log('error ',error);
+        // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -186,7 +187,7 @@ export function* submitAddUserMobileSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -197,7 +198,7 @@ export function* submitEditUserMobileSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -207,9 +208,9 @@ export function* getProductTypeSaga(action) {
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
-        console.log('error ',error);
+        // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -220,7 +221,7 @@ export function* submitAddProductTypeSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -231,7 +232,7 @@ export function* submitEditProductTypeSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -241,9 +242,9 @@ export function* getProductSaga(action) {
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
-        console.log('error ',error);
+        // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -254,7 +255,7 @@ export function* submitAddProductSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -265,7 +266,7 @@ export function* submitEditProductSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -288,9 +289,9 @@ export function* getReportSaga(action) {
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
-        console.log('error ',error);
+        // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -300,9 +301,9 @@ export function* getReportTemplateSaga(action) {
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
-        console.log('error ',error);
+        // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -313,7 +314,7 @@ export function* submitDeleteBranchSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -324,7 +325,7 @@ export function* submitDeleteRoleSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -335,7 +336,7 @@ export function* submitDeleteUserSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -346,7 +347,7 @@ export function* submitDeleteUserMobileSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -357,7 +358,7 @@ export function* submitDeleteCustomerSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -368,6 +369,6 @@ export function* submitDeleteCustomerTypeSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
