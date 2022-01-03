@@ -169,7 +169,7 @@ import {MenuInformation, editInfo_Permission,deleteInfo_Permission } from '../..
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'error'
+            text: error
         })
     }
 
