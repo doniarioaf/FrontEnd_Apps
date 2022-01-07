@@ -57,6 +57,7 @@
     "label_SEQUENCE":"Urutan",
     "label_NOT_OPEN_THIS_PAGE":"Oopss, Tidak Bisa Membuka Halaman Ini",
     "label_AUTHORIZED":"User Tidak Ada Otorisasi",
+    "label_CHANGE_LANGUAGE":"Ubah Bahasa",
     "grid": {
       "ADD": "Tambah",
       "EDIT": "Ubah",

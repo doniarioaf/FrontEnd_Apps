@@ -57,6 +57,7 @@
   "label_SEQUENCE":"Sequence",
   "label_NOT_OPEN_THIS_PAGE":"Oopss, Can't Open This Page",
   "label_AUTHORIZED":"User Is Not Authorized",
+  "label_CHANGE_LANGUAGE":"Change Language",
   "grid": {
     "ADD": "Add",
     "EDIT": "Edit",
