@@ -28,6 +28,25 @@
     <noscript>
         You need to enable JavaScript to run this app.
     </noscript>
+    <script type="text/javascript">
+      let name = 'BizzApps'
+      let version = '1.0.0' // Demo , Version Last
+      // let version = '1.1.10' //Prod , Version Last
+      const last_version = localStorage.getItem(`${name}-Version`);
+      console.log('ver ',last_version+" | "+version);
+      if(last_version !== version){
+      // unregister();
+      caches.keys().then((names) => {
+            // Delete all the cache files
+            names.forEach(name => {
+                caches.delete(name);
+            })
+        });
+        localStorage.setItem(`${name}-Version`, version)
+        window.location.reload(true);
+        // register();
+      }
+    </script>
     <div id="app"></div>
     <!--
       This HTML file is a template.
