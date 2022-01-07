@@ -109,6 +109,7 @@ const Maintenance = lazy(() => import('./components/Pages/Maintenance'));
 
 
 const LoginBizz = lazy(() => import('./containers/Page/Login'));
+const Logout = lazy(() => import('./containers/Page/Login/Logout'));
 
 const Home = lazy(() => import('./containers/Page/home'));
 
@@ -430,7 +431,9 @@ const Routes = ({ location, ...props }) => {
                                 <Route path="/vote-links" component={waitFor(VoteLinks)}/>
 
                                 <Route path="/forum" component={waitFor(ForumHome)}/> */}
-
+                                
+                                <Route exact path="/logout" component={waitFor(Logout)}/>
+                                <Route exact path="/login" component={waitFor(LoginBizz)}/>
                                 <Redirect to="/login"/>
                             </Switch>
                         </Suspense>

@@ -56,7 +56,7 @@ const AddButton = ({onExecute}) => {
         <div style={{textAlign: 'center'}} title={i18n.t('grid.ADD')}>
             <Tooltip title={i18n.t('grid.ADD')}>
                 <IconButton 
-                hidden={isGetPermissions(addCustomer_Permission,'TRANSACTION')}
+                hidden={!isGetPermissions(addCustomer_Permission,'TRANSACTION')}
                 color={'primary'} onClick={() => history.push(pathmenu.addcustomers)} >
                     <IconAdd/>
                 </IconButton>
