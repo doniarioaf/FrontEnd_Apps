@@ -333,7 +333,8 @@ export default function EditFormRole(props) {
 
                             <Card>
                             <CardBody>
-                            <div className="table-responsive" style={{height:defaultHeight}}>
+                            {/* <div className="table-responsive" style={{height:defaultHeight}}> */}
+                            <div className="table-responsive" style={{height:'1000px'}}>
                                 <Grid
                                     rows={RowsPermissions}
                                     columns={columns}
