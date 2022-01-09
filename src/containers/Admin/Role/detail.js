@@ -109,8 +109,8 @@ import { MenuRole, editRole_Permission,deleteRole_Permission } from '../../share
     const setHeightGridList = (dataval) =>{
         if(dataval.length > 2){
             let height = ( 50 * (dataval.length - 2) ) + StartdefaultHeight;
-            if(height > 600){
-                height = 600;
+            if(height > 800){
+                height = 800;
             }
             setdefaultHeight(height+'px');
         }
@@ -284,7 +284,7 @@ import { MenuRole, editRole_Permission,deleteRole_Permission } from '../../share
         <div><p className="lead text-center"><h2>List Permissions</h2></p></div>
         <Card>
         <CardBody>
-        <div className="table-responsive" style={{height:defaultHeight}}>
+        <div className="table-responsive" style={{height:'1000px'}}>
             <Grid
                 rows={RowsPermissions}
                 columns={columns}

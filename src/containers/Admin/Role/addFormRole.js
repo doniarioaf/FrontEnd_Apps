@@ -315,7 +315,8 @@ export default function AddFormRole(props) {
 
                             <Card>
                             <CardBody>
-                            <div className="table-responsive" style={{height:defaultHeight}}>
+                            <div className="table-responsive" style={{height:'1000px'}}>
+                            {/* <div className="table-responsive" style={{height:defaultHeight}}> */}
                                 <Grid
                                     rows={RowsPermissions}
                                     columns={columns}
