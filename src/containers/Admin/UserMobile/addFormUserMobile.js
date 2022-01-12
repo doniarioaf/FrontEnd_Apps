@@ -186,7 +186,7 @@ export default function AddFormUserMobile(props) {
         }
 
         if(CallPlans.length == 0){
-            setErrRoles(i18n.t('label_REQUIRED'));
+            setErrCallPlans(i18n.t('label_REQUIRED'));
             flag = false;
         }
         return flag;
