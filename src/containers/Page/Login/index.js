@@ -1,4 +1,4 @@
-import React, { useState,Component } from 'react';
+import React, { useState } from 'react';
 // import { Link } from 'react-router-dom';
 import {Formik}                        from 'formik';
 import { Input } from 'reactstrap';
@@ -8,6 +8,7 @@ import * as actions                 from '../../../store/actions';
 import Swal             from "sweetalert2";
 import {useDispatch}   from 'react-redux';
 import {useHistory}                 from 'react-router-dom';
+// import {deleteSessionAndLocalStorage} from '../../../containers/shared/globalFunc';
 
 export default function FormLogin(props) {
     const dispatch = useDispatch();
@@ -17,6 +18,9 @@ export default function FormLogin(props) {
     const [showpassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     
+    // useEffect(() => {
+    //     deleteSessionAndLocalStorage();
+    // }, []);
 
     const handleChangeUser = (data) =>{
         let val = data.target.value;

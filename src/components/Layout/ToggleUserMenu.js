@@ -9,7 +9,7 @@ import MenuItem                   from '@material-ui/core/MenuItem';
 import MenuList                   from '@material-ui/core/MenuList';
 import {useSelector, useDispatch} from 'react-redux';
 import { withRouter ,useHistory } from 'react-router-dom';
-import {deleteSessionAndLocalStorage} from '../../containers/shared/globalFunc';
+// import {deleteSessionAndLocalStorage} from '../../containers/shared/globalFunc';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -56,7 +56,7 @@ function MenuListComposition(props) {
     }
 
     function handleLogout() {
-        deleteSessionAndLocalStorage();
+        // deleteSessionAndLocalStorage();
         history.push('/logout');
     }
 

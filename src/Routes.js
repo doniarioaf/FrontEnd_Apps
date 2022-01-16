@@ -183,7 +183,8 @@ const listofPages = [
     '/notfound',
     '/error500',
     '/maintenance',
-    '/loginapps'
+    '/loginapps',
+    pathmenu.unauthorized
 ];
 
 const Routes = ({ location, ...props }) => {
@@ -276,6 +277,7 @@ const Routes = ({ location, ...props }) => {
                         <Route path="/notfound" component={waitFor(NotFound)}/>
                         <Route path="/error500" component={waitFor(Error500)}/>
                         <Route path="/maintenance" component={waitFor(Maintenance)}/>
+                        <Route path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                     </Switch>
                 </Suspense>
             </BasePage>
@@ -449,6 +451,7 @@ const Routes = ({ location, ...props }) => {
         <BasePage>
             <Suspense fallback={<PageLoader/>}>
                 <Switch>
+                    <Route path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                     <Route path={'/notfound'} component={waitFor(NotFound)}/>
                     <Route exact path={["/login", "/"]} component={waitFor(LoginBizz)}/>
                     <Redirect from='*' to="/login"/>

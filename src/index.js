@@ -26,4 +26,4 @@ ReactDOM.render(
     document.getElementById('app')
 );
 
-serviceWorker.register();
+// serviceWorker.register();
