@@ -1,5 +1,6 @@
 import * as key from '../../containers/shared/constantKey';
 import CryptoJS from 'crypto-js';
+import * as pathmenu           from './pathMenu';
 
 export const deleteSessionAndLocalStorage = () =>{
     localStorage.removeItem(key.token);
@@ -80,7 +81,7 @@ export const listTypeReport = () => {
 export const reloadToHomeNotAuthorize = (listPermission,action)  =>{
     const flag =  isGetPermissions(listPermission,action);
     if(!flag){
-        window.location.href = '/unauthorized';
+        window.location.href = pathmenu.unauthorized;
     }
 }
 
