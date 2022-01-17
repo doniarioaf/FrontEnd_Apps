@@ -32,3 +32,11 @@ export const retrieveDatacheckUser = (data) => {
     };
 };
 
+export const logoutUser = (successHandler, errorHandler) => {
+    return {
+        type: actions.LOGOUT,
+        successHandler,
+        errorHandler,
+    }
+}
+
