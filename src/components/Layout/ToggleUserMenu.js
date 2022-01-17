@@ -9,6 +9,7 @@ import MenuItem                   from '@material-ui/core/MenuItem';
 import MenuList                   from '@material-ui/core/MenuList';
 import {useSelector, useDispatch} from 'react-redux';
 import { withRouter ,useHistory } from 'react-router-dom';
+import * as actions                 from '../../store/actions';
 // import {deleteSessionAndLocalStorage} from '../../containers/shared/globalFunc';
 
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +35,7 @@ function MenuListComposition(props) {
     const history = useHistory();
     const [open, setOpen] = useState(false);
     const anchorRef = useRef(null);
+    const dispatch = useDispatch();
     // const username = 'hahaha';
     const username = useSelector(state => state.auth.username);
 
@@ -56,9 +58,16 @@ function MenuListComposition(props) {
     }
 
     function handleLogout() {
+        history.push('/');
         // deleteSessionAndLocalStorage();
-        history.push('/logout');
+        // dispatch(actions.logoutUser(succesHandlerSubmit, errorHandler));
     }
+    // function succesHandlerSubmit() {
+    //     history.push('/');
+    // }
+    // function errorHandler() {
+    //     history.push('/');
+    // }
 
     const prevOpen = useRef(open);
     useEffect(() => {

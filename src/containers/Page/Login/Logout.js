@@ -8,9 +8,9 @@ export default function LogoutMenu() {
 
     // const dispatch = useDispatch();
 
-    useEffect(() => {
-        deleteSessionAndLocalStorage();
-    }, []);
+    // useEffect(() => {
+    //     deleteSessionAndLocalStorage();
+    // }, []);
 
     return (
         <Redirect to="/"/>

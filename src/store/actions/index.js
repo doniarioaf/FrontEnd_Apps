@@ -8,7 +8,8 @@ export {
     loginUser,
     authSuccess,
     checkUser,
-    retrieveDatacheckUser
+    retrieveDatacheckUser,
+    logoutUser
 } from './login';
 
 export {

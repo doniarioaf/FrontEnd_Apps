@@ -3,7 +3,8 @@ import * as actions                from '../actions/actions';
 
 import {
     loginUserSaga,
-    checkUserSaga
+    checkUserSaga,
+    logoutUserSaga
 } from './login';
 
 import {
@@ -73,7 +74,8 @@ export function* watchCustomer() {
 export function* watchLogin() {
     yield all([
         takeEvery(actions.LOGIN_USER, loginUserSaga),
-        takeEvery(actions.CHECK_AUTH_SUCCESS, checkUserSaga)
+        takeEvery(actions.CHECK_AUTH_SUCCESS, checkUserSaga),
+        takeEvery(actions.LOGOUT, logoutUserSaga)
     ]);
 }
 
