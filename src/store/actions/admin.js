@@ -28,6 +28,15 @@ export const submitEditBranch = (id,payload, successHandler, errorHandler) => {
     }
 }
 
+export const submitDeleteBranch = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_BRANCH,
+        id:id,
+        successHandler,
+        errorHandler,
+    }
+}
+
 export const getCompanyData = (param, successHandler, errorHandler) => {
     return {
         type: actions.GET_COMPANY_DATA,
@@ -164,6 +173,126 @@ export const submitEditUserMobile = (id,payload, successHandler, errorHandler) =
         type: actions.SUBMIT_EDIT_USERMOBILE,
         id:id,
         payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getProductType = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PRODUCTTYPE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddProductType = (payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PRODUCTTYPE,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditProductType = (id,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PRODUCTTYPE,
+        id:id,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getProductData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PRODUCT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddProduct = (payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PRODUCT,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditProduct = (id,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PRODUCT,
+        id:id,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getReportData = (param,typefile, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_REPORT_DATA,
+        param: param,
+        typefile:typefile,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getReportTemplateData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_REPORT_TEMPLATE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteRole = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_ROLE,
+        id:id,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteUser = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_USER,
+        id:id,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteUserMobile = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_USER_MOBILE,
+        id:id,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteCustomer = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_CUSTOMER,
+        id:id,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteCustomerType = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_CUSTOMER_TYPE,
+        id:id,
         successHandler,
         errorHandler,
     }

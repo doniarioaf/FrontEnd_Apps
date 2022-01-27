@@ -6,8 +6,11 @@ import ContentWrapper               from '../../../components/Layout/ContentWrap
 import {useDispatch}   from 'react-redux';
 import Swal                         from 'sweetalert2';
 import * as actions                 from '../../../store/actions';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { MenuCustomerType } from '../../shared/permissionMenu';
 
 const CustomerTypeIndex = () => {
+    reloadToHomeNotAuthorize(MenuCustomerType,'READ');
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
@@ -44,14 +47,14 @@ const CustomerTypeIndex = () => {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'error'
+            text: error
         })
     }
 
     return (
         <ContentWrapper>
             <div className="content-heading">
-                <span><Trans t={t} i18nKey={'Customer Type'}>Customer Type</Trans></span>
+                <span><Trans t={t} i18nKey={'label_CUSTOMER_TYPE'}>Customer Type</Trans></span>
             </div>
             <Container fluid>
             <Card>

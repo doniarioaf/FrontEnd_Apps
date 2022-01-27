@@ -73,7 +73,7 @@ const MenuListComposition = (props) => {
             >
                 {office}
             </Button> */}
-            <Tooltip title={i18n.t('tooltip.header.LANGUAGE')}>
+            <Tooltip title={i18n.t('label_CHANGE_LANGUAGE')}>
                 <Button
                     className={props.onMenu ? classes.buttonWhite : classes.buttonBlack}
                     aria-controls="simple-menu"

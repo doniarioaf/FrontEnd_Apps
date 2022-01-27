@@ -23,6 +23,8 @@ import React, {useState,
   import moment                       from "moment/moment";
   import {Loading}                    from '../../../components/Common/Loading';
   import Grid                         from './gridPermissions';
+  import { reloadToHomeNotAuthorize,isGetPermissions} from '../../shared/globalFunc';
+import { MenuRole, editRole_Permission,deleteRole_Permission } from '../../shared/permissionMenu';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,7 +36,7 @@ import React, {useState,
   }));
 
   function Detail(props) {
-    // reloadToHomeNotAuthorize(DetailInternalUser_Permission,'READ');
+    reloadToHomeNotAuthorize(MenuRole,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
@@ -99,8 +101,50 @@ import React, {useState,
                 }
             ], []);
             setRowsPermissions(theData);
+            setHeightGridList(theData);
         }     
         setLoading(false);
+    }
+
+    const setHeightGridList = (dataval) =>{
+        if(dataval.length > 2){
+            let height = ( 50 * (dataval.length - 2) ) + StartdefaultHeight;
+            if(height > 800){
+                height = 800;
+            }
+            setdefaultHeight(height+'px');
+        }
+    }
+
+    const submitHandlerDelete = () => {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                dispatch(actions.submitDeleteRole(id,succesHandlerSubmit, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+    }
+
+    const succesHandlerSubmit = (data) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(pathmenu.menuRole);
+            }
+        })
     }
 
     function errorHandler(error) {
@@ -218,7 +262,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editrole+'/'+id)}>{i18n.t('label_EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editRole_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editrole+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteRole_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}
@@ -239,7 +284,7 @@ import React, {useState,
         <div><p className="lead text-center"><h2>List Permissions</h2></p></div>
         <Card>
         <CardBody>
-        <div className="table-responsive" style={{height:defaultHeight}}>
+        <div className="table-responsive" style={{height:'1000px'}}>
             <Grid
                 rows={RowsPermissions}
                 columns={columns}

@@ -14,9 +14,12 @@ import {useDispatch}   from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { addRole_Permission } from '../../shared/permissionMenu';
 
 
 export default function AddFormRole(props) {
+    reloadToHomeNotAuthorize(addRole_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -211,7 +214,7 @@ export default function AddFormRole(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddPermissions">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Add Role')}</span>
+                            <span>{i18n.t('label_ADD_ROLE')}</span>
                             </div>
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
@@ -312,7 +315,8 @@ export default function AddFormRole(props) {
 
                             <Card>
                             <CardBody>
-                            <div className="table-responsive" style={{height:defaultHeight}}>
+                            <div className="table-responsive" style={{height:'1000px'}}>
+                            {/* <div className="table-responsive" style={{height:defaultHeight}}> */}
                                 <Grid
                                     rows={RowsPermissions}
                                     columns={columns}

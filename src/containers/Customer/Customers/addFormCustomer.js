@@ -7,14 +7,15 @@ import * as actions                 from '../../../store/actions';
 import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import {useDispatch}   from 'react-redux';
-// import { reloadToHomeNotAuthorize } from '../../../../shared/maskFunc';
 import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-// import { AddInternalUser_Permission } from '../../../../shared/PermissionForFeatures';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { addCustomer_Permission } from '../../shared/permissionMenu';
 
 
 export default function AddFormCompany(props) {
+    reloadToHomeNotAuthorize(addCustomer_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -278,7 +279,7 @@ export default function AddFormCompany(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="formAddCustomer">
                             <ContentWrapper>
                             <div className="content-heading" >
-                            <span>{i18n.t('Add Customer')}</span>
+                            <span>{i18n.t('label_ADD_CUSTOMER')}</span>
                             </div>
 
                             <div className="row mt-2">
@@ -302,7 +303,7 @@ export default function AddFormCompany(props) {
                             <div className="invalid-feedback-custom">{ErrInputName}</div>
 
                             <label className="mt-3 form-label required" htmlFor="phone">
-                                {i18n.t('Contact Number')}
+                                {i18n.t('label_CONTACT_NUMBER')}
                             </label>
                             <Input
                                 name="phone"
@@ -320,7 +321,7 @@ export default function AddFormCompany(props) {
                             <div className="invalid-feedback-custom">{ErrInputPhone}</div>
 
                             <label className="mt-3 form-label required" htmlFor="address">
-                                {i18n.t('Address')}
+                                {i18n.t('label_ADDRESS')}
                             </label>
                             <Input
                                 name="address"
@@ -356,7 +357,7 @@ export default function AddFormCompany(props) {
                             <div className="invalid-feedback-custom">{ErrInputProvinsi}</div>
 
                             <label className="mt-3 form-label required" htmlFor="city">
-                                {i18n.t('City')}
+                                {i18n.t('label_CITY')}
                             </label>
                             <Input
                                 name="city"
@@ -449,7 +450,7 @@ export default function AddFormCompany(props) {
                             <div className="invalid-feedback-custom">{ErrInputLongitude}</div>
 
                             <label className="mt-3 form-label required" htmlFor="customertype">
-                                {i18n.t('customer type')}
+                                {i18n.t('label_CUSTOMER_TYPE')}
                             </label>
 
                             <DropdownList

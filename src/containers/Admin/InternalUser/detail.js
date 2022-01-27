@@ -24,6 +24,8 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import moment                       from "moment/moment";
   import {Loading}                    from '../../../components/Common/Loading';
+  import { reloadToHomeNotAuthorize,isGetPermissions } from '../../shared/globalFunc';
+  import { MenuInternalUser, editInternalUser_Permission,deleteInternalUser_Permission } from '../../shared/permissionMenu';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,6 +38,7 @@ import React, {useState,
 
 
   function Detail(props) {
+    reloadToHomeNotAuthorize(MenuInternalUser,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
@@ -102,19 +105,50 @@ import React, {useState,
         setLoading(false);
     }
 
+    const submitHandlerDelete = () => {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                dispatch(actions.submitDeleteUser(id,succesHandlerSubmit, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+    }
+
+    const succesHandlerSubmit = (data) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(pathmenu.menuInternalUser);
+            }
+        })
+    }
+
     function errorHandler(error) {
         setLoading(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'error'
+            text: error
         })
     }
 
     return (
         <ContentWrapper>
             <div className="content-heading">
-            <span>{i18n.t('Internal User')}</span>
+            <span>{i18n.t('label_INTERNAL_USERR')}</span>
             </div>
 
             <Container fluid>
@@ -245,7 +279,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editinternaluser+'/'+id)}>{i18n.t('label_EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editInternalUser_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editinternaluser+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteInternalUser_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}

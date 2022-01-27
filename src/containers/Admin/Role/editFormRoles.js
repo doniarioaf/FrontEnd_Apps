@@ -10,13 +10,15 @@ import { IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import "react-widgets/dist/css/react-widgets.css";
 import {useDispatch}   from 'react-redux';
-// import { reloadToHomeNotAuthorize } from '../../../../shared/maskFunc';
 import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { editRole_Permission } from '../../shared/permissionMenu';
 
 
 export default function EditFormRole(props) {
+    reloadToHomeNotAuthorize(editRole_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -230,7 +232,7 @@ export default function EditFormRole(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddPermissions">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Edit Role')}</span>
+                            <span>{i18n.t('label_EDIT_ROLE')}</span>
                             </div>
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
@@ -331,7 +333,8 @@ export default function EditFormRole(props) {
 
                             <Card>
                             <CardBody>
-                            <div className="table-responsive" style={{height:defaultHeight}}>
+                            {/* <div className="table-responsive" style={{height:defaultHeight}}> */}
+                            <div className="table-responsive" style={{height:'1000px'}}>
                                 <Grid
                                     rows={RowsPermissions}
                                     columns={columns}

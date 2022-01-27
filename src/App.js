@@ -10,7 +10,7 @@
  */
 
 import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter,HashRouter } from 'react-router-dom';
 
 // App Routes
 import Routes from './Routes';
@@ -32,9 +32,9 @@ class App extends Component {
     const basename = process.env.NODE_ENV === 'development' ? '/' : (PUBLIC_URL || '/');
 
     return (
-        <BrowserRouter basename={basename}>
+        <HashRouter basename={basename}>
             <Routes />
-        </BrowserRouter>
+        </HashRouter>
     );
 
   }

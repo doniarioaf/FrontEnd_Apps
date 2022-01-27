@@ -7,7 +7,7 @@ import 'core-js/es6/promise';
 import 'core-js/es7/object';
 import 'core-js/es7/array';
 import 'raf/polyfill';
-
+import * as serviceWorker from './serviceWorker';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -25,3 +25,5 @@ ReactDOM.render(
     </Provider>,
     document.getElementById('app')
 );
+
+// serviceWorker.register();

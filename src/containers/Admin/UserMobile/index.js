@@ -7,8 +7,11 @@ import Swal                         from 'sweetalert2';
 import {useHistory}                 from 'react-router-dom';
 import * as actions                 from '../../../store/actions';
 import Grid                         from './grid';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { MenuUserMobile } from '../../shared/permissionMenu';
 
 const UserMobileIndex = () => {
+    reloadToHomeNotAuthorize(MenuUserMobile,'READ');
     const history = useHistory();
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
@@ -37,7 +40,7 @@ const UserMobileIndex = () => {
                     'id': el.id,
                     'name': el.nama ?el.nama:'',
                     'username':el.username?el.username:'',
-                    'notelepon':el.contactnumber?el.contactnumber:'',
+                    'notelepon':el.notelepon?el.notelepon:'',
                     'isactive': el.isactive?el.isactive == true?'Yes':'No':'No'
                 }
             ], []);
@@ -58,7 +61,7 @@ const UserMobileIndex = () => {
     return (
         <ContentWrapper>
             <div className="content-heading">
-                <span><Trans t={t} i18nKey={'User Mobile'}>User Mobile</Trans></span>
+                <span><Trans t={t} i18nKey={'label_MOBILE_USER'}>User Mobile</Trans></span>
             </div>
             <Container fluid>
             <Card>

@@ -67,6 +67,7 @@
     "flot": "themicon/flot",
     "formik": "^2.2.9",
     "get-size": "2.0.3",
+    "google-maps-react": "^2.0.6",
     "history": "4.10.1",
     "html5sortable": "0.11.1",
     "i18next": "12.1.0",

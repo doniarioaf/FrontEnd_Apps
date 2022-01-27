@@ -1,5 +1,6 @@
 import axios        from '../../Axios-BizzApps';
 import {baseCustomerTypeURL,baseCustomerURL} from '../../containers/shared/apiURL';
+import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataCustomerTypeSaga(action) {
     try {
@@ -8,7 +9,7 @@ export function* getDataCustomerTypeSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -19,7 +20,7 @@ export function* submitAddCustomerTypeSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -30,7 +31,7 @@ export function* submitAEditCustomerTypeSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -41,7 +42,7 @@ export function* getDataCustomerSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -52,7 +53,7 @@ export function* submitAddCustomerSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -63,6 +64,6 @@ export function* submitEditCustomerSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }

@@ -10,8 +10,11 @@ import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import Select from 'react-select';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { editUserMobile_Permission } from '../../shared/permissionMenu';
 
 export default function EditFormUserMobile(props) {
+    reloadToHomeNotAuthorize(editUserMobile_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -51,14 +54,21 @@ export default function EditFormUserMobile(props) {
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getUserMobileData('/'+id,successHandlerDetail, errorHandler));
-        dispatch(actions.getCallPlanData('',successHandlerCallPlan, errorHandler));
-        dispatch(actions.getRoleData('',successHandler, errorHandler));
+        // dispatch(actions.getCallPlanData('',successHandlerCallPlan, errorHandler));
+        dispatch(actions.getUserMobileData('/template',successHandler, errorHandler));
         
     }, []);
 
     function successHandler(data) {
         if(data.data){
-            setListRoles(data.data.reduce((obj, el) => (
+            setListRoles(data.data.roleoptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama
+                }]
+            ), []));
+
+            setListCallPlans(data.data.callplanoptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama
@@ -69,16 +79,16 @@ export default function EditFormUserMobile(props) {
 
     }
 
-    function successHandlerCallPlan(data) {
-        if(data.data){
-            setListCallPlans(data.data.reduce((obj, el) => (
-                [...obj, {
-                    value: el.id,
-                    label: el.nama
-                }]
-            ), []));
-        }
-    }
+    // function successHandlerCallPlan(data) {
+    //     if(data.data){
+    //         setListCallPlans(data.data.reduce((obj, el) => (
+    //             [...obj, {
+    //                 value: el.id,
+    //                 label: el.nama
+    //             }]
+    //         ), []));
+    //     }
+    // }
 
     function successHandlerDetail(data) {
         let detail = data.data.user?data.data.user:[];
@@ -287,11 +297,11 @@ export default function EditFormUserMobile(props) {
 
     function errorHandler(error) {
         setLoading(false);
-        let arrMsg = mappingMessageError(error);
+        // let arrMsg = mappingMessageError(error);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: arrMsg.length > 0?i18n.t('label_ERROR.'+arrMsg[0].replaceAll('.','_')):'Error'
+            text: error
         })
     }
 
@@ -334,7 +344,7 @@ export default function EditFormUserMobile(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddUser">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Edit User Mobile')}</span>
+                            <span>{i18n.t('label_EDIT_MOBILE_USER')}</span>
                             </div>
 
                             <div className="row mt-2">
@@ -485,7 +495,7 @@ export default function EditFormUserMobile(props) {
                             <div className="invalid-feedback-custom">{ErrRoles}</div>
 
                             <label className="mt-3 form-label required" htmlFor="callplans">
-                                {i18n.t('Call Plans')}
+                                {i18n.t('label_CALL_PLAN')}
                             </label>
                             <Select
                                 // defaultValue={[options[0], options[1]]}

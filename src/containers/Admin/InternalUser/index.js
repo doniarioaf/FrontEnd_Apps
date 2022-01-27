@@ -4,13 +4,13 @@ import {Trans, useTranslation}      from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
 import {useDispatch}   from 'react-redux';
 import Swal                         from 'sweetalert2';
-import {useHistory}                 from 'react-router-dom';
 import * as actions                 from '../../../store/actions';
-import * as pathmenu           from '../../shared/pathMenu';
 import Grid                         from './grid';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { MenuInternalUser } from '../../shared/permissionMenu';
 
 const InternalUserIndex = () => {
-    const history = useHistory();
+    reloadToHomeNotAuthorize(MenuInternalUser,'READ');
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
     // const [hiddenColumns] = useState(['id']);
@@ -59,7 +59,7 @@ const InternalUserIndex = () => {
     return (
         <ContentWrapper>
             <div className="content-heading">
-                <span><Trans t={t} i18nKey={'Internal User'}>Internal User</Trans></span>
+                <span><Trans t={t} i18nKey={'label_INTERNAL_USERR'}>Internal User</Trans></span>
             </div>
             <Container fluid>
             <Card>

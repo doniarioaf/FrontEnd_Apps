@@ -141,7 +141,7 @@ const ChargesListGrid = props => {
                         <IconDelete/>
                 </IconButton>
                 </Tooltip> */}
-                <Tooltip title={i18n.t('tooltip.VIEWUSER')}>
+                <Tooltip title={i18n.t('grid.DELETE')}>
                     <IconButton color={'primary'} ///MobileUser/detail
                         onClick={() => props.handleSubstractList(row.id)}
                         hidden={props.handleSubstractList?false:true}

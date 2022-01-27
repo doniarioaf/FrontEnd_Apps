@@ -4,16 +4,15 @@ import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
 import {Input,Button,FormGroup,Label} from 'reactstrap';
 import * as actions                 from '../../../store/actions';
-import { createMuiTheme} from '@material-ui/core/styles';
 import {useDispatch}   from 'react-redux';
-// import { reloadToHomeNotAuthorize } from '../../../../shared/maskFunc';
 import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-// import { AddInternalUser_Permission } from '../../../../shared/PermissionForFeatures';
-
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { editBranch_Permission } from '../../shared/permissionMenu';
 
 export default function EditFormBranch(props) {
+    reloadToHomeNotAuthorize(editBranch_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();

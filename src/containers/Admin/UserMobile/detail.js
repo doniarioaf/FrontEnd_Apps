@@ -11,8 +11,6 @@ import React, {useState,
   import {useDispatch}    from 'react-redux';
   import * as actions     from '../../../store/actions';
   import Skeleton         from 'react-loading-skeleton';
-  import styled                       from "styled-components";
-  import Dialog                       from '@material-ui/core/Dialog';
   import * as pathmenu           from '../../shared/pathMenu';
   import ButtonMUI from '@material-ui/core/Button';
   import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -24,6 +22,8 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import moment                       from "moment/moment";
   import {Loading}                    from '../../../components/Common/Loading';
+  import { reloadToHomeNotAuthorize,isGetPermissions } from '../../shared/globalFunc';
+  import { MenuUserMobile, editUserMobile_Permission,deleteUserMobile_Permission } from '../../shared/permissionMenu';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,6 +36,7 @@ import React, {useState,
 
 
   function Detail(props) {
+    reloadToHomeNotAuthorize(MenuUserMobile,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
@@ -112,12 +113,43 @@ import React, {useState,
         setLoading(false);
     }
 
+    const submitHandlerDelete = () => {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                dispatch(actions.submitDeleteUserMobile(id,succesHandlerSubmit, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+    }
+
+    const succesHandlerSubmit = (data) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(pathmenu.menuusermobile);
+            }
+        })
+    }
+
     function errorHandler(error) {
         setLoading(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'error'
+            text: error
         })
     }
 
@@ -213,7 +245,7 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Call Plans')}</span>
+                            <span className="col-md-5">{i18n.t('label_CALL_PLAN')}</span>
                                 <strong className="col-md-7">
                                 {CallPlans}
                                 </strong>
@@ -262,7 +294,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editusermobile+'/'+id)}>{i18n.t('label_EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editUserMobile_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editusermobile+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteUserMobile_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}

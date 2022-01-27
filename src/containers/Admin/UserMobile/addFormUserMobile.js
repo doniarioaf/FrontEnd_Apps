@@ -11,8 +11,11 @@ import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import Select from 'react-select';
 import {mappingMessageError} from '../../../containers/shared/globalFunc';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { addUserMobile_Permission } from '../../shared/permissionMenu';
 
 export default function AddFormUserMobile(props) {
+    reloadToHomeNotAuthorize(addUserMobile_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -49,24 +52,31 @@ export default function AddFormUserMobile(props) {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getCallPlanData('',successHandlerCallPlan, errorHandler));
-        dispatch(actions.getRoleData('',successHandler, errorHandler));
+        // dispatch(actions.getCallPlanData('',successHandlerCallPlan, errorHandler));
+        dispatch(actions.getUserMobileData('/template',successHandler, errorHandler));
     }, []);
 
-    function successHandlerCallPlan(data) {
+    // function successHandlerCallPlan(data) {
+    //     if(data.data){
+    //         setListCallPlans(data.data.reduce((obj, el) => (
+    //             [...obj, {
+    //                 value: el.id,
+    //                 label: el.nama
+    //             }]
+    //         ), []));
+    //     }
+    // }
+
+    function successHandler(data) {
         if(data.data){
-            setListCallPlans(data.data.reduce((obj, el) => (
+            setListRoles(data.data.roleoptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama
                 }]
             ), []));
-        }
-    }
 
-    function successHandler(data) {
-        if(data.data){
-            setListRoles(data.data.reduce((obj, el) => (
+            setListCallPlans(data.data.callplanoptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama
@@ -176,7 +186,7 @@ export default function AddFormUserMobile(props) {
         }
 
         if(CallPlans.length == 0){
-            setErrRoles(i18n.t('label_REQUIRED'));
+            setErrCallPlans(i18n.t('label_REQUIRED'));
             flag = false;
         }
         return flag;
@@ -234,13 +244,12 @@ export default function AddFormUserMobile(props) {
 
 
     function errorHandler(error) {
-        console.log('errorHandler ',error);
         setLoading(false);
-        let arrMsg = mappingMessageError(error);
+        // let arrMsg = mappingMessageError(error);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: arrMsg.length > 0?i18n.t('label_ERROR.'+arrMsg[0].replaceAll('.','_')):'Error'
+            text: error//arrMsg.length > 0?i18n.t('label_ERROR.'+arrMsg[0].replaceAll('.','_')):'Error'
         })
     }
 
@@ -283,7 +292,7 @@ export default function AddFormUserMobile(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddUser">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Add User Mobile')}</span>
+                            <span>{i18n.t('label_ADD_MOBILE_USER')}</span>
                             </div>
 
                             <div className="row mt-2">
@@ -432,7 +441,7 @@ export default function AddFormUserMobile(props) {
                             <div className="invalid-feedback-custom">{ErrRoles}</div>
 
                             <label className="mt-3 form-label required" htmlFor="role">
-                                {i18n.t('Call Plan')}
+                                {i18n.t('label_CALL_PLAN')}
                             </label>
                             <Select
                                 // defaultValue={[options[0], options[1]]}

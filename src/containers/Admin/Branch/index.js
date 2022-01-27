@@ -6,8 +6,11 @@ import ContentWrapper               from '../../../components/Layout/ContentWrap
 import {useDispatch}   from 'react-redux';
 import Swal                         from 'sweetalert2';
 import * as actions                 from '../../../store/actions';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { MenuBranch } from '../../shared/permissionMenu';
 
 const BranchIndex = () => {
+    reloadToHomeNotAuthorize(MenuBranch,'READ');
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
@@ -46,7 +49,7 @@ const BranchIndex = () => {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'error'
+            text: '' + error
         })
     }
 

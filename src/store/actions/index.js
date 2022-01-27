@@ -8,7 +8,8 @@ export {
     loginUser,
     authSuccess,
     checkUser,
-    retrieveDatacheckUser
+    retrieveDatacheckUser,
+    logoutUser
 } from './login';
 
 export {
@@ -29,7 +30,21 @@ export {
     submitDeleteCompany,
     getUserMobileData,
     submitAddUserMobile,
-    submitEditUserMobile
+    submitEditUserMobile,
+    getProductType,
+    submitAddProductType,
+    submitEditProductType,
+    getProductData,
+    submitAddProduct,
+    submitEditProduct,
+    getReportData,
+    getReportTemplateData,
+    submitDeleteBranch,
+    submitDeleteRole,
+    submitDeleteUser,
+    submitDeleteUserMobile,
+    submitDeleteCustomer,
+    submitDeleteCustomerType
 } from './admin';
 
 export {
@@ -42,5 +57,13 @@ export {
 } from './customer';
 
 export {
-    getCallPlanData
+    getCallPlanData,
+    getInfoData,
+    submitAddInfo,
+    submitEditInfo,
+    submitAddCallPlan,
+    submitEditCallPlan,
+    submitDeleteCallPlan,
+    submitDeleteInfo,
+    getMonitoringData
 } from './mobile';

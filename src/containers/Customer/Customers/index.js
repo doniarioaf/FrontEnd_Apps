@@ -6,15 +6,18 @@ import ContentWrapper               from '../../../components/Layout/ContentWrap
 import {useDispatch}   from 'react-redux';
 import Swal                         from 'sweetalert2';
 import * as actions                 from '../../../store/actions';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { MenuCustomer } from '../../shared/permissionMenu';
 
 const CustomerIndex = () => {
+    reloadToHomeNotAuthorize(MenuCustomer,'READ');
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
         {name: 'id', title: 'id'},
         {name: 'name', title: i18n.t('label_NAME')},
-        {name: 'address', title: i18n.t('Address')},
-        {name: 'contactnumber', title: i18n.t('Contact Number')}
+        {name: 'address', title: i18n.t('label_ADDRESS')},
+        {name: 'contactnumber', title: i18n.t('label_CONTACT_NUMBER')}
         
     ]);
     const [tableColumnExtensions] = useState([]);
@@ -47,14 +50,14 @@ const CustomerIndex = () => {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'error'
+            text: error
         })
     }
 
     return (
         <ContentWrapper>
             <div className="content-heading">
-                <span><Trans t={t} i18nKey={'Customer'}>Customer</Trans></span>
+                <span><Trans t={t} i18nKey={'label_CUSTOMER'}>Customer</Trans></span>
             </div>
             <Container fluid>
             <Card>

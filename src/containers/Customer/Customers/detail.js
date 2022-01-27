@@ -11,8 +11,6 @@ import React, {useState,
   import {useDispatch}    from 'react-redux';
   import * as actions     from '../../../store/actions';
   import Skeleton         from 'react-loading-skeleton';
-  import styled                       from "styled-components";
-  import Dialog                       from '@material-ui/core/Dialog';
   import * as pathmenu           from '../../shared/pathMenu';
   import ButtonMUI from '@material-ui/core/Button';
   import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -22,8 +20,9 @@ import React, {useState,
   import MenuItem from '@material-ui/core/MenuItem';
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
-  import moment                       from "moment/moment";
   import {Loading}                    from '../../../components/Common/Loading';
+  import { reloadToHomeNotAuthorize,isGetPermissions } from '../../shared/globalFunc';
+  import { MenuCustomer, editCustomer_Permission,deleteCustomer_Permission } from '../../shared/permissionMenu';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,7 +34,7 @@ import React, {useState,
   }));
 
   function Detail(props) {
-    // reloadToHomeNotAuthorize(DetailInternalUser_Permission,'READ');
+    reloadToHomeNotAuthorize(MenuCustomer,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
@@ -89,19 +88,50 @@ import React, {useState,
         setValue(data.data);
     }
 
+    const submitHandlerDelete = () => {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                dispatch(actions.submitDeleteCustomer(id,succesHandlerSubmit, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+    }
+
+    const succesHandlerSubmit = (data) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(pathmenu.menucustomers);
+            }
+        })
+    }
+
     function errorHandler(error) {
         setLoading(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'error'
+            text: error
         })
     }
 
     return (
         <ContentWrapper>
             <div className="content-heading">
-            <span>{i18n.t('Customer')}</span>
+            <span>{i18n.t('label_CUSTOMER')}</span>
             </div>
             <Container fluid>
             <Card>
@@ -154,14 +184,14 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Phone')}</span>
+                            <span className="col-md-5">{i18n.t('label_CONTACT_NUMBER')}</span>
                                 <strong className="col-md-7">
                                 {value.phone?value.phone:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Address')}</span>
+                            <span className="col-md-5">{i18n.t('label_ADDRESS')}</span>
                                 <strong className="col-md-7">
                                 {value.address?value.address:''}
                                 </strong>
@@ -175,7 +205,7 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('City')}</span>
+                            <span className="col-md-5">{i18n.t('label_CITY')}</span>
                                 <strong className="col-md-7">
                                 {value.city?value.city:''}
                                 </strong>
@@ -210,7 +240,7 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Customer Type')}</span>
+                            <span className="col-md-5">{i18n.t('label_CUSTOMER_TYPE')}</span>
                                 <strong className="col-md-7">
                                 {value.namecustomertype?value.namecustomertype:''}
                                 </strong>
@@ -245,7 +275,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editcustomers+'/'+id)}>{i18n.t('label_EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editCustomer_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editcustomers+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteCustomer_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}

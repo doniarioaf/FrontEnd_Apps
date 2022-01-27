@@ -1,15 +1,14 @@
-import React, { useState,Component } from 'react';
+import React, { useState } from 'react';
 // import { Link } from 'react-router-dom';
 import {Formik}                        from 'formik';
 import { Input } from 'reactstrap';
 import PageFooter               from "../../../components/Pages/PageFooter";
+import { Loading } from '../../../components/Common/Loading';
 import * as actions                 from '../../../store/actions';
-
-
-// import FormValidator from '../../../components/Forms/FormValidator.js';
+import Swal             from "sweetalert2";
 import {useDispatch}   from 'react-redux';
 import {useHistory}                 from 'react-router-dom';
-
+// import {deleteSessionAndLocalStorage} from '../../../containers/shared/globalFunc';
 
 export default function FormLogin(props) {
     const dispatch = useDispatch();
@@ -17,7 +16,11 @@ export default function FormLogin(props) {
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
     const [showpassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
     
+    // useEffect(() => {
+    //     deleteSessionAndLocalStorage();
+    // }, []);
 
     const handleChangeUser = (data) =>{
         let val = data.target.value;
@@ -31,7 +34,8 @@ export default function FormLogin(props) {
         setShowPassword(!showpassword);
     }
     const SubmitLogin = () =>{
-        alert(user+' | '+password);
+        // alert(user+' | '+password);
+        setLoading(true);
         var obj = new Object();
         obj.user = user;
         obj.password = password;
@@ -39,14 +43,32 @@ export default function FormLogin(props) {
 
     }
     const succesHandlerSubmit = (data) => {
-        console.log('succesHandlerSubmit ',data);
-        if(data){
-            history.push('/home');
+        // console.log('succesHandlerSubmit ',data);
+        setLoading(false);
+        if(data.flag){
+            if(data.msg !== ''){
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Information',
+                    text: data.msg
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        history.push('/home');
+                    }
+                })
+            }else{
+                history.push('/home');
+            }
         }
         // alert('succesHandlerSubmit '+data);
     }
     const errorHandler = (data) => {
-        alert('errorHandler '+data);
+        setLoading(false);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: '' + data
+        })
     }
     return (
         <Formik
@@ -131,6 +153,7 @@ export default function FormLogin(props) {
                         <button className="btn btn-block btn-primary mt-3" type="button" onClick={() => SubmitLogin()}>Login</button>
                         </form>
                         </div>
+                        {loading && <Loading/>}
                         </div>
                         <PageFooter/>
                     </div>

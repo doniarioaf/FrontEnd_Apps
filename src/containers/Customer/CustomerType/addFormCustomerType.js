@@ -2,16 +2,17 @@ import React, {useState}    from 'react';
 import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
-import {Input,Button,FormGroup,Label} from 'reactstrap';
+import {Input,Button} from 'reactstrap';
 import * as actions                 from '../../../store/actions';
 import {useDispatch}   from 'react-redux';
-// import { reloadToHomeNotAuthorize } from '../../../../shared/maskFunc';
 import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-// import { AddInternalUser_Permission } from '../../../../shared/PermissionForFeatures';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { addCustomerType_Permission } from '../../shared/permissionMenu';
 
 export default function AddFormCustomerType(props) {
+    reloadToHomeNotAuthorize(addCustomerType_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -136,7 +137,7 @@ export default function AddFormCustomerType(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddBranch">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('Add Customer Type')}</span>
+                            <span>{i18n.t('label_ADD_CUSTOMER_TYPE')}</span>
                             </div>
 
                             <label className="mt-3 form-label required" htmlFor="nama">
@@ -158,7 +159,7 @@ export default function AddFormCustomerType(props) {
                             <div className="invalid-feedback-custom">{ErrInputName}</div>
 
                             <label className="mt-3 form-label required" htmlFor="description">
-                                {i18n.t('label_NAME')}
+                                {i18n.t('label_DESCRIPTION')}
                             </label>
                             <Input
                                 name="description"

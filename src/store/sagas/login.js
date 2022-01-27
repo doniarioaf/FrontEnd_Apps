@@ -3,17 +3,24 @@ import axios        from '../../Axios-BizzApps';
 import {put, call}         from 'redux-saga/effects';
 import * as actions                from '../actions';
 import CryptoJS from 'crypto-js';
-import {loginURL,checkAuthURL} from '../../containers/shared/apiURL';
+import {loginURL,checkAuthURL,baseUserAppsURL} from '../../containers/shared/apiURL';
 import * as key from '../../containers/shared/constantKey';
-
+import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* loginUserSaga(action) {
     try {
-        const response = yield AxiosLogin.post(loginURL,action.payload).then(response => response.data);
-        console.log('loginUserSaga ',response);
+        const response = yield AxiosLogin.post(loginURL,action.payload,{timeout:4000})
+        .then(response => response.data ?response.data:[] );
+        // console.log('loginUserSaga ',response);
         let flag = false;
         let responflag = response.data?.token?true:false;
+        let message = '';
         if(response.message == 'SUCCESS' && responflag){
+            if(response.validations){
+                if(response.validations.length > 0){
+                    message = response.validations[0].message;
+                }
+            }
             const permissions = CryptoJS.AES.encrypt(JSON.stringify(response.data.permissions),key.keyEcncrypt).toString();
 
             localStorage.setItem(key.token,response.data.token);
@@ -27,11 +34,12 @@ export function* loginUserSaga(action) {
             yield put(actions.authSuccess(obj));
             flag = true;
         }
-        action.successHandler(flag);
+        let obj = new Object();
+        obj.flag = flag;
+        obj.msg = message;
+        action.successHandler(obj);
     }catch (error) {
-        // toLogout(error);
-        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(error);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -47,5 +55,16 @@ export function* checkUserSaga(action) {
         let obj = new Object();
         obj.success = false;
         yield put(actions.retrieveDatacheckUser(obj));
+    }
+}
+
+export function* logoutUserSaga(action) {
+    try {
+        const response = yield axios.get(baseUserAppsURL('/logout')).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
