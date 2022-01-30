@@ -297,3 +297,21 @@ export const submitDeleteCustomerType = (id, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const submitAddStockProduct = (payload, successHandler, errorHandler) => {
+    return {
+        type: actions.ADD_STOCK_PRODUCT,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitRejectStockProduct = (payload, successHandler, errorHandler) => {
+    return {
+        type: actions.REJECT_STOCK_PRODUCT,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}

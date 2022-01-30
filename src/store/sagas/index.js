@@ -39,7 +39,9 @@ import {
     submitEditRoleSaga,
     submitEditUserAppsSaga,
     submitEditUserMobileSaga,
-    submitPostCompanySaga
+    submitPostCompanySaga,
+    submitAddStockProductSaga,
+    submitRejectStockProductSaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
@@ -113,5 +115,7 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_DELETE_USER_MOBILE, submitDeleteUserMobileSaga),
         takeEvery(actions.SUBMIT_DELETE_CUSTOMER, submitDeleteCustomerSaga),
         takeEvery(actions.SUBMIT_DELETE_CUSTOMER_TYPE, submitDeleteCustomerTypeSaga),
+        takeEvery(actions.ADD_STOCK_PRODUCT, submitAddStockProductSaga),
+        takeEvery(actions.REJECT_STOCK_PRODUCT, submitRejectStockProductSaga),
     ]);
 }

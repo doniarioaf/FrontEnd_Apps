@@ -58,6 +58,13 @@
   "label_NOT_OPEN_THIS_PAGE":"Oopss, Can't Open This Page",
   "label_AUTHORIZED":"User Is Not Authorized",
   "label_CHANGE_LANGUAGE":"Change Language",
+  "label_SHORT_NAME":"Short Name",
+  "label_PRICE_BUY":"Price Buy",
+  "label_PRICE_SELL":"Price Sell",
+  "label_PRODUCT_CODE":"Product Code",
+  "label_CONVERTION1TO4":"Convertion 1 To 4",
+  "label_CONVERTION2TO4":"Convertion 2 To 4",
+  "label_CONVERTION3TO4":"Convertion 3 To 4",
   "grid": {
     "ADD": "Add",
     "EDIT": "Edit",

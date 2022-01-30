@@ -29,12 +29,13 @@ const handleMenu = () => {
                     translate: 'Role',
                     permission:permissionmenu.MenuRole,
                 }
+                ,{
+                    name: 'Product',
+                    path: pathmenu.menuproduct,
+                    translate: 'label_PRODUCT',
+                    permission:permissionmenu.MenuProduct,
+                }
                 // ,{
-                //     name: 'Product',
-                //     path: pathmenu.menuproduct,
-                //     translate: 'label_PRODUCT',
-                //     permission:permissionmenu.MenuProduct,
-                // },{
                 //     name: 'ProductType',
                 //     path: pathmenu.menuproducttype,
                 //     translate: 'label_PRODUCT_TYPE',

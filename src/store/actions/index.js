@@ -44,7 +44,9 @@ export {
     submitDeleteUser,
     submitDeleteUserMobile,
     submitDeleteCustomer,
-    submitDeleteCustomerType
+    submitDeleteCustomerType,
+    submitAddStockProduct,
+    submitRejectStockProduct
 } from './admin';
 
 export {

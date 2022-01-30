@@ -21,6 +21,11 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../../components/Common/Loading';
+  import  {numToMoney} from '../../../shared/globalFunc';
+  import styled                       from "styled-components";
+  import Dialog                       from '@material-ui/core/Dialog';
+  import DialogAddStock from './dialogAddStock';
+  
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,6 +36,12 @@ import React, {useState,
     },
   }));
 
+  const StyledDialog = styled(Dialog)`
+  & > .MuiDialog-container > .MuiPaper-root {
+    height: 500px;
+  }
+`;
+
 
   function Detail(props) {
     // reloadToHomeNotAuthorize(DetailInternalUser_Permission,'READ');
@@ -38,11 +49,14 @@ import React, {useState,
     const history = useHistory();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
+    const [LoadingSend, setLoadingSend] = useState(false);
     const [value, setValue] = useState([]);
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
+    const [ShowDialogStock, setShowDialogStock] = useState(false);
+    const [ShowDialogRejectStock, setShowDialogRejectStock] = useState(false);
     // const [showchangepassword, setShowChangePassword] = useState(false);
     // const [showunlock, setShowUnlock] = useState(false);
     const id = props.match.params.id;
@@ -89,11 +103,38 @@ import React, {useState,
 
     function errorHandler(error) {
         setLoading(false);
+        setLoadingSend(false);
+        setShowDialogStock(false);
+        setShowDialogRejectStock(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: error
         })
+    }
+
+    const succesHandlerSubmit = (data) => {
+        setLoading(false);
+        setLoadingSend(false);
+        setShowDialogStock(false);
+        setShowDialogRejectStock(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.goBack();
+            }
+        })
+    }
+
+    const handleShowDialogAdd = () => {
+        setShowDialogStock(true);
+    }
+
+    const handleShowDialogReject = () => {
+        setShowDialogRejectStock(true);
     }
 
     return (
@@ -161,11 +202,88 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_PRICE_BUY')}</span>
+                                <strong className="col-md-7">
+                                {value.pricebuy?numToMoney(value.pricebuy):''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_PRICE_SELL')}</span>
+                                <strong className="col-md-7">
+                                {value.pricesell?numToMoney(value.pricesell):''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_PRODUCT_CODE')}</span>
+                                <strong className="col-md-7">
+                                {value.productcode?value.productcode:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_SHORT_NAME')}</span>
+                                <strong className="col-md-7">
+                                {value.shortname?value.shortname:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('UOM 1')}</span>
+                                <strong className="col-md-7">
+                                {value.uom1?value.uom1:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('UOM 2')}</span>
+                                <strong className="col-md-7">
+                                {value.uom2?value.uom2:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('UOM 3')}</span>
+                                <strong className="col-md-7">
+                                {value.uom3?value.uom3:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('UOM 4')}</span>
+                                <strong className="col-md-7">
+                                {value.uom4?value.uom4:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_CONVERTION1TO4')}</span>
+                                <strong className="col-md-7">
+                                {value.conversion1to4?value.conversion1to4:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_CONVERTION2TO4')}</span>
+                                <strong className="col-md-7">
+                                {value.conversion2to4?value.conversion2to4:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_CONVERTION3TO4')}</span>
+                                <strong className="col-md-7">
+                                {value.conversion3to4?value.conversion3to4:''}
+                                </strong>
+                            </div>
+
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_PRODUCT_TYPE')}</span>
                                 <strong className="col-md-7">
                                 {value.nameproducttype?value.nameproducttype:''}
                                 </strong>
-                            </div>
+                            </div> */}
 
                         </section>
                     )
@@ -177,6 +295,50 @@ import React, {useState,
             </CardBody>
             </Card>
             </Container>
+
+            <StyledDialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                maxWidth="sm"
+                fullWidth={true}
+                style={{height: '100%'}}
+                open={ShowDialogStock}
+            >
+              {
+                value.nama ?
+                <DialogAddStock
+                  showflag = {setShowDialogStock}
+                  flagloadingsend = {setLoadingSend}
+                  errorhandler = {errorHandler}
+                  succesHandlerSubmit = {succesHandlerSubmit}
+                  data = {value}
+                  type = {"ADD"}
+                />:''
+              }
+              {LoadingSend && <Loading/>}
+              </StyledDialog>
+
+              <StyledDialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                maxWidth="sm"
+                fullWidth={true}
+                style={{height: '100%'}}
+                open={ShowDialogRejectStock}
+            >
+              {
+                value.nama ?
+                <DialogAddStock
+                  showflag = {setShowDialogStock}
+                  flagloadingsend = {setLoadingSend}
+                  errorhandler = {errorHandler}
+                  succesHandlerSubmit = {succesHandlerSubmit}
+                  data = {value}
+                  type = {"REJECT"}
+                />:''
+              }
+              {LoadingSend && <Loading/>}
+              </StyledDialog>
 
             <div className={classes.root}>
         <Paper className={classes.paper}>
@@ -196,9 +358,8 @@ import React, {useState,
                         </div>)
                         :(<div>
                             <MenuItem hidden={false}  onClick={() => history.push(pathmenu.editproduct+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
-                            <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
-                            <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}
+                            <MenuItem hidden={false}  onClick={() => handleShowDialogAdd()}>{i18n.t('Add Stock')}</MenuItem>
+                            <MenuItem hidden={false}  onClick={() => handleShowDialogReject()}>{i18n.t('Reject Stock')}</MenuItem>
                         </div>)
                         
                     }
