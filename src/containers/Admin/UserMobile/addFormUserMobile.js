@@ -69,7 +69,8 @@ export default function AddFormUserMobile(props) {
 
     function successHandler(data) {
         if(data.data){
-            setListRoles(data.data.roleoptions.reduce((obj, el) => (
+            let listfilteroutput = data.data.roleoptions.filter(output => output.nama == 'Mobile');
+            setListRoles(listfilteroutput.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama
