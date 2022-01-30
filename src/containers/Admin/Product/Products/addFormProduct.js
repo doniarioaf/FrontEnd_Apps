@@ -26,10 +26,24 @@ export default function AddFormProduct(props) {
     const [ErrInputShortName, setErrInputShortName] = useState('');
     const [InputProductCode, setInputProductCode] = useState('');
     const [ErrInputProductCode, setErrInputProductCode] = useState('');
+    const [InputBarcode1, setInputBarcode1] = useState('');
+    const [ErrInputBarcode1, setErrInputBarcode1] = useState('');
+    const [InputBarcode2, setInputBarcode2] = useState('');
+    const [ErrInputBarcode2, setErrInputBarcode2] = useState('');
+    const [InputBarcode3, setInputBarcode3] = useState('');
+    const [ErrInputBarcode3, setErrInputBarcode3] = useState('');
+    const [InputBarcode4, setInputBarcode4] = useState('');
+    const [ErrInputBarcode4, setErrInputBarcode4] = useState('');
     const [InputPriceBuy, setInputPriceBuy] = useState('');
     const [ErrInputPriceBuy, setErrInputPriceBuy] = useState('');
     const [InputPriceSell, setInputPriceSell] = useState('');
     const [ErrInputPriceSell, setErrInputPriceSell] = useState('');
+    const [InputPriceSellUOM2, setInputPriceSellUOM2] = useState('');
+    const [ErrInputPriceSellUOM2, setErrInputPriceSellUOM2] = useState('');
+    const [InputPriceSellUOM3, setInputPriceSellUOM3] = useState('');
+    const [ErrInputPriceSellUOM3, setErrInputPriceSellUOM3] = useState('');
+    const [InputPriceSellUOM4, setInputPriceSellUOM4] = useState('');
+    const [ErrInputPriceSellUOM4, setErrInputPriceSellUOM4] = useState('');
     const [InputDescription, setInputDescription] = useState('');
     const [ErrInputDescription, setErrInputDescription] = useState('');
     const [InputUom1, setInputUom1] = useState('PCS');
@@ -129,9 +143,44 @@ export default function AddFormProduct(props) {
         setInputPriceSell(val.replaceAll('.',''));
     }
 
+    const handleInputPriceSellUom2 = (data) =>{
+        let val = data.target.value;
+        setInputPriceSellUOM2(val.replaceAll('.',''));
+    }
+
+    const handleInputPriceSellUom3 = (data) =>{
+        let val = data.target.value;
+        setInputPriceSellUOM3(val.replaceAll('.',''));
+    }
+
+    const handleInputPriceSellUom4 = (data) =>{
+        let val = data.target.value;
+        setInputPriceSellUOM4(val.replaceAll('.',''));
+    }
+
     const handleInputProductCode = (data) =>{
         let val = data.target.value;
         setInputProductCode(val);
+    }
+
+    const handleInputBarcode1 = (data) =>{
+        let val = data.target.value;
+        setInputBarcode1(val);
+    }
+
+    const handleInputBarcode2 = (data) =>{
+        let val = data.target.value;
+        setInputBarcode2(val);
+    }
+
+    const handleInputBarcode3 = (data) =>{
+        let val = data.target.value;
+        setInputBarcode3(val);
+    }
+
+    const handleInputBarcode4 = (data) =>{
+        let val = data.target.value;
+        setInputBarcode4(val);
     }
 
     const handleInputDescription = (data) =>{
@@ -159,6 +208,13 @@ export default function AddFormProduct(props) {
         setErrInputConvertion1to4('');
         setErrInputConvertion2to4('');
         setErrInputConvertion3to4('');
+        setErrInputPriceSellUOM2('');
+        setErrInputPriceSellUOM3('');
+        setErrInputPriceSellUOM4('');
+        setErrInputBarcode1('');
+        setErrInputBarcode2('');
+        setErrInputBarcode3('');
+        setErrInputBarcode4('');
 
         if(InputName == ''){
             setErrInputName(i18n.t('label_REQUIRED'));
@@ -177,19 +233,75 @@ export default function AddFormProduct(props) {
             flag = false;
         }
 
-        if(InputProductCode == ''){
-            setErrInputProductCode(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(InputProductCode == ''){
+        //     setErrInputProductCode(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
         if(InputPriceBuy == ''){
             setErrInputPriceBuy(i18n.t('label_REQUIRED'));
             flag = false;
+        }else{
+            let temp = InputPriceBuy.replaceAll('.','');
+            if(!isNaN(temp)){
+                if(parseInt(temp) <= 0){
+                    setErrInputPriceBuy(i18n.t('label_REQUIRED'));
+                    flag = false;
+                }
+            }
         }
 
         if(InputPriceSell == ''){
             setErrInputPriceSell(i18n.t('label_REQUIRED'));
             flag = false;
+        }else{
+            let temp = InputPriceSell.replaceAll('.','');
+            if(!isNaN(temp)){
+                if(parseInt(temp) <= 0){
+                    setErrInputPriceSell(i18n.t('label_REQUIRED'));
+                    flag = false;
+                }
+            }
         }
+
+        if(InputPriceSellUOM2 == ''){
+            setErrInputPriceSellUOM2(i18n.t('label_REQUIRED'));
+            flag = false;
+        }else{
+            let temp = InputPriceSellUOM2.replaceAll('.','');
+            if(!isNaN(temp)){
+                if(parseInt(temp) <= 0){
+                    setErrInputPriceSellUOM2(i18n.t('label_REQUIRED'));
+                    flag = false;
+                }
+            }
+        }
+
+        if(InputPriceSellUOM3 == ''){
+            setErrInputPriceSellUOM3(i18n.t('label_REQUIRED'));
+            flag = false;
+        }else{
+            let temp = InputPriceSellUOM3.replaceAll('.','');
+            if(!isNaN(temp)){
+                if(parseInt(temp) <= 0){
+                    setErrInputPriceSellUOM3(i18n.t('label_REQUIRED'));
+                    flag = false;
+                }
+            }
+        }
+
+        if(InputPriceSellUOM4 == ''){
+            setErrInputPriceSellUOM4(i18n.t('label_REQUIRED'));
+            flag = false;
+        }else{
+            let temp = InputPriceSellUOM4.replaceAll('.','');
+            if(!isNaN(temp)){
+                if(parseInt(temp) <= 0){
+                    setErrInputPriceSellUOM4(i18n.t('label_REQUIRED'));
+                    flag = false;
+                }
+            }
+        }
+
         if(InputUom1 == ''){
             setErrInputUom1(i18n.t('label_REQUIRED'));
             flag = false;
@@ -255,6 +367,9 @@ export default function AddFormProduct(props) {
             obj.productcode = InputProductCode;
             obj.pricebuy = InputPriceBuy.replaceAll('.','');
             obj.pricesell = InputPriceSell.replaceAll('.','');
+            obj.priceselluom2 = InputPriceSellUOM2.replaceAll('.','');
+            obj.priceselluom3 = InputPriceSellUOM3.replaceAll('.','');
+            obj.priceselluom4 = InputPriceSellUOM4.replaceAll('.','');
             obj.uom1 = InputUom1;
             obj.uom2 = InputUom2;
             obj.uom3 = InputUom3;
@@ -262,6 +377,10 @@ export default function AddFormProduct(props) {
             obj.conversion1to4 = InputConvertion1to4;
             obj.conversion2to4 = InputConvertion2to4;
             obj.conversion3to4 = InputConvertion3to4;
+            obj.barcode1 = InputBarcode1;
+            obj.barcode2 = InputBarcode2;
+            obj.barcode3 = InputBarcode3;
+            obj.barcode4 = InputBarcode4;
             dispatch(actions.submitAddProduct(obj,succesHandlerSubmit, errorHandler));
         }
     }
@@ -313,10 +432,17 @@ export default function AddFormProduct(props) {
                     nama:InputName,
                     shortnama:InputShortName,
                     productcode:InputProductCode,
+                    barcode1:InputBarcode1,
+                    barcode2:InputBarcode2,
+                    barcode3:InputBarcode3,
+                    barcode4:InputBarcode4,
                     description:InputDescription,
                     producttype:SelProductType,
                     pricebuy:InputPriceBuy,
                     pricesell:InputPriceSell,
+                    priceselluom2:InputPriceSellUOM2,
+                    priceselluom3:InputPriceSellUOM3,
+                    priceselluom4:InputPriceSellUOM4,
                     uom1:InputUom1,
                     uom2:InputUom2,
                     uom3:InputUom3,
@@ -415,7 +541,7 @@ export default function AddFormProduct(props) {
                             <div className="invalid-feedback-custom">{ErrInputPriceBuy}</div>
 
                             <label className="mt-3 form-label required" htmlFor="pricesell">
-                                {i18n.t('label_PRICE_SELL')}
+                                {i18n.t('Price UOM 1')}
                             </label>
                             <Input
                                 name="pricesell"
@@ -431,26 +557,134 @@ export default function AddFormProduct(props) {
                                 value={values.pricesell !== ''?numToMoney(parseFloat(values.pricesell.replaceAll('.',''))):'' }
                             />
                             <div className="invalid-feedback-custom">{ErrInputPriceSell}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="priceselluom2">
+                                {i18n.t('Price UOM 2')}
+                            </label>
+                            <Input
+                                name="priceselluom2"
+                                // className={
+                                //     touched.pricesell && errors.pricesell
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="priceselluom2"
+                                onChange={val => handleInputPriceSellUom2(val)}
+                                onBlur={handleBlur}
+                                value={values.priceselluom2 !== ''?numToMoney(parseFloat(values.priceselluom2.replaceAll('.',''))):'' }
+                            />
+                            <div className="invalid-feedback-custom">{ErrInputPriceSellUOM2}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="priceselluom3">
+                                {i18n.t('Price UOM 3')}
+                            </label>
+                            <Input
+                                name="priceselluom3"
+                                // className={
+                                //     touched.pricesell && errors.pricesell
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="priceselluom3"
+                                onChange={val => handleInputPriceSellUom3(val)}
+                                onBlur={handleBlur}
+                                value={values.priceselluom3 !== ''?numToMoney(parseFloat(values.priceselluom3.replaceAll('.',''))):'' }
+                            />
+                            <div className="invalid-feedback-custom">{ErrInputPriceSellUOM3}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="priceselluom4">
+                                {i18n.t('Price UOM 4')}
+                            </label>
+                            <Input
+                                name="priceselluom4"
+                                // className={
+                                //     touched.pricesell && errors.pricesell
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="priceselluom4"
+                                onChange={val => handleInputPriceSellUom4(val)}
+                                onBlur={handleBlur}
+                                value={values.priceselluom4 !== ''?numToMoney(parseFloat(values.priceselluom4.replaceAll('.',''))):'' }
+                            />
+                            <div className="invalid-feedback-custom">{ErrInputPriceSellUOM4}</div>
                             </div>
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
 
-                            <label className="mt-3 form-label required" htmlFor="productcode">
-                                {i18n.t('label_PRODUCT_CODE')}
+                            <label className="mt-3 form-label required" htmlFor="barcode1">
+                                {i18n.t('Barcode 1')}
                             </label>
                             <Input
-                                name="productcode"
+                                name="barcode1"
                                 // className={
                                 //     touched.productcode && errors.productcode
                                 //         ? "w-50 input-error"
                                 //         : "w-50"
                                 // }
                                 type="text"
-                                id="productcode"
-                                onChange={val => handleInputProductCode(val)}
+                                id="barcode1"
+                                onChange={val => handleInputBarcode1(val)}
                                 onBlur={handleBlur}
-                                value={values.productcode}
+                                value={values.barcode1}
                             />
-                            <div className="invalid-feedback-custom">{ErrInputProductCode}</div>
+                            <div className="invalid-feedback-custom">{ErrInputBarcode1}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="barcode2">
+                                {i18n.t('Barcode 2')}
+                            </label>
+                            <Input
+                                name="barcode2"
+                                // className={
+                                //     touched.productcode && errors.productcode
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="barcode2"
+                                onChange={val => handleInputBarcode2(val)}
+                                onBlur={handleBlur}
+                                value={values.barcode2}
+                            />
+                            <div className="invalid-feedback-custom">{ErrInputBarcode2}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="barcode3">
+                                {i18n.t('Barcode 3')}
+                            </label>
+                            <Input
+                                name="barcode3"
+                                // className={
+                                //     touched.productcode && errors.productcode
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="barcode3"
+                                onChange={val => handleInputBarcode3(val)}
+                                onBlur={handleBlur}
+                                value={values.barcode3}
+                            />
+                            <div className="invalid-feedback-custom">{ErrInputBarcode3}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="barcode4">
+                                {i18n.t('Barcode 4')}
+                            </label>
+                            <Input
+                                name="barcode4"
+                                // className={
+                                //     touched.productcode && errors.productcode
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="barcode4"
+                                onChange={val => handleInputBarcode4(val)}
+                                onBlur={handleBlur}
+                                value={values.barcode4}
+                            />
+                            <div className="invalid-feedback-custom">{ErrInputBarcode4}</div>
 
                             <label className="mt-3 form-label required" htmlFor="description">
                                 {i18n.t('label_DESCRIPTION')}

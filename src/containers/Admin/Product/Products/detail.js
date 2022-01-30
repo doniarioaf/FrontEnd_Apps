@@ -193,6 +193,12 @@ import React, {useState,
                                 </strong>
                             </div>
 
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_SHORT_NAME')}</span>
+                                <strong className="col-md-7">
+                                {value.shortname?value.shortname:''}
+                                </strong>
+                            </div>
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_DESCRIPTION')}</span>
@@ -209,23 +215,58 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_PRICE_SELL')}</span>
+                            <span className="col-md-5">{i18n.t('Price UOM 1')}</span>
                                 <strong className="col-md-7">
                                 {value.pricesell?numToMoney(value.pricesell):''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_PRODUCT_CODE')}</span>
+                            <span className="col-md-5">{i18n.t('Price UOM 2')}</span>
                                 <strong className="col-md-7">
-                                {value.productcode?value.productcode:''}
+                                {value.priceselluom2?numToMoney(value.priceselluom2):''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_SHORT_NAME')}</span>
+                            <span className="col-md-5">{i18n.t('Price UOM 3')}</span>
                                 <strong className="col-md-7">
-                                {value.shortname?value.shortname:''}
+                                {value.priceselluom3?numToMoney(value.priceselluom3):''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Price UOM 4')}</span>
+                                <strong className="col-md-7">
+                                {value.priceselluom4?numToMoney(value.priceselluom4):''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Barcode 1')}</span>
+                                <strong className="col-md-7">
+                                {value.barcode1?value.barcode1:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Barcode 2')}</span>
+                                <strong className="col-md-7">
+                                {value.barcode2?value.barcode2:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Barcode 3')}</span>
+                                <strong className="col-md-7">
+                                {value.barcode3?value.barcode3:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Barcode 4')}</span>
+                                <strong className="col-md-7">
+                                {value.barcode4?value.barcode4:''}
                                 </strong>
                             </div>
 
