@@ -49,3 +49,4 @@ export const MenuCallPlan = ['READ_CALLPLAN'];
 export const MenuInformation = ['READ_INFO'];
 export const MenuMonitoring = ['READ_REPORT_MONITORING'];
 export const MenuMonitoringMaps = ['READ_MAPS_MONITORING'];
+export const MenuUploadCustomerCallPlan = ['CREATE_UPLOAD_CUSTOMER_CALLPLAN'];

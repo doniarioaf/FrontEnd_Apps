@@ -55,3 +55,12 @@ export const submitEditCustomer = (id,payload, successHandler, errorHandler) => 
         errorHandler,
     }
 }
+
+export const submitUploadFileCustomerCallPlan = (payload, successHandler, errorHandler) => {
+    return {
+        type: actions.UPLOAD_FILE_CUSTOMER_CALL_PLAN,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}

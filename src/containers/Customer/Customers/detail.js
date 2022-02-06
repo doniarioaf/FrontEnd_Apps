@@ -23,6 +23,9 @@ import React, {useState,
   import {Loading}                    from '../../../components/Common/Loading';
   import { reloadToHomeNotAuthorize,isGetPermissions } from '../../shared/globalFunc';
   import { MenuCustomer, editCustomer_Permission,deleteCustomer_Permission } from '../../shared/permissionMenu';
+  import styled                       from "styled-components";
+  import Dialog                       from '@material-ui/core/Dialog';
+//   import DialogUploadFile from './dialogUploadFile';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,6 +35,12 @@ import React, {useState,
       marginRight: theme.spacing(2),
     },
   }));
+
+  const StyledDialog = styled(Dialog)`
+  & > .MuiDialog-container > .MuiPaper-root {
+    height: 500px;
+  }
+`;
 
   function Detail(props) {
     reloadToHomeNotAuthorize(MenuCustomer,'READ');
@@ -44,8 +53,8 @@ import React, {useState,
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
-    // const [showchangepassword, setShowChangePassword] = useState(false);
-    // const [showunlock, setShowUnlock] = useState(false);
+    const [ShowUploadFile, setShowUploadFile] = useState(false);
+    const [loadingsend, setLoadingSend] = useState(false);
     const id = props.match.params.id;
 
     const handleToggle = (flag) => {
@@ -119,8 +128,13 @@ import React, {useState,
         })
     }
 
+    const handleUploadFiles = () => {
+        setShowUploadFile(true);
+    }
+
     function errorHandler(error) {
         setLoading(false);
+        setShowUploadFile(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -277,6 +291,7 @@ import React, {useState,
                         :(<div>
                             <MenuItem hidden={!isGetPermissions(editCustomer_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editcustomers+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteCustomer_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteCustomer_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}
@@ -292,8 +307,27 @@ import React, {useState,
         </Popper>
         </Paper>
         </div>
+
+        <StyledDialog
+        disableBackdropClick
+        disableEscapeKeyDown
+        maxWidth="md"
+        fullWidth={true}
+        style={{height: '100%'}}
+        open={ShowUploadFile}
+        >
+            {/* <DialogUploadFile
+            showflag = {setShowEditCharges}
+            flagloadingsend = {setLoadingSend}
+            errorhandler = {errorHandler}
+            /> */}
+            {loadingsend && <Loading/>}
+        </StyledDialog>
+
         {props.loading && <Loading/>}
         </ContentWrapper>
+
+        
     )
   }
   export default Detail;

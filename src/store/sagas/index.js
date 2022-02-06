@@ -41,7 +41,7 @@ import {
     submitEditUserMobileSaga,
     submitPostCompanySaga
 } from './admin';
-import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga } from './customer';
+import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga, submitUploadFileCustomerCallPlanSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
 
 
@@ -68,6 +68,8 @@ export function* watchCustomer() {
         takeEvery(actions.GET_CUSTOMER_DATA, getDataCustomerSaga),
         takeEvery(actions.SUBMIT_ADD_CUSTOMER, submitAddCustomerSaga),
         takeEvery(actions.SUBMIT_EDIT_CUSTOMER, submitEditCustomerSaga),
+        takeEvery(actions.UPLOAD_FILE_CUSTOMER_CALL_PLAN, submitUploadFileCustomerCallPlanSaga),
+        
     ]);
 }
 

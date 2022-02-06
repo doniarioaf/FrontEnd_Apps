@@ -53,7 +53,8 @@ export {
     submitEditCustomerType,
     getCustomerData,
     submitAddCustomer,
-    submitEditCustomer
+    submitEditCustomer,
+    submitUploadFileCustomerCallPlan
 } from './customer';
 
 export {

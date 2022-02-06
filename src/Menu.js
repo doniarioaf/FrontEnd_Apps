@@ -105,6 +105,19 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuMonitoringMaps,
                 }
             ]
+        },
+        {
+            name: 'Import',
+            icon: 'icon-note',
+            translate: 'Import',
+            submenu:[
+                {
+                    name: 'Import Customer Call Plan',
+                    path: pathmenu.importcustomercallplan,
+                    translate: 'Import Customer Call Plan',
+                    permission:permissionmenu.MenuUploadCustomerCallPlan,
+                }
+            ]
         }
         // ,
         // {
