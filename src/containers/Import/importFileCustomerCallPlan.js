@@ -32,12 +32,35 @@ export default function ImportFileCustomerCallPlan(props) {
 
 	};
 
+    const handleSubmission = () => {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                executeAction();
+                // dispatch(actions.submitDeleteCustomer(id,succesHandlerSubmit, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+    }
 
-	const handleSubmission = () => {
-        setLoading(true);
-        const formData = new FormData();
-		formData.append('file', selectedFile);
-        dispatch(actions.submitUploadFileCustomerCallPlan(formData,succesHandlerSubmit, errorHandler));
+	const executeAction = () => {
+        if(isSelected && selectedFile !== undefined && selectedFile !== null){
+            setLoading(true);
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            dispatch(actions.submitUploadFileCustomerCallPlan(formData,succesHandlerSubmit, errorHandler));
+        }else{
+            errorHandler('Silahkan Pilih File');
+        }
+        
 	};
 
     const succesHandlerSubmit = (data) => {
@@ -101,21 +124,21 @@ export default function ImportFileCustomerCallPlan(props) {
                             </div>
 
                             <input type="file" name="file" onChange={changeHandler} />
-                            {isSelected ? (
+                            {isSelected && selectedFile !== undefined && selectedFile !== null ? (
 
                             <div>
+                                
+                                <p>Nama File: {selectedFile.name || selectedFile.name !== undefined?selectedFile.name:''}</p>
 
-                                <p>Nama File: {selectedFile.name}</p>
+                                <p>Tipe File: {selectedFile.type || selectedFile.type !== undefined?selectedFile.type:''}</p>
 
-                                <p>Tipe File: {selectedFile.type}</p>
-
-                                <p>Ukuran Dalam KB: {selectedFile.size?selectedFile.size / 1024:0}</p>
+                                <p>Ukuran Dalam KB: {selectedFile.size || selectedFile.size !== undefined?selectedFile.size / 1024:0}</p>
 
                                 <p>
 
                                     Terakhir Diubah:{' '}
 
-                                    {selectedFile.lastModifiedDate.toLocaleDateString()}
+                                    {selectedFile.lastModifiedDate || selectedFile.lastModifiedDate !== undefined?selectedFile.lastModifiedDate.toLocaleDateString():''}
 
                                 </p>
 
