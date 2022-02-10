@@ -156,6 +156,7 @@ export default function ImportFileCustomerCallPlan(props) {
                             <Button
                                 // style={{marginLeft:"1%"}}
                                 onClick={() => handleSubmission()}
+                                disabled={loading}
                             >
                             {'Submit'}
                             </Button>
