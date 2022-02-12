@@ -167,6 +167,11 @@ const addCallPlan = lazy(() => import('./containers/Mobile/callplan/addFormCallP
 const detailCallPlan = lazy(() => import('./containers/Mobile/callplan/detail'));
 const editCallPlan = lazy(() => import('./containers/Mobile/callplan/editFormCallPlan'));
 
+const menuProject = lazy(() => import('./containers/Admin/Project'));
+const menuAddProject = lazy(() => import('./containers/Admin/Project/addFormProject'));
+const menuEditProject = lazy(() => import('./containers/Admin/Project/editFormProject'));
+const detailProject = lazy(() => import('./containers/Admin/Project/detail'));
+
 const reportMonitoring = lazy(() => import('./containers/Report/Mobile/reportMobileMonitoring'));
 
 const monitoringMaps = lazy(() => import('./containers/Mobile/MonitoringMaps'));
@@ -351,6 +356,11 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.monitoringmaps} component={waitFor(monitoringMaps)}/>
                             <Route path={pathmenu.importcustomercallplan} component={waitFor(importFileCustomerCallPlan)}/>
                             
+                            <Route path={pathmenu.menuproject} component={waitFor(menuProject)}/>
+                            <Route path={pathmenu.menuaddproject} component={waitFor(menuAddProject)}/>
+                            <Route path={pathmenu.detailproject+'/:id'} component={waitFor(detailProject)}/>
+                            <Route path={pathmenu.editproject+'/:id'} component={waitFor(menuEditProject)}/>
+
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             
                                 {/*Dashboard*/}

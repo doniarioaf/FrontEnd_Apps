@@ -44,7 +44,11 @@ export {
     submitDeleteUser,
     submitDeleteUserMobile,
     submitDeleteCustomer,
-    submitDeleteCustomerType
+    submitDeleteCustomerType,
+    getProjectData,
+    submitAddProject,
+    submitEditProject,
+    submitDeleteProject
 } from './admin';
 
 export {

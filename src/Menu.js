@@ -28,6 +28,11 @@ const handleMenu = () => {
                     path: pathmenu.menuRole,
                     translate: 'Role',
                     permission:permissionmenu.MenuRole,
+                },{
+                    name: 'Project',
+                    path: pathmenu.menuproject,
+                    translate: 'Project',
+                    permission:permissionmenu.MenuProject,
                 }
                 // ,{
                 //     name: 'Product',

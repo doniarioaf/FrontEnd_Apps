@@ -297,3 +297,40 @@ export const submitDeleteCustomerType = (id, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getProjectData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PROJECT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddProject = (payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PROJECT,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditProject = (id,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PROJECT,
+        id:id,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteProject = (id, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_PROJECT,
+        id:id,
+        successHandler,
+        errorHandler,
+    }
+}
