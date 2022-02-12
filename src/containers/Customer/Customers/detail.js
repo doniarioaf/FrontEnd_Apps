@@ -49,6 +49,7 @@ import React, {useState,
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
+    const [Projects, setProjects] = useState('');
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
@@ -94,7 +95,20 @@ import React, {useState,
 
     function successHandler(data) {
         setLoading(false);
-        setValue(data.data);
+        if(data.data){
+            let val = data.data;
+            if(val.projects != null && val.projects){
+                let listproject = val.projects;
+                let arr = [];
+                for(let i=0; i < listproject.length; i++){
+                    arr.push(' '+listproject[i].nama);
+                }
+                setProjects(arr.join());
+            }
+            setValue(val);
+        }
+        
+
     }
 
     const submitHandlerDelete = () => {
@@ -198,6 +212,27 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Customer Code')}</span>
+                                <strong className="col-md-7">
+                                {value.customercode?value.customercode:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Project')}</span>
+                                <strong className="col-md-7">
+                                {Projects}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Contact Person')}</span>
+                                <strong className="col-md-7">
+                                {value.contactperson?value.contactperson:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_CONTACT_NUMBER')}</span>
                                 <strong className="col-md-7">
                                 {value.phone?value.phone:''}
@@ -291,7 +326,7 @@ import React, {useState,
                         :(<div>
                             <MenuItem hidden={!isGetPermissions(editCustomer_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editcustomers+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteCustomer_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deleteCustomer_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            {/* <MenuItem hidden={!isGetPermissions(deleteCustomer_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem> */}
                             {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}
