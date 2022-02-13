@@ -288,12 +288,12 @@ import React, {useState,
                                 </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_CUSTOMER_TYPE')}</span>
                                 <strong className="col-md-7">
                                 {value.namecustomertype?value.namecustomertype:''}
                                 </strong>
-                            </div>
+                            </div> */}
 
                         </section>
                     )

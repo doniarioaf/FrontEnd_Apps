@@ -100,6 +100,7 @@ import { MenuCallPlan, editCallPlan_Permission,deleteCallPlan_Permission } from 
                 let obj = new Object();
                 obj.nama = data.data.nama;
                 obj.description = data.data.description;
+                obj.projectname = data.data.projectname;
                 setValue(obj);
                 if(data.data.customers){
                     let listcustomers = data.data.customers;
@@ -208,6 +209,13 @@ import { MenuCallPlan, editCallPlan_Permission,deleteCallPlan_Permission } from 
                             <span className="col-md-5">{i18n.t('label_NAME')}</span>
                                 <strong className="col-md-7">
                                 {value.nama?value.nama:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Project')}</span>
+                                <strong className="col-md-7">
+                                {value.projectname?value.projectname:''}
                                 </strong>
                             </div>
 

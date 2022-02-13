@@ -76,7 +76,7 @@ export default function EditFormCompany(props) {
             setInputPhone(cust.phone);
             setInputLatitude(cust.latitude);
             setInputLongitude(cust.longitude);
-            setSelCustomerType(cust.idcustomertype);
+            // setSelCustomerType(cust.idcustomertype);
             setInputCustomerCode(cust.customercode);
             setInputContactPerson(cust.contactperson);
         }
@@ -84,12 +84,12 @@ export default function EditFormCompany(props) {
 
     function successHandlerTemplate(data) {
         if(data.data){
-            setListCustomerType(data.data.customertypeoptions.reduce((obj, el) => (
-                [...obj, {
-                    value: el.id,
-                    label: el.nama
-                }]
-            ), []));
+            // setListCustomerType(data.data.customertypeoptions.reduce((obj, el) => (
+            //     [...obj, {
+            //         value: el.id,
+            //         label: el.nama
+            //     }]
+            // ), []));
         }
         setLoading(false);
     }
@@ -206,10 +206,10 @@ export default function EditFormCompany(props) {
         //     setErrInputLongitude(i18n.t('label_REQUIRED'));
         //     flag = false;
         // }
-        if(SelCustomerType == ''){
-            setErrCustomerType(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(SelCustomerType == ''){
+        //     setErrCustomerType(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         if(InputContactPerson == ''){
             setErrInputContactPerson(i18n.t('label_REQUIRED'));
@@ -251,7 +251,7 @@ export default function EditFormCompany(props) {
             obj.phone = InputPhone;
             obj.latitude = InputLatitude;
             obj.longitude = InputLongitude;
-            obj.idcustomertype = SelCustomerType;
+            obj.idcustomertype = 1;//SelCustomerType;
             obj.contactperson = InputContactPerson;
             obj.customercode = InputCustomerCode;
             dispatch(actions.submitEditCustomer(id,obj,succesHandlerSubmit, errorHandler));
@@ -293,7 +293,7 @@ export default function EditFormCompany(props) {
                 phone:InputPhone,
                 latitude:InputLatitude,
                 longitude:InputLongitude,
-                customertype:SelCustomerType,
+                // customertype:SelCustomerType,
                 contactperson:InputContactPerson,
                 customercode:InputCustomerCode,
             }
@@ -530,7 +530,7 @@ export default function EditFormCompany(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputLongitude}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="customertype">
+                            {/* <label className="mt-3 form-label required" htmlFor="customertype">
                                 {i18n.t('label_CUSTOMER_TYPE')}
                             </label>
 
@@ -552,7 +552,7 @@ export default function EditFormCompany(props) {
                                 // disabled={values.isdisabledcountry}
                                 value={values.customertype}
                             />
-                            <div className="invalid-feedback-custom">{ErrCustomerType}</div>
+                            <div className="invalid-feedback-custom">{ErrCustomerType}</div> */}
 
                             </div>
 

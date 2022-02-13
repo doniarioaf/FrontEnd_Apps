@@ -27,6 +27,10 @@ export default function EditFormCallPlan(props) {
     const [InputDescription, setInputDescription] = useState('');
     const [ErrInputDescription, setErrInputDescription] = useState('');
 
+    const [ListProject, SetListProject] = useState([]);
+    const [SelProject, SetSelProject] = useState('');
+    const [ErrSelProject, SetErrSelProject] = useState('');
+
     const [ListCustomer, setListCustomer] = useState([]);
     const [SelCustomer, setSelCustomer] = useState('');
     const [hiddenColumns] = useState(['id']);
@@ -53,6 +57,7 @@ export default function EditFormCallPlan(props) {
             if(data.data){
                 setInputName(data.data.nama);
                 setInputDescription(data.data.description);
+                SetSelProject(data.data.idproject == 0?'':data.data.idproject);
                 if(data.data.customers){
                     let listcustomers = data.data.customers;
                     setRowsCustomer(listcustomers.reduce((obj, el) => (
@@ -78,11 +83,13 @@ export default function EditFormCallPlan(props) {
                 }]
             ), []));
 
-            // let arr = [];
-            // for(let i=1; i < 2100; i++){
-            //     arr.push({value:i,label:'Urutan Ke - '+i});
-            // }
-            // setListCustomer(arr);
+            let listproject = data.data.projectoptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama
+                }]
+            ), []);
+            SetListProject(listproject);
         }
         setLoading(false);
     }
@@ -90,6 +97,11 @@ export default function EditFormCallPlan(props) {
     const handleChangeCustomer = (data) =>{
         let id = data?.value ? data.value : '';
         setSelCustomer(id);
+    }
+
+    const handleChangeProject = (data) =>{
+        let id = data?.value ? data.value : '';
+        SetSelProject(id);
     }
 
     const setHeightGridList = (dataval) =>{
@@ -134,6 +146,7 @@ export default function EditFormCallPlan(props) {
         let flag = true;
         setErrInputName('');
         setErrInputDescription('');
+        SetErrSelProject('');
         
         if(InputName == ''){
             setErrInputName(i18n.t('label_REQUIRED'));
@@ -141,6 +154,11 @@ export default function EditFormCallPlan(props) {
         }
         if(InputDescription == ''){
             setErrInputDescription(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+
+        if(SelProject == ''){
+            SetErrSelProject(i18n.t('label_REQUIRED'));
             flag = false;
         }
         return flag;
@@ -153,6 +171,7 @@ export default function EditFormCallPlan(props) {
             let obj = new Object();
             obj.nama = InputName;
             obj.description = InputDescription;
+            obj.idproject = SelProject;
             let listcustomer= [];
             for(let i=0; i < RowsCustomer.length > 0 ; i++){
                 let rows = RowsCustomer[i];
@@ -219,7 +238,8 @@ export default function EditFormCallPlan(props) {
             {
             nama:InputName,
             description:InputDescription,
-            customer:SelCustomer
+            customer:SelCustomer,
+            project:SelProject
             }   
         }
         validate={values => {
@@ -270,6 +290,30 @@ export default function EditFormCallPlan(props) {
                                 value={values.nama}
                             />
                             <div className="invalid-feedback-custom">{ErrInputName}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="project">
+                                {i18n.t('Project')}
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="project"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeProject(val)}
+                                onBlur={val => setFieldTouched("project", val?.value ? val.value : '')}
+                                data={ListProject}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.project}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelProject}</div>
 
                             <label className="mt-3 form-label required" htmlFor="namebranch">
                                 {i18n.t('label_DESCRIPTION')}

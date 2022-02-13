@@ -33,6 +33,10 @@ export default function ReportMobileMonitoring(props) {
     const [SelUserMobile, SetSelUserMobile] = useState('');
     const [ErrSelUserMobile, SetErrSelUserMobile] = useState('');
 
+    const [ListProject, SetListProject] = useState([]);
+    const [SelProject, SetSelProject] = useState('');
+    const [ErrSelProject, SetErrSelProject] = useState('');
+
     const [selectedUserMobile, setSelectedUserMobile] = useState([]);
     const [UserMobile, setUserMobile] = useState([]);
 
@@ -43,12 +47,22 @@ export default function ReportMobileMonitoring(props) {
     }, []);
     const succesHandlerTemplate = (data) => {
         if(data.data){
-            SetListUserMobile(data.data.reduce((obj, el) => (
+            // console.log('succesHandlerTemplate ',data);
+            SetListUserMobile(data.data.userMobileOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama
                 }]
             ), []));
+            
+            let listproject = data.data.projectoptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama
+                }]
+            ), []);
+            listproject.push({value: 'ALL',label:'ALL'});
+            SetListProject(listproject);
             setLoading(false);
         }
     }
@@ -56,8 +70,14 @@ export default function ReportMobileMonitoring(props) {
     const checkColumnMandatory = () => {
         let flag = true;
         SetErrSelUserMobile('');
+        SetErrSelProject('');
         if(UserMobile.length == 0){
             SetErrSelUserMobile(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+
+        if(SelProject == ''){
+            SetErrSelProject(i18n.t('label_REQUIRED'));
             flag = false;
         }
         return flag;
@@ -69,8 +89,9 @@ export default function ReportMobileMonitoring(props) {
             let startDate = moment(start).format('YYYY-MM-DD');
             let thruDate = moment(end).format('YYYY-MM-DD');
             let listId = UserMobile.join(',');
+            let project = SelProject == 'ALL' || SelProject == ''?0:SelProject;
             let typereport = output; 
-            let pathURL = '/monitoring?idusermobile='+listId+'&from='+startDate+'&thru='+thruDate+'&type='+typereport;
+            let pathURL = '/monitoring?idusermobile='+listId+'&from='+startDate+'&thru='+thruDate+'&type='+typereport+'&project='+project;
             if(output == 'XLSX'){
                 dispatch(actions.getReportData(pathURL,'application/vnd.ms-excel',succesHandlerSubmit, errorHandler));
             }else{
@@ -115,6 +136,11 @@ export default function ReportMobileMonitoring(props) {
         SetSelUserMobile(id);
     }
 
+    const handleChangeProject = (data) =>{
+        let id = data?.value ? data.value : '';
+        SetSelProject(id);
+    }
+
     const handleChangeOutPut = (data) =>{
         let id = data?.value ? data.value : '';
         setOutput(id);
@@ -154,6 +180,7 @@ export default function ReportMobileMonitoring(props) {
         initialValues={
             {
                 usermobile:SelUserMobile,
+                project:SelProject,
                 startdate:start !== null ? moment(start, "DD MMMM YYYY").toDate() : new Date(),
                 enddate:end !== null ? moment(end, "DD MMMM YYYY").toDate(): new Date(),
                 outputtype:output !== ''?output: 'XLSX',
@@ -263,6 +290,30 @@ export default function ReportMobileMonitoring(props) {
                                 // placeholder={i18n.t('select.SELECT_OPTION')}
                             />
                             <div className="invalid-feedback-custom">{ErrSelUserMobile}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="project">
+                                {i18n.t('Project')}
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="project"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeProject(val)}
+                                onBlur={val => setFieldTouched("project", val?.value ? val.value : '')}
+                                data={ListProject}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.project}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelProject}</div>
 
                             <label className="mt-3 form-label required" htmlFor="outputtype" >
                                 {i18n.t('Output Type')}

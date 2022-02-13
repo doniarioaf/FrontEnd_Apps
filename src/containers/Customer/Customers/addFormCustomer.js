@@ -63,12 +63,12 @@ export default function AddFormCompany(props) {
 
     function successHandlerTemplate(data) {
         if(data.data){
-            setListCustomerType(data.data.customertypeoptions.reduce((obj, el) => (
-                [...obj, {
-                    value: el.id,
-                    label: el.nama
-                }]
-            ), []));
+            // setListCustomerType(data.data.customertypeoptions.reduce((obj, el) => (
+            //     [...obj, {
+            //         value: el.id,
+            //         label: el.nama
+            //     }]
+            // ), []));
         }
         setLoading(false);
     }
@@ -185,10 +185,10 @@ export default function AddFormCompany(props) {
         //     setErrInputLongitude(i18n.t('label_REQUIRED'));
         //     flag = false;
         // }
-        if(SelCustomerType == ''){
-            setErrCustomerType(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(SelCustomerType == ''){
+        //     setErrCustomerType(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         if(InputContactPerson == ''){
             setErrInputContactPerson(i18n.t('label_REQUIRED'));
@@ -230,7 +230,7 @@ export default function AddFormCompany(props) {
             obj.phone = InputPhone;
             obj.latitude = InputLatitude;
             obj.longitude = InputLongitude;
-            obj.idcustomertype = SelCustomerType;
+            obj.idcustomertype = 1;//SelCustomerType;
             obj.contactperson = InputContactPerson;
             obj.customercode = InputCustomerCode;
             dispatch(actions.submitAddCustomer(obj,succesHandlerSubmit, errorHandler));
@@ -507,7 +507,7 @@ export default function AddFormCompany(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputLongitude}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="customertype">
+                            {/* <label className="mt-3 form-label required" htmlFor="customertype">
                                 {i18n.t('label_CUSTOMER_TYPE')}
                             </label>
 
@@ -529,7 +529,7 @@ export default function AddFormCompany(props) {
                                 // disabled={values.isdisabledcountry}
                                 value={values.customertype}
                             />
-                            <div className="invalid-feedback-custom">{ErrCustomerType}</div>
+                            <div className="invalid-feedback-custom">{ErrCustomerType}</div> */}
 
                             </div>
 
