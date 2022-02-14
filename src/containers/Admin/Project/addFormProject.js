@@ -14,22 +14,20 @@ import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { editCallPlan_Permission } from '../../shared/permissionMenu';
+import { addProject_Permission } from '../../shared/permissionMenu';
 
-export default function EditFormCallPlan(props) {
-    reloadToHomeNotAuthorize(editCallPlan_Permission,'TRANSACTION');
+export default function AddFormProject(props) {
+    reloadToHomeNotAuthorize(addProject_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
     const [InputName, setInputName] = useState('');
     const [ErrInputName, setErrInputName] = useState('');
+    const [InputProjectNumber, setInputProjectNumber] = useState('');
+    const [ErrInputProjectNumber, setErrInputProjectNumber] = useState('');
     const [InputDescription, setInputDescription] = useState('');
     const [ErrInputDescription, setErrInputDescription] = useState('');
-
-    const [ListProject, SetListProject] = useState([]);
-    const [SelProject, SetSelProject] = useState('');
-    const [ErrSelProject, SetErrSelProject] = useState('');
 
     const [ListCustomer, setListCustomer] = useState([]);
     const [SelCustomer, setSelCustomer] = useState('');
@@ -44,34 +42,10 @@ export default function EditFormCallPlan(props) {
     const [StartdefaultHeight] = useState(250);
     const [defaultHeight, setdefaultHeight] = useState(StartdefaultHeight+'px');
 
-    const id = props.match.params.id;
-
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getCallPlanData('/'+id,successHandler, errorHandler));
-        dispatch(actions.getCallPlanData('/template',successHandlerTemplate, errorHandler));
+        dispatch(actions.getProjectData('/template',successHandlerTemplate, errorHandler));
     }, []);
-
-    function successHandler(data) {
-            setLoading(false);
-            if(data.data){
-                setInputName(data.data.nama);
-                setInputDescription(data.data.description);
-                SetSelProject(data.data.idproject == 0?'':data.data.idproject);
-                if(data.data.customers){
-                    let listcustomers = data.data.customers;
-                    setRowsCustomer(listcustomers.reduce((obj, el) => (
-                        [...obj, {
-                            id: el.id,
-                            name: el.nama,
-                            address: el.address,
-                            phone: el.phone
-                        }]
-                    ), []));
-                    setHeightGridList(listcustomers);
-                }
-            }
-    }
 
     function successHandlerTemplate(data) {
         if(data.data){
@@ -83,13 +57,11 @@ export default function EditFormCallPlan(props) {
                 }]
             ), []));
 
-            let listproject = data.data.projectoptions.reduce((obj, el) => (
-                [...obj, {
-                    value: el.id,
-                    label: el.nama
-                }]
-            ), []);
-            SetListProject(listproject);
+            // let arr = [];
+            // for(let i=1; i < 2100; i++){
+            //     arr.push({value:i,label:'Urutan Ke - '+i});
+            // }
+            // setListCustomer(arr);
         }
         setLoading(false);
     }
@@ -97,11 +69,6 @@ export default function EditFormCallPlan(props) {
     const handleChangeCustomer = (data) =>{
         let id = data?.value ? data.value : '';
         setSelCustomer(id);
-    }
-
-    const handleChangeProject = (data) =>{
-        let id = data?.value ? data.value : '';
-        SetSelProject(id);
     }
 
     const setHeightGridList = (dataval) =>{
@@ -125,8 +92,8 @@ export default function EditFormCallPlan(props) {
                 let obj = {
                     'id':filter.value,
                     'name':filter.label,
-                    'address': '',//filter.customer.address,
-                    'phone':'',//filter.customer.phone,
+                    'address': filter.customer.address,
+                    'phone':filter.customer.phone,
                 };
                 dataval.push(obj);
                 setRowsCustomer(dataval);
@@ -146,8 +113,7 @@ export default function EditFormCallPlan(props) {
         let flag = true;
         setErrInputName('');
         setErrInputDescription('');
-        SetErrSelProject('');
-        
+        setErrInputProjectNumber('');
         if(InputName == ''){
             setErrInputName(i18n.t('label_REQUIRED'));
             flag = false;
@@ -156,9 +122,8 @@ export default function EditFormCallPlan(props) {
             setErrInputDescription(i18n.t('label_REQUIRED'));
             flag = false;
         }
-
-        if(SelProject == ''){
-            SetErrSelProject(i18n.t('label_REQUIRED'));
+        if(InputProjectNumber == ''){
+            setErrInputProjectNumber(i18n.t('label_REQUIRED'));
             flag = false;
         }
         return flag;
@@ -171,14 +136,14 @@ export default function EditFormCallPlan(props) {
             let obj = new Object();
             obj.nama = InputName;
             obj.description = InputDescription;
-            obj.idproject = SelProject;
+            obj.projectnumber = InputProjectNumber;
             let listcustomer= [];
             for(let i=0; i < RowsCustomer.length > 0 ; i++){
                 let rows = RowsCustomer[i];
                 listcustomer.push(rows.id);
             }
             obj.customers = listcustomer;
-            dispatch(actions.submitEditCallPlan(id,obj,succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitAddProject(obj,succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -223,6 +188,11 @@ export default function EditFormCallPlan(props) {
         setInputDescription(val);
     }
 
+    const handleInputProject = (data) =>{
+        let val = data.target.value;
+        setInputProjectNumber(val);
+    }
+
     const errorHandler = (data) => {
         setLoading(false);
           Swal.fire({
@@ -238,8 +208,8 @@ export default function EditFormCallPlan(props) {
             {
             nama:InputName,
             description:InputDescription,
-            customer:SelCustomer,
-            project:SelProject
+            projectnumber:InputProjectNumber,
+            customer:SelCustomer
             }   
         }
         validate={values => {
@@ -268,12 +238,12 @@ export default function EditFormCallPlan(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddCallPlan">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('label_EDIT_CALL_PLAN')}</span>
+                            <span>{i18n.t('Add Project')}</span>
                             </div>
 
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
-                            <label className="mt-3 form-label required" htmlFor="nama">
+                            <label className="mt-3 form-label required" htmlFor="namebranch">
                                 {i18n.t('label_NAME')}
                             </label>
                             <Input
@@ -288,32 +258,28 @@ export default function EditFormCallPlan(props) {
                                 onChange={val => handleInputName(val)}
                                 onBlur={handleBlur}
                                 value={values.nama}
+                                maxLength={100}
                             />
                             <div className="invalid-feedback-custom">{ErrInputName}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="project">
-                                {i18n.t('Project')}
+                            <label className="mt-3 form-label required" htmlFor="projectnumber">
+                                {i18n.t('Project Number')}
                             </label>
-
-                            <DropdownList
+                            <Input
+                                name="projectnumber"
                                 // className={
-                                //     touched.branch && errors.branch
-                                //         ? "input-error" : ""
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
                                 // }
-                                name="project"
-                                filter='contains'
-                                placeholder={i18n.t('select.SELECT_OPTION')}
-                                
-                                onChange={val => handleChangeProject(val)}
-                                onBlur={val => setFieldTouched("project", val?.value ? val.value : '')}
-                                data={ListProject}
-                                textField={'label'}
-                                valueField={'value'}
-                                // style={{width: '25%'}}
-                                // disabled={values.isdisabledcountry}
-                                value={values.project}
+                                type="text"
+                                id="projectnumber"
+                                onChange={val => handleInputProject(val)}
+                                onBlur={handleBlur}
+                                value={values.projectnumber}
+                                maxLength={20}
                             />
-                            <div className="invalid-feedback-custom">{ErrSelProject}</div>
+                            <div className="invalid-feedback-custom">{ErrInputProjectNumber}</div>
 
                             <label className="mt-3 form-label required" htmlFor="namebranch">
                                 {i18n.t('label_DESCRIPTION')}
@@ -330,6 +296,7 @@ export default function EditFormCallPlan(props) {
                                 onChange={val => handleInputDescription(val)}
                                 onBlur={handleBlur}
                                 value={values.description}
+                                maxLength={200}
                             />
                             <div className="invalid-feedback-custom">{ErrInputDescription}</div>
 

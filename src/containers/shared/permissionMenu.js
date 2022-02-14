@@ -34,6 +34,9 @@ export const addInfo_Permission = ['READ_INFO','CREATE_INFO'];
 export const editInfo_Permission = ['READ_INFO','EDIT_INFO'];
 export const deleteInfo_Permission = ['DELETE_INFO'];
 
+export const addProject_Permission = ['READ_PROJECT','CREATE_PROJECT'];
+export const editProject_Permission = ['READ_PROJECT','EDIT_PROJECT'];
+export const deleteProject_Permission = ['DELETE_PROJECT'];
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
@@ -49,3 +52,5 @@ export const MenuCallPlan = ['READ_CALLPLAN'];
 export const MenuInformation = ['READ_INFO'];
 export const MenuMonitoring = ['READ_REPORT_MONITORING'];
 export const MenuMonitoringMaps = ['READ_MAPS_MONITORING'];
+export const MenuUploadCustomerCallPlan = ['CREATE_UPLOAD_CUSTOMER_CALLPLAN'];
+export const MenuProject = ['READ_PROJECT'];

@@ -21,11 +21,9 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
+  import Grid                         from './gridCustomer';
   import { reloadToHomeNotAuthorize,isGetPermissions } from '../../shared/globalFunc';
-  import { MenuCustomer, editCustomer_Permission,deleteCustomer_Permission } from '../../shared/permissionMenu';
-  import styled                       from "styled-components";
-  import Dialog                       from '@material-ui/core/Dialog';
-//   import DialogUploadFile from './dialogUploadFile';
+import { MenuProject, editProject_Permission,deleteProject_Permission } from '../../shared/permissionMenu';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,26 +34,29 @@ import React, {useState,
     },
   }));
 
-  const StyledDialog = styled(Dialog)`
-  & > .MuiDialog-container > .MuiPaper-root {
-    height: 500px;
-  }
-`;
 
   function Detail(props) {
-    reloadToHomeNotAuthorize(MenuCustomer,'READ');
+    reloadToHomeNotAuthorize(MenuProject,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
-    const [Projects, setProjects] = useState('');
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
-    const [ShowUploadFile, setShowUploadFile] = useState(false);
-    const [loadingsend, setLoadingSend] = useState(false);
+
+    const [RowsCustomer, setRowsCustomer] = useState([]);
+    const [columns] = useState([
+        {name: 'id', title: 'id'},
+        {name: 'name', title: i18n.t('label_NAME')},
+        {name: 'address', title: i18n.t('label_ADDRESS')},
+        {name: 'phone', title: i18n.t('label_CONTACT_NUMBER')},
+    ]);
+    const [StartdefaultHeight] = useState(250);
+    const [defaultHeight, setdefaultHeight] = useState(StartdefaultHeight+'px');
+
     const id = props.match.params.id;
 
     const handleToggle = (flag) => {
@@ -90,25 +91,29 @@ import React, {useState,
 
       useEffect(() => {
         setLoading(true);
-        dispatch(actions.getCustomerData('/'+id,successHandler, errorHandler));
+        dispatch(actions.getProjectData('/'+id,successHandler, errorHandler));
     }, []);
 
-    function successHandler(data) {
-        setLoading(false);
-        if(data.data){
-            let val = data.data;
-            if(val.projects != null && val.projects){
-                let listproject = val.projects;
-                let arr = [];
-                for(let i=0; i < listproject.length; i++){
-                    arr.push(' '+listproject[i].nama);
+        function successHandler(data) {
+            setLoading(false);
+            if(data.data){
+                let obj = new Object();
+                obj.nama = data.data.nama;
+                obj.description = data.data.description;
+                obj.projectnumber = data.data.projectnumber;
+                setValue(obj);
+                if(data.data.customers){
+                    let listcustomers = data.data.customers;
+                    setRowsCustomer(listcustomers.reduce((obj, el) => (
+                        [...obj, {
+                            id: el.id,
+                            name: el.nama,
+                            address: el.address,
+                            phone: el.phone
+                        }]
+                    ), []));
                 }
-                setProjects(arr.join());
             }
-            setValue(val);
-        }
-        
-
     }
 
     const submitHandlerDelete = () => {
@@ -121,7 +126,7 @@ import React, {useState,
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                dispatch(actions.submitDeleteCustomer(id,succesHandlerSubmit, errorHandler));
+                dispatch(actions.submitDeleteProject(id,succesHandlerSubmit, errorHandler));
             //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
             //   Swal.fire('Changes are not saved', '', 'info')
@@ -137,18 +142,13 @@ import React, {useState,
             text: i18n.t('label_SUCCESS')
         }).then((result) => {
             if (result.isConfirmed) {
-                history.push(pathmenu.menucustomers);
+                history.push(pathmenu.menuproject);
             }
         })
     }
 
-    const handleUploadFiles = () => {
-        setShowUploadFile(true);
-    }
-
     function errorHandler(error) {
         setLoading(false);
-        setShowUploadFile(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -159,8 +159,9 @@ import React, {useState,
     return (
         <ContentWrapper>
             <div className="content-heading">
-            <span>{i18n.t('label_CUSTOMER')}</span>
+            <span>{i18n.t('Project')}</span>
             </div>
+
             <Container fluid>
             <Card>
             <CardBody>
@@ -194,15 +195,15 @@ import React, {useState,
                     }
                 </h2>
             </div>
-
+            
             <div className="row mt-2">
             <div className="mt-2 col-lg-4 ft-detail mb-3">
             <Card outline color="primary" className="mb-3" style={{width:"125%"}}>
             <CardHeader className="text-white bg-primary" tag="h4" >{loading ? <Skeleton/> : 'Details'}</CardHeader>
             <CardBody>
                 {
-                    loading ?<Skeleton count={7} height={21} style={{marginTop: '1rem'}}/> :
-                    (
+                     loading ?<Skeleton count={7} height={21} style={{marginTop: '1rem'}}/> :
+                     (
                         <section>
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_NAME')}</span>
@@ -212,97 +213,27 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Customer Code')}</span>
+                            <span className="col-md-5">{i18n.t('Project Number')}</span>
                                 <strong className="col-md-7">
-                                {value.customercode?value.customercode:''}
+                                {value.projectnumber?value.projectnumber:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Project')}</span>
+                            <span className="col-md-5">{i18n.t('label_DESCRIPTION')}</span>
                                 <strong className="col-md-7">
-                                {Projects}
+                                {value.description?value.description:''}
                                 </strong>
                             </div>
 
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Contact Person')}</span>
-                                <strong className="col-md-7">
-                                {value.contactperson?value.contactperson:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_CONTACT_NUMBER')}</span>
-                                <strong className="col-md-7">
-                                {value.phone?value.phone:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_ADDRESS')}</span>
-                                <strong className="col-md-7">
-                                {value.address?value.address:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Provinsi')}</span>
-                                <strong className="col-md-7">
-                                {value.provinsi?value.provinsi:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_CITY')}</span>
-                                <strong className="col-md-7">
-                                {value.city?value.city:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Area')}</span>
-                                <strong className="col-md-7">
-                                {value.areaname?value.areaname:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Sub Area')}</span>
-                                <strong className="col-md-7">
-                                {value.subarename?value.subarename:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Latitude')}</span>
-                                <strong className="col-md-7">
-                                {value.latitude?value.latitude:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Longitude')}</span>
-                                <strong className="col-md-7">
-                                {value.longitude?value.longitude:''}
-                                </strong>
-                            </div>
-
-                            {/* <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_CUSTOMER_TYPE')}</span>
-                                <strong className="col-md-7">
-                                {value.namecustomertype?value.namecustomertype:''}
-                                </strong>
-                            </div> */}
 
                         </section>
-                    )
+                     )
                 }
             </CardBody>
             </Card>
-            </div>    
             </div>
-
+            </div>
             </CardBody>
             </Card>
             </Container>
@@ -324,12 +255,9 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editCustomer_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editcustomers+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deleteCustomer_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
-                            {/* <MenuItem hidden={!isGetPermissions(deleteCustomer_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem> */}
-                            {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
-                            <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
-                            <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}
+                            <MenuItem hidden={!isGetPermissions(editProject_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editproject+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteProject_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            
                         </div>)
                         
                     }
@@ -342,27 +270,24 @@ import React, {useState,
         </Popper>
         </Paper>
         </div>
-
-        <StyledDialog
-        disableBackdropClick
-        disableEscapeKeyDown
-        maxWidth="md"
-        fullWidth={true}
-        style={{height: '100%'}}
-        open={ShowUploadFile}
-        >
-            {/* <DialogUploadFile
-            showflag = {setShowEditCharges}
-            flagloadingsend = {setLoadingSend}
-            errorhandler = {errorHandler}
-            /> */}
-            {loadingsend && <Loading/>}
-        </StyledDialog>
-
         {props.loading && <Loading/>}
-        </ContentWrapper>
 
-        
+        <div><p className="lead text-center"><h2>{i18n.t('label_CUSTOMER')}</h2></p></div>
+        <Card>
+        <CardBody>
+        <div className="table-responsive" style={{height:defaultHeight}}>
+            <Grid
+                rows={RowsCustomer}
+                columns={columns}
+                totalCounts={RowsCustomer.length}
+                loading={loading}
+                columnextension={[]}
+            />
+        </div>
+        </CardBody>
+        </Card>
+
+        </ContentWrapper>
     )
   }
   export default Detail;

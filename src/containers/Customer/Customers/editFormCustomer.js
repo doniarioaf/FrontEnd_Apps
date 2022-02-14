@@ -24,6 +24,10 @@ export default function EditFormCompany(props) {
     const [InputName, setInputName] = useState('');
     const [ErrInputName, setErrInputName] = useState('');
 
+    const [InputCustomerCode, setInputCustomerCode] = useState('');
+    const [InputContactPerson, setInputContactPerson] = useState('');
+    const [ErrInputContactPerson, setErrInputContactPerson] = useState('');
+
     const [InputAddress, setInputAddress] = useState('');
     const [ErrInputAddress, setErrInputAddress] = useState('');
 
@@ -72,20 +76,32 @@ export default function EditFormCompany(props) {
             setInputPhone(cust.phone);
             setInputLatitude(cust.latitude);
             setInputLongitude(cust.longitude);
-            setSelCustomerType(cust.idcustomertype);
+            // setSelCustomerType(cust.idcustomertype);
+            setInputCustomerCode(cust.customercode);
+            setInputContactPerson(cust.contactperson);
         }
     }
 
     function successHandlerTemplate(data) {
         if(data.data){
-            setListCustomerType(data.data.customertypeoptions.reduce((obj, el) => (
-                [...obj, {
-                    value: el.id,
-                    label: el.nama
-                }]
-            ), []));
+            // setListCustomerType(data.data.customertypeoptions.reduce((obj, el) => (
+            //     [...obj, {
+            //         value: el.id,
+            //         label: el.nama
+            //     }]
+            // ), []));
         }
         setLoading(false);
+    }
+
+    const handleInputCustCode = (data) =>{
+        let val = data.target.value;
+        setInputCustomerCode(val);
+    }
+
+    const handleInputContactPerson = (data) =>{
+        let val = data.target.value;
+        setInputContactPerson(val);
     }
 
     const handleInputName = (data) =>{
@@ -152,6 +168,7 @@ export default function EditFormCompany(props) {
         // setErrInputLatitude('');
         // setErrInputLongitude('');
         setErrCustomerType('');
+        setErrInputContactPerson('');
 
         if(InputName == ''){
             setErrInputName(i18n.t('label_REQUIRED'));
@@ -189,8 +206,13 @@ export default function EditFormCompany(props) {
         //     setErrInputLongitude(i18n.t('label_REQUIRED'));
         //     flag = false;
         // }
-        if(SelCustomerType == ''){
-            setErrCustomerType(i18n.t('label_REQUIRED'));
+        // if(SelCustomerType == ''){
+        //     setErrCustomerType(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
+
+        if(InputContactPerson == ''){
+            setErrInputContactPerson(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
@@ -229,7 +251,9 @@ export default function EditFormCompany(props) {
             obj.phone = InputPhone;
             obj.latitude = InputLatitude;
             obj.longitude = InputLongitude;
-            obj.idcustomertype = SelCustomerType;
+            obj.idcustomertype = 1;//SelCustomerType;
+            obj.contactperson = InputContactPerson;
+            obj.customercode = InputCustomerCode;
             dispatch(actions.submitEditCustomer(id,obj,succesHandlerSubmit, errorHandler));
         }
     }
@@ -269,7 +293,9 @@ export default function EditFormCompany(props) {
                 phone:InputPhone,
                 latitude:InputLatitude,
                 longitude:InputLongitude,
-                customertype:SelCustomerType
+                // customertype:SelCustomerType,
+                contactperson:InputContactPerson,
+                customercode:InputCustomerCode,
             }
         }
 
@@ -320,6 +346,41 @@ export default function EditFormCompany(props) {
                                 value={values.nama}
                             />
                             <div className="invalid-feedback-custom">{ErrInputName}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="customercode">
+                                {i18n.t('Customer Code')}
+                            </label>
+                            <Input
+                                name="customercode"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="customercode"
+                                onChange={val => handleInputCustCode(val)}
+                                onBlur={handleBlur}
+                                value={values.customercode}
+                            />
+                            
+                            <label className="mt-3 form-label required" htmlFor="contactperson">
+                                {i18n.t('Contact Person')}
+                            </label>
+                            <Input
+                                name="contactperson"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="contactperson"
+                                onChange={val => handleInputContactPerson(val)}
+                                onBlur={handleBlur}
+                                value={values.contactperson}
+                            />
+                            <div className="invalid-feedback-custom">{ErrInputContactPerson}</div>
 
                             <label className="mt-3 form-label required" htmlFor="phone">
                                 {i18n.t('label_CONTACT_NUMBER')}
@@ -375,6 +436,10 @@ export default function EditFormCompany(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputProvinsi}</div>
 
+                            </div>
+
+                            <div className="mt-2 col-lg-6 ft-detail mb-5">
+                            
                             <label className="mt-3 form-label required" htmlFor="city">
                                 {i18n.t('label_CITY')}
                             </label>
@@ -392,10 +457,7 @@ export default function EditFormCompany(props) {
                                 value={values.city}
                             />
                             <div className="invalid-feedback-custom">{ErrInputCity}</div>
-
-                            </div>
-
-                            <div className="mt-2 col-lg-6 ft-detail mb-5">
+                            
                             <label className="mt-3 form-label required" htmlFor="areaname">
                                 {i18n.t('Area Name')}
                             </label>
@@ -468,7 +530,7 @@ export default function EditFormCompany(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputLongitude}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="customertype">
+                            {/* <label className="mt-3 form-label required" htmlFor="customertype">
                                 {i18n.t('label_CUSTOMER_TYPE')}
                             </label>
 
@@ -490,7 +552,7 @@ export default function EditFormCompany(props) {
                                 // disabled={values.isdisabledcountry}
                                 value={values.customertype}
                             />
-                            <div className="invalid-feedback-custom">{ErrCustomerType}</div>
+                            <div className="invalid-feedback-custom">{ErrCustomerType}</div> */}
 
                             </div>
 

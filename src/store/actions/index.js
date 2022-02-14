@@ -44,7 +44,11 @@ export {
     submitDeleteUser,
     submitDeleteUserMobile,
     submitDeleteCustomer,
-    submitDeleteCustomerType
+    submitDeleteCustomerType,
+    getProjectData,
+    submitAddProject,
+    submitEditProject,
+    submitDeleteProject
 } from './admin';
 
 export {
@@ -53,7 +57,8 @@ export {
     submitEditCustomerType,
     getCustomerData,
     submitAddCustomer,
-    submitEditCustomer
+    submitEditCustomer,
+    submitUploadFileCustomerCallPlan
 } from './customer';
 
 export {

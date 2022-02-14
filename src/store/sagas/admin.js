@@ -1,6 +1,6 @@
 import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
-    baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL} from '../../containers/shared/apiURL';
+    baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL, baseProjectURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -365,6 +365,51 @@ export function* submitDeleteCustomerSaga(action) {
 export function* submitDeleteCustomerTypeSaga(action) {
     try {
         const response = yield axios.delete(baseCustomerTypeURL('/'+action.id)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(handleMessageError(error).msg);
+    }
+}
+
+export function* getProjectDataSaga(action) {
+    try {
+        const response = yield axios.get(baseProjectURL(action.param)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // console.log('error ',error);
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(handleMessageError(error).msg);
+    }
+}
+
+export function* submitAddProjectSaga(action) {
+    try {
+        const response = yield axios.post(baseProjectURL(''),action.payload).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(handleMessageError(error).msg);
+    }
+}
+
+export function* submitEditProjectSaga(action) {
+    try {
+        const response = yield axios.put(baseProjectURL('/'+action.id),action.payload).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(handleMessageError(error).msg);
+    }
+}
+
+export function* submitDeleteProjectSaga(action) {
+    try {
+        const response = yield axios.delete(baseProjectURL('/'+action.id)).then(response => response.data);
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
