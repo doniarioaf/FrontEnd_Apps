@@ -51,14 +51,6 @@ export default function AddFormCallPlan(props) {
 
     function successHandlerTemplate(data) {
         if(data.data){
-            setListCustomer(data.data.customerOptions.reduce((obj, el) => (
-                [...obj, {
-                    value: el.id,
-                    label: el.nama,
-                    customer:el
-                }]
-            ), []));
-
             let listproject = data.data.projectoptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
@@ -78,6 +70,25 @@ export default function AddFormCallPlan(props) {
     const handleChangeProject = (data) =>{
         let id = data?.value ? data.value : '';
         SetSelProject(id);
+        setListCustomer([]);
+        setRowsCustomer([]);
+        setSelCustomer('');
+        setdefaultHeight(StartdefaultHeight+'px');
+        setLoading(true);
+        dispatch(actions.getCallPlanData('/template/searchcustomer/'+id,successHandlerSeacrh, errorHandler));
+    }
+
+    function successHandlerSeacrh(data) {
+        if(data.data){
+        setListCustomer(data.data.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama,
+                    customer:el
+                }]
+            ), []));
+        }
+        setLoading(false);
     }
 
     const setHeightGridList = (dataval) =>{

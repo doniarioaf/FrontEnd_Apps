@@ -53,11 +53,12 @@ export default function EditFormCallPlan(props) {
     }, []);
 
     function successHandler(data) {
-            setLoading(false);
+            // setLoading(false);
             if(data.data){
                 setInputName(data.data.nama);
                 setInputDescription(data.data.description);
                 SetSelProject(data.data.idproject == 0?'':data.data.idproject);
+                dispatch(actions.getCallPlanData('/template/searchcustomer/'+data.data.idproject,successHandlerSeacrh, errorHandler));
                 if(data.data.customers){
                     let listcustomers = data.data.customers;
                     setRowsCustomer(listcustomers.reduce((obj, el) => (
@@ -75,14 +76,6 @@ export default function EditFormCallPlan(props) {
 
     function successHandlerTemplate(data) {
         if(data.data){
-            setListCustomer(data.data.customerOptions.reduce((obj, el) => (
-                [...obj, {
-                    value: el.id,
-                    label: el.nama,
-                    customer:el
-                }]
-            ), []));
-
             let listproject = data.data.projectoptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
@@ -102,6 +95,25 @@ export default function EditFormCallPlan(props) {
     const handleChangeProject = (data) =>{
         let id = data?.value ? data.value : '';
         SetSelProject(id);
+        setListCustomer([]);
+        setRowsCustomer([]);
+        setSelCustomer('');
+        setdefaultHeight(StartdefaultHeight+'px');
+        setLoading(true);
+        dispatch(actions.getCallPlanData('/template/searchcustomer/'+id,successHandlerSeacrh, errorHandler));
+    }
+
+    function successHandlerSeacrh(data) {
+        if(data.data){
+        setListCustomer(data.data.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama,
+                    customer:el
+                }]
+            ), []));
+        }
+        setLoading(false);
     }
 
     const setHeightGridList = (dataval) =>{
@@ -310,7 +322,7 @@ export default function EditFormCallPlan(props) {
                                 textField={'label'}
                                 valueField={'value'}
                                 // style={{width: '25%'}}
-                                // disabled={values.isdisabledcountry}
+                                disabled={true}
                                 value={values.project}
                             />
                             <div className="invalid-feedback-custom">{ErrSelProject}</div>
