@@ -94,10 +94,28 @@ export default function ReportMobileMonitoring(props) {
             let pathURL = '/monitoring?idusermobile='+listId+'&from='+startDate+'&thru='+thruDate+'&type='+typereport+'&project='+project;
             if(output == 'XLSX'){
                 dispatch(actions.getReportData(pathURL,'application/vnd.ms-excel',succesHandlerSubmit, errorHandler));
+            }else if(output == 'PPT'){
+                dispatch(actions.getReportData(pathURL,'application/vnd.ms-powerpoint',succesHandlerSubmitPPT, errorHandler));
             }else{
                 dispatch(actions.getReportData(pathURL,'application/pdf',succesHandlerSubmitPDF, errorHandler));
             }
         }
+    }
+
+    const succesHandlerSubmitPPT = (data) => {
+        var blob = new Blob([data],{ type: 'application/vnd.ms-powerpoint'});
+        var dataUrl = URL.createObjectURL(blob);
+        var fileLink = document.createElement('a');
+        fileLink.href = dataUrl;
+
+        // it forces the name of the downloaded file
+        fileLink.download = 'ReportMonitoring.pptx';
+        fileLink.click();
+        fileLink.remove();
+        setLoading(false);
+        
+        
+        // setFileDoc(data);
     }
 
 
