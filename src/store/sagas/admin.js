@@ -274,7 +274,7 @@ export function* submitEditProductSaga(action) {
 export function* getReportSaga(action) {
     try {
         let resType = '';
-        if(action.typefile === 'application/pdf' || action.typefile === 'application/vnd.ms-excel' || action.typefile === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+        if(action.typefile  === 'application/vnd.ms-powerpoint' || action.typefile === 'application/pdf' || action.typefile === 'application/vnd.ms-excel' || action.typefile === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
             resType = 'arraybuffer'
         }
         // const response = yield axios.get(baseReportURL(action.param)).then(response => response.data);

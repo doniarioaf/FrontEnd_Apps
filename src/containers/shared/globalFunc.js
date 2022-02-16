@@ -74,7 +74,7 @@ export const listTypeReport = () => {
     tempOutPut.push({"value":"XLSX","label":"Excel Format","typeapi":"application/vnd.ms-excel"});
     // tempOutPut.push({"value":"XLS","label":"Excel 97-2003 Format","typeapi":"application/vnd.ms-excel"});
     tempOutPut.push({"value":"PDF","label":"PDF Format","typeapi":"application/pdf"});
-
+    tempOutPut.push({"value":"PPT","label":"PPT Format","typeapi":"application/vnd.ms-powerpoint"});
     return tempOutPut;
 }
 
