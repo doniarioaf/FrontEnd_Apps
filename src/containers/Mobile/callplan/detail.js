@@ -275,7 +275,7 @@ import { MenuCallPlan, editCallPlan_Permission,deleteCallPlan_Permission } from 
         <div><p className="lead text-center"><h2>{i18n.t('label_CUSTOMER')}</h2></p></div>
         <Card>
         <CardBody>
-        <div className="table-responsive" style={{height:defaultHeight}}>
+        <div className="table-responsive" >
             <Grid
                 rows={RowsCustomer}
                 columns={columns}
