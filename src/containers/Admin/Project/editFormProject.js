@@ -301,6 +301,7 @@ export default function EditFormProject(props) {
                                 onChange={val => handleInputProject(val)}
                                 onBlur={handleBlur}
                                 value={values.projectnumber}
+                                disabled={true}
                                 maxLength={20}
                             />
                             <div className="invalid-feedback-custom">{ErrInputProjectNumber}</div>

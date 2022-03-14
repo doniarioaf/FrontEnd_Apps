@@ -240,10 +240,10 @@ export default function ReportMobileMonitoring(props) {
                             </label>
                             <DatePicker
                                     name="startdate"
-                                    onChange={(val) => {
-                                            setFieldValue("startdate", val);
-                                        }
-                                    }
+                                    // onChange={(val) => {
+                                    //         setFieldValue("startdate", val);
+                                    //     }
+                                    // }
                                     onChange={val => handleStartDate(val)}
                                     onBlur={handleBlur}
                                     // defaultValue={Date(moment([]))}
@@ -259,10 +259,10 @@ export default function ReportMobileMonitoring(props) {
                             </label>
                             <DatePicker
                                     name="enddate"
-                                    onChange={(val) => {
-                                            setFieldValue("enddate", val);
-                                        }
-                                    }
+                                    // onChange={(val) => {
+                                    //         setFieldValue("enddate", val);
+                                    //     }
+                                    // }
                                     onChange={val => handleEndDate(val)}
                                     onBlur={handleBlur}
                                     // defaultValue={Date(moment([]))}
