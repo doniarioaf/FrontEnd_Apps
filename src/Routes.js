@@ -178,6 +178,8 @@ const monitoringMaps = lazy(() => import('./containers/Mobile/MonitoringMaps'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 const importFileCustomerCallPlan = lazy(() => import('./containers/Import/importFileCustomerCallPlan'));
+
+const InvoiceMenu = lazy(() => import('./containers/Invoice'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -360,7 +362,8 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.menuaddproject} component={waitFor(menuAddProject)}/>
                             <Route path={pathmenu.detailproject+'/:id'} component={waitFor(detailProject)}/>
                             <Route path={pathmenu.editproject+'/:id'} component={waitFor(menuEditProject)}/>
-
+                            <Route path={pathmenu.invoice} component={waitFor(InvoiceMenu)}/>
+                            
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             
                                 {/*Dashboard*/}

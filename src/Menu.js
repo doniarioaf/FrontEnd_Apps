@@ -33,6 +33,11 @@ const handleMenu = () => {
                     path: pathmenu.menuproject,
                     translate: 'Project',
                     permission:permissionmenu.MenuProject,
+                },{
+                    name: 'Invoice',
+                    path: pathmenu.invoice,
+                    translate: 'Invoice',
+                    permission:permissionmenu.MenuProject,
                 }
                 // ,{
                 //     name: 'Product',
