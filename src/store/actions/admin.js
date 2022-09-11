@@ -334,3 +334,22 @@ export const submitDeleteProject = (id, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getBankAccountData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_DATA_BANK_ACCOUNT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddBankAccount = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_BANK_ACCOUNT,
+        payload:payload,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
