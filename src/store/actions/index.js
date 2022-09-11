@@ -48,7 +48,9 @@ export {
     getProjectData,
     submitAddProject,
     submitEditProject,
-    submitDeleteProject
+    submitDeleteProject,
+    getBankAccountData,
+    submitAddBankAccount
 } from './admin';
 
 export {

@@ -49,3 +49,5 @@ export const menuaddproject = `/admin/add/project`;
 export const detailproject = `/admin/detail/project`;
 export const editproject = `/admin/edit/project`;
 export const invoice = `/admin/invoice`;
+export const menubankaccount = `/admin/bankaccount`;
+export const addbankaccount = `/admin/add/bankaccount`;
