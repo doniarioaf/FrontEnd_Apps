@@ -441,3 +441,27 @@ export function* submitAddBankAccountDataSaga(action) {
         action.errorHandler(handleMessageError(error));
     }
 }
+
+export function* submitEditBankAccountDataSaga(action) {
+    try {
+        const response = yield axios.put(baseBankAccountURL(action.param),action.payload).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // console.log('error ',error);
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitDeleteBankAccountDataSaga(action) {
+    try {
+        const response = yield axios.delete(baseBankAccountURL(action.param)).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // console.log('error ',error);
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(handleMessageError(error));
+    }
+}

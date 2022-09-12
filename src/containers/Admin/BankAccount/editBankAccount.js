@@ -1,4 +1,4 @@
-import React, {useState}    from 'react';
+import React, {useState,useEffect}    from 'react';
 import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
@@ -12,11 +12,11 @@ import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { addBankAccount_Permission } from '../../shared/permissionMenu';
+import { addBranch_Permission } from '../../shared/permissionMenu';
 import "react-widgets/dist/css/react-widgets.css";
 
-export default function AddBankAccount(props) {
-    reloadToHomeNotAuthorize(addBankAccount_Permission,'TRANSACTION');
+export default function EditBankAccount(props) {
+    reloadToHomeNotAuthorize(addBranch_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     momentLocalizer();
@@ -33,6 +33,25 @@ export default function AddBankAccount(props) {
     const [InputCatatan1, setInputCatatan1] = useState('');
     const [InputCatatan2, setInputCatatan2] = useState('');
     const [InputIsActive, setInputIsActive] = useState(true);
+
+    const id = props.match.params.id;
+
+    useEffect(() => {
+        setLoading(true);
+        dispatch(actions.getBankAccountData('/'+id,successHandler, errorHandler));
+    }, []);
+
+    function successHandler(data) {
+        let det = data.data;
+        setInputNamaBank(det.namabank);
+        setInputCabang(det.cabang);
+        setInputNoRek(det.norekening);
+        setInputDateOpen(moment(new Date(det.dateopen), "DD MMMM YYYY").toDate());
+        setInputCatatan1(det.catatan1);
+        setInputCatatan2(det.catatan2);
+        setInputIsActive(det.isactive ? true:false);
+        setLoading(false);
+    }
 
     const handleInputNamaBank = (data) =>{
         let val = data.target.value;
@@ -120,7 +139,7 @@ export default function AddBankAccount(props) {
             obj.catatan1 = InputCatatan1;
             obj.catatan2 = InputCatatan2;
             obj.isactive = InputIsActive;
-            dispatch(actions.submitAddBankAccount('',obj,succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitEditBankAccount('/'+id,obj,succesHandlerSubmit, errorHandler));
         }
     }
 

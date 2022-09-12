@@ -30,7 +30,7 @@ import IconAdd from '../../../components/Icons/IconAdd';
 import * as pathmenu           from '../../shared/pathMenu';
 import {Loading}                    from '../../../components/Common/Loading';
 import { isGetPermissions } from '../../shared/globalFunc';
-import { addBranch_Permission } from '../../shared/permissionMenu';
+import { addBankAccount_Permission,MenuBankAccount } from '../../shared/permissionMenu';
 
 const FilterIcon = ({type, ...restProps}) => {
     return <TableFilterRow.Icon type={type} {...restProps} />;
@@ -56,7 +56,7 @@ const AddButton = ({onExecute}) => {
         <div style={{textAlign: 'center'}} title={i18n.t('grid.ADD')}>
             <Tooltip title={i18n.t('grid.ADD')}>
                 <IconButton 
-                hidden={!isGetPermissions(addBranch_Permission,'TRANSACTION')}
+                hidden={!isGetPermissions(addBankAccount_Permission,'TRANSACTION')}
                 color={'primary'} onClick={() => history.push(pathmenu.addbankaccount)} >
                     <IconAdd/>
                 </IconButton>
@@ -74,7 +74,8 @@ const CellComponent = ({children, row, ...restProps}) => {
             {children}
             <Tooltip title={i18n.t('grid.VIEW')}>
                 <IconButton color={'primary'} 
-                            onClick={() => history.push(pathmenu.detailBranch +'/'+ row.id)}
+                hidden={!isGetPermissions(MenuBankAccount,'TRANSACTION')}
+                            onClick={() => history.push(pathmenu.detailbankaccount +'/'+ row.id)}
                 >
                     <IconView/>
                 </IconButton>
