@@ -181,7 +181,9 @@ const importFileCustomerCallPlan = lazy(() => import('./containers/Import/import
 
 const InvoiceMenu = lazy(() => import('./containers/Invoice'));
 const menuBankAccount = lazy(() => import('./containers/Admin/BankAccount'));
+const detailBankAccount = lazy(() => import('./containers/Admin/BankAccount/detail'));
 const addBankAccount = lazy(() => import('./containers/Admin/BankAccount/addBankAccount'));
+const editBankAccount = lazy(() => import('./containers/Admin/BankAccount/editBankAccount'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -366,6 +368,8 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.editproject+'/:id'} component={waitFor(menuEditProject)}/>
                             <Route path={pathmenu.menubankaccount} component={waitFor(menuBankAccount)}/>
                             <Route path={pathmenu.addbankaccount} component={waitFor(addBankAccount)}/>
+                            <Route path={pathmenu.detailbankaccount+'/:id'} component={waitFor(detailBankAccount)}/>
+                            <Route path={pathmenu.editbankaccount+'/:id'} component={waitFor(editBankAccount)}/>
                             
                             <Route path={pathmenu.invoice} component={waitFor(InvoiceMenu)}/>
                             

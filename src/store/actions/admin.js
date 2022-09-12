@@ -353,3 +353,22 @@ export const submitAddBankAccount = (param,payload, successHandler, errorHandler
         errorHandler,
     }
 }
+
+export const submitEditBankAccount = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_BANK_ACCOUNT,
+        payload:payload,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteBankAccount = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_BANK_ACCOUNT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

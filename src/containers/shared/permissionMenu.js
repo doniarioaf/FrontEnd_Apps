@@ -38,6 +38,10 @@ export const addProject_Permission = ['READ_PROJECT','CREATE_PROJECT'];
 export const editProject_Permission = ['READ_PROJECT','EDIT_PROJECT'];
 export const deleteProject_Permission = ['DELETE_PROJECT'];
 
+export const addBankAccount_Permission = ['CREATE_BANK_ACCOUNT'];
+export const editBankAccount_Permission = ['EDIT_BANK_ACCOUNT','READ_BANK_ACCOUNT'];
+export const deleteBankAccount_Permission = ['DELETE_BANK_ACCOUNT'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -54,3 +58,4 @@ export const MenuMonitoring = ['READ_REPORT_MONITORING'];
 export const MenuMonitoringMaps = ['READ_MAPS_MONITORING'];
 export const MenuUploadCustomerCallPlan = ['CREATE_UPLOAD_CUSTOMER_CALLPLAN'];
 export const MenuProject = ['READ_PROJECT'];
+export const MenuBankAccount = ['READ_BANK_ACCOUNT'];

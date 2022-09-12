@@ -38,7 +38,7 @@ const handleMenu = () => {
                     name: 'Bank Account',
                     path: pathmenu.menubankaccount,
                     translate: 'Bank Account',
-                    permission:permissionmenu.MenuProject,
+                    permission:permissionmenu.MenuBankAccount,
                 },{
                     name: 'Invoice',
                     path: pathmenu.invoice,

@@ -7,10 +7,10 @@ import {useDispatch}   from 'react-redux';
 import Swal                         from 'sweetalert2';
 import * as actions                 from '../../../store/actions';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { MenuBranch } from '../../shared/permissionMenu';
+import { MenuBankAccount } from '../../shared/permissionMenu';
 
 const BankAccountIndex = () => {
-    reloadToHomeNotAuthorize(MenuBranch,'READ');
+    reloadToHomeNotAuthorize(MenuBankAccount,'READ');
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
@@ -25,12 +25,10 @@ const BankAccountIndex = () => {
 
     useEffect(() => {
         setLoading(true);
-        console.log('Start');
         dispatch(actions.getBankAccountData('',successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
-        console.log('Start 1 ',data);
         if(data.data){
             const theData = data.data.reduce((obj, el) => [
                 ...obj,

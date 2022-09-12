@@ -50,7 +50,9 @@ export {
     submitEditProject,
     submitDeleteProject,
     getBankAccountData,
-    submitAddBankAccount
+    submitAddBankAccount,
+    submitEditBankAccount,
+    submitDeleteBankAccount
 } from './admin';
 
 export {
