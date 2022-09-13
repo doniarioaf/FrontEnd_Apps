@@ -2,21 +2,25 @@ import React, {useState, useEffect} from 'react';
 import {Container, Card, CardBody}  from 'reactstrap';
 import {Trans, useTranslation}      from 'react-i18next';
 import Grid                         from './grid';
-import ContentWrapper               from '../../../components/Layout/ContentWrapper'
+import ContentWrapper               from '../../../components/Layout/ContentWrapper';
+import ContentHeading               from '../../../components/Layout/ContentHeading';
 import {useDispatch}   from 'react-redux';
 import Swal                         from 'sweetalert2';
 import * as actions                 from '../../../store/actions';
+import * as pathmenu           from '../../shared/pathMenu';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { MenuBankAccount } from '../../shared/permissionMenu';
+import {useHistory}                 from 'react-router-dom';
 
 const BankAccountIndex = () => {
     reloadToHomeNotAuthorize(MenuBankAccount,'READ');
+    const history = useHistory();
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
         {name: 'id', title: 'id'},
         {name: 'name', title: i18n.t('label_NAME')},
-        {name: 'cabang', title: i18n.t('Cabang')},
+        {name: 'cabang', title: i18n.t('label_BRANCH_BANK')},
         {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);
     const [tableColumnExtensions] = useState([]);
@@ -55,9 +59,7 @@ const BankAccountIndex = () => {
 
     return (
         <ContentWrapper>
-            <div className="content-heading">
-                <span><Trans t={t} i18nKey={'Bank Account'}>Bank Account</Trans></span>
-            </div>
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menubankaccount} label={'label_BANK_ACCOUNT'} labeldefault={'Bank Account'} />
             <Container fluid>
             <Card>
             <CardBody>

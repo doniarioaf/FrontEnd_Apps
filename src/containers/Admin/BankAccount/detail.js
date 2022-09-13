@@ -1,6 +1,7 @@
 import React, {useState,
     useEffect} from 'react';
   import ContentWrapper               from '../../../components/Layout/ContentWrapper';
+  import ContentHeading               from '../../../components/Layout/ContentHeading';
   import {
   Container, Card, CardBody
   , Button, CardHeader
@@ -11,8 +12,8 @@ import React, {useState,
   import {useDispatch}    from 'react-redux';
   import * as actions     from '../../../store/actions';
   import Skeleton         from 'react-loading-skeleton';
-  import styled                       from "styled-components";
-  import Dialog                       from '@material-ui/core/Dialog';
+//   import styled                       from "styled-components";
+//   import Dialog                       from '@material-ui/core/Dialog';
   import * as pathmenu           from '../../shared/pathMenu';
   import ButtonMUI from '@material-ui/core/Button';
   import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -133,9 +134,7 @@ import React, {useState,
 
     return (
         <ContentWrapper>
-            <div className="content-heading">
-            <span>{i18n.t('Bank Account')}</span>
-            </div>
+            <ContentHeading history={history} link={pathmenu.detailbankaccount+'/'+id} label={'label_DETAIL_BANK_ACCOUNT'} labeldefault={'Detail Bank Account'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -180,49 +179,49 @@ import React, {useState,
                     (
                         <section>
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Nama Bank')}</span>
+                            <span className="col-md-5">{i18n.t('label_BANK_NAME')}</span>
                             <strong className="col-md-7">
                                 {value.namabank?value.namabank:''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Cabang')}</span>
+                            <span className="col-md-5">{i18n.t('label_BRANCH_BANK')}</span>
                                 <strong className="col-md-7">
                                 {value.cabang?value.cabang:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('No Rekening')}</span>
+                            <span className="col-md-5">{i18n.t('label_NUMBER_ACCOUNT')}</span>
                                 <strong className="col-md-7">
                                 {value.norekening?value.norekening:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Tanggal Pembukaan')}</span>
+                            <span className="col-md-5">{i18n.t('label_OPENING_DATE')}</span>
                                 <strong className="col-md-7">
                                 {value.dateopen?moment (new Date(value.dateopen)).format('DD MMMM YYYY'):''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Is Active ?')}</span>
+                            <span className="col-md-5">{i18n.t('label_IS_ACTIVE')}</span>
                                 <strong className="col-md-7">
                                 {value.isactive?'Yes':'No'}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Catatan 1')}</span>
+                            <span className="col-md-5">{i18n.t('label_NOTE') +' 1'}</span>
                                 <strong className="col-md-7">
                                 {value.catatan1?value.catatan1:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Catatan 2')}</span>
+                            <span className="col-md-5">{i18n.t('label_NOTE') +' 2'}</span>
                                 <strong className="col-md-7">
                                 {value.catatan2?value.catatan2:''}
                                 </strong>

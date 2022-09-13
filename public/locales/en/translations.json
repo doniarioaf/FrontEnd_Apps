@@ -58,6 +58,30 @@
   "label_NOT_OPEN_THIS_PAGE":"Oopss, Can't Open This Page",
   "label_AUTHORIZED":"User Is Not Authorized",
   "label_CHANGE_LANGUAGE":"Change Language",
+  "label_BRANCH_BANK":"Branch",
+  "label_BANK_NAME":"Bank Name",
+  "label_NUMBER_ACCOUNT":"Number Account",
+  "label_OPENING_DATE":"Opening Date",
+  "label_NOTE":"Notes",
+  "label_BANK_ACCOUNT":"Bank Account",
+  "label_ADD_BANK_ACCOUNT":"Add Bank Account",
+  "label_EDIT_BANK_ACCOUNT":"Edit Bank Account",
+  "label_DETAIL_BANK_ACCOUNT":"Detail Bank Account",
+  "validation": {
+    "bankaccount":{
+      "dateopen":{
+        "empty":"Opening Date Cannot Be Blank",
+        "notvalid":"Invalid Opening Date"
+      },
+      "norekening":{
+        "empty":"Invalid Number Account",
+        "notnumber":"Number Account Must Number"
+      },
+      "cabang":{
+        "empty":"Branch Cannot Be Blank"
+      }
+    }
+  },
   "grid": {
     "ADD": "Add",
     "EDIT": "Edit",
