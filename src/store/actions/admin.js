@@ -372,3 +372,41 @@ export const submitDeleteBankAccount = (param, successHandler, errorHandler) => 
         errorHandler,
     }
 }
+
+export const getCustomerManggalaData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_DATA_CUSTOMER_MANGGALA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddCustomerManggala = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_CUSTOMER_MANGGALA,
+        payload:payload,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditCustomerManggala = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_CUSTOMER_MANGGALA,
+        payload:payload,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteCustomerManggala = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_CUSTOMER_MANGGALA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

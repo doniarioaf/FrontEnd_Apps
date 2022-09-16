@@ -47,7 +47,11 @@ import {
     getBankAccountDataSaga,
     submitAddBankAccountDataSaga,
     submitEditBankAccountDataSaga,
-    submitDeleteBankAccountDataSaga
+    submitDeleteBankAccountDataSaga,
+    getCustomerManggalaDataSaga,
+    submitAddCustomerManggalaSaga,
+    submitEditCustomerManggalaSaga,
+    submitDeleteCustomerManggalaSaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga, submitUploadFileCustomerCallPlanSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
@@ -131,6 +135,10 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_ADD_BANK_ACCOUNT, submitAddBankAccountDataSaga),
         takeEvery(actions.SUBMIT_EDIT_BANK_ACCOUNT, submitEditBankAccountDataSaga),
         takeEvery(actions.SUBMIT_DELETE_BANK_ACCOUNT, submitDeleteBankAccountDataSaga),
+        takeEvery(actions.GET_DATA_CUSTOMER_MANGGALA, getCustomerManggalaDataSaga),
+        takeEvery(actions.SUBMIT_ADD_CUSTOMER_MANGGALA, submitAddCustomerManggalaSaga),
+        takeEvery(actions.SUBMIT_EDIT_CUSTOMER_MANGGALA, submitEditCustomerManggalaSaga),
+        takeEvery(actions.SUBMIT_DELETE_CUSTOMER_MANGGALA, submitDeleteCustomerManggalaSaga),
         
     ]);
 }
