@@ -52,7 +52,12 @@ export {
     getBankAccountData,
     submitAddBankAccount,
     submitEditBankAccount,
-    submitDeleteBankAccount
+    submitDeleteBankAccount,
+    getCustomerManggalaData,
+    submitAddCustomerManggala,
+    submitEditCustomerManggala,
+    submitDeleteCustomerManggala,
+    getAddressData
 } from './admin';
 
 export {

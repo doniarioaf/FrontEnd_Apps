@@ -23,7 +23,6 @@ import React, {useState,
   import MenuItem from '@material-ui/core/MenuItem';
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
-  import moment                       from "moment/moment";
   import {Loading}                    from '../../../components/Common/Loading';
   import { isGetPermissions,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { deleteBankAccount_Permission,editBankAccount_Permission,MenuBankAccount } from '../../shared/permissionMenu';
@@ -84,7 +83,7 @@ import React, {useState,
 
       useEffect(() => {
         setLoading(true);
-        dispatch(actions.getBankAccountData('/'+id,successHandler, errorHandler));
+        dispatch(actions.getCustomerManggalaData('/'+id,successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
@@ -102,7 +101,7 @@ import React, {useState,
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                dispatch(actions.submitDeleteBankAccount('/'+id,succesHandlerSubmit, errorHandler));
+                dispatch(actions.submitDeleteCustomerManggala('/'+id,succesHandlerSubmit, errorHandler));
             //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
             //   Swal.fire('Changes are not saved', '', 'info')
@@ -118,7 +117,7 @@ import React, {useState,
             text: i18n.t('label_SUCCESS')
         }).then((result) => {
             if (result.isConfirmed) {
-                history.push(pathmenu.menubankaccount);
+                history.push(pathmenu.menucustomers);
             }
         })
     }
@@ -132,9 +131,35 @@ import React, {useState,
         })
     }
 
+    const listNoTelpKantor = (data) => {
+        let list = [];
+        let cek = new String(data).includes(',');
+        if(cek){
+            let arrList = new String(data).split(',');
+            for(let i=0; i < arrList.length; i++){
+                list.push(
+                    <div className="row mt-1">
+                    <strong className="col-md-7">
+                    {arrList[i]}
+                    </strong>
+                    </div>
+                )
+            }
+        }else{
+            list.push(
+                <div className="row mt-1">
+                <strong className="col-md-7">
+                {data}
+                </strong>
+                </div>
+            )
+        }
+        return list;
+    }
+
     return (
         <ContentWrapper>
-            <ContentHeading history={history} link={pathmenu.detailbankaccount+'/'+id} label={'label_DETAIL_BANK_ACCOUNT'} labeldefault={'Detail Bank Account'} />
+            <ContentHeading history={history} link={pathmenu.detailcustomers+'/'+id} label={'Detail Customer'} labeldefault={'Detail Customer'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -163,7 +188,7 @@ import React, {useState,
                 <h2>
                     {
                         !loading  ?
-                            value.name :
+                            value.customername :
                             <Skeleton style={{maxWidth: 300}}/>
                     }
                 </h2>
@@ -179,30 +204,72 @@ import React, {useState,
                     (
                         <section>
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_BANK_NAME')}</span>
+                            <span className="col-md-5">{i18n.t('PT/CV')}</span>
                             <strong className="col-md-7">
-                                {value.namabank?value.namabank:''}
+                                {value.customertype?value.customertype:''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_BRANCH_BANK')}</span>
+                            <span className="col-md-5">{i18n.t('Name')}</span>
                                 <strong className="col-md-7">
-                                {value.cabang?value.cabang:''}
+                                {value.customername?value.customername:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_NUMBER_ACCOUNT')}</span>
+                            <span className="col-md-5">{i18n.t('Telp Kantor')}</span>
+                            <strong className="col-md-7">
+                                {listNoTelpKantor(value.telpkantor?value.telpkantor:'')}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Alias')}</span>
                                 <strong className="col-md-7">
-                                {value.norekening?value.norekening:''}
+                                {value.alias?value.alias:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_OPENING_DATE')}</span>
+                            <span className="col-md-5">{i18n.t('NPWP')}</span>
                                 <strong className="col-md-7">
-                                {value.dateopen?moment (new Date(value.dateopen)).format('DD MMMM YYYY'):''}
+                                {value.npwp?value.npwp:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('NIB')}</span>
+                                <strong className="col-md-7">
+                                {value.nib?value.nib:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Provinsi')}</span>
+                                <strong className="col-md-7">
+                                {value.provinsiname?value.provinsiname:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Kota')}</span>
+                                <strong className="col-md-7">
+                                {value.kotaname?value.kotaname:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Kode Pos')}</span>
+                                <strong className="col-md-7">
+                                {value.kodepos?value.kodepos:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Alamat')}</span>
+                                <strong className="col-md-7">
+                                {value.alamat?value.alamat:''}
                                 </strong>
                             </div>
 
@@ -210,20 +277,6 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('label_IS_ACTIVE')}</span>
                                 <strong className="col-md-7">
                                 {value.isactive?'Yes':'No'}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_NOTE') +' 1'}</span>
-                                <strong className="col-md-7">
-                                {value.catatan1?value.catatan1:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_NOTE') +' 2'}</span>
-                                <strong className="col-md-7">
-                                {value.catatan2?value.catatan2:''}
                                 </strong>
                             </div>
 
@@ -255,7 +308,7 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editBankAccount_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editbankaccount+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editBankAccount_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editcustomers+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteBankAccount_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             
                         </div>)

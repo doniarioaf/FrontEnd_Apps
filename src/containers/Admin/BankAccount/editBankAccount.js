@@ -2,6 +2,7 @@ import React, {useState,useEffect}    from 'react';
 import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
+import ContentHeading               from '../../../components/Layout/ContentHeading';
 import {Input,Button,FormGroup,Label} from 'reactstrap';
 import * as actions                 from '../../../store/actions';
 import {useDispatch}   from 'react-redux';
@@ -13,6 +14,7 @@ import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { addBranch_Permission } from '../../shared/permissionMenu';
+import * as pathmenu           from '../../shared/pathMenu';
 import "react-widgets/dist/css/react-widgets.css";
 
 export default function EditBankAccount(props) {
@@ -166,7 +168,7 @@ export default function EditBankAccount(props) {
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: data.msg
+            text: i18n.t(data.msgcode)
         })
     }
 
@@ -208,14 +210,12 @@ export default function EditBankAccount(props) {
                     return(
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddBankAccount">
                             <ContentWrapper>
-                            <div className="content-heading"  >
-                            <span>{i18n.t('Bank Account')}</span>
-                            </div>
+                            <ContentHeading history={history} link={pathmenu.editbankaccount+'/'+id} label={'label_EDIT_BANK_ACCOUNT'} labeldefault={'Edit Bank Account'} />
 
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="namabank">
-                                {i18n.t('Nama Bank')}
+                                {i18n.t('label_BANK_NAME')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <Input
@@ -234,7 +234,7 @@ export default function EditBankAccount(props) {
                             <div className="invalid-feedback-custom">{ErrInputNamaBank}</div>
 
                             <label className="mt-3 form-label required" htmlFor="cabang">
-                                {i18n.t('Cabang')}
+                                {i18n.t('label_BRANCH_BANK')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <Input
@@ -253,7 +253,7 @@ export default function EditBankAccount(props) {
                             <div className="invalid-feedback-custom">{ErrInputCabang}</div>
 
                             <label className="mt-3 form-label required" htmlFor="norekening">
-                                {i18n.t('No Rekening')}
+                                {i18n.t('label_NUMBER_ACCOUNT')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <Input
@@ -273,7 +273,7 @@ export default function EditBankAccount(props) {
                             </div>
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="dateopen">
-                                {i18n.t('Tanggal Buka')}
+                                {i18n.t('label_OPENING_DATE')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <DatePicker
@@ -292,7 +292,7 @@ export default function EditBankAccount(props) {
                             />
 
                             <label className="mt-3 form-label required" htmlFor="catatan1">
-                                {i18n.t('Catatan 1')}
+                                {i18n.t('label_NOTE')+' 1'}
                             </label>
                             <Input
                                 name="catatan1"
@@ -309,7 +309,7 @@ export default function EditBankAccount(props) {
                             />
 
                             <label className="mt-3 form-label required" htmlFor="catatan2">
-                                {i18n.t('Catatan 2')}
+                            {i18n.t('label_NOTE')+' 2'}
                             </label>
                             <Input
                                 name="catatan2"

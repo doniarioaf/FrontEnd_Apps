@@ -58,6 +58,30 @@
     "label_NOT_OPEN_THIS_PAGE":"Oopss, Tidak Bisa Membuka Halaman Ini",
     "label_AUTHORIZED":"User Tidak Ada Otorisasi",
     "label_CHANGE_LANGUAGE":"Ubah Bahasa",
+    "label_BRANCH_BANK":"Cabang",
+    "label_BANK_NAME":"Nama Bank",
+    "label_NUMBER_ACCOUNT":"No Rekening",
+    "label_OPENING_DATE":"Tanggal Pembukaan",
+    "label_NOTE":"Catatan",
+    "label_BANK_ACCOUNT":"Akun Bank",
+    "label_ADD_BANK_ACCOUNT":"Tambah Akun Bank",
+    "label_EDIT_BANK_ACCOUNT":"Ubah Akun Bank",
+    "label_DETAIL_BANK_ACCOUNT":"Detil Akun Bank",
+    "validation": {
+      "bankaccount":{
+        "dateopen":{
+          "empty":"Tanggal Pembukaan Tidak Boleh Kosong",
+          "notvalid":"Tanggal Pembukaan Tidak Valid"
+        },
+        "norekening":{
+          "empty":"No Rekening Tidak Valid",
+          "notnumber":"No Rekening Harus Angka"
+        },
+        "cabang":{
+          "empty":"Cabang Tidak Boleh Kosong"
+        }
+      }
+    },
     "grid": {
       "ADD": "Tambah",
       "EDIT": "Ubah",

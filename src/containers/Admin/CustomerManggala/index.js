@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Container, Card, CardBody}  from 'reactstrap';
-import {Trans, useTranslation}      from 'react-i18next';
+import {useTranslation}      from 'react-i18next';
 import Grid                         from './grid';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../../components/Layout/ContentHeading';
@@ -12,15 +12,15 @@ import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { MenuBankAccount } from '../../shared/permissionMenu';
 import {useHistory}                 from 'react-router-dom';
 
-const BankAccountIndex = () => {
+const CustomerManggalaIndex = () => {
     reloadToHomeNotAuthorize(MenuBankAccount,'READ');
     const history = useHistory();
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
         {name: 'id', title: 'id'},
-        {name: 'name', title: i18n.t('label_NAME')},
-        {name: 'cabang', title: i18n.t('label_BRANCH_BANK')},
+        {name: 'name', title: i18n.t('Customer Name')},
+        {name: 'address', title: i18n.t('Alamat')},
         {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);
     const [tableColumnExtensions] = useState([]);
@@ -29,7 +29,7 @@ const BankAccountIndex = () => {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getBankAccountData('',successHandler, errorHandler));
+        dispatch(actions.getCustomerManggalaData('',successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
@@ -38,8 +38,8 @@ const BankAccountIndex = () => {
                 ...obj,
                 {
                     'id': el.id,
-                    'name': el.namabank ?el.namabank:'',
-                    'cabang':el.cabang?el.cabang:'',
+                    'name': el.customername ?el.customername:'',
+                    'address':el.alamat?el.alamat:'',
                     'isactive': el.isactive?'Yes':'No'
                 }
             ], []);
@@ -59,7 +59,7 @@ const BankAccountIndex = () => {
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menubankaccount} label={'label_BANK_ACCOUNT'} labeldefault={'Bank Account'} />
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menucustomers} label={'Customer'} labeldefault={'Customer'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -81,4 +81,4 @@ const BankAccountIndex = () => {
         
     );
 };
-export default BankAccountIndex;
+export default CustomerManggalaIndex;
