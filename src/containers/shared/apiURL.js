@@ -18,3 +18,4 @@ export const baseReportURL = param => `${baseApiURL}/report${param}`;
 export const baseProjectURL = param => `${baseApiURL}/project${param}`;
 export const baseBankAccountURL = param => `${baseApiURL}/bankaccount${param}`;
 export const baseCustomerManggalaURL = param => `${baseApiURL}/customermanggala${param}`;
+export const baseAddressURL = param => `${baseApiURL}/address${param}`;

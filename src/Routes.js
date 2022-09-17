@@ -184,6 +184,10 @@ const menuBankAccount = lazy(() => import('./containers/Admin/BankAccount'));
 const detailBankAccount = lazy(() => import('./containers/Admin/BankAccount/detail'));
 const addBankAccount = lazy(() => import('./containers/Admin/BankAccount/addBankAccount'));
 const editBankAccount = lazy(() => import('./containers/Admin/BankAccount/editBankAccount'));
+const menuCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala'));
+const detailCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala/detail'));
+const addCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala/addCustomer'));
+const editCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala/editCustomer'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -330,10 +334,10 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addcustomertype} component={waitFor(addCustomerType)}/>
                             <Route path={pathmenu.editcustomertype+'/:id'} component={waitFor(editCustomerType)}/>
 
-                            <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
+                            {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>
                             <Route path={pathmenu.addcustomers} component={waitFor(addFormCustomer)}/>
-                            <Route path={pathmenu.editcustomers+'/:id'} component={waitFor(editFormCustomer)}/>
+                            <Route path={pathmenu.editcustomers+'/:id'} component={waitFor(editFormCustomer)}/> */}
 
                             <Route path={pathmenu.menuusermobile} component={waitFor(menuUserMobile)}/>
                             <Route path={pathmenu.addusermobile} component={waitFor(addUserMobile)}/>
@@ -370,6 +374,15 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addbankaccount} component={waitFor(addBankAccount)}/>
                             <Route path={pathmenu.detailbankaccount+'/:id'} component={waitFor(detailBankAccount)}/>
                             <Route path={pathmenu.editbankaccount+'/:id'} component={waitFor(editBankAccount)}/>
+                            <Route path={pathmenu.menucustomers} component={waitFor(menuCustomerManggala)}/>
+                            <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomerManggala)}/>
+                            <Route path={pathmenu.addcustomers} component={waitFor(addCustomerManggala)}/>
+                            <Route path={pathmenu.editcustomers+'/:id'} component={waitFor(editCustomerManggala)}/>
+                            
+                            {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
+                            <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>
+                            <Route path={pathmenu.addcustomers} component={waitFor(addFormCustomer)}/>
+                            <Route path={pathmenu.editcustomers+'/:id'} component={waitFor(editFormCustomer)}/> */}
                             
                             <Route path={pathmenu.invoice} component={waitFor(InvoiceMenu)}/>
                             

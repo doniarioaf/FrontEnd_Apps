@@ -56,7 +56,8 @@ export {
     getCustomerManggalaData,
     submitAddCustomerManggala,
     submitEditCustomerManggala,
-    submitDeleteCustomerManggala
+    submitDeleteCustomerManggala,
+    getAddressData
 } from './admin';
 
 export {

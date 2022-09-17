@@ -1,6 +1,7 @@
 import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
-    baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL, baseProjectURL,baseBankAccountURL,baseCustomerManggalaURL} from '../../containers/shared/apiURL';
+    baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL, baseProjectURL,baseBankAccountURL,baseCustomerManggalaURL,
+    baseAddressURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -496,11 +497,17 @@ export function* submitEditCustomerManggalaSaga(action) {
 export function* submitDeleteCustomerManggalaSaga(action) {
     try {
         const response = yield axios.delete(baseCustomerManggalaURL(action.param)).then(response => response.data);
-        //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {
-        // console.log('error ',error);
-        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getAddressDataSaga(action) {
+    try {
+        const response = yield axios.get(baseAddressURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
         action.errorHandler(handleMessageError(error));
     }
 }

@@ -410,3 +410,12 @@ export const submitDeleteCustomerManggala = (param, successHandler, errorHandler
         errorHandler,
     }
 }
+
+export const getAddressData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_ADDRESS_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
