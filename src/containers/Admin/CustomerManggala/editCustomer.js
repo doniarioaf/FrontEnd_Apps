@@ -18,6 +18,7 @@ import "react-widgets/dist/css/react-widgets.css";
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { IconButton } from '@material-ui/core';
+import '../../CSS/table.css';
 
 export default function EditCustomerManggala(props) {
     reloadToHomeNotAuthorize(addBankAccount_Permission,'TRANSACTION');
@@ -59,6 +60,20 @@ export default function EditCustomerManggala(props) {
     const [DataTemplate, setDataTemplate] = useState([]);
     const [InputListNoKantor, setInputListNoKantor] = useState([{ nokantor: ""}]);
 
+    const [InputListInfoKementerian, setInputListInfoKementerian] = useState([{ kementerian:"",alamat_email: "", password_email: ""}]);
+    const [ErrInputKementtrian, setErrInputKementtrian] = useState('');
+    const [ErrInputAlamatEmail, setErrInputAlamatEmail] = useState('');
+    const [ErrInputPasswordEmail, setErrInputPasswordEmail] = useState('');
+
+    const [InputListInfoContact, setInputListInfoContact] = useState([{ panggilan:"",namakontak: "", listnotelepon: [{notelepon:""}],email:"",noext:""}]);
+    const [ErrInputPanggilan, setErrInputPanggilan] = useState('');
+    const [ErrInputNamaKontak, setErrInputNamaKontak] = useState('');
+    const [ErrInputNotelepon, setErrInputNotelepon] = useState('');
+    const [ErrInputEmail, setErrInputEmail] = useState('');
+    const [ErrInputNoExt, setErrInputNoExt] = useState('');
+
+    const [ListPanggilan, setListPanggilan] = useState([]);
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -93,7 +108,39 @@ export default function EditCustomerManggala(props) {
                 }else{
                     listnokantor.push({ nokantor: data.data.telpkantor});
                 }
-                setInputListNoKantor(listnokantor);
+                if(listnokantor.length > 0){
+                    setInputListNoKantor(listnokantor);
+                }
+                
+            }
+
+            let listnoinfocontact = [];
+            if(data.data.detailsInfoContact){
+                for(let i=0; i < data.data.detailsInfoContact.length; i++){
+                    let det = data.data.detailsInfoContact[i];
+                    let cek = new String(det.notelepon).includes(',');
+                    let listnotelpinfocontact = [];
+                    if(cek){
+                        let arrList = new String(det.notelepon).split(',');
+                        for(let j=0; j < arrList.length; j++){
+                            listnotelpinfocontact.push({ notelepon: arrList[j]});
+                        }
+                    }else{
+                        listnotelpinfocontact.push({ notelepon: det.notelepon});
+                    }
+
+                    listnoinfocontact.push({ panggilan: det.panggilan,namakontak:det.namakontak,listnotelepon:listnotelpinfocontact,email:det.email,noext:det.noext});
+                    
+                }
+                if(listnoinfocontact.length > 0){
+                    setInputListInfoContact(listnoinfocontact);
+                }
+                
+            }
+            
+
+            if(data.data.detailsInfoKementerian){
+                setInputListInfoKementerian(data.data.detailsInfoKementerian);
             }
             
 
@@ -108,6 +155,13 @@ export default function EditCustomerManggala(props) {
                 [...obj, {
                     value: el.prov_id,
                     label: el.prov_name
+                }]
+            ), []));
+
+            setListPanggilan(template.panggilanOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.code,
+                    label: el.codename
                 }]
             ), []));
 
@@ -224,7 +278,78 @@ export default function EditCustomerManggala(props) {
         setErrSelCity('');
         setErrSelKodePos('');
         setErrSelCustomerType('');
+        setErrInputKementtrian('');
+        setErrInputAlamatEmail('');
+        setErrInputPasswordEmail('');
+        setErrInputPanggilan('');
+        setErrInputNamaKontak('');
+        setErrInputNotelepon('');
+        setErrInputEmail('');
+        setErrInputNoExt('');
 
+        if(InputListInfoContact.length > 0){
+            for(let i=0; i < InputListInfoContact.length; i++){
+                let det = InputListInfoContact[i];
+                if(det.panggilan !== '' || det.namakontak !== '' || det.email !== '' || det.noext !== ''){
+                    if(det.panggilan == ''){
+                        setErrInputPanggilan('Bapak/Ibu '+i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+
+                    if(det.namakontak == ''){
+                        setErrInputNamaKontak('Nama Kontak '+i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+
+                    if(det.email == ''){
+                        setErrInputEmail('Email '+i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+
+                    if(det.noext == ''){
+                        setErrInputNoExt('No Ext '+i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+
+                    if(det.listnotelepon.length > 0){
+                        for(let j=0; j < det.listnotelepon.length; j++){
+                            let detnotlp = det.listnotelepon[j];
+                            if(detnotlp.notelepon == ''){
+                                setErrInputNotelepon('No Telepon '+i18n.t('label_REQUIRED'));
+                                flag = false;
+                            }
+                        }
+                    }else{
+                        setErrInputNotelepon('No Telepon '+i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+                }
+
+                
+            }
+        }
+
+        if(InputListInfoKementerian.length > 0){
+            for(let i=0; i < InputListInfoKementerian.length; i++){
+                let det = InputListInfoKementerian[i];
+                if(det.kementerian !== '' || det.alamat_email !== '' || det.password_email !== ''){
+                    if(det.kementerian == ''){
+                        setErrInputKementtrian('Kementrian '+i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+
+                    if(det.alamat_email == ''){
+                        setErrInputAlamatEmail('Alamat Email '+i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+
+                    if(det.password_email == ''){
+                        setErrInputPasswordEmail('Password Email '+i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+                }
+            }
+        }
         if(InputNib == ''){
             setErrInputNib(i18n.t('label_REQUIRED'));
             flag = false;
@@ -315,6 +440,38 @@ export default function EditCustomerManggala(props) {
                 }
             }
             obj.telpkantor = listnotelp;
+            obj.detailsinfokementerian = InputListInfoKementerian;
+
+            let listinfocontact =[];
+            if(InputListInfoContact.length > 0){
+                
+                for(let i=0; i < InputListInfoContact.length; i++){
+                    let det = InputListInfoContact[i];
+                    let listnotelpinfocontact = '';
+                    if(det.panggilan !== '' && det.namakontak !== '' && det.email !== '' && det.noext !== ''){
+                        let count =0;
+                        for(let j=0; j < det.listnotelepon.length; j++){
+                            let no = det.listnotelepon[j].notelepon;
+                            count++;
+                            if(no != ''){
+                                if(count == det.listnotelepon.length){
+                                    listnotelpinfocontact += no;
+                                }else{
+                                    listnotelpinfocontact += no+',';
+                                }
+                            }
+                        }
+                        let objinfocontact = new Object();
+                        objinfocontact.panggilan = det.panggilan;
+                        objinfocontact.namakontak = det.namakontak;
+                        objinfocontact.email = det.email;
+                        objinfocontact.noext = det.noext;
+                        objinfocontact.notelepon = listnotelpinfocontact;
+                        listinfocontact.push(objinfocontact);
+                    }
+                }
+            }
+            obj.detailsinfocontact = listinfocontact;
             dispatch(actions.submitEditCustomerManggala('/'+id,obj,succesHandlerSubmit, errorHandler));
         }
     }
@@ -348,17 +505,82 @@ export default function EditCustomerManggala(props) {
         setInputListNoKantor(list);
         
     };
+
+    const handleInputChangeKementerian = (e, index) => {
+        const { name, value } = e.target;
+        const list = [...InputListInfoKementerian];
+        list[index][name] = value;
+        setInputListInfoKementerian(list);
+    };
     
+    const handleInputChangeInfoContact = (e, index) => {
+        const { name, value } = e.target;
+        const list = [...InputListInfoContact];
+        list[index][name] = value;
+        setInputListInfoContact(list);
+    };
+
     // handle click event of the Remove button
     const handleRemoveClick = index => {
         const list = [...InputListNoKantor];
         list.splice(index, 1);
         setInputListNoKantor(list);
     };
+
+    const handleRemoveClickInfoKementerian = index => {
+        const list = [...InputListInfoKementerian];
+        list.splice(index, 1);
+        setInputListInfoKementerian(list);
+    };
+
+    const handleRemoveClickInfoContact = index => {
+        const list = [...InputListInfoContact];
+        list.splice(index, 1);
+        setInputListInfoContact(list);
+    };
     
     // handle click event of the Add button
     const handleAddClick = () => {
         setInputListNoKantor([...InputListNoKantor, { nokantor: ""}]);
+    };
+
+    const handleAddClickInfoKementerian = () => {
+        setInputListInfoKementerian([...InputListInfoKementerian, { kementerian:"",alamat_email: "", password_email: ""}]);
+    };
+
+    const handleAddClickInfoContact = () => {
+        setInputListInfoContact([...InputListInfoContact, { panggilan:"",namakontak: "", listnotelepon: [{notelepon:""}],email:"",noext:""}]);
+    };
+
+    const handleInputDropDownChangeInfoContact = (e, index,name) => {
+        const list = [...InputListInfoContact];
+        list[index][name] = e.value;
+        setInputListInfoContact(list);
+    };
+
+    const handleAddClickListNoTelpInfoContact = (paramparent,indexparent) => {
+        const list = [...InputListInfoContact];
+        const listnotelp = [...list[indexparent][paramparent], { notelepon: ""}];
+        list[indexparent][paramparent] = listnotelp;
+        setInputListInfoContact(list);
+    };
+
+    const handleRemoveClickListNoTelpInfoContact = (paramparent,indexparent,index) => {
+        const list = [...InputListInfoContact];
+        const listnotelp = [...list[indexparent][paramparent]];
+        listnotelp.splice(index, 1);
+        list[indexparent][paramparent] = listnotelp;
+        setInputListInfoContact(list);
+    };
+
+    const handleInputChangeListNoTelpInfoContact = (e, paramparent,indexparent,indexchild) => {
+        // let paramlist = 'listnotelepon';
+        const { name, value } = e.target;
+        const list = [...InputListInfoContact];
+        const listnotelp = list[indexparent][paramparent];
+        listnotelp[indexchild][name] = value;
+        list[indexparent][paramparent] = listnotelp;
+        setInputListInfoContact(list);
     };
 
     return (
@@ -670,9 +892,294 @@ export default function EditCustomerManggala(props) {
                             </div>
 
                             </div>
+
+                            <div><h3>Informasi Kementerian</h3></div>
+                            <div className="invalid-feedback-custom">{ErrInputKementtrian}</div>
+                            <div className="invalid-feedback-custom">{ErrInputAlamatEmail}</div>
+                            <div className="invalid-feedback-custom">{ErrInputPasswordEmail}</div>
+
+                            {
+                                InputListInfoKementerian.length == 0?'':
+                                
+                                <table id="tablegrid">
+                                    
+                                <tr>
+                                    <th>{i18n.t('Kementrian')}</th>
+                                    <th>{i18n.t('Alamat Email')}</th>
+                                    <th>{i18n.t('Password Email')}</th>
+                                    <th>{i18n.t('Action')}</th>
+                                </tr>
+                                {
+                                    InputListInfoKementerian.map((x, i) => {
+                                        return (
+                                            <tr>
+                                                <td>
+                                                <Input
+                                                name="kementerian"
+                                                // className={
+                                                //     touched.amount && errors.amount
+                                                //         ? "w-50 input-error"
+                                                //         : "w-50"
+                                                // }
+                                                type="text"
+                                                id="kementerian"
+                                                onChange={val => handleInputChangeKementerian(val,i)}
+                                                onBlur={handleBlur}
+                                                // placeholder={i18n.t('label_AMOUNT')}
+                                                // style={{width: '25%'}}
+                                                // value={values.amount}
+                                                value={x.kementerian}
+                                                disabled={false}
+                                                />
+                                                </td>
+
+                                                <td>
+                                                <Input
+                                                name="alamat_email"
+                                                // className={
+                                                //     touched.amount && errors.amount
+                                                //         ? "w-50 input-error"
+                                                //         : "w-50"
+                                                // }
+                                                type="text"
+                                                id="alamat_email"
+                                                onChange={val => handleInputChangeKementerian(val,i)}
+                                                onBlur={handleBlur}
+                                                // placeholder={i18n.t('label_AMOUNT')}
+                                                // style={{width: '25%'}}
+                                                // value={values.amount}
+                                                value={x.alamat_email}
+                                                disabled={false}
+                                                />
+                                                </td>
+
+                                                <td>
+                                                <Input
+                                                name="password_email"
+                                                // className={
+                                                //     touched.amount && errors.amount
+                                                //         ? "w-50 input-error"
+                                                //         : "w-50"
+                                                // }
+                                                type="text"
+                                                id="password_email"
+                                                onChange={val => handleInputChangeKementerian(val,i)}
+                                                onBlur={handleBlur}
+                                                // placeholder={i18n.t('label_AMOUNT')}
+                                                // style={{width: '25%'}}
+                                                // value={values.amount}
+                                                value={x.password_email}
+                                                disabled={false}
+                                                />
+                                                </td>
+
+                                                <td>
+                                                <IconButton color={'primary'} hidden={i > 0}
+                                                    onClick={() => handleAddClickInfoKementerian()}
+                                                // hidden={showplusdebit}
+                                                >
+                                                    <AddIcon style={{ fontSize: 18 }}/>
+                                                </IconButton>
+                                                <IconButton color={'primary'} hidden={i == 0}
+                                                onClick={() => handleRemoveClickInfoKementerian(i)}
+                                                // hidden={showplusdebit}
+                                                >
+                                                    <RemoveIcon style={{ fontSize: 18 }}/>
+                                                </IconButton>    
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                                </table>
+                            }
+
+                                <div style={{marginTop:'50px'}}><h3>Informasi Contact</h3></div>
+                                <div className="invalid-feedback-custom">{ErrInputPanggilan}</div>
+                                <div className="invalid-feedback-custom">{ErrInputNamaKontak}</div>
+                                <div className="invalid-feedback-custom">{ErrInputNotelepon}</div>
+                                <div className="invalid-feedback-custom">{ErrInputEmail}</div>
+                                <div className="invalid-feedback-custom">{ErrInputNoExt}</div>
+                                {
+                                    InputListInfoContact.length == 0?'':
+                                    <table id="tablegrid">
+                                        <tr>
+                                            <th>{i18n.t('Bapal/Ibu')}</th>
+                                            <th>{i18n.t('Nama Kontak')}</th>
+                                            <th>{i18n.t('No Telepon')}</th>
+                                            <th>{i18n.t('Email')}</th>
+                                            <th>{i18n.t('No Ext')}</th>
+                                            <th>{i18n.t('Action')}</th>
+                                        </tr>
+                                        {
+                                            InputListInfoContact.map((x, i) => {
+                                                return (
+                                                    <tr>
+                                                        <td>
+                                                        <DropdownList
+                                                            name="panggilan"
+                                                            filter='contains'
+                                                            // placeholder={i18n.t('select.SELECT_OPTION')}
+                                                            
+                                                            onChange={val => handleInputDropDownChangeInfoContact(val,i,'panggilan')}
+                                                            data={ListPanggilan}
+                                                            textField={'label'}
+                                                            valueField={'value'}
+                                                            style={{width: '100px'}}
+                                                            value={x.panggilan}
+                                                        />
+                                                        </td>
+
+                                                        <td>
+                                                        <Input
+                                                            name="namakontak"
+                                                            // className={
+                                                            //     touched.amount && errors.amount
+                                                            //         ? "w-50 input-error"
+                                                            //         : "w-50"
+                                                            // }
+                                                            type="text"
+                                                            id="namakontak"
+                                                            onChange={val => handleInputChangeInfoContact(val,i)}
+                                                            onBlur={handleBlur}
+                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                            // style={{width: '25%'}}
+                                                            // value={values.amount}
+                                                            value={x.namakontak}
+                                                            disabled={false}
+                                                            />
+                                                        </td>
+
+                                                        <td>
+                                                        <table >
+                                                            {
+                                                                x.listnotelepon.map((y, j) => {
+                                                                    return (
+                                                                        <tr>
+                                                                            <td>
+                                                                            <Input
+                                                                            name="notelepon"
+                                                                            // className={
+                                                                            //     touched.amount && errors.amount
+                                                                            //         ? "w-50 input-error"
+                                                                            //         : "w-50"
+                                                                            // }
+                                                                            type="text"
+                                                                            id="notelepon"
+                                                                            onChange={val => handleInputChangeListNoTelpInfoContact(val,'listnotelepon',i,j)}
+                                                                            onBlur={handleBlur}
+                                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                                            // style={{width: '70%'}}
+                                                                            // value={values.amount}
+                                                                            value={y.notelepon}
+                                                                            disabled={false}
+                                                                            />
+                                                                            </td>
+                                                                            
+                                                                            <td hidden={j > 0}>
+                                                                            <IconButton color={'primary'} hidden={j > 0}
+                                                                                onClick={() => handleAddClickListNoTelpInfoContact('listnotelepon',i)}
+                                                                            // hidden={showplusdebit}
+                                                                            >
+                                                                                <AddIcon style={{ fontSize: 18 }}/>
+                                                                            </IconButton>
+                                                                            </td>
+                                                                            <td hidden={j == 0}>
+                                                                            <IconButton color={'primary'} hidden={j == 0}
+                                                                            onClick={() => handleRemoveClickListNoTelpInfoContact('listnotelepon',i,j)}
+                                                                            // hidden={showplusdebit}
+                                                                            >
+                                                                                <RemoveIcon style={{ fontSize: 18 }}/>
+                                                                            </IconButton>    
+                                                                            </td>
+                                                                        </tr>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </table>
+                                                        {/* <Input
+                                                            name="notelepon"
+                                                            // className={
+                                                            //     touched.amount && errors.amount
+                                                            //         ? "w-50 input-error"
+                                                            //         : "w-50"
+                                                            // }
+                                                            type="text"
+                                                            id="notelepon"
+                                                            onChange={val => handleInputChangeInfoContact(val,i)}
+                                                            onBlur={handleBlur}
+                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                            // style={{width: '25%'}}
+                                                            // value={values.amount}
+                                                            value={x.notelepon}
+                                                            disabled={false}
+                                                            /> */}
+                                                        </td>
+
+                                                        <td>
+                                                        <Input
+                                                            name="email"
+                                                            // className={
+                                                            //     touched.amount && errors.amount
+                                                            //         ? "w-50 input-error"
+                                                            //         : "w-50"
+                                                            // }
+                                                            type="text"
+                                                            id="email"
+                                                            onChange={val => handleInputChangeInfoContact(val,i)}
+                                                            onBlur={handleBlur}
+                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                            // style={{width: '25%'}}
+                                                            // value={values.amount}
+                                                            value={x.email}
+                                                            disabled={false}
+                                                            />
+                                                        </td>
+
+                                                        <td>
+                                                        <Input
+                                                            name="noext"
+                                                            // className={
+                                                            //     touched.amount && errors.amount
+                                                            //         ? "w-50 input-error"
+                                                            //         : "w-50"
+                                                            // }
+                                                            type="text"
+                                                            id="noext"
+                                                            onChange={val => handleInputChangeInfoContact(val,i)}
+                                                            onBlur={handleBlur}
+                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                            // style={{width: '25%'}}
+                                                            // value={values.amount}
+                                                            value={x.noext}
+                                                            disabled={false}
+                                                            />
+                                                        </td>
+
+                                                        <td>
+                                                        <IconButton color={'primary'} hidden={i > 0}
+                                                            onClick={() => handleAddClickInfoContact()}
+                                                        // hidden={showplusdebit}
+                                                        >
+                                                            <AddIcon style={{ fontSize: 18 }}/>
+                                                        </IconButton>
+                                                        <IconButton color={'primary'} hidden={i == 0}
+                                                        onClick={() => handleRemoveClickInfoContact(i)}
+                                                        // hidden={showplusdebit}
+                                                        >
+                                                            <RemoveIcon style={{ fontSize: 18 }}/>
+                                                        </IconButton>    
+                                                        </td>
+
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </table>
+                                }
                             </ContentWrapper>
                             {loading && <Loading/>}
-                            <div className="row justify-content-center" style={{marginTop:'-30px',marginBottom:'20px'}}>
+                            <div className="row justify-content-center" style={{marginBottom:'20px'}}>
                             <Button
                             // disabled={props.activeStep === 0}
                                 // style={{marginLeft:"20%"}}

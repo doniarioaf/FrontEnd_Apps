@@ -26,6 +26,7 @@ import React, {useState,
   import {Loading}                    from '../../../components/Common/Loading';
   import { isGetPermissions,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { deleteBankAccount_Permission,editBankAccount_Permission,MenuBankAccount } from '../../shared/permissionMenu';
+  import '../../CSS/table.css';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -44,6 +45,7 @@ import React, {useState,
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
+    const [InputListInfoContact, setInputListInfoContact] = useState([{ panggilan:"",namakontak: "", listnotelepon: [{notelepon:""}],email:"",noext:""}]);
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
@@ -87,8 +89,38 @@ import React, {useState,
     }, []);
 
     function successHandler(data) {
+        
         setLoading(false);
+        let template = data.data.template;
         setValue(data.data);
+
+        let listnoinfocontact = [];
+            if(data.data.detailsInfoContact){
+                for(let i=0; i < data.data.detailsInfoContact.length; i++){
+                    let det = data.data.detailsInfoContact[i];
+                    let panggilanname = det.panggilan;
+
+                    let listfilteroutput = template.panggilanOptions.filter(output => output.code == det.panggilan);
+                    if(listfilteroutput.length > 0){
+                        panggilanname = listfilteroutput[0].codename;
+                    }
+
+                    let cek = new String(det.notelepon).includes(',');
+                    let listnotelpinfocontact = [];
+                    if(cek){
+                        let arrList = new String(det.notelepon).split(',');
+                        for(let j=0; j < arrList.length; j++){
+                            listnotelpinfocontact.push({ notelepon: arrList[j]});
+                        }
+                    }else{
+                        listnotelpinfocontact.push({ notelepon: det.notelepon});
+                    }
+
+                    listnoinfocontact.push({ panggilan: panggilanname,namakontak:det.namakontak,listnotelepon:listnotelpinfocontact,email:det.email,noext:det.noext});
+                    
+                }
+            }
+        setInputListInfoContact(listnoinfocontact);
     }
 
     const submitHandlerDelete = () => {
@@ -196,7 +228,7 @@ import React, {useState,
 
             <div className="row mt-2">
             <div className="mt-2 col-lg-4 ft-detail mb-3">
-            <Card outline color="primary" className="mb-3" style={{width:"125%"}}>
+            <Card outline color="primary" className="mb-3" style={{width:"200%"}}>
             <CardHeader className="text-white bg-primary" tag="h4" >{loading ? <Skeleton/> : 'Details'}</CardHeader>
             <CardBody>
                 {
@@ -288,7 +320,75 @@ import React, {useState,
             </div>
             </div>
             </CardBody>
+
+            <div><h3>Informasi Kementerian</h3></div>
+            {
+                value.detailsInfoKementerian?
+                <table id="tablegrid">
+                    <tr>
+                        <th>{i18n.t('Kementrian')}</th>
+                        <th>{i18n.t('Alamat Email')}</th>
+                        <th>{i18n.t('Password Email')}</th>
+                    </tr>
+                    {
+                        value.detailsInfoKementerian.map((x, i) => {
+                            return (
+                                <tr>
+                                    <td>{x.kementerian}</td>
+                                    <td>{x.alamat_email}</td>
+                                    <td>{x.password_email}</td>
+                                </tr>
+                            )
+                        })
+                    }
+                </table>
+                :''
+                
+            }
+
+            <div><h3>Informasi Contact</h3></div>
+            {
+                value.detailsInfoKementerian?
+                <table id="tablegrid">
+                    <tr>
+                    <th>{i18n.t('Bapal/Ibu')}</th>
+                    <th>{i18n.t('Nama Kontak')}</th>
+                    <th>{i18n.t('No Telepon')}</th>
+                    <th>{i18n.t('Email')}</th>
+                    <th>{i18n.t('No Ext')}</th>
+                    </tr>
+                    {
+                        InputListInfoContact.map((x, i) => {
+                            return (
+                                <tr>
+                                    <td>{x.panggilan}</td>
+                                    <td>{x.namakontak}</td>
+                                    <td>
+                                    <table style={{border:'0px'}}>
+                                        {
+                                            x.listnotelepon.map((y, j) => {
+                                                return (
+                                                    <tr>
+                                                        <td style={{border:'0px',backgroundColor:i % 2 == 0?'#f2f2f2':'white'}}>{y.notelepon}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </table>
+                                    </td>
+                                    <td>{x.email}</td>
+                                    <td>{x.noext}</td>
+                                </tr>
+                            )
+                        })
+                    }
+                </table>
+                :''
+                
+            }
             </Card>
+
+            
             </Container>
             
             <div className={classes.root}>
