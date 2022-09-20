@@ -84,14 +84,14 @@ const handleMenu = () => {
                     name: 'Customer',
                     path: pathmenu.menucustomers,
                     translate: 'label_CUSTOMER',
-                    permission:permissionmenu.MenuCustomer,
+                    permission:permissionmenu.MenuCustomerManggala,
                 },
-                {
-                    name: 'Customer Type',
-                    path: pathmenu.menucustomertype,
-                    translate: 'label_CUSTOMER_TYPE',
-                    permission:permissionmenu.MenuCustomerType,
-                }
+                // {
+                //     name: 'Customer Type',
+                //     path: pathmenu.menucustomertype,
+                //     translate: 'label_CUSTOMER_TYPE',
+                //     permission:permissionmenu.MenuCustomerType,
+                // }
             ]
         },{
             name: 'Mobile',

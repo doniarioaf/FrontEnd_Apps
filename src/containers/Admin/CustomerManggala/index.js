@@ -9,11 +9,11 @@ import Swal                         from 'sweetalert2';
 import * as actions                 from '../../../store/actions';
 import * as pathmenu           from '../../shared/pathMenu';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { MenuBankAccount } from '../../shared/permissionMenu';
+import { MenuCustomerManggala } from '../../shared/permissionMenu';
 import {useHistory}                 from 'react-router-dom';
 
 const CustomerManggalaIndex = () => {
-    reloadToHomeNotAuthorize(MenuBankAccount,'READ');
+    reloadToHomeNotAuthorize(MenuCustomerManggala,'READ');
     const history = useHistory();
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');

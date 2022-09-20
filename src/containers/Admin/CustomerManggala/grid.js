@@ -30,7 +30,7 @@ import IconAdd from '../../../components/Icons/IconAdd';
 import * as pathmenu           from '../../shared/pathMenu';
 import {Loading}                    from '../../../components/Common/Loading';
 import { isGetPermissions } from '../../shared/globalFunc';
-import { addBankAccount_Permission,MenuBankAccount } from '../../shared/permissionMenu';
+import { addCustomerManggala_Permission,MenuCustomerManggala } from '../../shared/permissionMenu';
 
 const FilterIcon = ({type, ...restProps}) => {
     return <TableFilterRow.Icon type={type} {...restProps} />;
@@ -56,7 +56,7 @@ const AddButton = ({onExecute}) => {
         <div style={{textAlign: 'center'}} title={i18n.t('grid.ADD')}>
             <Tooltip title={i18n.t('grid.ADD')}>
                 <IconButton 
-                hidden={!isGetPermissions(addBankAccount_Permission,'TRANSACTION')}
+                hidden={!isGetPermissions(addCustomerManggala_Permission,'TRANSACTION')}
                 color={'primary'} onClick={() => history.push(pathmenu.addcustomers)} >
                     <IconAdd/>
                 </IconButton>
@@ -74,7 +74,7 @@ const CellComponent = ({children, row, ...restProps}) => {
             {children}
             <Tooltip title={i18n.t('grid.VIEW')}>
                 <IconButton color={'primary'} 
-                hidden={!isGetPermissions(MenuBankAccount,'TRANSACTION')}
+                hidden={!isGetPermissions(MenuCustomerManggala,'TRANSACTION')}
                             onClick={() => history.push(pathmenu.detailcustomers +'/'+ row.id)}
                 >
                     <IconView/>
