@@ -13,12 +13,12 @@ import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { addBranch_Permission } from '../../shared/permissionMenu';
+import { addBankAccount_Permission } from '../../shared/permissionMenu';
 import * as pathmenu           from '../../shared/pathMenu';
 import "react-widgets/dist/css/react-widgets.css";
 
 export default function EditBankAccount(props) {
-    reloadToHomeNotAuthorize(addBranch_Permission,'TRANSACTION');
+    reloadToHomeNotAuthorize(addBankAccount_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     momentLocalizer();

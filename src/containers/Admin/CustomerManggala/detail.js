@@ -25,7 +25,7 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
   import { isGetPermissions,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { deleteBankAccount_Permission,editBankAccount_Permission,MenuBankAccount } from '../../shared/permissionMenu';
+  import { deleteCustomerManggala_Permission,editCustomerManggala_Permission,MenuCustomerManggala } from '../../shared/permissionMenu';
   import '../../CSS/table.css';
 
   const useStyles = makeStyles((theme) => ({
@@ -39,13 +39,14 @@ import React, {useState,
 
 
   function Detail(props) {
-    reloadToHomeNotAuthorize(MenuBankAccount,'READ');
+    reloadToHomeNotAuthorize(MenuCustomerManggala,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
     const [InputListInfoContact, setInputListInfoContact] = useState([{ panggilan:"",namakontak: "", listnotelepon: [{notelepon:""}],email:"",noext:""}]);
+    const [InputListInfoGudang, setInputListInfoGudang] = useState([{ namagudang:"",areakirim: "",alamatgudang:"",ancerancer:"", listkontakgudang: [{kontakgudang:""}],listhpkontakgudang: [{hpkontakgudang:""}],note:""}]);
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
@@ -121,6 +122,43 @@ import React, {useState,
                 }
             }
         setInputListInfoContact(listnoinfocontact);
+
+        let listinfogudang = [];
+        if(data.data.detailsInfoGudang){
+            for(let i=0; i < data.data.detailsInfoGudang.length; i++){
+                let det = data.data.detailsInfoGudang[i];
+
+                let areakirim = det.areakirim;
+                let listfilteroutput = data.data.districtOptions.filter(output => output.dis_id == parseInt(areakirim));
+                if(listfilteroutput.length > 0){
+                    areakirim = listfilteroutput[0].dis_name;
+                }
+                let cek = new String(det.kontakgudang).includes(',');
+                let listkontakgudang = [];
+                if(cek){
+                    let arrList = new String(det.kontakgudang).split(',');
+                    for(let j=0; j < arrList.length; j++){
+                        listkontakgudang.push({ kontakgudang: arrList[j]});
+                    }
+                }else{
+                    listkontakgudang.push({ kontakgudang: det.kontakgudang});
+                }
+
+                cek = new String(det.hpkontakgudang).includes(',');
+                let listhpkontakgudang = [];
+                if(cek){
+                    let arrList = new String(det.hpkontakgudang).split(',');
+                    for(let j=0; j < arrList.length; j++){
+                        listhpkontakgudang.push({ hpkontakgudang: arrList[j]});
+                    }
+                }else{
+                    listhpkontakgudang.push({ hpkontakgudang: det.hpkontakgudang});
+                }
+
+                listinfogudang.push({ namagudang:det.namagudang,areakirim: areakirim,alamatgudang:det.alamatgudang,ancerancer:det.ancerancer, listkontakgudang: listkontakgudang,listhpkontakgudang: listhpkontakgudang,note:det.note});
+            }
+        }
+        setInputListInfoGudang(listinfogudang);
     }
 
     const submitHandlerDelete = () => {
@@ -348,7 +386,7 @@ import React, {useState,
 
             <div><h3>Informasi Contact</h3></div>
             {
-                value.detailsInfoKementerian?
+                value.detailsInfoContact?
                 <table id="tablegrid">
                     <tr>
                     <th>{i18n.t('Bapal/Ibu')}</th>
@@ -386,6 +424,65 @@ import React, {useState,
                 :''
                 
             }
+
+            <div><h3>Informasi Gudang</h3></div>
+            {
+                value.detailsInfoGudang?
+                <div style={{overflowX:'auto',marginBottom:'20px'}}>
+                <table id="tablegrid" style={{width:'1500px'}}>
+                    <tr>
+                    <th>{i18n.t('Nama Gudang')}</th>
+                    <th>{i18n.t('Area Kirim')}</th>
+                    <th>{i18n.t('Alamat Gudang')}</th>
+                    <th>{i18n.t('Ancer Ancer')}</th>
+                    <th>{i18n.t('Kontak Gudang')}</th>
+                    <th>{i18n.t('HP Kontak Gudang')}</th>
+                    <th>{i18n.t('Catatan Penting')}</th>
+                    </tr>
+                    {
+                        InputListInfoGudang.map((x, i) => {
+                            return (
+                                <tr>
+                                    <td>{x.namagudang}</td>
+                                    <td>{x.areakirim}</td>
+                                    <td>{x.alamatgudang}</td>
+                                    <td>{x.ancerancer}</td>
+                                    <td>
+                                    <table style={{border:'0px'}}>
+                                        {
+                                            x.listkontakgudang.map((y, j) => {
+                                                return (
+                                                    <tr>
+                                                        <td style={{border:'0px',backgroundColor:i % 2 == 0?'#f2f2f2':'white'}}>{y.kontakgudang}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </table>
+                                    </td>
+                                    <td>
+                                    <table style={{border:'0px'}}>
+                                        {
+                                            x.listhpkontakgudang.map((y, j) => {
+                                                return (
+                                                    <tr>
+                                                        <td style={{border:'0px',backgroundColor:i % 2 == 0?'#f2f2f2':'white'}}>{y.hpkontakgudang}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </table>
+                                    </td>
+                                    <td>{x.note}</td>
+                                </tr>
+                            )
+                        })
+                    }
+                </table>
+                </div>
+                :''
+                
+            }
             </Card>
 
             
@@ -408,8 +505,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editBankAccount_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editcustomers+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deleteBankAccount_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editCustomerManggala_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editcustomers+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteCustomerManggala_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             
                         </div>)
                         

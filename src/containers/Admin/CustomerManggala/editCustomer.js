@@ -11,7 +11,7 @@ import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { addBankAccount_Permission } from '../../shared/permissionMenu';
+import { editCustomerManggala_Permission } from '../../shared/permissionMenu';
 import * as pathmenu           from '../../shared/pathMenu';
 import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
@@ -21,7 +21,7 @@ import { IconButton } from '@material-ui/core';
 import '../../CSS/table.css';
 
 export default function EditCustomerManggala(props) {
-    reloadToHomeNotAuthorize(addBankAccount_Permission,'TRANSACTION');
+    reloadToHomeNotAuthorize(editCustomerManggala_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     momentLocalizer();
@@ -73,6 +73,16 @@ export default function EditCustomerManggala(props) {
     const [ErrInputNoExt, setErrInputNoExt] = useState('');
 
     const [ListPanggilan, setListPanggilan] = useState([]);
+
+    const [ListAreaKirim, setListAreaKirim] = useState([]);
+    const [InputListInfoGudang, setInputListInfoGudang] = useState([{ namagudang:"",areakirim: "",alamatgudang:"",ancerancer:"", listkontakgudang: [{kontakgudang:""}],listhpkontakgudang: [{hpkontakgudang:""}],note:""}]);
+    const [ErrInputNamaGudang, setErrInputNamaGudang] = useState('');
+    const [ErrInputAreaKirim, setErrInputAreaKirim] = useState('');
+    const [ErrInputAlamatGudang, setErrInputAlamatGudang] = useState('');
+    const [ErrInputAncerAncer, setErrInputAncerAncer] = useState('');
+    const [ErrInputKontakGudang, setErrInputKontakGudang] = useState('');
+    const [ErrInputHpKontakGudang, setErrInputHpKontakGudang] = useState('');
+    const [ErrInputNote, setErrInputNote] = useState('');
 
     const id = props.match.params.id;
 
@@ -137,6 +147,48 @@ export default function EditCustomerManggala(props) {
                 }
                 
             }
+
+            let listinfogudang = [];
+        if(data.data.detailsInfoGudang){
+            for(let i=0; i < data.data.detailsInfoGudang.length; i++){
+                let det = data.data.detailsInfoGudang[i];
+
+                let areakirim = det.areakirim?parseInt(det.areakirim):'';
+                // let listfilteroutput = data.data.districtOptions.filter(output => output.dis_id == parseInt(areakirim));
+                // if(listfilteroutput.length > 0){
+                //     areakirim = listfilteroutput[0].dis_name;
+                // }
+                let cek = new String(det.kontakgudang).includes(',');
+                let listkontakgudang = [];
+                if(cek){
+                    let arrList = new String(det.kontakgudang).split(',');
+                    for(let j=0; j < arrList.length; j++){
+                        listkontakgudang.push({ kontakgudang: arrList[j]});
+                    }
+                }else{
+                    listkontakgudang.push({ kontakgudang: det.kontakgudang});
+                }
+
+                cek = new String(det.hpkontakgudang).includes(',');
+                let listhpkontakgudang = [];
+                if(cek){
+                    let arrList = new String(det.hpkontakgudang).split(',');
+                    for(let j=0; j < arrList.length; j++){
+                        listhpkontakgudang.push({ hpkontakgudang: arrList[j]});
+                    }
+                }else{
+                    listhpkontakgudang.push({ hpkontakgudang: det.hpkontakgudang});
+                }
+
+                listinfogudang.push({ namagudang:det.namagudang,areakirim: areakirim,alamatgudang:det.alamatgudang,ancerancer:det.ancerancer, listkontakgudang: listkontakgudang,listhpkontakgudang: listhpkontakgudang,note:det.note});
+            }
+
+            if(listinfogudang.length > 0){
+                setInputListInfoGudang(listinfogudang);
+            }
+            
+        }
+        
             
 
             if(data.data.detailsInfoKementerian){
@@ -165,6 +217,15 @@ export default function EditCustomerManggala(props) {
                 }]
             ), []));
 
+            setListAreaKirim(data.data.districtOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.dis_id,
+                    label: el.dis_name
+                }]
+            ), []));
+
+            
+
             let listfilteroutput = template.cityOptions.filter(output => output.prov_id == data.data.provinsi);
             if(listfilteroutput.length > 0){
                     setListCity(listfilteroutput.reduce((obj, el) => (
@@ -181,6 +242,14 @@ export default function EditCustomerManggala(props) {
         }
 
         // setLoading(false);
+    }
+    const setKosongAreaKirim = () =>{
+        const list = [...InputListInfoGudang];
+        for(let index=0; index < list.length; index++){
+            list[index]['areakirim'] = '';
+        }
+        
+        setInputListInfoGudang(list);
     }
     // const successHandlerTemplate = (data) =>{
     //     if(data.data){
@@ -215,6 +284,7 @@ export default function EditCustomerManggala(props) {
         setSelKodePos('');
         setListKodePos([]);
         setSelCity('');
+        setKosongAreaKirim();
         let listfilteroutput = DataTemplate.cityOptions.filter(output => output.prov_id == id);
         if(listfilteroutput.length > 0){
             setListCity(listfilteroutput.reduce((obj, el) => (
@@ -234,6 +304,7 @@ export default function EditCustomerManggala(props) {
         setSelCity(id);
         setSelKodePos('');
         setListKodePos([]);
+        setKosongAreaKirim();
         setLoading(true);
         dispatch(actions.getAddressData('/postalcodebycityandprovince?cityid='+id+'&provid='+SelProvinsi,successHandlerPostalCode, errorHandler));
     }
@@ -252,7 +323,20 @@ export default function EditCustomerManggala(props) {
 
     const handleChangeKodePos = (data) =>{
         let id = data?.value ? data.value : '';
+        setKosongAreaKirim();
         setSelKodePos(id);
+        setLoading(true);
+        dispatch(actions.getAddressData('/districtbypostalcode?postalcode='+id,successHandlerDistrictPostalCode, errorHandler));
+    }
+
+    const successHandlerDistrictPostalCode = (data) =>{
+        setListAreaKirim(data.data.reduce((obj, el) => (
+            [...obj, {
+                value: el.dis_id,
+                label: el.dis_name
+            }]
+        ), []));
+        setLoading(false);
     }
 
     const handleInputNpwp = (data) =>{
@@ -286,6 +370,60 @@ export default function EditCustomerManggala(props) {
         setErrInputNotelepon('');
         setErrInputEmail('');
         setErrInputNoExt('');
+
+        setErrInputNamaGudang('');
+        setErrInputAreaKirim('');
+        setErrInputAlamatGudang('');
+        setErrInputKontakGudang('');
+        setErrInputHpKontakGudang('');
+
+        if(InputListInfoGudang.length > 0){
+            for(let i=0; i < InputListInfoGudang.length; i++){
+                let det = InputListInfoGudang[i];
+                if(det.namagudang !== '' || det.areakirim !== '' || det.alamatgudang !== '' ){
+                    if(det.namagudang == ''){
+                        setErrInputNamaGudang('Nama Gudang '+i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+
+                    if(det.areakirim == ''){
+                        setErrInputAreaKirim('Area Kirim '+i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+
+                    if(det.alamatgudang == ''){
+                        setErrInputAlamatGudang('Alamat Gudang '+i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+
+                    if(det.listkontakgudang.length > 0){
+                        for(let j=0; j < det.listkontakgudang.length; j++){
+                            let detnotlp = det.listkontakgudang[j];
+                            if(detnotlp.kontakgudang == ''){
+                                setErrInputKontakGudang('Kontak Gudang '+i18n.t('label_REQUIRED'));
+                                flag = false;
+                            }
+                        }
+                    }else{
+                        setErrInputKontakGudang('Kontak Gudang '+i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+
+                    if(det.listhpkontakgudang.length > 0){
+                        for(let j=0; j < det.listhpkontakgudang.length; j++){
+                            let detnotlp = det.listhpkontakgudang[j];
+                            if(detnotlp.hpkontakgudang == ''){
+                                setErrInputHpKontakGudang('HP Kontak Gudang '+i18n.t('label_REQUIRED'));
+                                flag = false;
+                            }
+                        }
+                    }else{
+                        setErrInputHpKontakGudang('HP Kontak Gudang '+i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+                }
+            }
+        }
 
         if(InputListInfoContact.length > 0){
             for(let i=0; i < InputListInfoContact.length; i++){
@@ -472,6 +610,54 @@ export default function EditCustomerManggala(props) {
                 }
             }
             obj.detailsinfocontact = listinfocontact;
+
+            let listinfogudang =[];
+            if(InputListInfoGudang.length > 0){
+                for(let i=0; i < InputListInfoGudang.length; i++){
+                    let det = InputListInfoGudang[i];
+                    let listkontakgudang = '';
+                    let listhpkontakgudang = '';
+                    if(det.namagudang !== '' && det.areakirim !== '' && det.alamatgudang !== ''){
+                        let count =0;
+                        for(let j=0; j < det.listkontakgudang.length; j++){
+                            let no = det.listkontakgudang[j].kontakgudang;
+                            count++;
+                            if(no != ''){
+                                if(count == det.listkontakgudang.length){
+                                    listkontakgudang += no;
+                                }else{
+                                    listkontakgudang += no+',';
+                                }
+                            }
+                        }
+
+                        count =0;
+                        for(let j=0; j < det.listhpkontakgudang.length; j++){
+                            let no = det.listhpkontakgudang[j].hpkontakgudang;
+                            count++;
+                            if(no != ''){
+                                if(count == det.listhpkontakgudang.length){
+                                    listhpkontakgudang += no;
+                                }else{
+                                    listhpkontakgudang += no+',';
+                                }
+                            }
+                        }
+
+                        let objinfogudang = new Object();
+                        objinfogudang.namagudang = det.namagudang;
+                        objinfogudang.areakirim = det.areakirim;
+                        objinfogudang.alamatgudang = det.alamatgudang;
+                        objinfogudang.ancerancer = det.ancerancer;
+                        objinfogudang.kontakgudang = listkontakgudang;
+                        objinfogudang.hpkontakgudang = listhpkontakgudang;
+                        objinfogudang.note = det.note;
+                        listinfogudang.push(objinfogudang);
+                    }
+                }
+            }
+            obj.detailsinfogudang = listinfogudang;
+
             dispatch(actions.submitEditCustomerManggala('/'+id,obj,succesHandlerSubmit, errorHandler));
         }
     }
@@ -520,6 +706,13 @@ export default function EditCustomerManggala(props) {
         setInputListInfoContact(list);
     };
 
+    const handleInputChangeInfoGudang = (e, index) => {
+        const { name, value } = e.target;
+        const list = [...InputListInfoGudang];
+        list[index][name] = value;
+        setInputListInfoGudang(list);
+    };
+
     // handle click event of the Remove button
     const handleRemoveClick = index => {
         const list = [...InputListNoKantor];
@@ -538,6 +731,12 @@ export default function EditCustomerManggala(props) {
         list.splice(index, 1);
         setInputListInfoContact(list);
     };
+
+    const handleRemoveClickInfoGudang = index => {
+        const list = [...InputListInfoGudang];
+        list.splice(index, 1);
+        setInputListInfoGudang(list);
+    };
     
     // handle click event of the Add button
     const handleAddClick = () => {
@@ -552,10 +751,27 @@ export default function EditCustomerManggala(props) {
         setInputListInfoContact([...InputListInfoContact, { panggilan:"",namakontak: "", listnotelepon: [{notelepon:""}],email:"",noext:""}]);
     };
 
+    const handleAddClickInfoGudang = () => {
+        setInputListInfoGudang([...InputListInfoGudang, { namagudang:"",areakirim: "",alamatgudang:"",ancerancer:"", listkontakgudang: [{kontakgudang:""}],listhpkontakgudang: [{hpkontakgudang:""}],note:""}]);
+    };
+
     const handleInputDropDownChangeInfoContact = (e, index,name) => {
         const list = [...InputListInfoContact];
         list[index][name] = e.value;
         setInputListInfoContact(list);
+    };
+
+    const handleInputDropDownChangeInfoGudang = (e, index,name) => {
+        const list = [...InputListInfoGudang];
+        list[index][name] = e.value;
+        setInputListInfoGudang(list);
+    };
+
+    const handleAddClickListKontakGudangInfoGudang = (paramparent,indexparent) => {
+        const list = [...InputListInfoGudang];
+        const listKontakGudang = [...list[indexparent][paramparent], { kontakgudang: ""}];
+        list[indexparent][paramparent] = listKontakGudang;
+        setInputListInfoGudang(list);
     };
 
     const handleAddClickListNoTelpInfoContact = (paramparent,indexparent) => {
@@ -563,6 +779,29 @@ export default function EditCustomerManggala(props) {
         const listnotelp = [...list[indexparent][paramparent], { notelepon: ""}];
         list[indexparent][paramparent] = listnotelp;
         setInputListInfoContact(list);
+    };
+
+    const handleRemoveClickListKontakGudangInfoGudang = (paramparent,indexparent,index) => {
+        const list = [...InputListInfoGudang];
+        const listKontakGudang = [...list[indexparent][paramparent]];
+        listKontakGudang.splice(index, 1);
+        list[indexparent][paramparent] = listKontakGudang;
+        setInputListInfoGudang(list);
+    };
+
+    const handleAddClickListHpKontakGudangInfoGudang = (paramparent,indexparent) => {
+        const list = [...InputListInfoGudang];
+        const listKontakGudang = [...list[indexparent][paramparent], { hpkontakgudang: ""}];
+        list[indexparent][paramparent] = listKontakGudang;
+        setInputListInfoGudang(list);
+    };
+
+    const handleRemoveClickListHpKontakGudangInfoGudang = (paramparent,indexparent,index) => {
+        const list = [...InputListInfoGudang];
+        const listKontakGudang = [...list[indexparent][paramparent]];
+        listKontakGudang.splice(index, 1);
+        list[indexparent][paramparent] = listKontakGudang;
+        setInputListInfoGudang(list);
     };
 
     const handleRemoveClickListNoTelpInfoContact = (paramparent,indexparent,index) => {
@@ -581,6 +820,16 @@ export default function EditCustomerManggala(props) {
         listnotelp[indexchild][name] = value;
         list[indexparent][paramparent] = listnotelp;
         setInputListInfoContact(list);
+    };
+
+    const handleInputChangeListInfoGudang = (e, paramparent,indexparent,indexchild) => {
+        // let paramlist = 'listnotelepon';
+        const { name, value } = e.target;
+        const list = [...InputListInfoGudang];
+        const listinfogudang = list[indexparent][paramparent];
+        listinfogudang[indexchild][name] = value;
+        list[indexparent][paramparent] = listinfogudang;
+        setInputListInfoGudang(list);
     };
 
     return (
@@ -1176,6 +1425,244 @@ export default function EditCustomerManggala(props) {
                                             })
                                         }
                                     </table>
+                                }
+
+                                <div style={{marginTop:'50px'}}><h3>Informasi Gudang</h3></div>
+                                <div className="invalid-feedback-custom">{ErrInputNamaGudang}</div>
+                                <div className="invalid-feedback-custom">{ErrInputAreaKirim}</div>
+                                <div className="invalid-feedback-custom">{ErrInputAlamatGudang}</div>
+                                <div className="invalid-feedback-custom">{ErrInputAncerAncer}</div>
+                                <div className="invalid-feedback-custom">{ErrInputKontakGudang}</div>
+                                <div className="invalid-feedback-custom">{ErrInputHpKontakGudang}</div>
+                                <div className="invalid-feedback-custom">{ErrInputNote}</div>
+                                {
+                                    InputListInfoGudang.length == 0?'':
+                                    <div style={{overflowX:'auto',marginBottom:'20px'}}>
+                                    <table id="tablegrid" style={{width:'1500px'}}>
+                                        <tr>
+                                            <th>{i18n.t('Nama Gudang')}</th>
+                                            <th>{i18n.t('Area Kirim')}</th>
+                                            <th>{i18n.t('Alamat Gudang')}</th>
+                                            <th>{i18n.t('Ancer Ancer')}</th>
+                                            <th>{i18n.t('Kontak Gudang')}</th>
+                                            <th>{i18n.t('HP Kontak Gudang')}</th>
+                                            <th>{i18n.t('Catatan Penting')}</th>
+                                            <th>{i18n.t('Action')}</th>
+
+                                        </tr>
+
+                                        {
+                                        InputListInfoGudang.map((x, i) => {
+                                            return (
+                                                <tr>
+                                                    <td>
+                                                        <Input
+                                                            name="namagudang"
+                                                            // className={
+                                                            //     touched.amount && errors.amount
+                                                            //         ? "w-50 input-error"
+                                                            //         : "w-50"
+                                                            // }
+                                                            type="text"
+                                                            id="namagudang"
+                                                            onChange={val => handleInputChangeInfoGudang(val,i)}
+                                                            onBlur={handleBlur}
+                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                            // style={{width: '25%'}}
+                                                            // value={values.amount}
+                                                            value={x.namagudang}
+                                                            disabled={false}
+                                                            />
+                                                        </td>
+                                                    
+                                                        <td>
+                                                        <DropdownList
+                                                            name="areakirim"
+                                                            filter='contains'
+                                                            // placeholder={i18n.t('select.SELECT_OPTION')}
+                                                            
+                                                            onChange={val => handleInputDropDownChangeInfoGudang(val,i,'areakirim')}
+                                                            data={ListAreaKirim}
+                                                            textField={'label'}
+                                                            valueField={'value'}
+                                                            style={{width: '200px'}}
+                                                            value={x.areakirim}
+                                                        />
+                                                        </td>
+
+                                                        <td>
+                                                        <Input
+                                                            name="alamatgudang"
+                                                            // className={
+                                                            //     touched.amount && errors.amount
+                                                            //         ? "w-50 input-error"
+                                                            //         : "w-50"
+                                                            // }
+                                                            type="text"
+                                                            id="alamatgudang"
+                                                            onChange={val => handleInputChangeInfoGudang(val,i)}
+                                                            onBlur={handleBlur}
+                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                            // style={{width: '25%'}}
+                                                            // value={values.amount}
+                                                            value={x.alamatgudang}
+                                                            disabled={false}
+                                                            />
+                                                        </td>
+
+                                                        <td>
+                                                        <Input
+                                                            name="ancerancer"
+                                                            // className={
+                                                            //     touched.amount && errors.amount
+                                                            //         ? "w-50 input-error"
+                                                            //         : "w-50"
+                                                            // }
+                                                            type="text"
+                                                            id="ancerancer"
+                                                            onChange={val => handleInputChangeInfoGudang(val,i)}
+                                                            onBlur={handleBlur}
+                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                            // style={{width: '25%'}}
+                                                            // value={values.amount}
+                                                            value={x.ancerancer}
+                                                            disabled={false}
+                                                            />
+                                                        </td>
+
+                                                        <td>
+                                                        <table >
+                                                            {
+                                                                x.listkontakgudang.map((y, j) => {
+                                                                    return (
+                                                                        <tr>
+                                                                            <td>
+                                                                            <Input
+                                                                            name="kontakgudang"
+                                                                            // className={
+                                                                            //     touched.amount && errors.amount
+                                                                            //         ? "w-50 input-error"
+                                                                            //         : "w-50"
+                                                                            // }
+                                                                            type="text"
+                                                                            id="kontakgudang"
+                                                                            onChange={val => handleInputChangeListInfoGudang(val,'listkontakgudang',i,j)}
+                                                                            onBlur={handleBlur}
+                                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                                            // style={{width: '70%'}}
+                                                                            // value={values.amount}
+                                                                            value={y.kontakgudang}
+                                                                            disabled={false}
+                                                                            />
+                                                                            </td>
+                                                                            
+                                                                            <td hidden={j > 0}>
+                                                                            <IconButton color={'primary'} hidden={j > 0}
+                                                                                onClick={() => handleAddClickListKontakGudangInfoGudang('listkontakgudang',i)}
+                                                                            // hidden={showplusdebit}
+                                                                            >
+                                                                                <AddIcon style={{ fontSize: 18 }}/>
+                                                                            </IconButton>
+                                                                            </td>
+                                                                            <td hidden={j == 0}>
+                                                                            <IconButton color={'primary'} hidden={j == 0}
+                                                                            onClick={() => handleRemoveClickListKontakGudangInfoGudang('listkontakgudang',i,j)}
+                                                                            // hidden={showplusdebit}
+                                                                            >
+                                                                                <RemoveIcon style={{ fontSize: 18 }}/>
+                                                                            </IconButton>    
+                                                                            </td>
+                                                                        </tr>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </table>
+                                                        </td>
+
+                                                        <td>
+                                                        <table >
+                                                            {
+                                                                x.listhpkontakgudang.map((y, j) => {
+                                                                    return (
+                                                                        <tr>
+                                                                            <td>
+                                                                            <Input
+                                                                            name="hpkontakgudang"
+                                                                            // className={
+                                                                            //     touched.amount && errors.amount
+                                                                            //         ? "w-50 input-error"
+                                                                            //         : "w-50"
+                                                                            // }
+                                                                            type="text"
+                                                                            id="hpkontakgudang"
+                                                                            onChange={val => handleInputChangeListInfoGudang(val,'listhpkontakgudang',i,j)}
+                                                                            onBlur={handleBlur}
+                                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                                            // style={{width: '70%'}}
+                                                                            // value={values.amount}
+                                                                            value={y.hpkontakgudang}
+                                                                            disabled={false}
+                                                                            />
+                                                                            </td>
+                                                                            
+                                                                            <td hidden={j > 0}>
+                                                                            <IconButton color={'primary'} hidden={j > 0}
+                                                                                onClick={() => handleAddClickListHpKontakGudangInfoGudang('listhpkontakgudang',i)}
+                                                                            // hidden={showplusdebit}
+                                                                            >
+                                                                                <AddIcon style={{ fontSize: 18 }}/>
+                                                                            </IconButton>
+                                                                            </td>
+                                                                            <td hidden={j == 0}>
+                                                                            <IconButton color={'primary'} hidden={j == 0}
+                                                                            onClick={() => handleRemoveClickListHpKontakGudangInfoGudang('listhpkontakgudang',i,j)}
+                                                                            // hidden={showplusdebit}
+                                                                            >
+                                                                                <RemoveIcon style={{ fontSize: 18 }}/>
+                                                                            </IconButton>    
+                                                                            </td>
+
+
+                                                                        </tr>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </table>
+                                                        </td>
+
+                                                        <td>
+                                                        <Input
+                                                            name="note"
+                                                            type="textarea"
+                                                            id="note"
+                                                            onChange={val => handleInputChangeInfoGudang(val,i)}
+                                                            onBlur={handleBlur}
+                                                            value={x.note}
+                                                            disabled={false}
+                                                        />
+                                                        </td>
+
+                                                        <td>
+                                                        <IconButton color={'primary'} hidden={i > 0}
+                                                            onClick={() => handleAddClickInfoGudang()}
+                                                        // hidden={showplusdebit}
+                                                        >
+                                                            <AddIcon style={{ fontSize: 18 }}/>
+                                                        </IconButton>
+                                                        <IconButton color={'primary'} hidden={i == 0}
+                                                        onClick={() => handleRemoveClickInfoGudang(i)}
+                                                        // hidden={showplusdebit}
+                                                        >
+                                                            <RemoveIcon style={{ fontSize: 18 }}/>
+                                                        </IconButton>    
+                                                        </td>
+                                                </tr>
+                                                )
+                                            })
+                                        }
+                                    </table>
+                                    </div>
+                                   
                                 }
                             </ContentWrapper>
                             {loading && <Loading/>}
