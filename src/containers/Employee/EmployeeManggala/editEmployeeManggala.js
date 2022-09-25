@@ -11,7 +11,7 @@ import {useDispatch}   from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { reloadToHomeNotAuthorize,isGetPermissions } from '../../shared/globalFunc';
 import { editEmployeeManggala_Permission,readSalaryEmployeeManggala_Permission,createSalaryEmployeeManggala_Permission,editSalaryEmployeeManggala_Permission } from '../../shared/permissionMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
