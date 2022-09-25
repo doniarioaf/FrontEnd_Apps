@@ -68,6 +68,11 @@
   "label_EDIT_BANK_ACCOUNT":"Edit Bank Account",
   "label_DETAIL_BANK_ACCOUNT":"Detail Bank Account",
   "validation": {
+    "employeemanggala":{
+      "noidentitas":{
+        "exist":"Number identity has been registered"
+      }
+    },
     "bankaccount":{
       "dateopen":{
         "empty":"Opening Date Cannot Be Blank",

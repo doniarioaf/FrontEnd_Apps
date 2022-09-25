@@ -91,7 +91,7 @@ import React, {useState,
 
     function successHandler(data) {
         
-        setLoading(false);
+        
         let template = data.data.template;
         setValue(data.data);
 
@@ -159,6 +159,8 @@ import React, {useState,
             }
         }
         setInputListInfoGudang(listinfogudang);
+
+        setLoading(false);
     }
 
     const submitHandlerDelete = () => {

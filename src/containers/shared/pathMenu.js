@@ -53,3 +53,7 @@ export const menubankaccount = `/admin/bankaccount`;
 export const addbankaccount = `/admin/add/bankaccount`;
 export const detailbankaccount = `/admin/detail/bankaccount`;
 export const editbankaccount = `/admin/edit/bankaccount`;
+export const menuemployeeManggala = `/employee`;
+export const addemployeeManggala = `/form/add/employee`;
+export const detailemployeeManggala = `/form/detail/employee`;
+export const editemployeeManggala = `/form/edit/employee`;

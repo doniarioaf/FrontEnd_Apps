@@ -93,7 +93,27 @@ const handleMenu = () => {
                 //     permission:permissionmenu.MenuCustomerType,
                 // }
             ]
-        },{
+        },
+        {
+            name: 'Employee',
+            icon: 'icon-user',
+            translate: 'Employee',
+            submenu:[
+                {
+                    name: 'Employee',
+                    path: pathmenu.menuemployeeManggala,
+                    translate: 'Employee',
+                    permission:permissionmenu.MenuEmployeeManggala,
+                },
+                // {
+                //     name: 'Customer Type',
+                //     path: pathmenu.menucustomertype,
+                //     translate: 'label_CUSTOMER_TYPE',
+                //     permission:permissionmenu.MenuCustomerType,
+                // }
+            ]
+        }
+        ,{
             name: 'Mobile',
             icon: 'icon-user',
             translate: 'Mobile',

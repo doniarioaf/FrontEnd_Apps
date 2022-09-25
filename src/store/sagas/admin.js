@@ -1,7 +1,7 @@
 import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
     baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL, baseProjectURL,baseBankAccountURL,baseCustomerManggalaURL,
-    baseAddressURL} from '../../containers/shared/apiURL';
+    baseAddressURL,baseEmployeeManggalaURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -506,6 +506,42 @@ export function* submitDeleteCustomerManggalaSaga(action) {
 export function* getAddressDataSaga(action) {
     try {
         const response = yield axios.get(baseAddressURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getEmployeeManggalaDataSaga(action) {
+    try {
+        const response = yield axios.get(baseEmployeeManggalaURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitAddEmployeeManggalaSaga(action) {
+    try {
+        const response = yield axios.post(baseEmployeeManggalaURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitEditEmployeeManggalaSaga(action) {
+    try {
+        const response = yield axios.put(baseEmployeeManggalaURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitDeleteEmployeeManggalaSaga(action) {
+    try {
+        const response = yield axios.delete(baseEmployeeManggalaURL(action.param)).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
         action.errorHandler(handleMessageError(error));

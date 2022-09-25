@@ -419,3 +419,41 @@ export const getAddressData = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getEmployeeManggalaData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_EMPLOYEE_MANGGALA_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddEmployeeManggalaData = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_EMPLOYEE_MANGGALA,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditEmployeeManggalaData = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_EMPLOYEE_MANGGALA,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteEmployeeManggalaData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_EMPLOYEE_MANGGALA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

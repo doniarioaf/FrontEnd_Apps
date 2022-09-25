@@ -188,6 +188,10 @@ const menuCustomerManggala = lazy(() => import('./containers/Admin/CustomerMangg
 const detailCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala/detail'));
 const addCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala/addCustomer'));
 const editCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala/editCustomer'));
+const menuEmployeeManggala = lazy(() => import('./containers/Employee/EmployeeManggala'));
+const addEmployeeManggala = lazy(() => import('./containers/Employee/EmployeeManggala/addEmployeeManggala'));
+const detailEmployeeManggala = lazy(() => import('./containers/Employee/EmployeeManggala/detail'));
+const editEmployeeManggala = lazy(() => import('./containers/Employee/EmployeeManggala/editEmployeeManggala'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -378,6 +382,10 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomerManggala)}/>
                             <Route path={pathmenu.addcustomers} component={waitFor(addCustomerManggala)}/>
                             <Route path={pathmenu.editcustomers+'/:id'} component={waitFor(editCustomerManggala)}/>
+                            <Route path={pathmenu.menuemployeeManggala} component={waitFor(menuEmployeeManggala)}/>
+                            <Route path={pathmenu.addemployeeManggala} component={waitFor(addEmployeeManggala)}/>
+                            <Route path={pathmenu.detailemployeeManggala+'/:id'} component={waitFor(detailEmployeeManggala)}/>
+                            <Route path={pathmenu.editemployeeManggala+'/:id'} component={waitFor(editEmployeeManggala)}/>
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>

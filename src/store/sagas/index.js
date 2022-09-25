@@ -52,7 +52,11 @@ import {
     submitAddCustomerManggalaSaga,
     submitEditCustomerManggalaSaga,
     submitDeleteCustomerManggalaSaga,
-    getAddressDataSaga
+    getAddressDataSaga,
+    getEmployeeManggalaDataSaga,
+    submitAddEmployeeManggalaSaga,
+    submitEditEmployeeManggalaSaga,
+    submitDeleteEmployeeManggalaSaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga, submitUploadFileCustomerCallPlanSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
@@ -141,5 +145,9 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_EDIT_CUSTOMER_MANGGALA, submitEditCustomerManggalaSaga),
         takeEvery(actions.SUBMIT_DELETE_CUSTOMER_MANGGALA, submitDeleteCustomerManggalaSaga),
         takeEvery(actions.GET_ADDRESS_DATA, getAddressDataSaga),
+        takeEvery(actions.GET_EMPLOYEE_MANGGALA_DATA, getEmployeeManggalaDataSaga),
+        takeEvery(actions.SUBMIT_ADD_EMPLOYEE_MANGGALA, submitAddEmployeeManggalaSaga),
+        takeEvery(actions.SUBMIT_EDIT_EMPLOYEE_MANGGALA, submitEditEmployeeManggalaSaga),
+        takeEvery(actions.SUBMIT_DELETE_EMPLOYEE_MANGGALA, submitDeleteEmployeeManggalaSaga),
     ]);
 }

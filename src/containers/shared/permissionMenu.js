@@ -46,6 +46,13 @@ export const addCustomerManggala_Permission = ['READ_CUSTOMER_MANGGALA','READ_AD
 export const editCustomerManggala_Permission = ['READ_CUSTOMER_MANGGALA','READ_ADDRESS','EDIT_CUSTOMER_MANGGALA'];
 export const deleteCustomerManggala_Permission = ['DELETE_CUSTOMER_MANGGALA'];
 
+export const addEmployeeManggala_Permission = ['READ_EMPLOYEE_MANGGALA','CREATE_EMPLOYEE_MANGGALA'];
+export const editEmployeeManggala_Permission = ['READ_EMPLOYEE_MANGGALA','EDIT_EMPLOYEE_MANGGALA'];
+export const deleteEmployeeManggala_Permission = ['DELETE_EMPLOYEE_MANGGALA'];
+export const readSalaryEmployeeManggala_Permission = ['READ_SALARY_EMPLOYEE_MANGGALA'];
+export const createSalaryEmployeeManggala_Permission = ['CREATE_SALARY_EMPLOYEE_MANGGALA'];
+export const editSalaryEmployeeManggala_Permission = ['EDIT_SALARY_EMPLOYEE_MANGGALA'];
+
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
@@ -65,3 +72,4 @@ export const MenuUploadCustomerCallPlan = ['CREATE_UPLOAD_CUSTOMER_CALLPLAN'];
 export const MenuProject = ['READ_PROJECT'];
 export const MenuBankAccount = ['READ_BANK_ACCOUNT'];
 export const MenuCustomerManggala = ['READ_CUSTOMER_MANGGALA'];
+export const MenuEmployeeManggala = ['READ_EMPLOYEE_MANGGALA'];

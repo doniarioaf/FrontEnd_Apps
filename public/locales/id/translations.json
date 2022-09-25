@@ -68,6 +68,11 @@
     "label_EDIT_BANK_ACCOUNT":"Ubah Akun Bank",
     "label_DETAIL_BANK_ACCOUNT":"Detil Akun Bank",
     "validation": {
+      "employeemanggala":{
+        "noidentitas":{
+          "exist":"No Identitas Sudah Terdaftar"
+        }
+      },
       "bankaccount":{
         "dateopen":{
           "empty":"Tanggal Pembukaan Tidak Boleh Kosong",
