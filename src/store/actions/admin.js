@@ -457,3 +457,41 @@ export const submitDeleteEmployeeManggalaData = (param, successHandler, errorHan
         errorHandler,
     }
 }
+
+export const getVendorCategoryData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_VENDOR_CATEGORY_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddVendorCategory = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_VENDOR_CATEGORY,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditVendorCategory = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_VENDOR_CATEGORY,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteVendorCategory = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_VENDOR_CATEGORY,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

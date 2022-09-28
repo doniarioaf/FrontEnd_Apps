@@ -61,7 +61,11 @@ export {
     getEmployeeManggalaData,
     submitAddEmployeeManggalaData,
     submitEditEmployeeManggalaData,
-    submitDeleteEmployeeManggalaData
+    submitDeleteEmployeeManggalaData,
+    getVendorCategoryData,
+    submitAddVendorCategory,
+    submitEditVendorCategory,
+    submitDeleteVendorCategory
 } from './admin';
 
 export {

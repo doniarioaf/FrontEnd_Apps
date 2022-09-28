@@ -109,12 +109,18 @@ const handleMenu = () => {
                     translate: 'Employee',
                     permission:permissionmenu.MenuEmployeeManggala,
                 },
-                // {
-                //     name: 'Customer Type',
-                //     path: pathmenu.menucustomertype,
-                //     translate: 'label_CUSTOMER_TYPE',
-                //     permission:permissionmenu.MenuCustomerType,
-                // }
+            ]
+        },{
+            name: 'Vendor',
+            icon: 'icon-user',
+            translate: 'Vendor',
+            submenu:[
+                {
+                    name: 'Vendor Category',
+                    path: pathmenu.menuvendorcategory,
+                    translate: 'Vendor Category',
+                    permission:permissionmenu.MenuEmployeeManggala,
+                },
             ]
         },
         // {

@@ -56,7 +56,11 @@ import {
     getEmployeeManggalaDataSaga,
     submitAddEmployeeManggalaSaga,
     submitEditEmployeeManggalaSaga,
-    submitDeleteEmployeeManggalaSaga
+    submitDeleteEmployeeManggalaSaga,
+    getVendorCategoryDataSaga,
+    submitAddVendorCategorySaga,
+    submitEditVendorCategorySaga,
+    submitDeleteVendorCategorySaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga, submitUploadFileCustomerCallPlanSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
@@ -149,5 +153,10 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_ADD_EMPLOYEE_MANGGALA, submitAddEmployeeManggalaSaga),
         takeEvery(actions.SUBMIT_EDIT_EMPLOYEE_MANGGALA, submitEditEmployeeManggalaSaga),
         takeEvery(actions.SUBMIT_DELETE_EMPLOYEE_MANGGALA, submitDeleteEmployeeManggalaSaga),
+        takeEvery(actions.GET_VENDOR_CATEGORY_DATA, getVendorCategoryDataSaga),
+        takeEvery(actions.SUBMIT_ADD_VENDOR_CATEGORY, submitAddVendorCategorySaga),
+        takeEvery(actions.SUBMIT_EDIT_VENDOR_CATEGORY, submitEditVendorCategorySaga),
+        takeEvery(actions.SUBMIT_DELETE_VENDOR_CATEGORY, submitDeleteVendorCategorySaga),
+        
     ]);
 }

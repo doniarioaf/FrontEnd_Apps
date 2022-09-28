@@ -57,3 +57,7 @@ export const menuemployeeManggala = `/employee`;
 export const addemployeeManggala = `/form/add/employee`;
 export const detailemployeeManggala = `/form/detail/employee`;
 export const editemployeeManggala = `/form/edit/employee`;
+export const menuvendorcategory = `/vendorcategory`;
+export const addvendorcategory = `/form/add/vendorcategory`;
+export const detailvendorcategory = `/form/detail/vendorcategory`;
+export const editvendorcategory = `/form/edit/vendorcategory`;

@@ -1,7 +1,7 @@
 import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
     baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL, baseProjectURL,baseBankAccountURL,baseCustomerManggalaURL,
-    baseAddressURL,baseEmployeeManggalaURL} from '../../containers/shared/apiURL';
+    baseAddressURL,baseEmployeeManggalaURL,baseVendorCategoryURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -540,6 +540,42 @@ export function* submitEditEmployeeManggalaSaga(action) {
 }
 
 export function* submitDeleteEmployeeManggalaSaga(action) {
+    try {
+        const response = yield axios.delete(baseEmployeeManggalaURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getVendorCategoryDataSaga(action) {
+    try {
+        const response = yield axios.get(baseVendorCategoryURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitAddVendorCategorySaga(action) {
+    try {
+        const response = yield axios.post(baseVendorCategoryURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitEditVendorCategorySaga(action) {
+    try {
+        const response = yield axios.put(baseVendorCategoryURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitDeleteVendorCategorySaga(action) {
     try {
         const response = yield axios.delete(baseEmployeeManggalaURL(action.param)).then(response => response.data);
         action.successHandler(response);
