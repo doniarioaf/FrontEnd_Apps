@@ -19,8 +19,8 @@ const EmployeeManggalaIndex = () => {
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
         {name: 'id', title: 'id'},
-        {name: 'name', title: i18n.t('Name')},
-        {name: 'jabatan', title: i18n.t('Jabatan')},
+        {name: 'name', title: i18n.t('label_NAME')},
+        {name: 'jabatan', title: i18n.t('label_POSITION')},
         {name: 'status', title: i18n.t('Status')},
         {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);

@@ -19,8 +19,8 @@ const CustomerManggalaIndex = () => {
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
         {name: 'id', title: 'id'},
-        {name: 'name', title: i18n.t('Customer Name')},
-        {name: 'address', title: i18n.t('Alamat')},
+        {name: 'name', title: i18n.t('label_NAME')},
+        {name: 'address', title: i18n.t('label_ADDRESS')},
         {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);
     const [tableColumnExtensions] = useState([]);

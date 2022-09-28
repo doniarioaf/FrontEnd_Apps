@@ -236,56 +236,56 @@ import React, {useState,
                     (
                         <section>
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Nama')}</span>
+                            <span className="col-md-5">{i18n.t('label_NAME')}</span>
                             <strong className="col-md-7">
                                 {value.nama?value.nama:''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Status Karyawan')}</span>
+                            <span className="col-md-5">{'Status '+i18n.t('label_EMPLOYEE')}</span>
                             <strong className="col-md-7">
                                 {value.statuskaryawan?getOptionsParameter(value.statuskaryawan,'STATUSKARYAWAN'):''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Jabatan')}</span>
+                            <span className="col-md-5">{i18n.t('label_POSITION')}</span>
                             <strong className="col-md-7">
                                 {value.jabatan?getOptionsParameter(value.jabatan,'JABATAN'):''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Gaji')}</span>
+                            <span className="col-md-5">{i18n.t('label_SALARY')}</span>
                                 <strong className="col-md-7">
                                 {value.gaji?numToMoney(parseFloat(value.gaji)):''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('No Identitas')}</span>
+                            <span className="col-md-5">{i18n.t('label_NUMBER_IDENTITY')}</span>
                             <strong className="col-md-7">
                                 {value.noidentitas?value.noidentitas:''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Jenis Kelamin')}</span>
+                            <span className="col-md-5">{i18n.t('label_GENDER')}</span>
                                 <strong className="col-md-7">
                                 {value.jeniskelamin?getOptionsParameter(value.jeniskelamin,'JENISKELAMIN'):''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Tanggal Lahir')}</span>
+                            <span className="col-md-5">{i18n.t('label_DATE_OF_BIRTH')}</span>
                                 <strong className="col-md-7">
                                 {value.tanggallahir?moment (new Date(value.tanggallahir)).format('DD MMMM YYYY'):''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Alamat')}</span>
+                            <span className="col-md-5">{i18n.t('label_ADDRESS')}</span>
                             <strong className="col-md-7">
                                 {value.alamat?value.alamat:''}
                             </strong>
@@ -300,14 +300,14 @@ import React, {useState,
 
                             <div hidden={value.status? (value.status == 'MENIKAH') :true}>
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Nama Pasangan')}</span>
+                            <span className="col-md-5">{i18n.t('label_COUPLE_NAME')}</span>
                                 <strong className="col-md-7">
                                 {value.namapasangan?value.namapasangan:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Tanggal Lahir Pasangan')}</span>
+                            <span className="col-md-5">{i18n.t('label_COUPLE_BIRTH_DATE')}</span>
                                 <strong className="col-md-7">
                                 {value.tanggallahirpasangan?moment (new Date(value.tanggallahirpasangan)).format('DD MMMM YYYY'):''}
                                 </strong>
@@ -323,28 +323,28 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('No Rekening')}</span>
+                            <span className="col-md-5">{i18n.t('label_NUMBER_ACCOUNT')}</span>
                                 <strong className="col-md-7">
                                 {value.norekening?value.norekening:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Atas Nama')}</span>
+                            <span className="col-md-5">{i18n.t('label_ACCOUNT_NAME')}</span>
                                 <strong className="col-md-7">
                                 {value.atasnama?value.atasnama:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Tanggal Mulai')}</span>
+                            <span className="col-md-5">{i18n.t('label_START_DATE')}</span>
                                 <strong className="col-md-7">
                                 {value.tanggalmulai?moment (new Date(value.tanggalmulai)).format('DD MMMM YYYY'):''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Tanggal Resign')}</span>
+                            <span className="col-md-5">{i18n.t('label_RESIGN_DATE')}</span>
                                 <strong className="col-md-7">
                                 {value.tanggalresign?moment (new Date(value.tanggalresign)).format('DD MMMM YYYY'):''}
                                 </strong>
@@ -369,14 +369,14 @@ import React, {useState,
 
             </CardBody>
 
-            <div><h3>Informasi Keluarga</h3></div>
+            <div><h3>{i18n.t('label_FAMILY_INFO')}</h3></div>
                 {
                     value.detailsFamily?
                     <table id="tablegrid">
                         <tr>
-                        <th>{i18n.t('Nama Anak')}</th>
-                        <th>{i18n.t('Tanggal Lahir')}</th>
-                        <th>{i18n.t('Jenis Kelamin')}</th>
+                        <th>{i18n.t('label_CHILD_NAME')}</th>
+                        <th>{i18n.t('label_DATE_OF_BIRTH')}</th>
+                        <th>{i18n.t('label_GENDER')}</th>
                         <th>{i18n.t('Status')}</th>
                         </tr>
                         <tbody>

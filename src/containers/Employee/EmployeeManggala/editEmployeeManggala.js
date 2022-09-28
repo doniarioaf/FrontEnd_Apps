@@ -313,12 +313,12 @@ export default function EditEmployeeManggala(props) {
                     let det = InputListInfoFamily[i];
                     if(det.namaanak !== '' || det.jeniskelamin !== '' || det.status !== '' ){
                         if(det.namaanak == ''){
-                            setErrInfoFamilyNamaAnak('Nama Anak '+i18n.t('label_REQUIRED'));
+                            setErrInfoFamilyNamaAnak(i18n.t('label_CHILD_NAME')+' '+i18n.t('label_REQUIRED'));
                             flag = false;
                         }
 
                         if(det.jeniskelamin == ''){
-                            setErrInfoFamilyJenisKelamin('Jenis Kelamin '+i18n.t('label_REQUIRED'));
+                            setErrInfoFamilyJenisKelamin(i18n.t('label_GENDER')+' '+i18n.t('label_REQUIRED'));
                             flag = false;
                         }
 
@@ -607,7 +607,7 @@ export default function EditEmployeeManggala(props) {
                                 <div className="row mt-2">
                                 <div className="mt-2 col-lg-6 ft-detail mb-5">
                                 <label className="mt-3 form-label required" htmlFor="statuskaryawan">
-                                {i18n.t('Status Karyawan')}
+                                {'Status '+i18n.t('label_EMPLOYEE')}
                                 <span style={{color:'red'}}>*</span>
                                 </label>
 
@@ -632,7 +632,7 @@ export default function EditEmployeeManggala(props) {
                                 <div className="invalid-feedback-custom">{ErrSelStatusKaryawan}</div>
 
                                 <label className="mt-3 form-label required" htmlFor="jabatan">
-                                {i18n.t('Jabatan')}
+                                {i18n.t('label_POSITION')}
                                 <span style={{color:'red'}}>*</span>
                                 </label>
 
@@ -658,7 +658,7 @@ export default function EditEmployeeManggala(props) {
 
                                 <div hidden={cekAksesGaji('IS_HIDE')}>
                                 <label className="mt-3 form-label required" htmlFor="gaji">
-                                {i18n.t('Gaji')}
+                                {i18n.t('label_SALARY')}
                                 <span style={{color:'red'}}>*</span>
                                 </label>
                                 <Input
@@ -680,7 +680,7 @@ export default function EditEmployeeManggala(props) {
                                 </div>
 
                                 <label className="mt-3 form-label required" htmlFor="nama">
-                                {i18n.t('Name')}
+                                {i18n.t('label_NAME')}
                                 <span style={{color:'red'}}>*</span>
                                 </label>
                                 <Input
@@ -700,7 +700,7 @@ export default function EditEmployeeManggala(props) {
                                 <div className="invalid-feedback-custom">{ErrInputName}</div>
 
                                 <label className="mt-3 form-label required" htmlFor="noidentitas">
-                                {i18n.t('No Identitas')}
+                                {i18n.t('label_NUMBER_IDENTITY')}
                                 <span style={{color:'red'}}>*</span>
                                 </label>
                                 <Input
@@ -720,7 +720,7 @@ export default function EditEmployeeManggala(props) {
                                 <div className="invalid-feedback-custom">{ErrInputNoIdentitas}</div>
 
                                 <label className="mt-3 form-label required" htmlFor="status">
-                                {i18n.t('Jenis Kelamin')}
+                                {i18n.t('label_GENDER')}
                                 <span style={{color:'red'}}>*</span>
                                 </label>
 
@@ -745,7 +745,7 @@ export default function EditEmployeeManggala(props) {
                                 <div className="invalid-feedback-custom">{ErrSelJenisKelamin}</div>
 
                                 <label className="mt-3 form-label required" htmlFor="tanggallahir">
-                                    {i18n.t('Tanggal Lahir')}
+                                {i18n.t('label_DATE_OF_BIRTH')}
                                     <span style={{color:'red'}}>*</span>
                                 </label>
                                 <DatePicker
@@ -764,7 +764,7 @@ export default function EditEmployeeManggala(props) {
                                 />
 
                                 <label className="mt-3 form-label required" htmlFor="alamat">
-                                {i18n.t('Alamat')}
+                                {i18n.t('label_ADDRESS')}
                                 <span style={{color:'red'}}>*</span>
                                 </label>
                                 <Input
@@ -815,7 +815,7 @@ export default function EditEmployeeManggala(props) {
 
                                 <div hidden={ !(values.status == 'MENIKAH')}>
                                 <label className="mt-3 form-label required" htmlFor="namapasangan">
-                                {i18n.t('Nama Pasangan')}
+                                {i18n.t('label_COUPLE_NAME')}
                                 <span style={{color:'red'}}>*</span>
                                 </label>
                                 <Input
@@ -835,7 +835,7 @@ export default function EditEmployeeManggala(props) {
                                 <div className="invalid-feedback-custom">{ErrInputNamePasangan}</div>
 
                                 <label className="mt-3 form-label required" htmlFor="tanggallahirpasangan">
-                                    {i18n.t('Tanggal Lahir Pasangan')}
+                                {i18n.t('label_COUPLE_BIRTH_DATE')}
                                     <span style={{color:'red'}}>*</span>
                                 </label>
                                 <DatePicker
@@ -875,7 +875,7 @@ export default function EditEmployeeManggala(props) {
                                 <div className="invalid-feedback-custom">{ErrInputBank}</div>
 
                                 <label className="mt-3 form-label required" htmlFor="norek">
-                                {i18n.t('No Rekening')}
+                                {i18n.t('label_NUMBER_ACCOUNT')}
                                 <span style={{color:'red'}}>*</span>
                                 </label>
                                 <Input
@@ -895,7 +895,7 @@ export default function EditEmployeeManggala(props) {
                                 <div className="invalid-feedback-custom">{ErrInputNoRek}</div>
 
                                 <label className="mt-3 form-label required" htmlFor="atasnama">
-                                {i18n.t('Atas Nama')}
+                                {i18n.t('label_ACCOUNT_NAME')}
                                 <span style={{color:'red'}}>*</span>
                                 </label>
                                 <Input
@@ -915,7 +915,7 @@ export default function EditEmployeeManggala(props) {
                                 <div className="invalid-feedback-custom">{ErrInputAtasNama}</div>
 
                                 <label className="mt-3 form-label required" htmlFor="tanggalmulai">
-                                    {i18n.t('Tanggal Mulai')}
+                                {i18n.t('label_START_DATE')}
                                     <span style={{color:'red'}}>*</span>
                                 </label>
                                 <DatePicker
@@ -934,7 +934,7 @@ export default function EditEmployeeManggala(props) {
                                 />
 
                                 <label className="mt-3 form-label required" htmlFor="tanggalresign">
-                                    {i18n.t('Tanggal Resign')}
+                                {i18n.t('label_RESIGN_DATE')}
                                     <span style={{color:'red'}}>*</span>
                                 </label>
                                 <DatePicker
@@ -998,7 +998,7 @@ export default function EditEmployeeManggala(props) {
 
                                 </div>
 
-                                <div style={{marginTop:'0px'}}><h3>Informasi Keluarga</h3></div>
+                                <div style={{marginTop:'0px'}}><h3>{i18n.t('label_FAMILY_INFO')}</h3></div>
                                 <div className="invalid-feedback-custom">{ErrInfoFamilyNamaAnak}</div>
                                 <div className="invalid-feedback-custom">{ErrInfoFamilyJenisKelamin}</div>
                                 <div className="invalid-feedback-custom">{ErrInfoFamilyStatus}</div>
@@ -1006,9 +1006,9 @@ export default function EditEmployeeManggala(props) {
                                     InputListInfoFamily.length == 0?'':
                                     <table id="tablegrid">
                                         <tr>
-                                            <th>{i18n.t('Nama Anak')}</th>
-                                            <th>{i18n.t('Tanggal Lahir')}</th>
-                                            <th>{i18n.t('Jenis Kelamin')}</th>
+                                            <th>{i18n.t('label_CHILD_NAME')}</th>
+                                            <th>{i18n.t('label_DATE_OF_BIRTH')}</th>
+                                            <th>{i18n.t('label_GENDER')}</th>
                                             <th>{i18n.t('Status')}</th>
                                             <th>{i18n.t('Action')}</th>
                                         </tr>

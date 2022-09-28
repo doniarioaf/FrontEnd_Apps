@@ -382,17 +382,17 @@ export default function EditCustomerManggala(props) {
                 let det = InputListInfoGudang[i];
                 if(det.namagudang !== '' || det.areakirim !== '' || det.alamatgudang !== '' ){
                     if(det.namagudang == ''){
-                        setErrInputNamaGudang('Nama Gudang '+i18n.t('label_REQUIRED'));
+                        setErrInputNamaGudang(i18n.t('label_NAME')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
 
                     if(det.areakirim == ''){
-                        setErrInputAreaKirim('Area Kirim '+i18n.t('label_REQUIRED'));
+                        setErrInputAreaKirim(i18n.t('label_SEND_AREA')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
 
                     if(det.alamatgudang == ''){
-                        setErrInputAlamatGudang('Alamat Gudang '+i18n.t('label_REQUIRED'));
+                        setErrInputAlamatGudang(i18n.t('label_ADDRESS')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
 
@@ -400,12 +400,12 @@ export default function EditCustomerManggala(props) {
                         for(let j=0; j < det.listkontakgudang.length; j++){
                             let detnotlp = det.listkontakgudang[j];
                             if(detnotlp.kontakgudang == ''){
-                                setErrInputKontakGudang('Kontak Gudang '+i18n.t('label_REQUIRED'));
+                                setErrInputKontakGudang(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
                                 flag = false;
                             }
                         }
                     }else{
-                        setErrInputKontakGudang('Kontak Gudang '+i18n.t('label_REQUIRED'));
+                        setErrInputKontakGudang(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
 
@@ -413,12 +413,12 @@ export default function EditCustomerManggala(props) {
                         for(let j=0; j < det.listhpkontakgudang.length; j++){
                             let detnotlp = det.listhpkontakgudang[j];
                             if(detnotlp.hpkontakgudang == ''){
-                                setErrInputHpKontakGudang('HP Kontak Gudang '+i18n.t('label_REQUIRED'));
+                                setErrInputHpKontakGudang(i18n.t('label_CONTACT_NUMBER')+' (HP) '+i18n.t('label_REQUIRED'));
                                 flag = false;
                             }
                         }
                     }else{
-                        setErrInputHpKontakGudang('HP Kontak Gudang '+i18n.t('label_REQUIRED'));
+                        setErrInputHpKontakGudang(i18n.t('label_CONTACT_NUMBER')+' (HP) '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
                 }
@@ -435,7 +435,7 @@ export default function EditCustomerManggala(props) {
                     }
 
                     if(det.namakontak == ''){
-                        setErrInputNamaKontak('Nama Kontak '+i18n.t('label_REQUIRED'));
+                        setErrInputNamaKontak(i18n.t('label_CONTACT_NAME')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
 
@@ -453,12 +453,12 @@ export default function EditCustomerManggala(props) {
                         for(let j=0; j < det.listnotelepon.length; j++){
                             let detnotlp = det.listnotelepon[j];
                             if(detnotlp.notelepon == ''){
-                                setErrInputNotelepon('No Telepon '+i18n.t('label_REQUIRED'));
+                                setErrInputNotelepon(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
                                 flag = false;
                             }
                         }
                     }else{
-                        setErrInputNotelepon('No Telepon '+i18n.t('label_REQUIRED'));
+                        setErrInputNotelepon(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
                 }
@@ -472,12 +472,12 @@ export default function EditCustomerManggala(props) {
                 let det = InputListInfoKementerian[i];
                 if(det.kementerian !== '' || det.alamat_email !== '' || det.password_email !== ''){
                     if(det.kementerian == ''){
-                        setErrInputKementtrian('Kementrian '+i18n.t('label_REQUIRED'));
+                        setErrInputKementtrian(i18n.t('label_MINISTRY')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
 
                     if(det.alamat_email == ''){
-                        setErrInputAlamatEmail('Alamat Email '+i18n.t('label_REQUIRED'));
+                        setErrInputAlamatEmail('Email '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
 
@@ -904,7 +904,7 @@ export default function EditCustomerManggala(props) {
                             <div className="invalid-feedback-custom">{ErrSelCustomerType}</div>
 
                             <label className="mt-3 form-label required" htmlFor="customername">
-                                {i18n.t('Name')}
+                                {i18n.t('label_NAME')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <Input
@@ -983,7 +983,7 @@ export default function EditCustomerManggala(props) {
                             <div className="invalid-feedback-custom">{ErrInputNib}</div>
 
                             <label className="mt-3 form-label required" htmlFor="ntp">
-                                {i18n.t('No Telp Kantor')}
+                            {i18n.t('label_PHONE_OFFICE')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <table style={{width:'120%'}}>
@@ -1038,7 +1038,7 @@ export default function EditCustomerManggala(props) {
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             
                             <label className="mt-3 form-label required" htmlFor="provinsi">
-                                {i18n.t('Provinsi')}
+                            {i18n.t('label_PROVINCE')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
 
@@ -1063,7 +1063,7 @@ export default function EditCustomerManggala(props) {
                             <div className="invalid-feedback-custom">{ErrSelProvinsi}</div>
 
                             <label className="mt-3 form-label required" htmlFor="city">
-                                {i18n.t('Kota')}
+                            {i18n.t('label_CITY')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
 
@@ -1088,7 +1088,7 @@ export default function EditCustomerManggala(props) {
                             <div className="invalid-feedback-custom">{ErrSelCity}</div>
 
                             <label className="mt-3 form-label required" htmlFor="kodepos">
-                                {i18n.t('Kode Pos')}
+                            {i18n.t('label_POSTAL_CODE')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
 
@@ -1113,7 +1113,7 @@ export default function EditCustomerManggala(props) {
                             <div className="invalid-feedback-custom">{ErrSelKodePos}</div>
 
                             <label className="mt-3 form-label required" htmlFor="alamat">
-                                {i18n.t('Alamat')}
+                            {i18n.t('label_ADDRESS')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <Input
@@ -1142,7 +1142,7 @@ export default function EditCustomerManggala(props) {
 
                             </div>
 
-                            <div><h3>Informasi Kementerian</h3></div>
+                            <div style={{marginTop:'0px'}}><h3>{i18n.t('label_MINISTRY_INFO')}</h3></div>
                             <div className="invalid-feedback-custom">{ErrInputKementtrian}</div>
                             <div className="invalid-feedback-custom">{ErrInputAlamatEmail}</div>
                             <div className="invalid-feedback-custom">{ErrInputPasswordEmail}</div>
@@ -1153,8 +1153,8 @@ export default function EditCustomerManggala(props) {
                                 <table id="tablegrid">
                                     
                                 <tr>
-                                    <th>{i18n.t('Kementrian')}</th>
-                                    <th>{i18n.t('Alamat Email')}</th>
+                                    <th>{i18n.t('label_MINISTRY')}</th>
+                                    <th>{i18n.t('Email')}</th>
                                     <th>{i18n.t('Password Email')}</th>
                                     <th>{i18n.t('Action')}</th>
                                 </tr>
@@ -1243,7 +1243,7 @@ export default function EditCustomerManggala(props) {
                                 </table>
                             }
 
-                                <div style={{marginTop:'50px'}}><h3>Informasi Contact</h3></div>
+                                <div style={{marginTop:'50px'}}><h3>{i18n.t('label_CONTACT_INFORMATION')}</h3></div>
                                 <div className="invalid-feedback-custom">{ErrInputPanggilan}</div>
                                 <div className="invalid-feedback-custom">{ErrInputNamaKontak}</div>
                                 <div className="invalid-feedback-custom">{ErrInputNotelepon}</div>
@@ -1254,8 +1254,8 @@ export default function EditCustomerManggala(props) {
                                     <table id="tablegrid">
                                         <tr>
                                             <th>{i18n.t('Bapal/Ibu')}</th>
-                                            <th>{i18n.t('Nama Kontak')}</th>
-                                            <th>{i18n.t('No Telepon')}</th>
+                                            <th>{i18n.t('label_CONTACT_NAME')}</th>
+                                            <th>{i18n.t('label_CONTACT_NUMBER')}</th>
                                             <th>{i18n.t('Email')}</th>
                                             <th>{i18n.t('No Ext')}</th>
                                             <th>{i18n.t('Action')}</th>
@@ -1427,7 +1427,7 @@ export default function EditCustomerManggala(props) {
                                     </table>
                                 }
 
-                                <div style={{marginTop:'50px'}}><h3>Informasi Gudang</h3></div>
+                                <div style={{marginTop:'50px'}}><h3>{i18n.t('label_WAREHOUSE_INFO')}</h3></div>
                                 <div className="invalid-feedback-custom">{ErrInputNamaGudang}</div>
                                 <div className="invalid-feedback-custom">{ErrInputAreaKirim}</div>
                                 <div className="invalid-feedback-custom">{ErrInputAlamatGudang}</div>
@@ -1440,13 +1440,13 @@ export default function EditCustomerManggala(props) {
                                     <div style={{overflowX:'auto',marginBottom:'20px'}}>
                                     <table id="tablegrid" style={{width:'1500px'}}>
                                         <tr>
-                                            <th>{i18n.t('Nama Gudang')}</th>
-                                            <th>{i18n.t('Area Kirim')}</th>
-                                            <th>{i18n.t('Alamat Gudang')}</th>
+                                            <th>{i18n.t('label_NAME')}</th>
+                                            <th>{i18n.t('label_SEND_AREA')}</th>
+                                            <th>{i18n.t('label_ADDRESS')}</th>
                                             <th>{i18n.t('Ancer Ancer')}</th>
-                                            <th>{i18n.t('Kontak Gudang')}</th>
-                                            <th>{i18n.t('HP Kontak Gudang')}</th>
-                                            <th>{i18n.t('Catatan Penting')}</th>
+                                            <th>{i18n.t('label_CONTACT_NUMBER')}</th>
+                                            <th>{i18n.t('label_CONTACT_NUMBER')+'(HP)'}</th>
+                                            <th>{i18n.t('label_NOTE')}</th>
                                             <th>{i18n.t('Action')}</th>
 
                                         </tr>
