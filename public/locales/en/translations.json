@@ -89,6 +89,9 @@
   "label_RESIGN_DATE":"Resign Date",
   "label_FAMILY_INFO":"Family Information",
   "label_CHILD_NAME":"Child Name",
+  "label_CATEGORY":"Category",
+  "label_ADD_VENDOR":"Add Vendor",
+  "label_EDIT_VENDOR":"Edit Vendor",
   "validation": {
     "employeemanggala":{
       "noidentitas":{

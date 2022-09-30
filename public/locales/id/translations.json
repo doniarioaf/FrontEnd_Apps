@@ -89,6 +89,9 @@
     "label_RESIGN_DATE":"Tanggal Resign",
     "label_FAMILY_INFO":"Informasi Keluarga",
     "label_CHILD_NAME":"Nama Anak",
+    "label_CATEGORY":"Kategori",
+    "label_ADD_VENDOR":"Tambah Vendor",
+    "label_EDIT_VENDOR":"Ubah Vendor",
     "validation": {
       "employeemanggala":{
         "noidentitas":{

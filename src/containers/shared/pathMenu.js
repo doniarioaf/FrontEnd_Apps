@@ -61,3 +61,7 @@ export const menuvendorcategory = `/vendorcategory`;
 export const addvendorcategory = `/form/add/vendorcategory`;
 export const detailvendorcategory = `/form/detail/vendorcategory`;
 export const editvendorcategory = `/form/edit/vendorcategory`;
+export const menuvendor = `/vendor`;
+export const addvendor = `/form/add/vendor`;
+export const detailvendor = `/form/detail/vendor`;
+export const editvendor = `/form/edit/vendor`;

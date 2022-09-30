@@ -196,6 +196,11 @@ const menuVendorCategory = lazy(() => import('./containers/Vendor/VendorManggala
 const addVendorCategory = lazy(() => import('./containers/Vendor/VendorManggala/VendorCategory/addFormVendorCategory'));
 const detailVendorCategory = lazy(() => import('./containers/Vendor/VendorManggala/VendorCategory/detail'));
 const editVendorCategory = lazy(() => import('./containers/Vendor/VendorManggala/VendorCategory/editFormVendorCategory'));
+
+const menuVendor = lazy(() => import('./containers/Vendor/VendorManggala/Vendor'));
+const addVendor = lazy(() => import('./containers/Vendor/VendorManggala/Vendor/addVendor'));
+const detailVendor = lazy(() => import('./containers/Vendor/VendorManggala/Vendor/detail'));
+const editVendor = lazy(() => import('./containers/Vendor/VendorManggala/Vendor/editVendor'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -395,8 +400,12 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addvendorcategory} component={waitFor(addVendorCategory)}/>
                             <Route path={pathmenu.detailvendorcategory+'/:id'} component={waitFor(detailVendorCategory)}/>
                             <Route path={pathmenu.editvendorcategory+'/:id'} component={waitFor(editVendorCategory)}/>
-                            
-                            
+
+                            <Route path={pathmenu.menuvendor} component={waitFor(menuVendor)}/>
+                            <Route path={pathmenu.addvendor} component={waitFor(addVendor)}/>
+                            <Route path={pathmenu.detailvendor+'/:id'} component={waitFor(detailVendor)}/>
+                            <Route path={pathmenu.editvendor+'/:id'} component={waitFor(editVendor)}/>
+
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>
                             <Route path={pathmenu.addcustomers} component={waitFor(addFormCustomer)}/>

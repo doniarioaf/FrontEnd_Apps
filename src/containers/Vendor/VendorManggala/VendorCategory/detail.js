@@ -26,7 +26,7 @@ import React, {useState,
   import moment                       from "moment/moment";
   import {Loading}                    from '../../../../components/Common/Loading';
   import { isGetPermissions,reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
-  import { deleteBankAccount_Permission,editBankAccount_Permission,MenuBankAccount } from '../../../shared/permissionMenu';
+  import { deleteVendorCategory_Permission,editVendorCategory_Permission,MenuVendorCategory } from '../../../shared/permissionMenu';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,7 +39,7 @@ import React, {useState,
 
 
   function Detail(props) {
-    reloadToHomeNotAuthorize(MenuBankAccount,'READ');
+    reloadToHomeNotAuthorize(MenuVendorCategory,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
@@ -228,8 +228,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editBankAccount_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editvendorcategory+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deleteBankAccount_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editVendorCategory_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editvendorcategory+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteVendorCategory_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             
                         </div>)
                         

@@ -65,7 +65,11 @@ export {
     getVendorCategoryData,
     submitAddVendorCategory,
     submitEditVendorCategory,
-    submitDeleteVendorCategory
+    submitDeleteVendorCategory,
+    getVendorData,
+    submitAddVendor,
+    submitEditVendor,
+    submitDeleteVendor
 } from './admin';
 
 export {

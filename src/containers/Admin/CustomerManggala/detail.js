@@ -90,8 +90,6 @@ import React, {useState,
     }, []);
 
     function successHandler(data) {
-        
-        
         let template = data.data.template;
         setValue(data.data);
 

@@ -53,6 +53,13 @@ export const readSalaryEmployeeManggala_Permission = ['READ_SALARY_EMPLOYEE_MANG
 export const createSalaryEmployeeManggala_Permission = ['CREATE_SALARY_EMPLOYEE_MANGGALA'];
 export const editSalaryEmployeeManggala_Permission = ['EDIT_SALARY_EMPLOYEE_MANGGALA'];
 
+export const addVendorCategory_Permission = ['READ_VENDOR_CATEGORY','CREATE_VENDOR_CATEGORY'];
+export const editVendorCategory_Permission = ['READ_VENDOR_CATEGORY','EDIT_VENDOR_CATEGORY'];
+export const deleteVendorCategory_Permission = ['DELETE_VENDOR_CATEGORY'];
+
+export const addVendor_Permission = ['READ_VENDOR','READ_ADDRESS','CREATE_VENDOR'];
+export const editVendor_Permission = ['READ_VENDOR','READ_ADDRESS','EDIT_VENDOR'];
+export const deleteVendor_Permission = ['DELETE_VENDOR'];
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
@@ -73,3 +80,5 @@ export const MenuProject = ['READ_PROJECT'];
 export const MenuBankAccount = ['READ_BANK_ACCOUNT'];
 export const MenuCustomerManggala = ['READ_CUSTOMER_MANGGALA'];
 export const MenuEmployeeManggala = ['READ_EMPLOYEE_MANGGALA'];
+export const MenuVendorCategory = ['READ_VENDOR_CATEGORY'];
+export const MenuVendor = ['READ_VENDOR'];

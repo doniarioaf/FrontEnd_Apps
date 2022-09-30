@@ -1253,7 +1253,7 @@ export default function EditCustomerManggala(props) {
                                     InputListInfoContact.length == 0?'':
                                     <table id="tablegrid">
                                         <tr>
-                                            <th>{i18n.t('Bapal/Ibu')}</th>
+                                            <th>{i18n.t('Bapak/Ibu')}</th>
                                             <th>{i18n.t('label_CONTACT_NAME')}</th>
                                             <th>{i18n.t('label_CONTACT_NUMBER')}</th>
                                             <th>{i18n.t('Email')}</th>

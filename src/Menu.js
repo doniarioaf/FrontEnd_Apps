@@ -116,10 +116,16 @@ const handleMenu = () => {
             translate: 'Vendor',
             submenu:[
                 {
+                    name: 'Vendor',
+                    path: pathmenu.menuvendor,
+                    translate: 'Vendor',
+                    permission:permissionmenu.MenuVendorCategory,
+                },
+                {
                     name: 'Vendor Category',
                     path: pathmenu.menuvendorcategory,
                     translate: 'Vendor Category',
-                    permission:permissionmenu.MenuEmployeeManggala,
+                    permission:permissionmenu.MenuVendorCategory,
                 },
             ]
         },

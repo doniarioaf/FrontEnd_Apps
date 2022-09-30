@@ -495,3 +495,41 @@ export const submitDeleteVendorCategory = (param, successHandler, errorHandler) 
         errorHandler,
     }
 }
+
+export const getVendorData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_VENDOR_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddVendor = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_VENDOR,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditVendor = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_VENDOR,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteVendor = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_VENDOR,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

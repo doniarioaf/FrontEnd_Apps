@@ -60,7 +60,11 @@ import {
     getVendorCategoryDataSaga,
     submitAddVendorCategorySaga,
     submitEditVendorCategorySaga,
-    submitDeleteVendorCategorySaga
+    submitDeleteVendorCategorySaga,
+    getVendorDataSaga,
+    submitAddVendorSaga,
+    submitEditVendorSaga,
+    submitDeleteVendorSaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga, submitUploadFileCustomerCallPlanSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
@@ -157,6 +161,9 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_ADD_VENDOR_CATEGORY, submitAddVendorCategorySaga),
         takeEvery(actions.SUBMIT_EDIT_VENDOR_CATEGORY, submitEditVendorCategorySaga),
         takeEvery(actions.SUBMIT_DELETE_VENDOR_CATEGORY, submitDeleteVendorCategorySaga),
-        
+        takeEvery(actions.GET_VENDOR_DATA, getVendorDataSaga),
+        takeEvery(actions.SUBMIT_ADD_VENDOR, submitAddVendorSaga),
+        takeEvery(actions.SUBMIT_EDIT_VENDOR, submitEditVendorSaga),
+        takeEvery(actions.SUBMIT_DELETE_VENDOR, submitDeleteVendorSaga),
     ]);
 }
