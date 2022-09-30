@@ -28,12 +28,13 @@ const handleMenu = () => {
                     path: pathmenu.menuRole,
                     translate: 'Role',
                     permission:permissionmenu.MenuRole,
-                },{
-                    name: 'Project',
-                    path: pathmenu.menuproject,
-                    translate: 'Project',
-                    permission:permissionmenu.MenuProject,
                 },
+                // {
+                //     name: 'Project',
+                //     path: pathmenu.menuproject,
+                //     translate: 'Project',
+                //     permission:permissionmenu.MenuProject,
+                // },
                 {
                     name: 'Bank Account',
                     path: pathmenu.menubankaccount,
@@ -58,7 +59,8 @@ const handleMenu = () => {
                 // }
                 
             ]
-        },{
+        },
+        {
             name: 'User',
             icon: 'icon-user',
             translate: 'label_USER',
@@ -68,14 +70,16 @@ const handleMenu = () => {
                     path: pathmenu.menuInternalUser,
                     translate: 'label_INTERNAL_USERR',
                     permission:permissionmenu.MenuInternalUser,
-                },{
-                    name: 'User Mobile',
-                    path: pathmenu.menuusermobile,
-                    translate: 'label_MOBILE_USER',
-                    permission:permissionmenu.MenuUserMobile,
-                }
+                },
+                // {
+                //     name: 'User Mobile',
+                //     path: pathmenu.menuusermobile,
+                //     translate: 'label_MOBILE_USER',
+                //     permission:permissionmenu.MenuUserMobile,
+                // }
             ]
-        },{
+        },
+        {
             name: 'Customer',
             icon: 'icon-user',
             translate: 'Customer',
@@ -93,48 +97,80 @@ const handleMenu = () => {
                 //     permission:permissionmenu.MenuCustomerType,
                 // }
             ]
-        },{
-            name: 'Mobile',
-            icon: 'icon-user',
-            translate: 'Mobile',
-            submenu:[
-                {
-                    name: 'Call Plan',
-                    path: pathmenu.menucallplan,
-                    translate: 'label_CALL_PLAN',
-                    permission:permissionmenu.MenuCallPlan,
-                },
-                {
-                    name: 'Info',
-                    path: pathmenu.menuinfo,
-                    translate: 'label_INFORMATION',
-                    permission:permissionmenu.MenuInformation,
-                },{
-                    name: 'Monitoring',
-                    path: pathmenu.reportmonitoring,
-                    translate: 'Monitoring',
-                    permission:permissionmenu.MenuMonitoring,
-                },{
-                    name: 'Monitoring Maps',
-                    path: pathmenu.monitoringmaps,
-                    translate: 'Monitoring Maps',
-                    permission:permissionmenu.MenuMonitoringMaps,
-                }
-            ]
         },
         {
-            name: 'Import',
-            icon: 'icon-note',
-            translate: 'Import',
+            name: 'Employee',
+            icon: 'icon-user',
+            translate: 'Employee',
             submenu:[
                 {
-                    name: 'Import Customer Call Plan',
-                    path: pathmenu.importcustomercallplan,
-                    translate: 'Import Customer Call Plan',
-                    permission:permissionmenu.MenuUploadCustomerCallPlan,
-                }
+                    name: 'Employee',
+                    path: pathmenu.menuemployeeManggala,
+                    translate: 'Employee',
+                    permission:permissionmenu.MenuEmployeeManggala,
+                },
             ]
-        }
+        },{
+            name: 'Vendor',
+            icon: 'icon-user',
+            translate: 'Vendor',
+            submenu:[
+                {
+                    name: 'Vendor',
+                    path: pathmenu.menuvendor,
+                    translate: 'Vendor',
+                    permission:permissionmenu.MenuVendorCategory,
+                },
+                {
+                    name: 'Vendor Category',
+                    path: pathmenu.menuvendorcategory,
+                    translate: 'Vendor Category',
+                    permission:permissionmenu.MenuVendorCategory,
+                },
+            ]
+        },
+        // {
+        //     name: 'Mobile',
+        //     icon: 'icon-user',
+        //     translate: 'Mobile',
+        //     submenu:[
+        //         {
+        //             name: 'Call Plan',
+        //             path: pathmenu.menucallplan,
+        //             translate: 'label_CALL_PLAN',
+        //             permission:permissionmenu.MenuCallPlan,
+        //         },
+        //         {
+        //             name: 'Info',
+        //             path: pathmenu.menuinfo,
+        //             translate: 'label_INFORMATION',
+        //             permission:permissionmenu.MenuInformation,
+        //         },{
+        //             name: 'Monitoring',
+        //             path: pathmenu.reportmonitoring,
+        //             translate: 'Monitoring',
+        //             permission:permissionmenu.MenuMonitoring,
+        //         },{
+        //             name: 'Monitoring Maps',
+        //             path: pathmenu.monitoringmaps,
+        //             translate: 'Monitoring Maps',
+        //             permission:permissionmenu.MenuMonitoringMaps,
+        //         }
+        //     ]
+        // },
+        // {
+        //     name: 'Import',
+        //     icon: 'icon-note',
+        //     translate: 'Import',
+        //     submenu:[
+        //         {
+        //             name: 'Import Customer Call Plan',
+        //             path: pathmenu.importcustomercallplan,
+        //             translate: 'Import Customer Call Plan',
+        //             permission:permissionmenu.MenuUploadCustomerCallPlan,
+        //         }
+        //     ]
+        // }
         // ,
         // {
         //     name: 'Dashboard',

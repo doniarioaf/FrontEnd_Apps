@@ -1,26 +1,27 @@
 import React, {useState, useEffect} from 'react';
 import {Container, Card, CardBody}  from 'reactstrap';
 import {useTranslation}      from 'react-i18next';
-import Grid                         from './grid';
-import ContentWrapper               from '../../../components/Layout/ContentWrapper';
-import ContentHeading               from '../../../components/Layout/ContentHeading';
+import Grid                         from '../../../../components/TableGrid';
+import ContentWrapper               from '../../../../components/Layout/ContentWrapper';
+import ContentHeading               from '../../../../components/Layout/ContentHeading';
 import {useDispatch}   from 'react-redux';
 import Swal                         from 'sweetalert2';
-import * as actions                 from '../../../store/actions';
-import * as pathmenu           from '../../shared/pathMenu';
-import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { MenuCustomerManggala } from '../../shared/permissionMenu';
+import * as actions                 from '../../../../store/actions';
+import * as pathmenu           from '../../../shared/pathMenu';
+import { reloadToHomeNotAuthorize,isGetPermissions } from '../../../shared/globalFunc';
+import { MenuVendor,addVendor_Permission } from '../../../shared/permissionMenu';
 import {useHistory}                 from 'react-router-dom';
 
-const CustomerManggalaIndex = () => {
-    reloadToHomeNotAuthorize(MenuCustomerManggala,'READ');
+const VendorIndex = () => {
+    reloadToHomeNotAuthorize(MenuVendor,'READ');
     const history = useHistory();
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
         {name: 'id', title: 'id'},
         {name: 'name', title: i18n.t('label_NAME')},
-        {name: 'address', title: i18n.t('label_ADDRESS')},
+        {name: 'alias', title: i18n.t('Alias')},
+        {name: 'categoryname', title: i18n.t('label_CATEGORY')},
         {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);
     const [tableColumnExtensions] = useState([]);
@@ -29,7 +30,7 @@ const CustomerManggalaIndex = () => {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getCustomerManggalaData('',successHandler, errorHandler));
+        dispatch(actions.getVendorData('',successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
@@ -38,8 +39,9 @@ const CustomerManggalaIndex = () => {
                 ...obj,
                 {
                     'id': el.id,
-                    'name': el.customername ?el.customername:'',
-                    'address':el.alamat?el.alamat:'',
+                    'name': el.nama ?el.nama:'',
+                    'alias':el.alias?el.alias:'',
+                    'categoryname':el.vendorcategoryname?el.vendorcategoryname:'',
                     'isactive': el.isactive?'Yes':'No'
                 }
             ], []);
@@ -57,9 +59,16 @@ const CustomerManggalaIndex = () => {
         })
     }
 
+    function onClickAdd() {
+        history.push(pathmenu.addvendor);
+    }
+    function onClickView(id) {
+        history.push(pathmenu.detailvendor+'/'+id);
+    }
+
     return (
         <ContentWrapper>
-            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menucustomers} label={'Customer'} labeldefault={'Customer'} />
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuvendor} label={'Vendor'} labeldefault={'Vendor'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -71,6 +80,10 @@ const CustomerManggalaIndex = () => {
                 totalCounts={rows.length}
                 loading={loading}
                 columnextension={tableColumnExtensions}
+                permissionadd={!isGetPermissions(addVendor_Permission,'TRANSACTION')}
+                onclickadd={onClickAdd}
+                permissionview={!isGetPermissions(MenuVendor,'READ')}
+                onclickview={onClickView}
             />
             </div>
             </Container>
@@ -81,4 +94,4 @@ const CustomerManggalaIndex = () => {
         
     );
 };
-export default CustomerManggalaIndex;
+export default VendorIndex;

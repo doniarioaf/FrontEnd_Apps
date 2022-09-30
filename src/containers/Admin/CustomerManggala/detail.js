@@ -90,8 +90,6 @@ import React, {useState,
     }, []);
 
     function successHandler(data) {
-        
-        setLoading(false);
         let template = data.data.template;
         setValue(data.data);
 
@@ -159,6 +157,8 @@ import React, {useState,
             }
         }
         setInputListInfoGudang(listinfogudang);
+
+        setLoading(false);
     }
 
     const submitHandlerDelete = () => {
@@ -281,14 +281,14 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Name')}</span>
+                            <span className="col-md-5">{i18n.t('label_NAME')}</span>
                                 <strong className="col-md-7">
                                 {value.customername?value.customername:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Telp Kantor')}</span>
+                            <span className="col-md-5">{i18n.t('label_PHONE_OFFICE')}</span>
                             <strong className="col-md-7">
                                 {listNoTelpKantor(value.telpkantor?value.telpkantor:'')}
                             </strong>
@@ -316,28 +316,28 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Provinsi')}</span>
+                            <span className="col-md-5">{i18n.t('label_PROVINCE')}</span>
                                 <strong className="col-md-7">
                                 {value.provinsiname?value.provinsiname:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Kota')}</span>
+                            <span className="col-md-5">{i18n.t('label_CITY')}</span>
                                 <strong className="col-md-7">
                                 {value.kotaname?value.kotaname:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Kode Pos')}</span>
+                            <span className="col-md-5">{i18n.t('label_POSTAL_CODE')}</span>
                                 <strong className="col-md-7">
                                 {value.kodepos?value.kodepos:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Alamat')}</span>
+                            <span className="col-md-5">{i18n.t('label_ADDRESS')}</span>
                                 <strong className="col-md-7">
                                 {value.alamat?value.alamat:''}
                                 </strong>
@@ -359,13 +359,13 @@ import React, {useState,
             </div>
             </CardBody>
 
-            <div><h3>Informasi Kementerian</h3></div>
+            <div><h3>{i18n.t('label_MINISTRY_INFO')}</h3></div>
             {
                 value.detailsInfoKementerian?
                 <table id="tablegrid">
                     <tr>
-                        <th>{i18n.t('Kementrian')}</th>
-                        <th>{i18n.t('Alamat Email')}</th>
+                        <th>{i18n.t('label_MINISTRY')}</th>
+                        <th>{i18n.t('Email')}</th>
                         <th>{i18n.t('Password Email')}</th>
                     </tr>
                     {
@@ -384,14 +384,14 @@ import React, {useState,
                 
             }
 
-            <div><h3>Informasi Contact</h3></div>
+            <div><h3>{i18n.t('label_CONTACT_INFORMATION')}</h3></div>
             {
                 value.detailsInfoContact?
                 <table id="tablegrid">
                     <tr>
                     <th>{i18n.t('Bapal/Ibu')}</th>
-                    <th>{i18n.t('Nama Kontak')}</th>
-                    <th>{i18n.t('No Telepon')}</th>
+                    <th>{i18n.t('label_CONTACT_NAME')}</th>
+                    <th>{i18n.t('label_CONTACT_NUMBER')}</th>
                     <th>{i18n.t('Email')}</th>
                     <th>{i18n.t('No Ext')}</th>
                     </tr>
@@ -425,19 +425,19 @@ import React, {useState,
                 
             }
 
-            <div><h3>Informasi Gudang</h3></div>
+            <div><h3>{i18n.t('label_WAREHOUSE_INFO')}</h3></div>
             {
                 value.detailsInfoGudang?
                 <div style={{overflowX:'auto',marginBottom:'20px'}}>
                 <table id="tablegrid" style={{width:'1500px'}}>
                     <tr>
-                    <th>{i18n.t('Nama Gudang')}</th>
-                    <th>{i18n.t('Area Kirim')}</th>
-                    <th>{i18n.t('Alamat Gudang')}</th>
+                    <th>{i18n.t('label_NAME')}</th>
+                    <th>{i18n.t('label_SEND_AREA')}</th>
+                    <th>{i18n.t('label_ADDRESS')}</th>
                     <th>{i18n.t('Ancer Ancer')}</th>
-                    <th>{i18n.t('Kontak Gudang')}</th>
-                    <th>{i18n.t('HP Kontak Gudang')}</th>
-                    <th>{i18n.t('Catatan Penting')}</th>
+                    <th>{i18n.t('label_CONTACT_NUMBER')}</th>
+                    <th>{i18n.t('label_CONTACT_NUMBER')+'(HP)'}</th>
+                    <th>{i18n.t('label_NOTE')}</th>
                     </tr>
                     {
                         InputListInfoGudang.map((x, i) => {

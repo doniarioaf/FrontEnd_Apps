@@ -188,6 +188,19 @@ const menuCustomerManggala = lazy(() => import('./containers/Admin/CustomerMangg
 const detailCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala/detail'));
 const addCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala/addCustomer'));
 const editCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala/editCustomer'));
+const menuEmployeeManggala = lazy(() => import('./containers/Employee/EmployeeManggala'));
+const addEmployeeManggala = lazy(() => import('./containers/Employee/EmployeeManggala/addEmployeeManggala'));
+const detailEmployeeManggala = lazy(() => import('./containers/Employee/EmployeeManggala/detail'));
+const editEmployeeManggala = lazy(() => import('./containers/Employee/EmployeeManggala/editEmployeeManggala'));
+const menuVendorCategory = lazy(() => import('./containers/Vendor/VendorManggala/VendorCategory'));
+const addVendorCategory = lazy(() => import('./containers/Vendor/VendorManggala/VendorCategory/addFormVendorCategory'));
+const detailVendorCategory = lazy(() => import('./containers/Vendor/VendorManggala/VendorCategory/detail'));
+const editVendorCategory = lazy(() => import('./containers/Vendor/VendorManggala/VendorCategory/editFormVendorCategory'));
+
+const menuVendor = lazy(() => import('./containers/Vendor/VendorManggala/Vendor'));
+const addVendor = lazy(() => import('./containers/Vendor/VendorManggala/Vendor/addVendor'));
+const detailVendor = lazy(() => import('./containers/Vendor/VendorManggala/Vendor/detail'));
+const editVendor = lazy(() => import('./containers/Vendor/VendorManggala/Vendor/editVendor'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -378,7 +391,21 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomerManggala)}/>
                             <Route path={pathmenu.addcustomers} component={waitFor(addCustomerManggala)}/>
                             <Route path={pathmenu.editcustomers+'/:id'} component={waitFor(editCustomerManggala)}/>
-                            
+                            <Route path={pathmenu.menuemployeeManggala} component={waitFor(menuEmployeeManggala)}/>
+                            <Route path={pathmenu.addemployeeManggala} component={waitFor(addEmployeeManggala)}/>
+                            <Route path={pathmenu.detailemployeeManggala+'/:id'} component={waitFor(detailEmployeeManggala)}/>
+                            <Route path={pathmenu.editemployeeManggala+'/:id'} component={waitFor(editEmployeeManggala)}/>
+
+                            <Route path={pathmenu.menuvendorcategory} component={waitFor(menuVendorCategory)}/>
+                            <Route path={pathmenu.addvendorcategory} component={waitFor(addVendorCategory)}/>
+                            <Route path={pathmenu.detailvendorcategory+'/:id'} component={waitFor(detailVendorCategory)}/>
+                            <Route path={pathmenu.editvendorcategory+'/:id'} component={waitFor(editVendorCategory)}/>
+
+                            <Route path={pathmenu.menuvendor} component={waitFor(menuVendor)}/>
+                            <Route path={pathmenu.addvendor} component={waitFor(addVendor)}/>
+                            <Route path={pathmenu.detailvendor+'/:id'} component={waitFor(detailVendor)}/>
+                            <Route path={pathmenu.editvendor+'/:id'} component={waitFor(editVendor)}/>
+
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>
                             <Route path={pathmenu.addcustomers} component={waitFor(addFormCustomer)}/>

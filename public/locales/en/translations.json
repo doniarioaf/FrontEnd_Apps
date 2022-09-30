@@ -67,7 +67,37 @@
   "label_ADD_BANK_ACCOUNT":"Add Bank Account",
   "label_EDIT_BANK_ACCOUNT":"Edit Bank Account",
   "label_DETAIL_BANK_ACCOUNT":"Detail Bank Account",
+  "label_PHONE_OFFICE":"Phone Office",
+  "label_PROVINCE":"Province",
+  "label_POSTAL_CODE":"Postal Code",
+  "label_MINISTRY_INFO":"Ministry Information",
+  "label_MINISTRY":"Ministry",
+  "label_CONTACT_NAME":"Contact Name",
+  "label_WAREHOUSE_INFO":"Warehouse Information",
+  "label_SEND_AREA":"Send Area",
+  "label_CONTACT_INFORMATION":"Contact Information",
+  "label_POSITION":"Position",
+  "label_EMPLOYEE":"Employee",
+  "label_SALARY":"Salary",
+  "label_NUMBER_IDENTITY":"Number Identity",
+  "label_GENDER":"Gender",
+  "label_DATE_OF_BIRTH":"Date of birth",
+  "label_COUPLE_NAME":"Couple Name",
+  "label_COUPLE_BIRTH_DATE":"Couple's Birth Date",
+  "label_ACCOUNT_NAME":"Account Name",
+  "label_START_DATE":"Start Date",
+  "label_RESIGN_DATE":"Resign Date",
+  "label_FAMILY_INFO":"Family Information",
+  "label_CHILD_NAME":"Child Name",
+  "label_CATEGORY":"Category",
+  "label_ADD_VENDOR":"Add Vendor",
+  "label_EDIT_VENDOR":"Edit Vendor",
   "validation": {
+    "employeemanggala":{
+      "noidentitas":{
+        "exist":"Number identity has been registered"
+      }
+    },
     "bankaccount":{
       "dateopen":{
         "empty":"Opening Date Cannot Be Blank",

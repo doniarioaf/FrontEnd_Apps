@@ -419,3 +419,117 @@ export const getAddressData = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getEmployeeManggalaData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_EMPLOYEE_MANGGALA_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddEmployeeManggalaData = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_EMPLOYEE_MANGGALA,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditEmployeeManggalaData = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_EMPLOYEE_MANGGALA,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteEmployeeManggalaData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_EMPLOYEE_MANGGALA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getVendorCategoryData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_VENDOR_CATEGORY_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddVendorCategory = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_VENDOR_CATEGORY,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditVendorCategory = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_VENDOR_CATEGORY,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteVendorCategory = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_VENDOR_CATEGORY,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getVendorData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_VENDOR_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddVendor = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_VENDOR,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditVendor = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_VENDOR,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteVendor = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_VENDOR,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

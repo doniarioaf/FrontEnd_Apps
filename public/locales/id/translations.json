@@ -67,7 +67,37 @@
     "label_ADD_BANK_ACCOUNT":"Tambah Akun Bank",
     "label_EDIT_BANK_ACCOUNT":"Ubah Akun Bank",
     "label_DETAIL_BANK_ACCOUNT":"Detil Akun Bank",
+    "label_PHONE_OFFICE":"Telepon Kantor",
+    "label_PROVINCE":"Provinsi",
+    "label_POSTAL_CODE":"Kode Pos",
+    "label_MINISTRY_INFO":"Informasi Kementerian",
+    "label_MINISTRY":"Kementerian",
+    "label_CONTACT_NAME":"Nama Kontak",
+    "label_WAREHOUSE_INFO":"Informasi Gudang",
+    "label_SEND_AREA":"Area Kirim",
+    "label_CONTACT_INFORMATION":"Informasi Kontak",
+    "label_POSITION":"Jabatan",
+    "label_EMPLOYEE":"Karyawan",
+    "label_SALARY":"Gaji",
+    "label_NUMBER_IDENTITY":"No Identitas",
+    "label_GENDER":"Jenis Kelamin",
+    "label_DATE_OF_BIRTH":"Tanggal Lahir",
+    "label_COUPLE_NAME":"Nama Pasangan",
+    "label_COUPLE_BIRTH_DATE":"Tanggal Lahir Pasangan",
+    "label_ACCOUNT_NAME":"Nama Akun",
+    "label_START_DATE":"Tanggal Mulai",
+    "label_RESIGN_DATE":"Tanggal Resign",
+    "label_FAMILY_INFO":"Informasi Keluarga",
+    "label_CHILD_NAME":"Nama Anak",
+    "label_CATEGORY":"Kategori",
+    "label_ADD_VENDOR":"Tambah Vendor",
+    "label_EDIT_VENDOR":"Ubah Vendor",
     "validation": {
+      "employeemanggala":{
+        "noidentitas":{
+          "exist":"No Identitas Sudah Terdaftar"
+        }
+      },
       "bankaccount":{
         "dateopen":{
           "empty":"Tanggal Pembukaan Tidak Boleh Kosong",
