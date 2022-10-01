@@ -22,3 +22,4 @@ export const baseAddressURL = param => `${baseApiURL}/address${param}`;
 export const baseEmployeeManggalaURL = param => `${baseApiURL}/employeemanggala${param}`;
 export const baseVendorCategoryURL = param => `${baseApiURL}/vendorcategory${param}`;
 export const baseVendorURL = param => `${baseApiURL}/vendor${param}`;
+export const baseWorkOrderTypeURL = param => `${baseApiURL}/workordertype${param}`;

@@ -61,6 +61,10 @@ export const addVendor_Permission = ['READ_VENDOR','READ_ADDRESS','CREATE_VENDOR
 export const editVendor_Permission = ['READ_VENDOR','READ_ADDRESS','EDIT_VENDOR'];
 export const deleteVendor_Permission = ['DELETE_VENDOR'];
 
+export const addWorkOrderType_Permission = ['READ_WORKORDERTYPE','CREATE_WORKORDERTYPE'];
+export const editWorkOrderType_Permission = ['READ_WORKORDERTYPE','EDIT_WORKORDERTYPE'];
+export const deleteWorkOrderType_Permission = ['DELETE_WORKORDERTYPE'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -82,3 +86,4 @@ export const MenuCustomerManggala = ['READ_CUSTOMER_MANGGALA'];
 export const MenuEmployeeManggala = ['READ_EMPLOYEE_MANGGALA'];
 export const MenuVendorCategory = ['READ_VENDOR_CATEGORY'];
 export const MenuVendor = ['READ_VENDOR'];
+export const MenuWorkOrderType = ['READ_WORKORDERTYPE'];
