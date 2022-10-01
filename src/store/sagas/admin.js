@@ -1,7 +1,7 @@
 import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
     baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL, baseProjectURL,baseBankAccountURL,baseCustomerManggalaURL,
-    baseAddressURL,baseEmployeeManggalaURL,baseVendorCategoryURL,baseVendorURL,baseWorkOrderTypeURL} from '../../containers/shared/apiURL';
+    baseAddressURL,baseEmployeeManggalaURL,baseVendorCategoryURL,baseVendorURL,baseWorkOrderTypeURL,basePartaiURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -650,6 +650,42 @@ export function* submitEditWorkOrderTypeSaga(action) {
 export function* deleteWorkOrderTypeSaga(action) {
     try {
         const response = yield axios.delete(baseWorkOrderTypeURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getPartaiDataSaga(action) {
+    try {
+        const response = yield axios.get(basePartaiURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitAddPartaiSaga(action) {
+    try {
+        const response = yield axios.post(basePartaiURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitEditPartaiSaga(action) {
+    try {
+        const response = yield axios.put(basePartaiURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* deletePartaiSaga(action) {
+    try {
+        const response = yield axios.delete(basePartaiURL(action.param)).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
         action.errorHandler(handleMessageError(error));

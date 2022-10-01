@@ -1,7 +1,7 @@
 import React, {useState,
     useEffect} from 'react';
-  import ContentWrapper               from '../../../../components/Layout/ContentWrapper';
-  import ContentHeading               from '../../../../components/Layout/ContentHeading';
+  import ContentWrapper               from '../../components/Layout/ContentWrapper';
+  import ContentHeading               from '../../components/Layout/ContentHeading';
   import {
   Container, Card, CardBody
   , Button, CardHeader
@@ -10,11 +10,11 @@ import React, {useState,
   import {useTranslation}             from 'react-i18next';
   import Swal             from "sweetalert2";
   import {useDispatch}    from 'react-redux';
-  import * as actions     from '../../../../store/actions';
+  import * as actions     from '../../store/actions';
   import Skeleton         from 'react-loading-skeleton';
 //   import styled                       from "styled-components";
 //   import Dialog                       from '@material-ui/core/Dialog';
-  import * as pathmenu           from '../../../shared/pathMenu';
+  import * as pathmenu           from '../shared/pathMenu';
   import ButtonMUI from '@material-ui/core/Button';
   import ClickAwayListener from '@material-ui/core/ClickAwayListener';
   import Grow from '@material-ui/core/Grow';
@@ -23,9 +23,9 @@ import React, {useState,
   import MenuItem from '@material-ui/core/MenuItem';
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
-  import {Loading}                    from '../../../../components/Common/Loading';
-  import { isGetPermissions,reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
-  import { deleteWorkOrderType_Permission,editWorkOrderType_Permission,MenuWorkOrderType } from '../../../shared/permissionMenu';
+  import {Loading}                    from '../../components/Common/Loading';
+  import { isGetPermissions,reloadToHomeNotAuthorize } from '../shared/globalFunc';
+  import { deletePartai_Permission,editPartai_Permission,MenuPartai } from '../shared/permissionMenu';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -38,7 +38,7 @@ import React, {useState,
 
 
   function Detail(props) {
-    reloadToHomeNotAuthorize(MenuWorkOrderType,'READ');
+    reloadToHomeNotAuthorize(MenuPartai,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
@@ -83,12 +83,12 @@ import React, {useState,
 
       useEffect(() => {
         setLoading(true);
-        dispatch(actions.getWorkOrderTypeData('/'+id,successHandler, errorHandler));
+        dispatch(actions.getpartaiData('/'+id,successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
-        setLoading(false);
         setValue(data.data);
+        setLoading(false);
     }
 
     const submitHandlerDelete = () => {
@@ -101,7 +101,7 @@ import React, {useState,
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                dispatch(actions.submitDeleteWorkOrderType('/'+id,succesHandlerSubmit, errorHandler));
+                dispatch(actions.submitDeletePartai('/'+id,succesHandlerSubmit, errorHandler));
             //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
             //   Swal.fire('Changes are not saved', '', 'info')
@@ -117,7 +117,7 @@ import React, {useState,
             text: i18n.t('label_SUCCESS')
         }).then((result) => {
             if (result.isConfirmed) {
-                history.push(pathmenu.menuworkordertype);
+                history.push(pathmenu.menupartai);
             }
         })
     }
@@ -133,7 +133,7 @@ import React, {useState,
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} link={pathmenu.detailworkordertype+'/'+id} label={'Detail Work Order Type'} labeldefault={'Detail Work Order Type'} />
+            <ContentHeading history={history} link={pathmenu.detailpartai+'/'+id} label={'Detail Partai'} labeldefault={'Detail Partai'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -162,7 +162,7 @@ import React, {useState,
                 <h2>
                     {
                         !loading  ?
-                            value.code :
+                            value.name :
                             <Skeleton style={{maxWidth: 300}}/>
                     }
                 </h2>
@@ -177,12 +177,12 @@ import React, {useState,
                     loading ?<Skeleton count={7} height={21} style={{marginTop: '1rem'}}/> :
                     (
                         <section>
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Code')}</span>
                             <strong className="col-md-7">
                                 {value.code?value.code:''}
                             </strong>
-                            </div>
+                            </div> */}
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_NAME')}</span>
@@ -234,8 +234,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editWorkOrderType_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editworkordertype+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deleteWorkOrderType_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editPartai_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpartai+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deletePartai_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             
                         </div>)
                         

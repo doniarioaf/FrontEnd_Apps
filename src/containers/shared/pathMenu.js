@@ -69,3 +69,7 @@ export const menuworkordertype = `/workordertype`;
 export const addworkordertype = `/form/add/workordertype`;
 export const detailworkordertype = `/form/detail/workordertype`;
 export const editworkordertype = `/form/edit/workordertype`;
+export const menupartai = `/partai`;
+export const addpartai = `/form/add/partai`;
+export const detailpartai = `/form/detail/partai`;
+export const editpartai = `/form/edit/partai`;

@@ -206,6 +206,11 @@ const menuWorkOrderType = lazy(() => import('./containers/WorkOrder/Manggala/Wor
 const addWorkOrderType = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderType/addWorkOrderType'));
 const detailWorkOrderType = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderType/detail'));
 const editWorkOrderType = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderType/editWorkOrderType'));
+
+const menuPartai = lazy(() => import('./containers/Partai'));
+const addPartai = lazy(() => import('./containers/Partai/addPartai'));
+const detailPartai = lazy(() => import('./containers/Partai/detail'));
+const editPartai = lazy(() => import('./containers/Partai/editPartai'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -415,6 +420,11 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addworkordertype} component={waitFor(addWorkOrderType)}/>
                             <Route path={pathmenu.detailworkordertype+'/:id'} component={waitFor(detailWorkOrderType)}/>
                             <Route path={pathmenu.editworkordertype+'/:id'} component={waitFor(editWorkOrderType)}/>
+
+                            <Route path={pathmenu.menupartai} component={waitFor(menuPartai)}/>
+                            <Route path={pathmenu.addpartai} component={waitFor(addPartai)}/>
+                            <Route path={pathmenu.detailpartai+'/:id'} component={waitFor(detailPartai)}/>
+                            <Route path={pathmenu.editpartai+'/:id'} component={waitFor(editPartai)}/>
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>

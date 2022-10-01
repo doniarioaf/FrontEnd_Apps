@@ -65,6 +65,10 @@ export const addWorkOrderType_Permission = ['READ_WORKORDERTYPE','CREATE_WORKORD
 export const editWorkOrderType_Permission = ['READ_WORKORDERTYPE','EDIT_WORKORDERTYPE'];
 export const deleteWorkOrderType_Permission = ['DELETE_WORKORDERTYPE'];
 
+export const addPartai_Permission = ['CREATE_PARTAI'];
+export const editPartai_Permission = ['READ_PARTAI','EDIT_PARTAI'];
+export const deletePartai_Permission = ['DELETE_PARTAI'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -87,3 +91,4 @@ export const MenuEmployeeManggala = ['READ_EMPLOYEE_MANGGALA'];
 export const MenuVendorCategory = ['READ_VENDOR_CATEGORY'];
 export const MenuVendor = ['READ_VENDOR'];
 export const MenuWorkOrderType = ['READ_WORKORDERTYPE'];
+export const MenuPartai = ['READ_PARTAI'];

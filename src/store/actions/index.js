@@ -73,7 +73,11 @@ export {
     getWorkOrderTypeData,
     submitAddWorkOrderType,
     submitEditWorkOrderType,
-    submitDeleteWorkOrderType
+    submitDeleteWorkOrderType,
+    getpartaiData,
+    submitAddPartai,
+    submitEditPartai,
+    submitDeletePartai
 } from './admin';
 
 export {
