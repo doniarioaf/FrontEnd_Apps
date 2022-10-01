@@ -188,6 +188,7 @@ export default function AddWorkOrderType(props) {
                                 // }
                                 type="text"
                                 id="code"
+                                maxLength={10}
                                 onChange={val => handleInputCode(val)}
                                 onBlur={handleBlur}
                                 value={values.code}
@@ -207,6 +208,7 @@ export default function AddWorkOrderType(props) {
                                 // }
                                 type="text"
                                 id="nama"
+                                maxLength={200}
                                 onChange={val => handleInputNama(val)}
                                 onBlur={handleBlur}
                                 value={values.nama}
@@ -226,6 +228,7 @@ export default function AddWorkOrderType(props) {
                                 // }
                                 type="text"
                                 id="note"
+                                maxLength={200}
                                 onChange={val => handleInputNote(val)}
                                 onBlur={handleBlur}
                                 value={values.note}

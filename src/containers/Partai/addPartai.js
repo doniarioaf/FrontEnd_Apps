@@ -1,21 +1,21 @@
 import React, {useState}    from 'react';
 import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
-import ContentWrapper               from '../../../../components/Layout/ContentWrapper';
-import ContentHeading               from '../../../../components/Layout/ContentHeading';
+import ContentWrapper               from '../../components/Layout/ContentWrapper';
+import ContentHeading               from '../../components/Layout/ContentHeading';
 import {Input,Button,FormGroup,Label} from 'reactstrap';
-import * as actions                 from '../../../../store/actions';
+import * as actions                 from '../../store/actions';
 import {useDispatch}   from 'react-redux';
-import { Loading } from '../../../../components/Common/Loading';
+import { Loading } from '../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-import { reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
-import { addWorkOrderType_Permission } from '../../../shared/permissionMenu';
-import * as pathmenu           from '../../../shared/pathMenu';
+import { reloadToHomeNotAuthorize } from '../shared/globalFunc';
+import { addPartai_Permission } from '../shared/permissionMenu';
+import * as pathmenu           from '../shared/pathMenu';
 import "react-widgets/dist/css/react-widgets.css";
 
-export default function AddWorkOrderType(props) {
-    reloadToHomeNotAuthorize(addWorkOrderType_Permission,'TRANSACTION');
+export default function AddPartai(props) {
+    reloadToHomeNotAuthorize(addPartai_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -53,16 +53,16 @@ export default function AddWorkOrderType(props) {
     const checkColumnMandatory = () => {
         let flag = true;
         setErrInputNama('');
-        setErrInputCode('');
+        // setErrInputCode('');
         if(InputNama == ''){
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
-        if(InputCode == ''){
-            setErrInputCode(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(InputCode == ''){
+        //     setErrInputCode(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         return flag;
     }
@@ -89,7 +89,7 @@ export default function AddWorkOrderType(props) {
             obj.name = InputNama;
             obj.note = InputNote;
             obj.isactive = InputIsActive;
-            dispatch(actions.submitAddWorkOrderType('',obj,succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitAddPartai('',obj,succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -153,13 +153,13 @@ export default function AddWorkOrderType(props) {
                     } = formikProps;
 
                     return(
-                        <form className="mb-6" onSubmit={handleSubmit}  name="FormAddBankAccount">
+                        <form className="mb-6" onSubmit={handleSubmit}  name="FormPartai">
                             <ContentWrapper>
-                            <ContentHeading history={history} link={pathmenu.addworkordertype} label={'Add Work Order Type'} labeldefault={'Add Work Order Type'} />
+                            <ContentHeading history={history} link={pathmenu.addpartai} label={'Add Partai'} labeldefault={'Add Partai'} />
 
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
-                            <label className="mt-3 form-label required" htmlFor="code">
+                            {/* <label className="mt-3 form-label required" htmlFor="code">
                                 {i18n.t('Code')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
@@ -172,12 +172,11 @@ export default function AddWorkOrderType(props) {
                                 // }
                                 type="text"
                                 id="code"
-                                maxLength={10}
                                 onChange={val => handleInputCode(val)}
                                 onBlur={handleBlur}
                                 value={values.code}
                             />
-                            <div className="invalid-feedback-custom">{ErrInputCode}</div>
+                            <div className="invalid-feedback-custom">{ErrInputCode}</div> */}
 
                             <label className="mt-3 form-label required" htmlFor="nama">
                                 {i18n.t('label_NAME')}

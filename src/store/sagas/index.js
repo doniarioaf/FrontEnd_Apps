@@ -68,7 +68,11 @@ import {
     getWorkOrderTypeDataSaga,
     submitAddWorkOrderTypeSaga,
     submitEditWorkOrderTypeSaga,
-    deleteWorkOrderTypeSaga
+    deleteWorkOrderTypeSaga,
+    getPartaiDataSaga,
+    submitAddPartaiSaga,
+    submitEditPartaiSaga,
+    deletePartaiSaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga, submitUploadFileCustomerCallPlanSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
@@ -172,5 +176,9 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_ADD_WORKORDERTYPE, submitAddWorkOrderTypeSaga),
         takeEvery(actions.SUBMIT_EDIT_WORKORDERTYPE, submitEditWorkOrderTypeSaga),
         takeEvery(actions.SUBMIT_DELETE_WORKORDERTYPE, deleteWorkOrderTypeSaga),
+        takeEvery(actions.GET_PARTAI_DATA, getPartaiDataSaga),
+        takeEvery(actions.SUBMIT_ADD_PARTAI, submitAddPartaiSaga),
+        takeEvery(actions.SUBMIT_EDIT_PARTAI, submitEditPartaiSaga),
+        takeEvery(actions.SUBMIT_DELETE_PARTAI, deletePartaiSaga),
     ]);
 }

@@ -571,3 +571,41 @@ export const submitDeleteWorkOrderType = (param, successHandler, errorHandler) =
         errorHandler,
     }
 }
+
+export const getpartaiData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PARTAI_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddPartai = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PARTAI,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditPartai = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PARTAI,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeletePartai = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_PARTAI,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
