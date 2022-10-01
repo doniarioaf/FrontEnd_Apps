@@ -69,7 +69,11 @@ export {
     getVendorData,
     submitAddVendor,
     submitEditVendor,
-    submitDeleteVendor
+    submitDeleteVendor,
+    getWorkOrderTypeData,
+    submitAddWorkOrderType,
+    submitEditWorkOrderType,
+    submitDeleteWorkOrderType
 } from './admin';
 
 export {

@@ -129,6 +129,19 @@ const handleMenu = () => {
                 },
             ]
         },
+        {
+            name: 'Work Order',
+            icon: 'icon-user',
+            translate: 'Work Order',
+            submenu:[
+                {
+                    name: 'Work Order Type',
+                    path: pathmenu.menuworkordertype,
+                    translate: 'Work Order Type',
+                    permission:permissionmenu.MenuWorkOrderType,
+                }
+            ]
+        }
         // {
         //     name: 'Mobile',
         //     icon: 'icon-user',

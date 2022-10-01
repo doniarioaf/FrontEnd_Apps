@@ -65,3 +65,7 @@ export const menuvendor = `/vendor`;
 export const addvendor = `/form/add/vendor`;
 export const detailvendor = `/form/detail/vendor`;
 export const editvendor = `/form/edit/vendor`;
+export const menuworkordertype = `/workordertype`;
+export const addworkordertype = `/form/add/workordertype`;
+export const detailworkordertype = `/form/detail/workordertype`;
+export const editworkordertype = `/form/edit/workordertype`;

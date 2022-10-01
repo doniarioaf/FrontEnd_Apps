@@ -64,11 +64,14 @@ import {
     getVendorDataSaga,
     submitAddVendorSaga,
     submitEditVendorSaga,
-    submitDeleteVendorSaga
+    submitDeleteVendorSaga,
+    getWorkOrderTypeDataSaga,
+    submitAddWorkOrderTypeSaga,
+    submitEditWorkOrderTypeSaga,
+    deleteWorkOrderTypeSaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga, submitUploadFileCustomerCallPlanSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
-
 
 export function* watchMobile() {
     yield all([
@@ -165,5 +168,9 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_ADD_VENDOR, submitAddVendorSaga),
         takeEvery(actions.SUBMIT_EDIT_VENDOR, submitEditVendorSaga),
         takeEvery(actions.SUBMIT_DELETE_VENDOR, submitDeleteVendorSaga),
+        takeEvery(actions.GET_WORKORDERTYPE_DATA, getWorkOrderTypeDataSaga),
+        takeEvery(actions.SUBMIT_ADD_WORKORDERTYPE, submitAddWorkOrderTypeSaga),
+        takeEvery(actions.SUBMIT_EDIT_WORKORDERTYPE, submitEditWorkOrderTypeSaga),
+        takeEvery(actions.SUBMIT_DELETE_WORKORDERTYPE, deleteWorkOrderTypeSaga),
     ]);
 }

@@ -533,3 +533,41 @@ export const submitDeleteVendor = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getWorkOrderTypeData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_WORKORDERTYPE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddWorkOrderType = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_WORKORDERTYPE,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditWorkOrderType = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_WORKORDERTYPE,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteWorkOrderType = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_WORKORDERTYPE,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

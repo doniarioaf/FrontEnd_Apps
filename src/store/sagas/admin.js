@@ -1,7 +1,7 @@
 import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
     baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL, baseProjectURL,baseBankAccountURL,baseCustomerManggalaURL,
-    baseAddressURL,baseEmployeeManggalaURL,baseVendorCategoryURL,baseVendorURL} from '../../containers/shared/apiURL';
+    baseAddressURL,baseEmployeeManggalaURL,baseVendorCategoryURL,baseVendorURL,baseWorkOrderTypeURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -614,6 +614,42 @@ export function* submitEditVendorSaga(action) {
 export function* submitDeleteVendorSaga(action) {
     try {
         const response = yield axios.delete(baseVendorURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getWorkOrderTypeDataSaga(action) {
+    try {
+        const response = yield axios.get(baseWorkOrderTypeURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitAddWorkOrderTypeSaga(action) {
+    try {
+        const response = yield axios.post(baseWorkOrderTypeURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitEditWorkOrderTypeSaga(action) {
+    try {
+        const response = yield axios.put(baseWorkOrderTypeURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* deleteWorkOrderTypeSaga(action) {
+    try {
+        const response = yield axios.delete(baseWorkOrderTypeURL(action.param)).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
         action.errorHandler(handleMessageError(error));
