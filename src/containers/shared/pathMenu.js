@@ -73,3 +73,7 @@ export const menupartai = `/partai`;
 export const addpartai = `/form/add/partai`;
 export const detailpartai = `/form/detail/partai`;
 export const editpartai = `/form/edit/partai`;
+export const menuport = `/port`;
+export const detailport = `/form/detail/port`;
+export const addport = `/form/add/port`;
+export const editport = `/form/edit/port`;

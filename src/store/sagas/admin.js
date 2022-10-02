@@ -1,7 +1,7 @@
 import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
     baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL, baseProjectURL,baseBankAccountURL,baseCustomerManggalaURL,
-    baseAddressURL,baseEmployeeManggalaURL,baseVendorCategoryURL,baseVendorURL,baseWorkOrderTypeURL,basePartaiURL} from '../../containers/shared/apiURL';
+    baseAddressURL,baseEmployeeManggalaURL,baseVendorCategoryURL,baseVendorURL,baseWorkOrderTypeURL,basePartaiURL,basePortURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -686,6 +686,42 @@ export function* submitEditPartaiSaga(action) {
 export function* deletePartaiSaga(action) {
     try {
         const response = yield axios.delete(basePartaiURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getPortDataSaga(action) {
+    try {
+        const response = yield axios.get(basePortURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitAddPortSaga(action) {
+    try {
+        const response = yield axios.post(basePortURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitEditPortSaga(action) {
+    try {
+        const response = yield axios.put(basePortURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* deletePortSaga(action) {
+    try {
+        const response = yield axios.delete(basePortURL(action.param)).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
         action.errorHandler(handleMessageError(error));

@@ -24,3 +24,4 @@ export const baseVendorCategoryURL = param => `${baseApiURL}/vendorcategory${par
 export const baseVendorURL = param => `${baseApiURL}/vendor${param}`;
 export const baseWorkOrderTypeURL = param => `${baseApiURL}/workordertype${param}`;
 export const basePartaiURL = param => `${baseApiURL}/partai${param}`;
+export const basePortURL = param => `${baseApiURL}/port${param}`;
