@@ -69,6 +69,10 @@ export const addPartai_Permission = ['CREATE_PARTAI'];
 export const editPartai_Permission = ['READ_PARTAI','EDIT_PARTAI'];
 export const deletePartai_Permission = ['DELETE_PARTAI'];
 
+export const addPort_Permission = ['CREATE_PORT'];
+export const editPort_Permission = ['READ_PORT','EDIT_PORT'];
+export const deletePort_Permission = ['DELETE_PORT'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -92,3 +96,4 @@ export const MenuVendorCategory = ['READ_VENDOR_CATEGORY'];
 export const MenuVendor = ['READ_VENDOR'];
 export const MenuWorkOrderType = ['READ_WORKORDERTYPE'];
 export const MenuPartai = ['READ_PARTAI'];
+export const MenuPort = ['READ_PORT'];

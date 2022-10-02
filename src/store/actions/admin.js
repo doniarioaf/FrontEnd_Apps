@@ -609,3 +609,41 @@ export const submitDeletePartai = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getPortData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PORT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddPort = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PORT,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditPort = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PORT,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeletePort = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_PORT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

@@ -9,11 +9,11 @@ import Swal                         from 'sweetalert2';
 import * as actions                 from '../../store/actions';
 import * as pathmenu           from '../shared/pathMenu';
 import { reloadToHomeNotAuthorize,isGetPermissions } from '../shared/globalFunc';
-import { MenuPartai,addPartai_Permission } from '../shared/permissionMenu';
+import { MenuPort,addPort_Permission } from '../shared/permissionMenu';
 import {useHistory}                 from 'react-router-dom';
 
-const PartaiIndex = () => {
-    reloadToHomeNotAuthorize(MenuPartai,'READ');
+const PortIndex = () => {
+    reloadToHomeNotAuthorize(MenuPort,'READ');
     const history = useHistory();
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
@@ -30,7 +30,7 @@ const PartaiIndex = () => {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getpartaiData('',successHandler, errorHandler));
+        dispatch(actions.getPortData('',successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
@@ -60,15 +60,15 @@ const PartaiIndex = () => {
     }
 
     function onClickAdd() {
-        history.push(pathmenu.addpartai);
+        history.push(pathmenu.addport);
     }
     function onClickView(id) {
-        history.push(pathmenu.detailpartai+'/'+id);
+        history.push(pathmenu.detailport+'/'+id);
     }
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menupartai} label={'Partai'} labeldefault={'Partai'} />
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuport} label={'Port'} labeldefault={'Port'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -80,9 +80,9 @@ const PartaiIndex = () => {
                 totalCounts={rows.length}
                 loading={loading}
                 columnextension={tableColumnExtensions}
-                permissionadd={!isGetPermissions(addPartai_Permission,'TRANSACTION')}
+                permissionadd={!isGetPermissions(addPort_Permission,'TRANSACTION')}
                 onclickadd={onClickAdd}
-                permissionview={!isGetPermissions(MenuPartai,'READ')}
+                permissionview={!isGetPermissions(MenuPort,'READ')}
                 onclickview={onClickView}
             />
             </div>
@@ -94,4 +94,4 @@ const PartaiIndex = () => {
         
     );
 };
-export default PartaiIndex;
+export default PortIndex;

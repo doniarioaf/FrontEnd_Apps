@@ -77,7 +77,11 @@ export {
     getpartaiData,
     submitAddPartai,
     submitEditPartai,
-    submitDeletePartai
+    submitDeletePartai,
+    getPortData,
+    submitAddPort,
+    submitEditPort,
+    submitDeletePort
 } from './admin';
 
 export {
