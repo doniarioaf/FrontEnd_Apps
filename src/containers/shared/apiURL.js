@@ -25,3 +25,5 @@ export const baseVendorURL = param => `${baseApiURL}/vendor${param}`;
 export const baseWorkOrderTypeURL = param => `${baseApiURL}/workordertype${param}`;
 export const basePartaiURL = param => `${baseApiURL}/partai${param}`;
 export const basePortURL = param => `${baseApiURL}/port${param}`;
+export const baseParameterManggalaURL = param => `${baseApiURL}/parametermanggala${param}`;
+export const baseWarehouseURL = param => `${baseApiURL}/warehouse${param}`;

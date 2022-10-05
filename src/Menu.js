@@ -51,6 +51,17 @@ const handleMenu = () => {
                     path: pathmenu.menuport,
                     translate: 'Port',
                     permission:permissionmenu.MenuPort,
+                },{
+                    name: 'Parameter',
+                    path: pathmenu.menuParameter,
+                    translate: 'Parameter',
+                    permission:permissionmenu.MenuParameterManggala,
+                },
+                {
+                    name: 'Warehouse',
+                    path: pathmenu.menuWarehouse,
+                    translate: 'Warehouse',
+                    permission:permissionmenu.MenuWarehouse,
                 },
                 {
                     name: 'Invoice',

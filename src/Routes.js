@@ -216,6 +216,17 @@ const menuPort = lazy(() => import('./containers/Port'));
 const detailPort = lazy(() => import('./containers/Port/detail'));
 const addPort = lazy(() => import('./containers/Port/addPort'));
 const editPort = lazy(() => import('./containers/Port/editPort'));
+
+const menuParameterManggala = lazy(() => import('./containers/Parameter/Manggala'));
+const addParameterManggala = lazy(() => import('./containers/Parameter/Manggala/add'));
+const editParameterManggala = lazy(() => import('./containers/Parameter/Manggala/edit'));
+const detailParameterManggala = lazy(() => import('./containers/Parameter/Manggala/detail'));
+
+const menuWarehouse = lazy(() => import('./containers/Warehouse/Manggala'));
+const addWarehouse = lazy(() => import('./containers/Warehouse/Manggala/add'));
+const detailWarehouse = lazy(() => import('./containers/Warehouse/Manggala/detail'));
+const editWarehouse = lazy(() => import('./containers/Warehouse/Manggala/edit'));
+
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -436,6 +447,16 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addport} component={waitFor(addPort)}/>
                             <Route path={pathmenu.editport+'/:id'} component={waitFor(editPort)}/>
                             
+                            
+                            <Route path={pathmenu.menuParameter} component={waitFor(menuParameterManggala)}/>
+                            <Route path={pathmenu.addparameter} component={waitFor(addParameterManggala)}/>
+                            <Route path={pathmenu.editparameter+'/:id'} component={waitFor(editParameterManggala)}/>
+                            <Route path={pathmenu.detailparameter+'/:id'} component={waitFor(detailParameterManggala)}/>
+                            
+                            <Route path={pathmenu.menuWarehouse} component={waitFor(menuWarehouse)}/>
+                            <Route path={pathmenu.addWarehouse} component={waitFor(addWarehouse)}/>
+                            <Route path={pathmenu.detailWarehouse+'/:id'} component={waitFor(detailWarehouse)}/>
+                            <Route path={pathmenu.editWarehouse+'/:id'} component={waitFor(editWarehouse)}/>
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>

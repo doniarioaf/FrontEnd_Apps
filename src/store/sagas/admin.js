@@ -1,7 +1,8 @@
 import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
     baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL, baseProjectURL,baseBankAccountURL,baseCustomerManggalaURL,
-    baseAddressURL,baseEmployeeManggalaURL,baseVendorCategoryURL,baseVendorURL,baseWorkOrderTypeURL,basePartaiURL,basePortURL} from '../../containers/shared/apiURL';
+    baseAddressURL,baseEmployeeManggalaURL,baseVendorCategoryURL,baseVendorURL,baseWorkOrderTypeURL,basePartaiURL,basePortURL, baseParameterManggalaURL,
+    baseWarehouseURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -722,6 +723,78 @@ export function* submitEditPortSaga(action) {
 export function* deletePortSaga(action) {
     try {
         const response = yield axios.delete(basePortURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getParameterManggalaSaga(action) {
+    try {
+        const response = yield axios.get(baseParameterManggalaURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitAddParameterManggalaSaga(action) {
+    try {
+        const response = yield axios.post(baseParameterManggalaURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitEditParameterManggalaSaga(action) {
+    try {
+        const response = yield axios.put(baseParameterManggalaURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitDeleteParameterManggalaSaga(action) {
+    try {
+        const response = yield axios.delete(baseParameterManggalaURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getWarehouseDataSaga(action) {
+    try {
+        const response = yield axios.get(baseWarehouseURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitAddWarehouseSaga(action) {
+    try {
+        const response = yield axios.post(baseWarehouseURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitEditWarehouseSaga(action) {
+    try {
+        const response = yield axios.put(baseWarehouseURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitDeleteWarehouseSaga(action) {
+    try {
+        const response = yield axios.delete(baseWarehouseURL(action.param)).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
         action.errorHandler(handleMessageError(error));

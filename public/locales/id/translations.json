@@ -92,6 +92,10 @@
     "label_CATEGORY":"Kategori",
     "label_ADD_VENDOR":"Tambah Vendor",
     "label_EDIT_VENDOR":"Ubah Vendor",
+    "label_DISTRICT": "Kecamatan",
+    "label_WAREHOUSE": "Gudang",
+    "label_ADD_WAREHOUSE": "Tambah Gudang",
+    "label_EDIT_WAREHOUSE": "Ubah Gudang",
     "validation": {
       "employeemanggala":{
         "noidentitas":{
