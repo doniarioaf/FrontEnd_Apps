@@ -647,3 +647,79 @@ export const submitDeletePort = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getParameterManggalaData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PARAMETERMANGGALA_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddParameterManggala = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PARAMETERMANGGALA,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditParameterManggala = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PARAMETERMANGGALA,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteParameterManggala = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_PARAMETERMANGGALA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getWarehouseData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_WAREHOUSE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddWarehouse = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_WAREHOUSE,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditWarehouse = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_WAREHOUSE,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteWarehouse = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_WAREHOUSE,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

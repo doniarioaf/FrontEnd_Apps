@@ -92,6 +92,10 @@
   "label_CATEGORY":"Category",
   "label_ADD_VENDOR":"Add Vendor",
   "label_EDIT_VENDOR":"Edit Vendor",
+  "label_DISTRICT": "District",
+  "label_WAREHOUSE": "Warehouse",
+  "label_ADD_WAREHOUSE": "Add Warehouse",
+  "label_EDIT_WAREHOUSE": "Edit Warehouse",
   "validation": {
     "employeemanggala":{
       "noidentitas":{

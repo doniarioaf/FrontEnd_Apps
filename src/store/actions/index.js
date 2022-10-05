@@ -81,7 +81,15 @@ export {
     getPortData,
     submitAddPort,
     submitEditPort,
-    submitDeletePort
+    submitDeletePort,
+    getParameterManggalaData,
+    submitAddParameterManggala,
+    submitEditParameterManggala,
+    submitDeleteParameterManggala,
+    getWarehouseData,
+    submitAddWarehouse,
+    submitEditWarehouse,
+    submitDeleteWarehouse
 } from './admin';
 
 export {

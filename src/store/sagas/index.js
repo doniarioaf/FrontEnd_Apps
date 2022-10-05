@@ -76,7 +76,15 @@ import {
     getPortDataSaga,
     submitAddPortSaga,
     submitEditPortSaga,
-    deletePortSaga
+    deletePortSaga,
+    getParameterManggalaSaga,
+    submitAddParameterManggalaSaga,
+    submitEditParameterManggalaSaga,
+    submitDeleteParameterManggalaSaga,
+    getWarehouseDataSaga,
+    submitAddWarehouseSaga,
+    submitEditWarehouseSaga,
+    submitDeleteWarehouseSaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga, submitUploadFileCustomerCallPlanSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
@@ -188,5 +196,13 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_ADD_PORT, submitAddPortSaga),
         takeEvery(actions.SUBMIT_EDIT_PORT, submitEditPortSaga),
         takeEvery(actions.SUBMIT_DELETE_PORT, deletePortSaga),
+        takeEvery(actions.GET_PARAMETERMANGGALA_DATA, getParameterManggalaSaga),
+        takeEvery(actions.SUBMIT_ADD_PARAMETERMANGGALA, submitAddParameterManggalaSaga),
+        takeEvery(actions.SUBMIT_EDIT_PARAMETERMANGGALA, submitEditParameterManggalaSaga),
+        takeEvery(actions.SUBMIT_DELETE_PARAMETERMANGGALA, submitDeleteParameterManggalaSaga),
+        takeEvery(actions.GET_WAREHOUSE_DATA, getWarehouseDataSaga),
+        takeEvery(actions.SUBMIT_ADD_WAREHOUSE, submitAddWarehouseSaga),
+        takeEvery(actions.SUBMIT_EDIT_WAREHOUSE, submitEditWarehouseSaga),
+        takeEvery(actions.SUBMIT_DELETE_WAREHOUSE, submitDeleteWarehouseSaga),
     ]);
 }

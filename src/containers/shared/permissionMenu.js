@@ -73,6 +73,14 @@ export const addPort_Permission = ['CREATE_PORT'];
 export const editPort_Permission = ['READ_PORT','EDIT_PORT'];
 export const deletePort_Permission = ['DELETE_PORT'];
 
+export const addParameterManggala_Permission = ['CREATE_PARAMETERMANGGALA'];
+export const editParameterManggala_Permission = ['READ_PARAMETERMANGGALA','EDIT_PARAMETERMANGGALA'];
+export const deleteParameterManggala_Permission = ['DELETE_PARAMETERMANGGALA'];
+
+export const addWarehouse_Permission = ['READ_WAREHOUSE','READ_ADDRESS','CREATE_WAREHOUSE'];
+export const editWarehouse_Permission = ['READ_WAREHOUSE','READ_ADDRESS','EDIT_WAREHOUSE'];
+export const deleteWarehouse_Permission = ['DELETE_WAREHOUSE'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -97,3 +105,5 @@ export const MenuVendor = ['READ_VENDOR'];
 export const MenuWorkOrderType = ['READ_WORKORDERTYPE'];
 export const MenuPartai = ['READ_PARTAI'];
 export const MenuPort = ['READ_PORT'];
+export const MenuParameterManggala = ['READ_PARAMETERMANGGALA'];
+export const MenuWarehouse = ['READ_WAREHOUSE'];
