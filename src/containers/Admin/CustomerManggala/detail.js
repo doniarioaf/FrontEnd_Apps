@@ -46,7 +46,7 @@ import React, {useState,
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
     const [InputListInfoContact, setInputListInfoContact] = useState([{ panggilan:"",namakontak: "", listnotelepon: [{notelepon:""}],email:"",noext:""}]);
-    const [InputListInfoGudang, setInputListInfoGudang] = useState([{ namagudang:"",areakirim: "",alamatgudang:"",ancerancer:"", listkontakgudang: [{kontakgudang:""}],listhpkontakgudang: [{hpkontakgudang:""}],note:""}]);
+    const [InputListInfoGudang, setInputListInfoGudang] = useState([{id:"", namagudang:"",areakirim: "",alamatgudang:"",ancerancer:"", listkontakgudang: [{kontakgudang:""}],listhpkontakgudang: [{hpkontakgudang:""}],note:""}]);
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
@@ -127,10 +127,10 @@ import React, {useState,
                 let det = data.data.detailsInfoGudang[i];
 
                 let areakirim = det.areakirim;
-                let listfilteroutput = data.data.districtOptions.filter(output => output.dis_id == parseInt(areakirim));
-                if(listfilteroutput.length > 0){
-                    areakirim = listfilteroutput[0].dis_name;
-                }
+                // let listfilteroutput = data.data.districtOptions.filter(output => output.dis_id == parseInt(areakirim));
+                // if(listfilteroutput.length > 0){
+                //     areakirim = listfilteroutput[0].dis_name;
+                // }
                 let cek = new String(det.kontakgudang).includes(',');
                 let listkontakgudang = [];
                 if(cek){
@@ -153,7 +153,7 @@ import React, {useState,
                     listhpkontakgudang.push({ hpkontakgudang: det.hpkontakgudang});
                 }
 
-                listinfogudang.push({ namagudang:det.namagudang,areakirim: areakirim,alamatgudang:det.alamatgudang,ancerancer:det.ancerancer, listkontakgudang: listkontakgudang,listhpkontakgudang: listhpkontakgudang,note:det.note});
+                listinfogudang.push({ id:det.id ,namagudang:det.namagudang,areakirim: areakirim,alamatgudang:det.alamatgudang,ancerancer:det.ancerancer, listkontakgudang: listkontakgudang,listhpkontakgudang: listhpkontakgudang,note:det.note});
             }
         }
         setInputListInfoGudang(listinfogudang);
