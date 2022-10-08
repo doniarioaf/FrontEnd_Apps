@@ -89,7 +89,11 @@ export {
     getWarehouseData,
     submitAddWarehouse,
     submitEditWarehouse,
-    submitDeleteWarehouse
+    submitDeleteWarehouse,
+    getInvoiceTypeData,
+    submitAddInvoiceType,
+    submitEditInvoiceType,
+    submitDeleteInvoiceType
 } from './admin';
 
 export {

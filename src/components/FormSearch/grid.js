@@ -5,12 +5,10 @@ import {
     SortingState,
     IntegratedSorting,
     IntegratedPaging,
-    FilteringState,
-    IntegratedFiltering,
     EditingState,
-    TableColumnVisibility
+    TableColumnVisibility,
+    SelectionState
 }                                   from '@devexpress/dx-react-grid';
-
 import {
     Grid,
     TableHeaderRow,
@@ -19,39 +17,52 @@ import {
     TableEditColumn,
     PagingPanel,
     VirtualTable,
+    TableSelection,
 }                                   from '@devexpress/dx-react-grid-material-ui';
 import TableCell                    from "@material-ui/core/TableCell";
+import {Loading}                    from '../../components/Common/Loading'
 import {useTranslation}             from 'react-i18next';
 import {useHistory}                 from 'react-router-dom';
-import Tooltip                      from '@material-ui/core/Tooltip';
 import IconButton                   from '@material-ui/core/IconButton';
-import IconView from '../../components/Icons/iconView';
-import IconAdd from '../../components/Icons/IconAdd';
-import EditIcon from '@material-ui/icons/Edit';
-// import * as pathmenu           from '../../shared/pathMenu';
-import {Loading}                    from '../../components/Common/Loading';
-// import { isGetPermissions } from '../../shared/globalFunc';
-// import { addBankAccount_Permission,MenuBankAccount } from '../../shared/permissionMenu';
+import CheckIcon from '@material-ui/icons/Check';
+import {useDispatch}   from 'react-redux';
 
 const FilterIcon = ({type, ...restProps}) => {
     return <TableFilterRow.Icon type={type} {...restProps} />;
 };
-const StatusFormatter = ({value}) => (
-    <b>
-        {value.id === 300 ? <span className="ml-auto circle bg-success circle-lg"/> : null}
-        {value.id === 100 ? <span className="ml-auto circle bg-warning circle-lg"/> : null}
-        {value.value}
-    </b>
-);
 
 const FilterCell = props => {
-    if (props.column.name === "statuss")
+    // if (props.column.name === "statuss")
         return <TableCell className={props.className}/>;
-    else return <TableFilterRow.Cell {...props} />;
+    // else return <TableFilterRow.Cell {...props} />;
+};
+
+const AddButton = ({onExecute}) => {
+    const history = useHistory();
+    const i18n = useTranslation('translations');
+    return (
+        <div style={{textAlign: 'center'}} title={i18n.t('grid.ADD')}>
+           
+        </div>
+    );
 };
 
 
-const TableGrid = props => {
+
+const commandComponents = {
+    add: AddButton,
+};
+
+const Command = ({id, onExecute}) => {
+    const CommandButton = commandComponents[id];
+    return (
+        <CommandButton
+            onExecute={onExecute}
+        />
+    );
+};
+
+const QuickSearchGrid = props => {
     const {i18n} = useTranslation();
     const [hiddenColumnNames] = useState(['id']);
     const [pageSize, setPageSize] = useState(10);
@@ -61,6 +72,7 @@ const TableGrid = props => {
     const [loading, setLoading] = useState(props.loading);
     const [integratedSortingColumnExtensions] = useState([]);
     const [tableColumnExtensions] = useState(props.columnextension);
+    const [selection, setSelection] = useState([1]);
 
     const pagingPanelMessages = {
         showAll: i18n.t('grid.ALL'),
@@ -80,66 +92,7 @@ const TableGrid = props => {
         lessThanOrEqual: i18n.t('grid.LESSTHANOREQUAL')
     };
 
-    
-        const AddButton = ({onExecute}) => {
-            const history = useHistory();
-            const i18n = useTranslation('translations');
-            return (
-                <div style={{textAlign: 'center'}} title={i18n.t('grid.ADD')}>
-                    <Tooltip title={i18n.t('grid.ADD')}>
-                        <IconButton 
-                        hidden={props.permissionadd !== undefined?props.permissionadd:true}
-                        color={'primary'} onClick={() => props.onclickadd?props.onclickadd():''} >
-                            <IconAdd/>
-                        </IconButton>
-                    </Tooltip>
-                </div>
-            );
-        };
-
-        const CellComponent = ({children, row, ...restProps}) => {
-            const {i18n} = useTranslation('translations');
-            const history = useHistory();
-            // const dispatch = useDispatch();
-            return (
-                <TableEditColumn.Cell row={row} {...restProps}>
-                    {children}
-                    <Tooltip title={i18n.t('grid.EDIT')}>
-                        <IconButton color={'primary'} 
-                        hidden={props.permissionedit !== undefined?props.permissionedit:true}
-                        onClick={() => props.onclickedit?props.onclickedit(row.id):''}
-                        >
-                            <EditIcon/>
-                        </IconButton>
-                    </Tooltip>
-
-                    <Tooltip title={i18n.t('grid.VIEW')}>
-                        <IconButton color={'primary'} 
-                        hidden={props.permissionview !== undefined?props.permissionview:true}
-                        onClick={() => props.onclickview?props.onclickview(row.id):''}
-                        >
-                            <IconView/>
-                        </IconButton>
-                    </Tooltip>
-                </TableEditColumn.Cell>
-            );
-        };
-
-        const commandComponents = {
-            add: AddButton,
-        };
-
-        const Command = ({id, onExecute}) => {
-            const CommandButton = commandComponents[id];
-            return (
-                <CommandButton
-                    onExecute={onExecute}
-                />
-            );
-        };
-
     useEffect(() => {
-        console.log('props.permissionadd ',props.permissionadd);
         if (props.loading !== loading) {
             setLoading(props.loading);
         }
@@ -156,6 +109,23 @@ const TableGrid = props => {
             </td>
             : <VirtualTable.NoDataCell {...props} />;
     }
+
+    const CellComponent = ({children, row, ...restProps}) => {
+        const {i18n} = useTranslation('translations');
+        const history = useHistory();
+        const dispatch = useDispatch();
+        return (
+            <TableEditColumn.Cell row={row} {...restProps}>
+                {children}
+                    <IconButton color={'primary'}
+                        onClick={() =>props.handlesearch(row.data)}
+                    >
+                        <CheckIcon/>
+                    </IconButton>
+              
+            </TableEditColumn.Cell>
+        );
+    };
     return (
         <Paper style={{position: 'relative'}}>
             <Grid
@@ -163,6 +133,10 @@ const TableGrid = props => {
                 columns={props.columns}
                 
             >
+                <SelectionState
+                selection={selection}
+                onSelectionChange={setSelection}
+                />
                 <EditingState onCommitChanges={() => {
                 }}/>
                 <PagingState
@@ -171,8 +145,8 @@ const TableGrid = props => {
                     pageSize={pageSize}
                     onPageSizeChange={setPageSize}
                 />
-                <FilteringState defaultFilters={[]}/>
-                <IntegratedFiltering/>
+                {/* <FilteringState defaultFilters={[]}/>
+                <IntegratedFiltering/> */}
                 <SortingState
                     sorting={sorting}
                     onSortingChange={setSorting}
@@ -186,15 +160,20 @@ const TableGrid = props => {
                     columnExtensions={tableColumnExtensions}
                 />
                 <TableHeaderRow showSortingControls/>
+                <TableSelection
+                selectByRowClick
+                highlightRow
+                showSelectionColumn={false}
+                />
                 <TableColumnVisibility
                     hiddenColumnNames={hiddenColumnNames}
                 />
-                <TableFilterRow
+                {/* <TableFilterRow
                     showFilterSelector
                     cellComponent={FilterCell}
                     iconComponent={FilterIcon}
                     messages={filterRowMessages}
-                />
+                /> */}
                 <TableEditRow/>
                 <TableEditColumn
                     showAddCommand
@@ -210,9 +189,8 @@ const TableGrid = props => {
                     messages={pagingPanelMessages}
                 />
             </Grid>
-            {props.loading && <Loading/>}            
+                    {props.loading && <Loading/>}
         </Paper>
-        
     );
 };
-export default TableGrid;
+export default QuickSearchGrid;

@@ -19,6 +19,7 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { IconButton } from '@material-ui/core';
 import '../../CSS/table.css';
+import InputMask                    from 'react-input-mask';
 
 export default function EditCustomerManggala(props) {
     reloadToHomeNotAuthorize(editCustomerManggala_Permission,'TRANSACTION');
@@ -75,7 +76,8 @@ export default function EditCustomerManggala(props) {
     const [ListPanggilan, setListPanggilan] = useState([]);
 
     const [ListAreaKirim, setListAreaKirim] = useState([]);
-    const [InputListInfoGudang, setInputListInfoGudang] = useState([{ namagudang:"",areakirim: "",alamatgudang:"",ancerancer:"", listkontakgudang: [{kontakgudang:""}],listhpkontakgudang: [{hpkontakgudang:""}],note:""}]);
+    // const [InputListInfoGudang, setInputListInfoGudang] = useState([{id:"", namagudang:"",areakirim: "",alamatgudang:"",ancerancer:"", listkontakgudang: [{kontakgudang:""}],listhpkontakgudang: [{hpkontakgudang:""}],note:""}]);
+    const [InputListInfoGudang, setInputListInfoGudang] = useState([]);
     const [ErrInputNamaGudang, setErrInputNamaGudang] = useState('');
     const [ErrInputAreaKirim, setErrInputAreaKirim] = useState('');
     const [ErrInputAlamatGudang, setErrInputAlamatGudang] = useState('');
@@ -84,11 +86,15 @@ export default function EditCustomerManggala(props) {
     const [ErrInputHpKontakGudang, setErrInputHpKontakGudang] = useState('');
     const [ErrInputNote, setErrInputNote] = useState('');
 
+    const [ListGudang, setListGudang] = useState([]);
+    const [SelGudang, setSelGudang] = useState('');
+    const [DataGudang, setDataGudang] = useState('');
+
     const id = props.match.params.id;
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getCustomerManggalaData('/'+id,successHandler, errorHandler));
+        dispatch(actions.getCustomerManggalaData('/template/'+id,successHandler, errorHandler));
         // dispatch(actions.getCustomerManggalaData('/template',successHandlerTemplate, errorHandler));
     }, []);
 
@@ -153,7 +159,7 @@ export default function EditCustomerManggala(props) {
             for(let i=0; i < data.data.detailsInfoGudang.length; i++){
                 let det = data.data.detailsInfoGudang[i];
 
-                let areakirim = det.areakirim?parseInt(det.areakirim):'';
+                let areakirim = det.areakirim;
                 // let listfilteroutput = data.data.districtOptions.filter(output => output.dis_id == parseInt(areakirim));
                 // if(listfilteroutput.length > 0){
                 //     areakirim = listfilteroutput[0].dis_name;
@@ -180,7 +186,7 @@ export default function EditCustomerManggala(props) {
                     listhpkontakgudang.push({ hpkontakgudang: det.hpkontakgudang});
                 }
 
-                listinfogudang.push({ namagudang:det.namagudang,areakirim: areakirim,alamatgudang:det.alamatgudang,ancerancer:det.ancerancer, listkontakgudang: listkontakgudang,listhpkontakgudang: listhpkontakgudang,note:det.note});
+                listinfogudang.push({id:det.id, namagudang:det.namagudang,areakirim: areakirim,alamatgudang:det.alamatgudang,ancerancer:det.ancerancer, listkontakgudang: listkontakgudang,listhpkontakgudang: listhpkontakgudang,note:det.note});
             }
 
             if(listinfogudang.length > 0){
@@ -224,7 +230,13 @@ export default function EditCustomerManggala(props) {
                 }]
             ), []));
 
-            
+            setListGudang(template.warehouseOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama,
+                    detail: el
+                }]
+            ), []));
 
             let listfilteroutput = template.cityOptions.filter(output => output.prov_id == data.data.provinsi);
             if(listfilteroutput.length > 0){
@@ -249,7 +261,7 @@ export default function EditCustomerManggala(props) {
             list[index]['areakirim'] = '';
         }
         
-        setInputListInfoGudang(list);
+        // setInputListInfoGudang(list);
     }
     // const successHandlerTemplate = (data) =>{
     //     if(data.data){
@@ -261,6 +273,49 @@ export default function EditCustomerManggala(props) {
     const handleChangeCustomerType = (data) =>{
         let id = data?.value ? data.value : '';
         setSelCustomerType(id);
+    }
+
+    const handleChangeGudang = (data) =>{
+        let id = data?.value ? data.value : '';
+        let detail = data?.detail ? data.detail : [];
+        setSelGudang(id);
+        setDataGudang(detail)
+    }
+
+    const handleAddGudang = () => {
+        let listfilteroutput = InputListInfoGudang.filter(output => output.id == SelGudang);
+        if(listfilteroutput.length <= 0){
+            const list = [...InputListInfoGudang];
+
+            let cek = new String(DataGudang.contactnumber).includes(',');
+            let listkontakgudang = [];
+            if(cek){
+                let arrList = new String(DataGudang.contactnumber).split(',');
+                for(let j=0; j < arrList.length; j++){
+                    listkontakgudang.push({ kontakgudang: arrList[j]});
+                }
+            }else{
+                listkontakgudang.push({ kontakgudang: DataGudang.contactnumber});
+            }
+
+            cek = new String(DataGudang.contacthp).includes(',');
+            let listhpkontakgudang = [];
+            if(cek){
+                let arrList = new String(DataGudang.contacthp).split(',');
+                for(let j=0; j < arrList.length; j++){
+                    listhpkontakgudang.push({ hpkontakgudang: arrList[j]});
+                }
+            }else{
+                listhpkontakgudang.push({ hpkontakgudang: DataGudang.contacthp});
+            }
+
+            let obj = {id:DataGudang.id, namagudang:DataGudang.nama,areakirim: DataGudang.kecamatanname,alamatgudang:DataGudang.alamat,ancerancer:DataGudang.ancerancer, listkontakgudang: listkontakgudang,listhpkontakgudang: listhpkontakgudang,note:DataGudang.note}
+            list.push(obj);
+            // list[index][name] = e.value;
+            setInputListInfoGudang(list);
+            //id:"", namagudang:"",areakirim: "",alamatgudang:"",ancerancer:"", listkontakgudang: [{kontakgudang:""}],listhpkontakgudang: [{hpkontakgudang:""}],note:""}
+
+        }
     }
 
     const handleInputCustomerName = (data) =>{
@@ -377,53 +432,53 @@ export default function EditCustomerManggala(props) {
         setErrInputKontakGudang('');
         setErrInputHpKontakGudang('');
 
-        if(InputListInfoGudang.length > 0){
-            for(let i=0; i < InputListInfoGudang.length; i++){
-                let det = InputListInfoGudang[i];
-                if(det.namagudang !== '' || det.areakirim !== '' || det.alamatgudang !== '' ){
-                    if(det.namagudang == ''){
-                        setErrInputNamaGudang(i18n.t('label_NAME')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+        // if(InputListInfoGudang.length > 0){
+        //     for(let i=0; i < InputListInfoGudang.length; i++){
+        //         let det = InputListInfoGudang[i];
+        //         if(det.namagudang !== '' || det.areakirim !== '' || det.alamatgudang !== '' ){
+        //             if(det.namagudang == ''){
+        //                 setErrInputNamaGudang(i18n.t('label_NAME')+' '+i18n.t('label_REQUIRED'));
+        //                 flag = false;
+        //             }
 
-                    if(det.areakirim == ''){
-                        setErrInputAreaKirim(i18n.t('label_SEND_AREA')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+        //             if(det.areakirim == ''){
+        //                 setErrInputAreaKirim(i18n.t('label_SEND_AREA')+' '+i18n.t('label_REQUIRED'));
+        //                 flag = false;
+        //             }
 
-                    if(det.alamatgudang == ''){
-                        setErrInputAlamatGudang(i18n.t('label_ADDRESS')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+        //             if(det.alamatgudang == ''){
+        //                 setErrInputAlamatGudang(i18n.t('label_ADDRESS')+' '+i18n.t('label_REQUIRED'));
+        //                 flag = false;
+        //             }
 
-                    if(det.listkontakgudang.length > 0){
-                        for(let j=0; j < det.listkontakgudang.length; j++){
-                            let detnotlp = det.listkontakgudang[j];
-                            if(detnotlp.kontakgudang == ''){
-                                setErrInputKontakGudang(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
-                            }
-                        }
-                    }else{
-                        setErrInputKontakGudang(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+        //             if(det.listkontakgudang.length > 0){
+        //                 for(let j=0; j < det.listkontakgudang.length; j++){
+        //                     let detnotlp = det.listkontakgudang[j];
+        //                     if(detnotlp.kontakgudang == ''){
+        //                         setErrInputKontakGudang(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
+        //                         flag = false;
+        //                     }
+        //                 }
+        //             }else{
+        //                 setErrInputKontakGudang(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
+        //                 flag = false;
+        //             }
 
-                    if(det.listhpkontakgudang.length > 0){
-                        for(let j=0; j < det.listhpkontakgudang.length; j++){
-                            let detnotlp = det.listhpkontakgudang[j];
-                            if(detnotlp.hpkontakgudang == ''){
-                                setErrInputHpKontakGudang(i18n.t('label_CONTACT_NUMBER')+' (HP) '+i18n.t('label_REQUIRED'));
-                                flag = false;
-                            }
-                        }
-                    }else{
-                        setErrInputHpKontakGudang(i18n.t('label_CONTACT_NUMBER')+' (HP) '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
-                }
-            }
-        }
+        //             if(det.listhpkontakgudang.length > 0){
+        //                 for(let j=0; j < det.listhpkontakgudang.length; j++){
+        //                     let detnotlp = det.listhpkontakgudang[j];
+        //                     if(detnotlp.hpkontakgudang == ''){
+        //                         setErrInputHpKontakGudang(i18n.t('label_CONTACT_NUMBER')+' (HP) '+i18n.t('label_REQUIRED'));
+        //                         flag = false;
+        //                     }
+        //                 }
+        //             }else{
+        //                 setErrInputHpKontakGudang(i18n.t('label_CONTACT_NUMBER')+' (HP) '+i18n.t('label_REQUIRED'));
+        //                 flag = false;
+        //             }
+        //         }
+        //     }
+        // }
 
         if(InputListInfoContact.length > 0){
             for(let i=0; i < InputListInfoContact.length; i++){
@@ -557,7 +612,7 @@ export default function EditCustomerManggala(props) {
             obj.provinsi = SelProvinsi;
             obj.kota = SelCity;
             obj.kodepos = SelKodePos;
-            obj.npwp = InputNpwp;
+            obj.npwp = new String(InputNpwp).replaceAll('_','');
             obj.nib = InputNib;
             obj.isactive = InputIsActive;
             let listnotelp = '';
@@ -567,6 +622,7 @@ export default function EditCustomerManggala(props) {
                     let no = InputListNoKantor[i].nokantor;
                     count++;
                     if(no != ''){
+                        no = new String(no).replaceAll('_','');
                         if(count == InputListNoKantor.length){
                             listnotelp += no;
                         }else{
@@ -592,6 +648,7 @@ export default function EditCustomerManggala(props) {
                             let no = det.listnotelepon[j].notelepon;
                             count++;
                             if(no != ''){
+                                no = new String(no).replaceAll('_','');
                                 if(count == det.listnotelepon.length){
                                     listnotelpinfocontact += no;
                                 }else{
@@ -615,45 +672,48 @@ export default function EditCustomerManggala(props) {
             if(InputListInfoGudang.length > 0){
                 for(let i=0; i < InputListInfoGudang.length; i++){
                     let det = InputListInfoGudang[i];
-                    let listkontakgudang = '';
-                    let listhpkontakgudang = '';
-                    if(det.namagudang !== '' && det.areakirim !== '' && det.alamatgudang !== ''){
-                        let count =0;
-                        for(let j=0; j < det.listkontakgudang.length; j++){
-                            let no = det.listkontakgudang[j].kontakgudang;
-                            count++;
-                            if(no != ''){
-                                if(count == det.listkontakgudang.length){
-                                    listkontakgudang += no;
-                                }else{
-                                    listkontakgudang += no+',';
-                                }
-                            }
-                        }
+                    let objinfogudang = new Object();
+                    objinfogudang.idwarehouse = det.id;
+                    listinfogudang.push(objinfogudang);
+                    // let listkontakgudang = '';
+                    // let listhpkontakgudang = '';
+                    // if(det.namagudang !== '' && det.areakirim !== '' && det.alamatgudang !== ''){
+                    //     let count =0;
+                    //     for(let j=0; j < det.listkontakgudang.length; j++){
+                    //         let no = det.listkontakgudang[j].kontakgudang;
+                    //         count++;
+                    //         if(no != ''){
+                    //             if(count == det.listkontakgudang.length){
+                    //                 listkontakgudang += no;
+                    //             }else{
+                    //                 listkontakgudang += no+',';
+                    //             }
+                    //         }
+                    //     }
 
-                        count =0;
-                        for(let j=0; j < det.listhpkontakgudang.length; j++){
-                            let no = det.listhpkontakgudang[j].hpkontakgudang;
-                            count++;
-                            if(no != ''){
-                                if(count == det.listhpkontakgudang.length){
-                                    listhpkontakgudang += no;
-                                }else{
-                                    listhpkontakgudang += no+',';
-                                }
-                            }
-                        }
+                    //     count =0;
+                    //     for(let j=0; j < det.listhpkontakgudang.length; j++){
+                    //         let no = det.listhpkontakgudang[j].hpkontakgudang;
+                    //         count++;
+                    //         if(no != ''){
+                    //             if(count == det.listhpkontakgudang.length){
+                    //                 listhpkontakgudang += no;
+                    //             }else{
+                    //                 listhpkontakgudang += no+',';
+                    //             }
+                    //         }
+                    //     }
 
-                        let objinfogudang = new Object();
-                        objinfogudang.namagudang = det.namagudang;
-                        objinfogudang.areakirim = det.areakirim;
-                        objinfogudang.alamatgudang = det.alamatgudang;
-                        objinfogudang.ancerancer = det.ancerancer;
-                        objinfogudang.kontakgudang = listkontakgudang;
-                        objinfogudang.hpkontakgudang = listhpkontakgudang;
-                        objinfogudang.note = det.note;
-                        listinfogudang.push(objinfogudang);
-                    }
+                    //     let objinfogudang = new Object();
+                    //     objinfogudang.namagudang = det.namagudang;
+                    //     objinfogudang.areakirim = det.areakirim;
+                    //     objinfogudang.alamatgudang = det.alamatgudang;
+                    //     objinfogudang.ancerancer = det.ancerancer;
+                    //     objinfogudang.kontakgudang = listkontakgudang;
+                    //     objinfogudang.hpkontakgudang = listhpkontakgudang;
+                    //     objinfogudang.note = det.note;
+                    //     listinfogudang.push(objinfogudang);
+                    // }
                 }
             }
             obj.detailsinfogudang = listinfogudang;
@@ -845,7 +905,8 @@ export default function EditCustomerManggala(props) {
                 npwp:InputNpwp,
                 nib:InputNib,
                 kodepos:SelKodePos,
-                isactive:InputIsActive
+                isactive:InputIsActive,
+                selgudang:SelGudang
             }
         }
 
@@ -956,6 +1017,8 @@ export default function EditCustomerManggala(props) {
                                 // }
                                 type="text"
                                 id="npwp"
+                                mask="99.999.999.9-999.999"
+                                tag={InputMask}
                                 onChange={val => handleInputNpwp(val)}
                                 onBlur={handleBlur}
                                 value={values.npwp}
@@ -1001,6 +1064,8 @@ export default function EditCustomerManggala(props) {
                                                 // }
                                                 type="text"
                                                 id="nokantor"
+                                                mask="(9999)999-9999"
+                                                tag={InputMask}
                                                 onChange={val => handleInputChange(val,i)}
                                                 onBlur={handleBlur}
                                                 // placeholder={i18n.t('label_AMOUNT')}
@@ -1127,7 +1192,7 @@ export default function EditCustomerManggala(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputAlamat}</div>
 
-                            <FormGroup check style={{marginTop:'20px'}}>
+                            {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 
                             id="isactived" 
                             onChange={val => handleChangeIsActive(val)}
@@ -1136,7 +1201,7 @@ export default function EditCustomerManggala(props) {
                             style={{transform:'scale(1.5)'}}
                             />
                             <Label for="isactived" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('label_IS_ACTIVE')}</Label>
-                            </FormGroup>    
+                            </FormGroup>     */}
 
                             </div>
 
@@ -1315,6 +1380,8 @@ export default function EditCustomerManggala(props) {
                                                                             // }
                                                                             type="text"
                                                                             id="notelepon"
+                                                                            mask="9999999999999"
+                                                                            tag={InputMask}
                                                                             onChange={val => handleInputChangeListNoTelpInfoContact(val,'listnotelepon',i,j)}
                                                                             onBlur={handleBlur}
                                                                             // placeholder={i18n.t('label_AMOUNT')}
@@ -1435,8 +1502,46 @@ export default function EditCustomerManggala(props) {
                                 <div className="invalid-feedback-custom">{ErrInputKontakGudang}</div>
                                 <div className="invalid-feedback-custom">{ErrInputHpKontakGudang}</div>
                                 <div className="invalid-feedback-custom">{ErrInputNote}</div>
+
+                                <table style={{width:'70%'}}>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                        <DropdownList
+                                            // className={
+                                            //     touched.branch && errors.branch
+                                            //         ? "input-error" : ""
+                                            // }
+                                            name="selgudang"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+                                            
+                                            onChange={val => handleChangeGudang(val)}
+                                            onBlur={val => setFieldTouched("selgudang", val?.value ? val.value : '')}
+                                            data={ListGudang}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '50%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.selgudang}
+                                            
+                                        />
+                                        </td>
+                                        <td>
+                                        <IconButton color={'primary'}
+                                                    onClick={() => handleAddGudang()}
+                                                // hidden={showplusdebit}
+                                                >
+                                                    <AddIcon style={{ fontSize: 18 }}/>
+                                                </IconButton>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                </table>
+                                
+                            
                                 {
-                                    InputListInfoGudang.length == 0?'':
+                                    // InputListInfoGudang.length == 0?'':
                                     <div style={{overflowX:'auto',marginBottom:'20px'}}>
                                     <table id="tablegrid" style={{width:'1500px'}}>
                                         <tr>
@@ -1456,7 +1561,8 @@ export default function EditCustomerManggala(props) {
                                             return (
                                                 <tr>
                                                     <td>
-                                                        <Input
+                                                    {x.namagudang}
+                                                        {/* <Input
                                                             name="namagudang"
                                                             // className={
                                                             //     touched.amount && errors.amount
@@ -1472,11 +1578,12 @@ export default function EditCustomerManggala(props) {
                                                             // value={values.amount}
                                                             value={x.namagudang}
                                                             disabled={false}
-                                                            />
-                                                        </td>
+                                                            /> */}
+                                                     </td>
                                                     
                                                         <td>
-                                                        <DropdownList
+                                                        {x.areakirim}
+                                                        {/* <DropdownList
                                                             name="areakirim"
                                                             filter='contains'
                                                             // placeholder={i18n.t('select.SELECT_OPTION')}
@@ -1487,11 +1594,12 @@ export default function EditCustomerManggala(props) {
                                                             valueField={'value'}
                                                             style={{width: '200px'}}
                                                             value={x.areakirim}
-                                                        />
+                                                        /> */}
                                                         </td>
 
                                                         <td>
-                                                        <Input
+                                                            {x.alamatgudang}
+                                                        {/* <Input
                                                             name="alamatgudang"
                                                             // className={
                                                             //     touched.amount && errors.amount
@@ -1507,11 +1615,12 @@ export default function EditCustomerManggala(props) {
                                                             // value={values.amount}
                                                             value={x.alamatgudang}
                                                             disabled={false}
-                                                            />
+                                                            /> */}
                                                         </td>
 
                                                         <td>
-                                                        <Input
+                                                            {x.ancerancer}
+                                                        {/* <Input
                                                             name="ancerancer"
                                                             // className={
                                                             //     touched.amount && errors.amount
@@ -1527,7 +1636,7 @@ export default function EditCustomerManggala(props) {
                                                             // value={values.amount}
                                                             value={x.ancerancer}
                                                             disabled={false}
-                                                            />
+                                                            /> */}
                                                         </td>
 
                                                         <td>
@@ -1536,7 +1645,8 @@ export default function EditCustomerManggala(props) {
                                                                 x.listkontakgudang.map((y, j) => {
                                                                     return (
                                                                         <tr>
-                                                                            <td>
+                                                                            <td style={{border:'0px',backgroundColor:i % 2 == 0?'#f2f2f2':'white'}}>{y.kontakgudang}</td>
+                                                                            {/* <td>
                                                                             <Input
                                                                             name="kontakgudang"
                                                                             // className={
@@ -1554,9 +1664,9 @@ export default function EditCustomerManggala(props) {
                                                                             value={y.kontakgudang}
                                                                             disabled={false}
                                                                             />
-                                                                            </td>
+                                                                            </td> */}
                                                                             
-                                                                            <td hidden={j > 0}>
+                                                                            {/* <td hidden={j > 0}>
                                                                             <IconButton color={'primary'} hidden={j > 0}
                                                                                 onClick={() => handleAddClickListKontakGudangInfoGudang('listkontakgudang',i)}
                                                                             // hidden={showplusdebit}
@@ -1571,7 +1681,7 @@ export default function EditCustomerManggala(props) {
                                                                             >
                                                                                 <RemoveIcon style={{ fontSize: 18 }}/>
                                                                             </IconButton>    
-                                                                            </td>
+                                                                            </td> */}
                                                                         </tr>
                                                                     )
                                                                 })
@@ -1585,7 +1695,8 @@ export default function EditCustomerManggala(props) {
                                                                 x.listhpkontakgudang.map((y, j) => {
                                                                     return (
                                                                         <tr>
-                                                                            <td>
+                                                                            <td style={{border:'0px',backgroundColor:i % 2 == 0?'#f2f2f2':'white'}}>{y.hpkontakgudang}</td>
+                                                                            {/* <td>
                                                                             <Input
                                                                             name="hpkontakgudang"
                                                                             // className={
@@ -1620,7 +1731,7 @@ export default function EditCustomerManggala(props) {
                                                                             >
                                                                                 <RemoveIcon style={{ fontSize: 18 }}/>
                                                                             </IconButton>    
-                                                                            </td>
+                                                                            </td> */}
 
 
                                                                         </tr>
@@ -1631,7 +1742,8 @@ export default function EditCustomerManggala(props) {
                                                         </td>
 
                                                         <td>
-                                                        <Input
+                                                        {x.note}
+                                                        {/* <Input
                                                             name="note"
                                                             type="textarea"
                                                             id="note"
@@ -1639,17 +1751,24 @@ export default function EditCustomerManggala(props) {
                                                             onBlur={handleBlur}
                                                             value={x.note}
                                                             disabled={false}
-                                                        />
+                                                        /> */}
                                                         </td>
 
                                                         <td>
-                                                        <IconButton color={'primary'} hidden={i > 0}
+                                                        {/* <IconButton color={'primary'} hidden={i > 0}
                                                             onClick={() => handleAddClickInfoGudang()}
                                                         // hidden={showplusdebit}
                                                         >
                                                             <AddIcon style={{ fontSize: 18 }}/>
-                                                        </IconButton>
-                                                        <IconButton color={'primary'} hidden={i == 0}
+                                                        </IconButton> */}
+                                                        {/* <IconButton color={'primary'} hidden={i == 0}
+                                                        onClick={() => handleRemoveClickInfoGudang(i)}
+                                                        // hidden={showplusdebit}
+                                                        >
+                                                            <RemoveIcon style={{ fontSize: 18 }}/>
+                                                        </IconButton>     */}
+
+                                                        <IconButton color={'primary'}
                                                         onClick={() => handleRemoveClickInfoGudang(i)}
                                                         // hidden={showplusdebit}
                                                         >

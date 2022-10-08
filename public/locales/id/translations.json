@@ -96,6 +96,9 @@
     "label_WAREHOUSE": "Gudang",
     "label_ADD_WAREHOUSE": "Tambah Gudang",
     "label_EDIT_WAREHOUSE": "Ubah Gudang",
+    "label_INVOICE_TYPE": "Jenis Invoice",
+    "label_ADD_INVOICE_TYPE": "Tambah Jenis Invoice",
+    "label_EDIT_INVOICE_TYPE": "Ubah Jenis Invoice",
     "validation": {
       "employeemanggala":{
         "noidentitas":{

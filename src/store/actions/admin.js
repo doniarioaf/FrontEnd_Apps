@@ -723,3 +723,41 @@ export const submitDeleteWarehouse = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getInvoiceTypeData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_INVOICETYPE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddInvoiceType = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_INVOICETYPE,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditInvoiceType = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_INVOICETYPE,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteInvoiceType = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_INVOICETYPE,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

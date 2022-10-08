@@ -35,6 +35,32 @@ const handleMenu = () => {
                 //     translate: 'Project',
                 //     permission:permissionmenu.MenuProject,
                 // },
+                
+                {
+                    name: 'Invoice',
+                    path: pathmenu.invoice,
+                    translate: 'Invoice',
+                    permission:permissionmenu.MenuProject,
+                }
+                // ,{
+                //     name: 'Product',
+                //     path: pathmenu.menuproduct,
+                //     translate: 'label_PRODUCT',
+                //     permission:permissionmenu.MenuProduct,
+                // },{
+                //     name: 'ProductType',
+                //     path: pathmenu.menuproducttype,
+                //     translate: 'label_PRODUCT_TYPE',
+                //     permission:permissionmenu.MenuProductType,
+                // }
+                
+            ]
+        },
+        {
+            name: 'Master',
+            icon: 'icon-user',
+            translate: 'Master',
+            submenu:[
                 {
                     name: 'Bank Account',
                     path: pathmenu.menubankaccount,
@@ -60,27 +86,15 @@ const handleMenu = () => {
                 {
                     name: 'Warehouse',
                     path: pathmenu.menuWarehouse,
-                    translate: 'Warehouse',
+                    translate: 'label_WAREHOUSE',
                     permission:permissionmenu.MenuWarehouse,
                 },
                 {
-                    name: 'Invoice',
-                    path: pathmenu.invoice,
-                    translate: 'Invoice',
-                    permission:permissionmenu.MenuProject,
+                    name: 'Invoice Type',
+                    path: pathmenu.menuInvoiceType,
+                    translate: 'label_INVOICE_TYPE',
+                    permission:permissionmenu.MenuInvoiceType,
                 }
-                // ,{
-                //     name: 'Product',
-                //     path: pathmenu.menuproduct,
-                //     translate: 'label_PRODUCT',
-                //     permission:permissionmenu.MenuProduct,
-                // },{
-                //     name: 'ProductType',
-                //     path: pathmenu.menuproducttype,
-                //     translate: 'label_PRODUCT_TYPE',
-                //     permission:permissionmenu.MenuProductType,
-                // }
-                
             ]
         },
         {

@@ -96,6 +96,9 @@
   "label_WAREHOUSE": "Warehouse",
   "label_ADD_WAREHOUSE": "Add Warehouse",
   "label_EDIT_WAREHOUSE": "Edit Warehouse",
+  "label_INVOICE_TYPE": "Invoice Type",
+  "label_ADD_INVOICE_TYPE": "Add Invoice Type",
+  "label_EDIT_INVOICE_TYPE": "Edit Invoice Type",
   "validation": {
     "employeemanggala":{
       "noidentitas":{
