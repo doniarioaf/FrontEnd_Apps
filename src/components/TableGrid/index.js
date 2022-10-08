@@ -27,6 +27,7 @@ import Tooltip                      from '@material-ui/core/Tooltip';
 import IconButton                   from '@material-ui/core/IconButton';
 import IconView from '../../components/Icons/iconView';
 import IconAdd from '../../components/Icons/IconAdd';
+import EditIcon from '@material-ui/icons/Edit';
 // import * as pathmenu           from '../../shared/pathMenu';
 import {Loading}                    from '../../components/Common/Loading';
 // import { isGetPermissions } from '../../shared/globalFunc';
@@ -103,6 +104,15 @@ const TableGrid = props => {
             return (
                 <TableEditColumn.Cell row={row} {...restProps}>
                     {children}
+                    <Tooltip title={i18n.t('grid.EDIT')}>
+                        <IconButton color={'primary'} 
+                        hidden={props.permissionedit !== undefined?props.permissionedit:true}
+                        onClick={() => props.onclickedit?props.onclickedit(row.id):''}
+                        >
+                            <EditIcon/>
+                        </IconButton>
+                    </Tooltip>
+
                     <Tooltip title={i18n.t('grid.VIEW')}>
                         <IconButton color={'primary'} 
                         hidden={props.permissionview !== undefined?props.permissionview:true}

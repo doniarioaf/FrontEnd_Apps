@@ -81,6 +81,10 @@ export const addWarehouse_Permission = ['READ_WAREHOUSE','READ_ADDRESS','CREATE_
 export const editWarehouse_Permission = ['READ_WAREHOUSE','READ_ADDRESS','EDIT_WAREHOUSE'];
 export const deleteWarehouse_Permission = ['DELETE_WAREHOUSE'];
 
+export const addInvoiceType_Permission = ['READ_INVOICETYPE','CREATE_INVOICETYPE'];
+export const editInvoiceType_Permission = ['READ_INVOICETYPE','EDIT_INVOICETYPE'];
+export const deleteInvoiceType_Permission = ['DELETE_INVOICETYPE'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -107,3 +111,4 @@ export const MenuPartai = ['READ_PARTAI'];
 export const MenuPort = ['READ_PORT'];
 export const MenuParameterManggala = ['READ_PARAMETERMANGGALA'];
 export const MenuWarehouse = ['READ_WAREHOUSE'];
+export const MenuInvoiceType = ['READ_INVOICETYPE'];
