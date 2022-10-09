@@ -85,6 +85,10 @@ export const addInvoiceType_Permission = ['READ_INVOICETYPE','CREATE_INVOICETYPE
 export const editInvoiceType_Permission = ['READ_INVOICETYPE','EDIT_INVOICETYPE'];
 export const deleteInvoiceType_Permission = ['DELETE_INVOICETYPE'];
 
+export const addPriceList_Permission = ['READ_PRICELIST','READ_CUSTOMER_MANGGALA','CREATE_PRICELIST'];
+export const editPriceList_Permission = ['READ_PRICELIST','READ_CUSTOMER_MANGGALA','EDIT_PRICELIST'];
+export const deletePriceList_Permission = ['DELETE_PRICELIST'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -112,3 +116,4 @@ export const MenuPort = ['READ_PORT'];
 export const MenuParameterManggala = ['READ_PARAMETERMANGGALA'];
 export const MenuWarehouse = ['READ_WAREHOUSE'];
 export const MenuInvoiceType = ['READ_INVOICETYPE'];
+export const MenuPriceList = ['READ_PRICELIST'];

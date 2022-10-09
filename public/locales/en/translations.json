@@ -99,6 +99,11 @@
   "label_INVOICE_TYPE": "Invoice Type",
   "label_ADD_INVOICE_TYPE": "Add Invoice Type",
   "label_EDIT_INVOICE_TYPE": "Edit Invoice Type",
+  "label_PRICE": "Price",
+  "label_NO_DOCUMENT": "No Document",
+  "label_PRICE_LIST": "Price List",
+  "label_ADD_PRICE_LIST": "Add Price List",
+  "label_EDIT_PRICE_LIST": "Edit Price List",
   "validation": {
     "employeemanggala":{
       "noidentitas":{

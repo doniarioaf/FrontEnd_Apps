@@ -88,3 +88,7 @@ export const editWarehouse = `/form/edit/warehouse`;
 export const menuInvoiceType = `/invoicetype`;
 export const addInvoiceType = `/form/add/invoicetype`;
 export const editInvoiceType = `/form/edit/invoicetype`;
+export const menuPriceList = `/pricelist`;
+export const addpricelist = `/form/add/pricelist`;
+export const detailpricelist = `/form/detail/pricelist`;
+export const editpricelist = `/form/edit/pricelist`;

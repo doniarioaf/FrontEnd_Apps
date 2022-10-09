@@ -94,6 +94,12 @@ const handleMenu = () => {
                     path: pathmenu.menuInvoiceType,
                     translate: 'label_INVOICE_TYPE',
                     permission:permissionmenu.MenuInvoiceType,
+                },
+                {
+                    name: 'PriceList',
+                    path: pathmenu.menuPriceList,
+                    translate: 'label_PRICE_LIST',
+                    permission:permissionmenu.MenuPriceList,
                 }
             ]
         },
