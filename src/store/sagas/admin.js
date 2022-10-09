@@ -2,7 +2,7 @@ import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
     baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL, baseProjectURL,baseBankAccountURL,baseCustomerManggalaURL,
     baseAddressURL,baseEmployeeManggalaURL,baseVendorCategoryURL,baseVendorURL,baseWorkOrderTypeURL,basePartaiURL,basePortURL, baseParameterManggalaURL,
-    baseWarehouseURL,baseInvoiceTypeURL} from '../../containers/shared/apiURL';
+    baseWarehouseURL,baseInvoiceTypeURL,basePriceListURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -831,6 +831,42 @@ export function* submitEditInvoiceTypeSaga(action) {
 export function* submitDeleteInvoiceTypeSaga(action) {
     try {
         const response = yield axios.delete(baseInvoiceTypeURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getPriceListDataSaga(action) {
+    try {
+        const response = yield axios.get(basePriceListURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitAddPriceListSaga(action) {
+    try {
+        const response = yield axios.post(basePriceListURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitEditPriceListSaga(action) {
+    try {
+        const response = yield axios.put(basePriceListURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitDeletePriceListSaga(action) {
+    try {
+        const response = yield axios.delete(basePriceListURL(action.param)).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
         action.errorHandler(handleMessageError(error));

@@ -88,7 +88,11 @@ import {
     getInvoiceTypeDataSaga,
     submitAddInvoiceTypeSaga,
     submitEditInvoiceTypeSaga,
-    submitDeleteInvoiceTypeSaga
+    submitDeleteInvoiceTypeSaga,
+    getPriceListDataSaga,
+    submitAddPriceListSaga,
+    submitEditPriceListSaga,
+    submitDeletePriceListSaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga, submitUploadFileCustomerCallPlanSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
@@ -212,5 +216,9 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_ADD_INVOICETYPE, submitAddInvoiceTypeSaga),
         takeEvery(actions.SUBMIT_EDIT_INVOICETYPE, submitEditInvoiceTypeSaga),
         takeEvery(actions.SUBMIT_DELETE_INVOICETYPE, submitDeleteInvoiceTypeSaga),
+        takeEvery(actions.GET_PRICELIST_DATA, getPriceListDataSaga),
+        takeEvery(actions.SUBMIT_ADD_PRICELIST, submitAddPriceListSaga),
+        takeEvery(actions.SUBMIT_EDIT_PRICELIST, submitEditPriceListSaga),
+        takeEvery(actions.SUBMIT_DELETE_PRICELIST, submitDeletePriceListSaga),
     ]);
 }

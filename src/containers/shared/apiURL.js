@@ -29,3 +29,4 @@ export const basePortURL = param => `${baseApiURL}/port${param}`;
 export const baseParameterManggalaURL = param => `${baseApiURL}/parametermanggala${param}`;
 export const baseWarehouseURL = param => `${baseApiURL}/warehouse${param}`;
 export const baseInvoiceTypeURL = param => `${baseApiURL}/invoicetype${param}`;
+export const basePriceListURL = param => `${baseApiURL}/pricelist${param}`;

@@ -1,3 +1,4 @@
+import numeral from 'numeral';
 import * as key from '../../containers/shared/constantKey';
 import CryptoJS from 'crypto-js';
 import * as pathmenu           from './pathMenu';
@@ -190,4 +191,36 @@ export const numToMoney = (amount) =>{
         }else{
             return '0'
         }
+};
+
+export const formatMoney = (amount) => {
+    const returnamount = amount;
+    amount = amount.replaceAll('.','');
+    let aftercomma = '';
+    if(amount.includes(',')){
+        aftercomma = ','+amount.split(',')[1];
+        amount = amount.split(',')[0];
+    }
+    if(amount.length > 3){
+        let sisabagi = amount.length % 3;
+        let isFirst = true;
+        let val = '';
+        let count = 0;
+        for(var i=0; i< amount.length; i++){
+            val += amount.charAt(i);
+            count++;
+            if((i == sisabagi - 1) && isFirst){
+                val += ".";
+                isFirst = false;
+                count = 0;
+            }else if(count == 3 && i !== amount.length - 1){
+                val += ".";
+                count = 0;
+            }
+            
+        }
+        return val+aftercomma;
+    }else{
+        return returnamount;
+    }
 };

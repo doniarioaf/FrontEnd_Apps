@@ -761,3 +761,41 @@ export const submitDeleteInvoiceType = (param, successHandler, errorHandler) => 
         errorHandler,
     }
 }
+
+export const getPriceListData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PRICELIST_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddPriceList = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PRICELIST,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditPriceList = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PRICELIST,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeletePriceList = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_PRICELIST,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
