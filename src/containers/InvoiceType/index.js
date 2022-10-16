@@ -9,7 +9,7 @@ import Swal                         from 'sweetalert2';
 import * as actions                 from '../../store/actions';
 import * as pathmenu           from '../shared/pathMenu';
 import { reloadToHomeNotAuthorize,isGetPermissions } from '../shared/globalFunc';
-import { MenuInvoiceType,addInvoiceType_Permission,editInvoiceType_Permission } from '../shared/permissionMenu';
+import { MenuInvoiceType,addInvoiceType_Permission,editInvoiceType_Permission,deleteInvoiceType_Permission } from '../shared/permissionMenu';
 import {useHistory}                 from 'react-router-dom';
 
 const MenuIndex = () => {
@@ -57,6 +57,40 @@ const MenuIndex = () => {
         })
     }
 
+    const submitHandlerDelete = (id) => {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                dispatch(actions.submitDeleteInvoiceType('/'+id,succesHandlerSubmitDelete, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+    }
+
+    const succesHandlerSubmitDelete = (data) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(0);
+            }
+        })
+    }
+    function onClickDelete(id) {
+        submitHandlerDelete(id);
+    }
+
     function onClickAdd() {
         history.push(pathmenu.addInvoiceType);
     }
@@ -86,6 +120,9 @@ const MenuIndex = () => {
                 onclickview={onClickView}
                 permissionedit={!isGetPermissions(editInvoiceType_Permission,'TRANSACTION')}
                 onclickedit={onClickEdit}
+                onclickdelete={onClickDelete}
+                permissiondelete={!isGetPermissions(deleteInvoiceType_Permission,'TRANSACTION')}
+                width = {110}
             />
             </div>
             </Container>
