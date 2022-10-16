@@ -89,6 +89,10 @@ export const addPriceList_Permission = ['READ_PRICELIST','READ_CUSTOMER_MANGGALA
 export const editPriceList_Permission = ['READ_PRICELIST','READ_CUSTOMER_MANGGALA','EDIT_PRICELIST'];
 export const deletePriceList_Permission = ['DELETE_PRICELIST'];
 
+export const addPaymentType_Permission = ['READ_PAYMENTTYPE','CREATE_PAYMENTTYPE'];
+export const editPaymentType_Permission = ['READ_PAYMENTTYPE','EDIT_PAYMENTTYPE'];
+export const deletePaymentType_Permission = ['DELETE_PAYMENTTYPE'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -117,3 +121,4 @@ export const MenuParameterManggala = ['READ_PARAMETERMANGGALA'];
 export const MenuWarehouse = ['READ_WAREHOUSE'];
 export const MenuInvoiceType = ['READ_INVOICETYPE'];
 export const MenuPriceList = ['READ_PRICELIST'];
+export const MenuPaymentType = ['READ_PAYMENTTYPE'];

@@ -236,6 +236,10 @@ const addPriceList = lazy(() => import('./containers/PriceList/addPriceList'));
 const detailPriceList = lazy(() => import('./containers/PriceList/detail'));
 const editPriceList = lazy(() => import('./containers/PriceList/editPriceList'));
 
+const menuPaymentType = lazy(() => import('./containers/PaymentType'));
+const addPaymentType = lazy(() => import('./containers/PaymentType/addPaymentType'));
+const editPaymentType = lazy(() => import('./containers/PaymentType/editPaymentType'));
+
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -476,6 +480,9 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.detailpricelist+'/:id'} component={waitFor(detailPriceList)}/>
                             <Route path={pathmenu.editpricelist+'/:id'} component={waitFor(editPriceList)}/>
                             
+                            <Route path={pathmenu.menuPaymentType} component={waitFor(menuPaymentType)}/>
+                            <Route path={pathmenu.addPaymentType} component={waitFor(addPaymentType)}/>
+                            <Route path={pathmenu.editPaymentType+'/:id'} component={waitFor(editPaymentType)}/>
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>

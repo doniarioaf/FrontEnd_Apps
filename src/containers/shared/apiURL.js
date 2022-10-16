@@ -30,3 +30,4 @@ export const baseParameterManggalaURL = param => `${baseApiURL}/parametermanggal
 export const baseWarehouseURL = param => `${baseApiURL}/warehouse${param}`;
 export const baseInvoiceTypeURL = param => `${baseApiURL}/invoicetype${param}`;
 export const basePriceListURL = param => `${baseApiURL}/pricelist${param}`;
+export const basePaymentTypeURL = param => `${baseApiURL}/paymenttype${param}`;

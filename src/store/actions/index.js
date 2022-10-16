@@ -97,7 +97,11 @@ export {
     getPriceListData,
     submitAddPriceList,
     submitEditPriceList,
-    submitDeletePriceList
+    submitDeletePriceList,
+    getPaymentTypeData,
+    submitAddPaymentType,
+    submitEditPaymentType,
+    submitDeletePaymentType
 } from './admin';
 
 export {

@@ -106,6 +106,9 @@
     "label_EDIT_PRICE_LIST": "Ubah Daftar Harga",
     "label_DATE": "Tanggal",
     "label_ON_BEHALF_OF": "Atas Nama",
+    "label_PAYMENT_TYPE": "Jenis Pembayaran",
+    "label_ADD_PAYMENT_TYPE": "Tambah Jenis Pembayaran",
+    "label_EDIT_PAYMENT_TYPE": "Ubah Jenis Pembayaran",
     "validation": {
       "employeemanggala":{
         "noidentitas":{

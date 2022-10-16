@@ -2,7 +2,7 @@ import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
     baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL, baseProjectURL,baseBankAccountURL,baseCustomerManggalaURL,
     baseAddressURL,baseEmployeeManggalaURL,baseVendorCategoryURL,baseVendorURL,baseWorkOrderTypeURL,basePartaiURL,basePortURL, baseParameterManggalaURL,
-    baseWarehouseURL,baseInvoiceTypeURL,basePriceListURL} from '../../containers/shared/apiURL';
+    baseWarehouseURL,baseInvoiceTypeURL,basePriceListURL,basePaymentTypeURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -867,6 +867,42 @@ export function* submitEditPriceListSaga(action) {
 export function* submitDeletePriceListSaga(action) {
     try {
         const response = yield axios.delete(basePriceListURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getPaymentTypeDataSaga(action) {
+    try {
+        const response = yield axios.get(basePaymentTypeURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitAddPaymentTypeSaga(action) {
+    try {
+        const response = yield axios.post(basePaymentTypeURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitEditPaymentTypeSaga(action) {
+    try {
+        const response = yield axios.put(basePaymentTypeURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitDeletePaymentTypeSaga(action) {
+    try {
+        const response = yield axios.delete(basePaymentTypeURL(action.param)).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
         action.errorHandler(handleMessageError(error));

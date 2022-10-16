@@ -799,3 +799,41 @@ export const submitDeletePriceList = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getPaymentTypeData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PAYMENTTYPE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddPaymentType = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PAYMENTTYPE,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditPaymentType = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PAYMENTTYPE,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeletePaymentType = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_PAYMENTTYPE,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
