@@ -31,6 +31,8 @@ import React, {useState,
   import Avatar           from '../../../components/Avatar/index';
   import { numToMoney } from '../../shared/globalFunc';
 
+  import Grid                         from '../../../components/TableGrid';
+
   const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
@@ -54,6 +56,16 @@ import React, {useState,
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
+
+    const [rows, setRows] = useState([]);
+    const [columns] = useState([
+        {name: 'id', title: 'id'},
+        // {name: 'code', title: i18n.t('Code')},
+        {name: 'statusemployee', title: 'Status '+i18n.t('label_EMPLOYEE')},
+        {name: 'gaji', title: i18n.t('label_SALARY')},
+        {name: 'tanggal', title: i18n.t('label_DATE')}
+    ]);
+    const [tableColumnExtensions] = useState([]);
 
     const id = props.match.params.id;
 
@@ -118,6 +130,21 @@ import React, {useState,
         }
         setInputListInfoFamily(listinfofamily);
 
+        if(data.data.historyEmployee){
+            const theData = data.data.historyEmployee.reduce((obj, el) => [
+                ...obj,
+                {
+                    'id': el.id,
+                    // 'code':el.code?el.code:'',
+                    'statusemployee': el.statusemployee ?el.statusemployee:'',
+                    'gaji':el.gaji?numToMoney(parseFloat(el.gaji)):'',
+                    'tanggal': el.tanggal?moment (new Date(el.tanggal)).format('DD MMMM YYYY'):'',
+                }
+            ], []);
+            setRows(theData);
+        }
+                
+
         setLoading(false);
     }
 
@@ -177,6 +204,11 @@ import React, {useState,
             title: 'Oops...',
             text: '' + error
         })
+    }
+
+    function onClickAdd() {
+    }
+    function onClickView(id) {
     }
 
     return (
@@ -259,7 +291,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_SALARY')}</span>
                                 <strong className="col-md-7">
-                                {value.gaji?numToMoney(parseFloat(value.gaji)):''}
+                                {value.gaji?(value.gaji !== ''?numToMoney(parseFloat(value.gaji)):'*******'):''}
                                 </strong>
                             </div>
 
@@ -330,7 +362,7 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_ACCOUNT_NAME')}</span>
+                            <span className="col-md-5">{i18n.t('label_ON_BEHALF_OF')}</span>
                                 <strong className="col-md-7">
                                 {value.atasnama?value.atasnama:''}
                                 </strong>
@@ -352,12 +384,12 @@ import React, {useState,
 
                            
 
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_IS_ACTIVE')}</span>
                                 <strong className="col-md-7">
                                 {value.isactive?'Yes':'No'}
                                 </strong>
-                            </div>
+                            </div> */}
 
                         </section>
                     )
@@ -396,6 +428,24 @@ import React, {useState,
                     </table>
                     :''
                 }
+
+
+            <div className="table-responsive">
+            <div><h3>{i18n.t('History')}</h3></div>
+            <Grid
+                rows={rows}
+                columns={columns}
+                totalCounts={rows.length}
+                loading={loading}
+                columnextension={tableColumnExtensions}
+                permissionadd={true}
+                onclickadd={onClickAdd}
+                permissionview={true}
+                onclickview={onClickView}
+                listfilterdisabled={['tanggal','statusemployee','gaji']}
+            />
+            </div>
+
             </Card>
             </Container>
 

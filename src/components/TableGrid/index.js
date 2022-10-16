@@ -28,6 +28,7 @@ import IconButton                   from '@material-ui/core/IconButton';
 import IconView from '../../components/Icons/iconView';
 import IconAdd from '../../components/Icons/IconAdd';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 // import * as pathmenu           from '../../shared/pathMenu';
 import {Loading}                    from '../../components/Common/Loading';
 // import { isGetPermissions } from '../../shared/globalFunc';
@@ -44,11 +45,7 @@ const StatusFormatter = ({value}) => (
     </b>
 );
 
-const FilterCell = props => {
-    if (props.column.name === "statuss")
-        return <TableCell className={props.className}/>;
-    else return <TableFilterRow.Cell {...props} />;
-};
+
 
 
 const TableGrid = props => {
@@ -80,6 +77,11 @@ const TableGrid = props => {
         lessThanOrEqual: i18n.t('grid.LESSTHANOREQUAL')
     };
 
+    const FilterCell = propsparam => {
+        if (props.listfilterdisabled? (props.listfilterdisabled.indexOf(propsparam.column.name) > -1):false)
+            return <TableCell className={propsparam.className}/>;
+        else return <TableFilterRow.Cell {...propsparam} />;
+    };
     
         const AddButton = ({onExecute}) => {
             const history = useHistory();
@@ -104,6 +106,16 @@ const TableGrid = props => {
             return (
                 <TableEditColumn.Cell row={row} {...restProps}>
                     {children}
+
+                    <Tooltip title={i18n.t('Delete')}>
+                        <IconButton color={'primary'} 
+                        hidden={props.permissiondelete !== undefined?props.permissiondelete:true}
+                        onClick={() => props.onclickdelete?props.onclickdelete(row.id):''}
+                        >
+                            <DeleteIcon/>
+                        </IconButton>
+                    </Tooltip>
+
                     <Tooltip title={i18n.t('grid.EDIT')}>
                         <IconButton color={'primary'} 
                         hidden={props.permissionedit !== undefined?props.permissionedit:true}
@@ -202,7 +214,7 @@ const TableGrid = props => {
                     // showDeleteCommand
                     cellComponent={CellComponent}
                     commandComponent={Command}
-                    width={70}
+                    width={props.width?props.width:70}
                     // messages={editColumnMessages}
                 />
                 <PagingPanel

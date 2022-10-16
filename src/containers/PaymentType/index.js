@@ -9,18 +9,18 @@ import Swal                         from 'sweetalert2';
 import * as actions                 from '../../store/actions';
 import * as pathmenu           from '../shared/pathMenu';
 import { reloadToHomeNotAuthorize,isGetPermissions } from '../shared/globalFunc';
-import { MenuInvoiceType,addInvoiceType_Permission,editInvoiceType_Permission,deleteInvoiceType_Permission } from '../shared/permissionMenu';
+import { MenuPaymentType,addPaymentType_Permission,editPaymentType_Permission,deletePaymentType_Permission } from '../shared/permissionMenu';
 import {useHistory}                 from 'react-router-dom';
 
 const MenuIndex = () => {
-    reloadToHomeNotAuthorize(MenuInvoiceType,'READ');
+    reloadToHomeNotAuthorize(MenuPaymentType,'READ');
     const history = useHistory();
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
         {name: 'id', title: 'id'},
         // {name: 'code', title: i18n.t('Code')},
-        {name: 'invoicetype', title: i18n.t('label_INVOICE_TYPE')},
+        {name: 'paymenttype', title: i18n.t('label_PAYMENT_TYPE')},
         {name: 'nama', title: i18n.t('label_NAME')},
     ]);
     const [tableColumnExtensions] = useState([]);
@@ -29,7 +29,7 @@ const MenuIndex = () => {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getInvoiceTypeData('',successHandler, errorHandler));
+        dispatch(actions.getPaymentTypeData('',successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
@@ -39,7 +39,7 @@ const MenuIndex = () => {
                 {
                     'id': el.id,
                     // 'code':el.code?el.code:'',
-                    'invoicetype': el.invoicetypename ?el.invoicetypename:'',
+                    'paymenttype': el.paymenttypename ?el.paymenttypename:'',
                     'nama':el.nama?el.nama:'',
                 }
             ], []);
@@ -67,7 +67,7 @@ const MenuIndex = () => {
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                dispatch(actions.submitDeleteInvoiceType('/'+id,succesHandlerSubmitDelete, errorHandler));
+                dispatch(actions.submitDeletePaymentType('/'+id,succesHandlerSubmitDelete, errorHandler));
             //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
             //   Swal.fire('Changes are not saved', '', 'info')
@@ -92,17 +92,17 @@ const MenuIndex = () => {
     }
 
     function onClickAdd() {
-        history.push(pathmenu.addInvoiceType);
+        history.push(pathmenu.addPaymentType);
     }
     function onClickView(id) {
     }
     function onClickEdit(id) {
-        history.push(pathmenu.editInvoiceType+'/'+id);
+        history.push(pathmenu.editPaymentType+'/'+id);
     }
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuInvoiceType} label={'label_INVOICE_TYPE'} labeldefault={'Invoice Item'} />
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuPaymentType} label={'label_PAYMENT_TYPE'} labeldefault={'Payment Item'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -114,14 +114,14 @@ const MenuIndex = () => {
                 totalCounts={rows.length}
                 loading={loading}
                 columnextension={tableColumnExtensions}
-                permissionadd={!isGetPermissions(addInvoiceType_Permission,'TRANSACTION')}
+                permissionadd={!isGetPermissions(addPaymentType_Permission,'TRANSACTION')}
                 onclickadd={onClickAdd}
                 // permissionview={!isGetPermissions(MenuPartai,'READ')}
                 onclickview={onClickView}
-                permissionedit={!isGetPermissions(editInvoiceType_Permission,'TRANSACTION')}
+                permissionedit={!isGetPermissions(editPaymentType_Permission,'TRANSACTION')}
                 onclickedit={onClickEdit}
                 onclickdelete={onClickDelete}
-                permissiondelete={!isGetPermissions(deleteInvoiceType_Permission,'TRANSACTION')}
+                permissiondelete={!isGetPermissions(deletePaymentType_Permission,'TRANSACTION')}
                 width = {110}
             />
             </div>

@@ -10,7 +10,7 @@ import { Loading } from '../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {DropdownList}      from 'react-widgets';
 import {useHistory}                 from 'react-router-dom';
-import { reloadToHomeNotAuthorize } from '../shared/globalFunc';
+import { reloadToHomeNotAuthorize,numToMoney } from '../shared/globalFunc';
 import { addPriceList_Permission } from '../shared/permissionMenu';
 import * as pathmenu           from '../shared/pathMenu';
 import "react-widgets/dist/css/react-widgets.css";
@@ -24,12 +24,28 @@ import SwipeableViews  from 'react-swipeable-views';
 import IndexjalurHijau                        from './indexjalurHijau';
 import IndexjalurMerah                        from './indexjalurMerah';
 
+import IconButton                   from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
+import DeleteIcon from '@material-ui/icons/Delete';
+
+import FormSearch from '../../components/FormSearch';
+import styled                       from "styled-components";
+import Dialog                       from '@material-ui/core/Dialog';
+const StyledDialog = styled(Dialog)`
+  & > .MuiDialog-container > .MuiPaper-root {
+    height: 500px;
+  }
+`;
+
+
 export default function AddFormIndex(props) {
     reloadToHomeNotAuthorize(addPriceList_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
+    const [ShowQuickSearch, setShowQuickSearch] = useState(false);
+    const [LoadingSend, setLoadingSend] = useState(false);
 
     const [tabValue, setTabValue] = useState(0);
 
@@ -50,6 +66,8 @@ export default function AddFormIndex(props) {
 
     const [InputIsActive, setInputIsActive] = useState(true);
 
+    const [InputSearch, setInputSearch] = useState('');
+    const [ListHandlerSearch, setListHandlerSearch] = useState(null);
 
     useEffect(() => {
         setLoading(true);
@@ -96,6 +114,60 @@ export default function AddFormIndex(props) {
             }]
         ), []));
         setLoading(false);
+    }
+
+    function copyPriceList(listwarehouse,listdatasearch) {
+        
+        if(listdatasearch !== null){
+            let listfilterhijau = listdatasearch.details.filter(output => output.jalur == 'HIJAU');
+            let listhijau = [];
+            if(listfilterhijau.length > 0){
+                let dethijau = listfilterhijau[0];
+                if(listwarehouse.length > 0){
+                    for(let i=0; i < listwarehouse.length; i++){
+                        
+                        let detWarehouse = listwarehouse[i];
+
+                        let obj = new Object();
+                        obj.idwarehouse = detWarehouse.value;
+                        obj.idinvoicetype = dethijau.idinvoicetype;
+                        obj.jalur = "HIJAU";
+                        obj.price = numToMoney(parseFloat(dethijau.price));
+                        obj.ismandatory = dethijau.ismandatory;
+
+                        console.log('hijau ',detWarehouse.value);
+                        listhijau.push({"idwarehouse":detWarehouse.value,"idinvoicetype":dethijau.idinvoicetype, "price":numToMoney(parseFloat(dethijau.price)) ,"ismandatory":dethijau.ismandatory,"jalur":"HIJAU"})
+                        
+                        // addToListHijau(obj);
+                    }
+                }
+            }
+            setInputListHijau(listhijau);
+
+            let listfiltermerah = listdatasearch.details.filter(output => output.jalur == 'MERAH');
+            let listmerah = [];
+            if(listfiltermerah.length > 0){
+                let detMerah = listfiltermerah[0];
+                if(listwarehouse.length > 0){
+                    for(let i=0; i < listwarehouse.length; i++){
+                        let detWarehouse = listwarehouse[i];
+
+                        let obj = new Object();
+                        obj.idwarehouse = detWarehouse.value;
+                        obj.idinvoicetype = parseInt(detMerah.idinvoicetype);
+                        obj.jalur = "MERAH";
+                        obj.price = numToMoney(parseFloat(detMerah.price));
+                        obj.ismandatory = detMerah.ismandatory;
+
+                        listmerah.push({"idwarehouse":detWarehouse.value,"idinvoicetype":detMerah.idinvoicetype, "price":numToMoney(parseFloat(detMerah.price)) ,"ismandatory":detMerah.ismandatory,"jalur":"MERAH"})
+                        
+
+                        // addToListMerah(obj);
+                    }
+                }
+            }
+            setInputListMerah(listmerah);
+        }
     }
     function handleChangeTab(event, value) {
         setTabValue(value);
@@ -228,6 +300,7 @@ export default function AddFormIndex(props) {
 
     const errorHandler = (data) => {
         setLoading(false);
+        setShowQuickSearch(false);
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -328,12 +401,39 @@ export default function AddFormIndex(props) {
         }
         
     }
+    const handleInputSearch = (data) =>{
+        let val = data.target.value;
+        setInputSearch(val);
+    }
+    const handleQuickSeacrh = (data) =>{
+        // console.log('handleQuickSeacrh ',data.accountNo);
+        setShowQuickSearch(false);
+        setInputSearch('');
+        setLoading(true);
+        dispatch(actions.getPriceListData('/'+data.id,successHandlerDetail, errorHandler));
+        // handleSetAccNumber(data.accountNo);
+    }
+
+    const successHandlerDetail = (data) =>{
+        let det = data.data;
+        setListHandlerSearch(det);
+        setInputSearch(det.nodocument+' - '+det.namacustomer);
+        copyPriceList(ListWarehouse,det);
+        setLoading(false);
+    }
+
+    const removeSeacrh = () => {
+        setInputSearch('');
+        setListHandlerSearch(null);
+    }
+
     return (
         <Formik
         initialValues={
             {
                 customer:SelCustomer,
-                isactive:InputIsActive
+                isactive:InputIsActive,
+                search:InputSearch
             }
         }
         validate={values => {
@@ -367,7 +467,7 @@ export default function AddFormIndex(props) {
                             <label className="mt-3 form-label required" htmlFor="customer">
                                 {i18n.t('Customer')}
                                 <span style={{color:'red'}}>*</span>
-                                </label>
+                            </label>
 
                                 <DropdownList
                                     // className={
@@ -388,7 +488,51 @@ export default function AddFormIndex(props) {
                                     value={values.customer}
                                 />
                                 <div className="invalid-feedback-custom">{ErrSelCustomer}</div>
-                                
+                            
+                            <label className="mt-3 form-label required" htmlFor="customer">
+                                {i18n.t('Copy')}
+                            </label>
+                            <table style={{width:'100%'}}>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                        <Input
+                                            name="search"
+                                            // className={
+                                            //     touched.namebranch && errors.namebranch
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="search"
+                                            maxLength={200}
+                                            onChange={val => handleInputSearch(val)}
+                                            onBlur={handleBlur}
+                                            disabled={true}
+                                            value={values.search}
+                                        />
+                                        </td>
+                                        <td>
+                                        
+                                        <IconButton color={'primary'}
+                                            onClick={() =>removeSeacrh()}
+                                            hidden={values.customer == '' || values.search == ''}
+                                        >
+                                            <DeleteIcon/>
+                                        </IconButton>
+
+                                        <IconButton color={'primary'}
+                                            onClick={() =>setShowQuickSearch(true)}
+                                            hidden={values.customer == ''}
+                                        >
+                                            <SearchIcon/>
+                                        </IconButton>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            
 
                                 {/* <FormGroup check style={{marginTop:'20px'}}>
                                 <Input type="checkbox" name="check" 
@@ -472,6 +616,26 @@ export default function AddFormIndex(props) {
                             {'Submit'}
                             </Button>
                             </div>
+
+                        <StyledDialog
+                            disableBackdropClick
+                            disableEscapeKeyDown
+                            maxWidth="md"
+                            fullWidth={true}
+                            // style={{height: '80%'}}
+                            open={ShowQuickSearch}
+                        >
+                                <FormSearch
+                                    showflag = {setShowQuickSearch}
+                                    flagloadingsend = {setLoadingSend}
+                                    seacrhtype = {'PRICELIST'}
+                                    errorHandler = {errorHandler}
+                                    handlesearch = {handleQuickSeacrh}
+                                    placeholder = {'Pencarian Berdasarkan No Document Atau Nama Customer'}
+                                ></FormSearch>
+                                {LoadingSend && <Loading/>}
+                        </StyledDialog>
+
                         </form>
                     )
                 }

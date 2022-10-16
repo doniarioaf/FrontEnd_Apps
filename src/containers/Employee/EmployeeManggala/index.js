@@ -19,12 +19,15 @@ const EmployeeManggalaIndex = () => {
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
         {name: 'id', title: 'id'},
+        {name: 'idd', title: 'ID'},
         {name: 'name', title: i18n.t('label_NAME')},
         {name: 'jabatan', title: i18n.t('label_POSITION')},
         {name: 'status', title: i18n.t('Status')},
-        {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
+        // {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);
-    const [tableColumnExtensions] = useState([]);
+    const [tableColumnExtensions] = useState([
+        // { columnName: 'idd', width: '70' },
+    ]);
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
@@ -39,6 +42,7 @@ const EmployeeManggalaIndex = () => {
                 ...obj,
                 {
                     'id': el.id,
+                    'idd': el.id,
                     'name': el.nama ?el.nama:'',
                     'jabatan':el.jabatan?getParamterOptions(data.data?.template?.jabatanOptions?data.data.template.jabatanOptions:[],el.jabatan):'',
                     'status':el.statuskaryawan?getParamterOptions(data.data?.template?.statusKaryawanOptions?data.data.template.statusKaryawanOptions:[],el.statuskaryawan):'',

@@ -57,9 +57,18 @@ const DialogQuickSearch = props => {
       });
 
       useEffect(() => {
-        if(props.seacrhtype == 'WAREHOUSE'){
-
+        let data = [
+            {name: 'id', title: 'id'},
+            {name: 'name', title: i18n.t('label_NAME')},
+        ]
+        if(props.seacrhtype == 'PRICELIST'){
+            data = [
+                {name: 'id', title: 'id'},
+                {name: 'nodoc', title: 'No Document'},
+                {name: 'name', title: i18n.t('label_NAME')},
+            ]
         }
+        setColumns(data);
     }, []);
 
     const handleChangeSearchName = (data) =>{
@@ -71,8 +80,11 @@ const DialogQuickSearch = props => {
         setErrInputSearch("");
         if(InputSearchName !== ''){
             props.flagloadingsend(true);
-            if(props.seacrhtype == 'WAREHOUSE'){
-
+            if(props.seacrhtype == 'PRICELIST'){
+                let obj = new Object();
+                obj.nodocument = InputSearchName;
+                obj.namacustomer = InputSearchName;
+                dispatch(actions.submitAddPriceList('/search',obj,successHandleSearch, props.errorHandler));
             }
         }else{
             setErrInputSearch(i18n.t('forms.REQUIRED'));
@@ -82,18 +94,20 @@ const DialogQuickSearch = props => {
 
     const successHandleSearch = (data) =>{
         let theData = [];
-        if(props.seacrhtype == 'WAREHOUSE'){
-            theData = data.reduce((obj, el) => [
-                ...obj,
-                {
-                    'id': el.accountNo,
-                    'name': el.fullName,
-                    'showaccno': el.accountNo+' - '+el.productName,
-                    'office': el.officeName,
-                    'data':el
-                }
-            ], []);
+        if(data.data){
+            if(props.seacrhtype == 'PRICELIST'){
+                theData = data.data.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        'id': el.id,
+                        'name': el.namacustomer,
+                        'nodoc': el.nodocument,
+                        'data':el
+                    }
+                ], []);
+            }
         }
+        
         setRows(theData);
 
         props.flagloadingsend(false);
@@ -102,7 +116,7 @@ const DialogQuickSearch = props => {
     return (
         <div>
             <DialogTitle id="confirmation-dialog-title" onClose={() => props.showflag(false)}>
-            {i18n.t('Quick Search')}
+            {i18n.t('Search')}
             </DialogTitle>
             <DialogContent dividers style={{height:"460px"}}>
             <table style={{width:'100%'}}>
@@ -122,7 +136,7 @@ const DialogQuickSearch = props => {
                                     handleSearch()
                                 }
                               }}
-                            placeholder={'Pencarian Berdasarkan Nama'}
+                            placeholder={props.placeholder?props.placeholder:''}
                             value={InputSearchName}
                             disabled={false}
                         />

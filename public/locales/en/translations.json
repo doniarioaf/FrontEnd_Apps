@@ -96,14 +96,19 @@
   "label_WAREHOUSE": "Warehouse",
   "label_ADD_WAREHOUSE": "Add Warehouse",
   "label_EDIT_WAREHOUSE": "Edit Warehouse",
-  "label_INVOICE_TYPE": "Invoice Type",
-  "label_ADD_INVOICE_TYPE": "Add Invoice Type",
-  "label_EDIT_INVOICE_TYPE": "Edit Invoice Type",
+  "label_INVOICE_TYPE": "Invoice Item",
+  "label_ADD_INVOICE_TYPE": "Add Invoice Item",
+  "label_EDIT_INVOICE_TYPE": "Edit Invoice Item",
   "label_PRICE": "Price",
   "label_NO_DOCUMENT": "No Document",
   "label_PRICE_LIST": "Price List",
   "label_ADD_PRICE_LIST": "Add Price List",
   "label_EDIT_PRICE_LIST": "Edit Price List",
+  "label_DATE": "Date",
+  "label_ON_BEHALF_OF": "On Behalf Of",
+  "label_PAYMENT_TYPE": "Payment Item",
+  "label_ADD_PAYMENT_TYPE": "Add Payment Item",
+  "label_EDIT_PAYMENT_TYPE": "Edit Payment Item",
   "validation": {
     "employeemanggala":{
       "noidentitas":{

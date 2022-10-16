@@ -144,16 +144,31 @@ export default function AddWarehouse(props) {
 
     const handleInputChangeContactNumber = (e, index) => {
         const { name, value } = e.target;
-        const list = [...InputListContactNumber];
-        list[index][name] = value;
-        setInputListContactNumber(list);
+        let flag = true;
+        let repVal = new String(value).replaceAll('(','');
+        repVal = new String(repVal).replaceAll(')','')
+        if(name == 'contactnumber' && isNaN(repVal)){
+            flag = false;
+        }
+        if(flag){
+            const list = [...InputListContactNumber];
+            list[index][name] = value;
+            setInputListContactNumber(list);
+        }
     };
 
     const handleInputChangeContacthp = (e, index) => {
         const { name, value } = e.target;
-        const list = [...InputListContactHp];
-        list[index][name] = value;
-        setInputListContactHp(list);
+        let flag = true;
+        if(name == 'contacthp' && isNaN(value)){
+            flag = false;
+        }
+        if(flag){
+            const list = [...InputListContactHp];
+            list[index][name] = value;
+            setInputListContactHp(list);
+        }
+        
     };
 
     const handleAddClickContactHp = () => {
@@ -275,7 +290,7 @@ export default function AddWarehouse(props) {
             obj.kecamatan = SelDistrict;
             obj.nama = InputNama;
             obj.alamat = InputAlamat;
-            obj.ancerancer = InputAlamat;
+            obj.ancerancer = InputAncerAncer;
             obj.isactive = InputIsActive;
             obj.note = InputNote;
 
@@ -540,8 +555,8 @@ export default function AddWarehouse(props) {
                                                 // }
                                                 type="text"
                                                 id="contacthp"
-                                                mask="9999-9999-9999"
-                                                tag={InputMask}
+                                                // mask="9999-9999-9999"
+                                                // tag={InputMask}
                                                 onChange={val => handleInputChangeContacthp(val,i)}
                                                 onBlur={handleBlur}
                                                 // placeholder={i18n.t('label_AMOUNT')}
@@ -549,6 +564,7 @@ export default function AddWarehouse(props) {
                                                 // value={values.amount}
                                                 value={x.contacthp}
                                                 disabled={false}
+                                                maxLength={15}
                                                 />
                                                 </td>
                                                 
@@ -594,8 +610,8 @@ export default function AddWarehouse(props) {
                                                 // }
                                                 type="text"
                                                 id="contactnumber"
-                                                mask="(9999)999-9999"
-                                                tag={InputMask}
+                                                // mask="(9999)999-9999"
+                                                // tag={InputMask}
                                                 onChange={val => handleInputChangeContactNumber(val,i)}
                                                 onBlur={handleBlur}
                                                 // placeholder={i18n.t('label_AMOUNT')}
@@ -603,6 +619,7 @@ export default function AddWarehouse(props) {
                                                 // value={values.amount}
                                                 value={x.contactnumber}
                                                 disabled={false}
+                                                maxLength={16}
                                                 />
                                                 </td>
                                                 
@@ -647,7 +664,7 @@ export default function AddWarehouse(props) {
                                 value={values.note}
                             />
 
-                            <FormGroup check style={{marginTop:'20px'}}>
+                            {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 
                             id="isactived" 
                             onChange={val => handleChangeIsActive(val)}
@@ -656,7 +673,7 @@ export default function AddWarehouse(props) {
                             style={{transform:'scale(1.5)'}}
                             />
                             <Label for="isactived" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('label_IS_ACTIVE')}</Label>
-                            </FormGroup>    
+                            </FormGroup>     */}
 
                             </div>
                             </div>

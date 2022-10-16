@@ -1,4 +1,4 @@
-import React, {useState, useEffect}    from 'react';
+import React, {useState,useEffect}    from 'react';
 import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../components/Layout/ContentWrapper';
@@ -10,42 +10,54 @@ import { Loading } from '../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import { reloadToHomeNotAuthorize } from '../shared/globalFunc';
-import { editPort_Permission } from '../shared/permissionMenu';
+import { editPaymentType_Permission } from '../shared/permissionMenu';
 import * as pathmenu           from '../shared/pathMenu';
+import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 
-export default function EditPartai(props) {
-    reloadToHomeNotAuthorize(editPort_Permission,'TRANSACTION');
+export default function EditPaymentType(props) {
+    reloadToHomeNotAuthorize(editPaymentType_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
-    const [InputCode, setInputCode] = useState('');
-    const [ErrInputCode, setErrInputCode] = useState('');
+
+    const [ListPaymentType, setListPaymentType] = useState([]);
+    const [SelPaymentType, setSelPaymentType] = useState('');
+    const [ErrSelPaymentType, setErrSelPaymentType] = useState('');
+
     const [InputNama, setInputNama] = useState('');
     const [ErrInputNama, setErrInputNama] = useState('');
-    const [InputNote, setInputNote] = useState('');
     const [InputIsActive, setInputIsActive] = useState(true);
 
     const id = props.match.params.id;
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getPortData('/'+id,successHandler, errorHandler));
-    }, []);
+        dispatch(actions.getPaymentTypeData('/'+id,successHandlerData, errorHandler));
+    }, []);    
 
-    function successHandler(data) {
-        let det = data.data;
-        // setInputCode(det.code);
-        setInputNama(det.name);
-        setInputNote(det.note);
-        setInputIsActive(det.isactive?true:false);
+    const successHandlerData = (data) =>{
+        if(data.data){
+            let det = data.data;
+            let template = det.template;
+            setListPaymentType(template.paymentTypeOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.code,
+                    label: el.codename
+                }]
+            ), []));
+            setSelPaymentType(det.paymenttype);
+            setInputNama(det.nama);
+            setInputIsActive(det.isactive?true:false);
+        }
+
         setLoading(false);
     }
 
-    const handleInputCode = (data) =>{
-        let val = data.target.value;
-        setInputCode(val);
+    const handleChangePaymentType = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelPaymentType(id);
     }
 
     const handleInputNama = (data) =>{
@@ -53,13 +65,7 @@ export default function EditPartai(props) {
         setInputNama(val);
     }
 
-    const handleInputNote = (data) =>{
-        let val = data.target.value;
-        setInputNote(val);
-    }
-
     
-
     const handleChangeIsActive = (data) =>{
         setInputIsActive(data.target.checked);
     }
@@ -69,16 +75,16 @@ export default function EditPartai(props) {
     const checkColumnMandatory = () => {
         let flag = true;
         setErrInputNama('');
-        // setErrInputCode('');
+        setErrSelPaymentType('');
         if(InputNama == ''){
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
-        // if(InputCode == ''){
-        //     setErrInputCode(i18n.t('label_REQUIRED'));
-        //     flag = false;
-        // }
+        if(SelPaymentType == ''){
+            setErrSelPaymentType(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
 
         return flag;
     }
@@ -101,11 +107,10 @@ export default function EditPartai(props) {
         if(flag){
             setLoading(true);
             let obj = new Object();
-            // obj.code = InputCode;
-            obj.name = InputNama;
-            obj.note = InputNote;
+            obj.paymenttype = SelPaymentType;
+            obj.nama = InputNama;
             obj.isactive = InputIsActive;
-            dispatch(actions.submitEditPort('/'+id,obj,succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitEditPaymentType('/'+id,obj,succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -140,9 +145,8 @@ export default function EditPartai(props) {
         <Formik
         initialValues={
             {
-                // code:InputCode,
+                paymenttype:SelPaymentType,
                 nama:InputNama,
-                note:InputNote,
                 isactive:InputIsActive
             }
         }
@@ -169,30 +173,37 @@ export default function EditPartai(props) {
                     } = formikProps;
 
                     return(
-                        <form className="mb-6" onSubmit={handleSubmit}  name="FormAddBankAccount">
+                        <form className="mb-6" onSubmit={handleSubmit}  name="FormEditInvoiceType">
                             <ContentWrapper>
-                            <ContentHeading history={history} link={pathmenu.editpartai+'/'+id} label={'Edit Partai'} labeldefault={'Edit Partai'} />
+                            <ContentHeading history={history} link={pathmenu.editPaymentType+'/'+id} label={'label_EDIT_PAYMENT_TYPE'} labeldefault={'Edit Payment Item'} />
 
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
-                            {/* <label className="mt-3 form-label required" htmlFor="code">
-                                {i18n.t('Code')}
+                                
+                            <label className="mt-3 form-label required" htmlFor="invoicetype">
+                                {i18n.t('label_PAYMENT_TYPE')}
                                 <span style={{color:'red'}}>*</span>
-                            </label>
-                            <Input
-                                name="code"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="code"
-                                onChange={val => handleInputCode(val)}
-                                onBlur={handleBlur}
-                                value={values.code}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputCode}</div> */}
+                                </label>
+
+                                <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="paymenttype"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangePaymentType(val)}
+                                    onBlur={val => setFieldTouched("paymenttype", val?.value ? val.value : '')}
+                                    data={ListPaymentType}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.paymenttype}
+                                />
+                                <div className="invalid-feedback-custom">{ErrSelPaymentType}</div>
 
                             <label className="mt-3 form-label required" htmlFor="nama">
                                 {i18n.t('label_NAME')}
@@ -214,24 +225,7 @@ export default function EditPartai(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputNama}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="note">
-                                {i18n.t('label_NOTE')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <Input
-                                name="note"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="note"
-                                maxLength={200}
-                                onChange={val => handleInputNote(val)}
-                                onBlur={handleBlur}
-                                value={values.note}
-                            />
+                            
 
                             {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 

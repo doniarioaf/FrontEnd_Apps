@@ -606,9 +606,18 @@ export default function AddCustomerManggala(props) {
 
     const handleInputChange = (e, index) => {
         const { name, value } = e.target;
-        const list = [...InputListNoKantor];
-        list[index][name] = value;
-        setInputListNoKantor(list);
+        let flag = true;
+        let repVal = new String(value).replaceAll('(','');
+        repVal = new String(repVal).replaceAll(')','')
+        if(name == 'nokantor' && isNaN(repVal)){
+            flag = false;
+        }
+        if(flag){
+            const list = [...InputListNoKantor];
+            list[index][name] = value;
+            setInputListNoKantor(list);
+        }
+        
     };
 
     const handleInputChangeKementerian = (e, index) => {
@@ -734,11 +743,17 @@ export default function AddCustomerManggala(props) {
     const handleInputChangeListNoTelpInfoContact = (e, paramparent,indexparent,indexchild) => {
         // let paramlist = 'listnotelepon';
         const { name, value } = e.target;
-        const list = [...InputListInfoContact];
-        const listnotelp = list[indexparent][paramparent];
-        listnotelp[indexchild][name] = value;
-        list[indexparent][paramparent] = listnotelp;
-        setInputListInfoContact(list);
+        let flag = true;
+        if(name == 'notelepon' && isNaN(value)){
+            flag = false;
+        }
+        if(flag){
+            const list = [...InputListInfoContact];
+            const listnotelp = list[indexparent][paramparent];
+            listnotelp[indexchild][name] = value;
+            list[indexparent][paramparent] = listnotelp;
+            setInputListInfoContact(list);
+        }
     };
 
     const handleInputChangeListInfoGudang = (e, paramparent,indexparent,indexchild) => {
@@ -932,8 +947,8 @@ export default function AddCustomerManggala(props) {
                                                 // }
                                                 type="text"
                                                 id="nokantor"
-                                                mask="(9999)999-9999"
-                                                tag={InputMask}
+                                                // mask="(9999)999-9999"
+                                                // tag={InputMask}
                                                 onChange={val => handleInputChange(val,i)}
                                                 onBlur={handleBlur}
                                                 // placeholder={i18n.t('label_AMOUNT')}
@@ -941,6 +956,7 @@ export default function AddCustomerManggala(props) {
                                                 // value={values.amount}
                                                 value={x.nokantor}
                                                 disabled={false}
+                                                maxLength={16}
                                                 />
                                                 </td>
                                                 
@@ -1245,8 +1261,8 @@ export default function AddCustomerManggala(props) {
                                                                             // }
                                                                             type="text"
                                                                             id="notelepon"
-                                                                            mask="9999999999999"
-                                                                            tag={InputMask}
+                                                                            // mask="9999999999999"
+                                                                            // tag={InputMask}
                                                                             onChange={val => handleInputChangeListNoTelpInfoContact(val,'listnotelepon',i,j)}
                                                                             onBlur={handleBlur}
                                                                             // placeholder={i18n.t('label_AMOUNT')}
@@ -1254,6 +1270,7 @@ export default function AddCustomerManggala(props) {
                                                                             // value={values.amount}
                                                                             value={y.notelepon}
                                                                             disabled={false}
+                                                                            maxLength={16}
                                                                             />
                                                                             </td>
                                                                             

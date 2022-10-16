@@ -198,7 +198,7 @@ import React, {useState,
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} link={pathmenu.detailvendor+'/'+id} label={'Detail Customer'} labeldefault={'Detail Customer'} />
+            <ContentHeading history={history} link={pathmenu.detailvendor+'/'+id} label={'Detail Vendor'} labeldefault={'Detail Vendor'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -305,12 +305,12 @@ import React, {useState,
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_IS_ACTIVE')}</span>
                                 <strong className="col-md-7">
                                 {value.isactive?'Yes':'No'}
                                 </strong>
-                            </div>
+                            </div> */}
                         </section>
                     )
                 }
