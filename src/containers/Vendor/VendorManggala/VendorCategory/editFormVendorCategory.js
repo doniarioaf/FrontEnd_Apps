@@ -154,7 +154,7 @@ export default function EditBankAccount(props) {
                     return(
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddBankAccount">
                             <ContentWrapper>
-                            <ContentHeading history={history} link={pathmenu.addvendorcategory} label={'Add Vendor Category'} labeldefault={'Add Vendor Category'} />
+                            <ContentHeading history={history} link={pathmenu.editvendorcategory+'/'+id} label={'Edit Vendor Category'} labeldefault={'Edit Vendor Category'} />
 
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
@@ -195,7 +195,7 @@ export default function EditBankAccount(props) {
                                 value={values.note}
                             />
 
-                            <FormGroup check style={{marginTop:'20px'}}>
+                            {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 
                             id="isactived" 
                             onChange={val => handleChangeIsActive(val)}
@@ -204,7 +204,7 @@ export default function EditBankAccount(props) {
                             style={{transform:'scale(1.5)'}}
                             />
                             <Label for="isactived" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('label_IS_ACTIVE')}</Label>
-                            </FormGroup>
+                            </FormGroup> */}
                             
                             </div>
                             

@@ -193,7 +193,7 @@ export default function AddParameterManggala(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputvalue}</div>
 
-                            <FormGroup check style={{marginTop:'20px'}}>
+                            {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 
                             id="isactived" 
                             onChange={val => handleChangeIsActive(val)}
@@ -202,7 +202,7 @@ export default function AddParameterManggala(props) {
                             style={{transform:'scale(1.5)'}}
                             />
                             <Label for="isactived" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('label_IS_ACTIVE')}</Label>
-                            </FormGroup>
+                            </FormGroup> */}
                             
                             </div>
                             

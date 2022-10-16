@@ -68,7 +68,7 @@ const MenuIndex = () => {
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuInvoiceType} label={'Invoice Type'} labeldefault={'Invoice Type'} />
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuInvoiceType} label={'label_INVOICE_TYPE'} labeldefault={'Invoice Item'} />
             <Container fluid>
             <Card>
             <CardBody>

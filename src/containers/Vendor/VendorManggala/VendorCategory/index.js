@@ -33,6 +33,7 @@ const VendorCategoryIndex = () => {
     }, []);
 
     function successHandler(data) {
+        console.log('successHandler ',data);
         if(data.data){
             const theData = data.data.reduce((obj, el) => [
                 ...obj,

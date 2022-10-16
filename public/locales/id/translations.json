@@ -104,6 +104,8 @@
     "label_PRICE_LIST": "Daftar Harga",
     "label_ADD_PRICE_LIST": "Tambah Daftar Harga",
     "label_EDIT_PRICE_LIST": "Ubah Daftar Harga",
+    "label_DATE": "Tanggal",
+    "label_ON_BEHALF_OF": "Atas Nama",
     "validation": {
       "employeemanggala":{
         "noidentitas":{

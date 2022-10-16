@@ -21,7 +21,7 @@ const BankAccountIndex = () => {
         {name: 'id', title: 'id'},
         {name: 'name', title: i18n.t('label_NAME')},
         {name: 'cabang', title: i18n.t('label_BRANCH_BANK')},
-        {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
+        // {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);

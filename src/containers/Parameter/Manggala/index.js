@@ -22,7 +22,7 @@ const PortIndex = () => {
         // {name: 'code', title: i18n.t('Code')},
         {name: 'name', title: i18n.t('label_NAME')},
         {name: 'value', title: i18n.t('Value')},
-        {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
+        // {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);

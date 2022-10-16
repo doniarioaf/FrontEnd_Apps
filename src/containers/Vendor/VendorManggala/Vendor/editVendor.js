@@ -18,6 +18,7 @@ import { IconButton } from '@material-ui/core';
 import '../../../CSS/table.css';
 import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
+import InputMask                    from 'react-input-mask';
 
 export default function EditVendor(props) {
     reloadToHomeNotAuthorize(editVendor_Permission,'TRANSACTION');
@@ -705,6 +706,8 @@ export default function EditVendor(props) {
                                 // }
                                 type="text"
                                 id="npwp"
+                                mask="99.999.999.9-999.999"
+                                tag={InputMask}
                                 onChange={val => handleInputNpwp(val)}
                                 onBlur={handleBlur}
                                 value={values.npwp}
@@ -811,7 +814,7 @@ export default function EditVendor(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputAddress}</div>
 
-                            <FormGroup check style={{marginTop:'20px'}}>
+                            {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 
                             id="isactived" 
                             onChange={val => handleChangeIsActive(val)}
@@ -820,7 +823,7 @@ export default function EditVendor(props) {
                             style={{transform:'scale(1.5)'}}
                             />
                             <Label for="isactived" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('label_IS_ACTIVE')}</Label>
-                            </FormGroup>
+                            </FormGroup> */}
                             </div>
                             
                             </div>

@@ -44,11 +44,7 @@ const StatusFormatter = ({value}) => (
     </b>
 );
 
-const FilterCell = props => {
-    if (props.column.name === "statuss")
-        return <TableCell className={props.className}/>;
-    else return <TableFilterRow.Cell {...props} />;
-};
+
 
 
 const TableGrid = props => {
@@ -80,6 +76,11 @@ const TableGrid = props => {
         lessThanOrEqual: i18n.t('grid.LESSTHANOREQUAL')
     };
 
+    const FilterCell = propsparam => {
+        if (props.listfilterdisabled? (props.listfilterdisabled.indexOf(propsparam.column.name) > -1):false)
+            return <TableCell className={propsparam.className}/>;
+        else return <TableFilterRow.Cell {...propsparam} />;
+    };
     
         const AddButton = ({onExecute}) => {
             const history = useHistory();

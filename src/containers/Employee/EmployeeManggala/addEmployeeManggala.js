@@ -245,6 +245,7 @@ export default function AddEmployeeManggala(props) {
         }
         const handleInputGaji = (data) =>{
             let val = data.target.value;
+            val = new String(val).replaceAll('.','');
             setInputGaji(val)
         }
         const handleChangeIsActive = (data) =>{
@@ -409,13 +410,16 @@ export default function AddEmployeeManggala(props) {
                 if(InputListInfoFamily.length > 0){
                     for(let i=0; i < InputListInfoFamily.length; i++){
                         let det = InputListInfoFamily[i];
-
-                        let objinfofamily = new Object();
-                        objinfofamily.namaanak = det.namaanak;
-                        objinfofamily.tanggallahir = moment(det.tanggallahir).toDate().getTime();
-                        objinfofamily.jeniskelamin = det.jeniskelamin;
-                        objinfofamily.status = det.status;
-                        listinfofamily.push(objinfofamily);
+                        
+                        if(det.namaanak !== '' && det.jeniskelamin !== '' && det.status !== ''){
+                            let objinfofamily = new Object();
+                            objinfofamily.namaanak = det.namaanak;
+                            objinfofamily.tanggallahir = moment(det.tanggallahir).toDate().getTime();
+                            objinfofamily.jeniskelamin = det.jeniskelamin;
+                            objinfofamily.status = det.status;
+                            listinfofamily.push(objinfofamily);
+                        }
+                       
                     }
                 }
                 obj.detailsInfoFamily = listinfofamily;
@@ -818,6 +822,7 @@ export default function AddEmployeeManggala(props) {
                                         // defaultValue={Date(moment([]))}
                                         format={'DD MMMM YYYY'}
                                         value={values.tanggallahirpasangan}
+                                        
                                         // style={{width: '25%'}}
                                         // disabled={ values.allmember}                                    
                                 />
@@ -864,7 +869,7 @@ export default function AddEmployeeManggala(props) {
                                 <div className="invalid-feedback-custom">{ErrInputNoRek}</div>
 
                                 <label className="mt-3 form-label required" htmlFor="atasnama">
-                                {i18n.t('label_ACCOUNT_NAME')}
+                                {i18n.t('label_ON_BEHALF_OF')}
                                 <span style={{color:'red'}}>*</span>
                                 </label>
                                 <Input
@@ -923,7 +928,7 @@ export default function AddEmployeeManggala(props) {
 
                                 
                                 
-                                <FormGroup check style={{marginTop:'20px'}}>
+                                {/* <FormGroup check style={{marginTop:'20px'}}>
                                 <Input type="checkbox" name="check" 
                                 id="isactived" 
                                 onChange={val => handleChangeIsActive(val)}
@@ -932,7 +937,7 @@ export default function AddEmployeeManggala(props) {
                                 style={{transform:'scale(1.5)'}}
                                 />
                                 <Label for="isactived" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('label_IS_ACTIVE')}</Label>
-                                </FormGroup>
+                                </FormGroup> */}
 
                                 
                                 <label className="mt-3 form-label required" htmlFor="tanggalresign">

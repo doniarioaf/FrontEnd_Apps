@@ -199,12 +199,12 @@ import React, {useState,
                             </div>
 
                             
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_IS_ACTIVE')}</span>
                                 <strong className="col-md-7">
                                 {value.isactive?'Yes':'No'}
                                 </strong>
-                            </div>
+                            </div> */}
 
                         </section>
                     )

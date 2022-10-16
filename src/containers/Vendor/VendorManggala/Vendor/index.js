@@ -22,7 +22,7 @@ const VendorIndex = () => {
         {name: 'name', title: i18n.t('label_NAME')},
         {name: 'alias', title: i18n.t('Alias')},
         {name: 'categoryname', title: i18n.t('label_CATEGORY')},
-        {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
+        // {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);

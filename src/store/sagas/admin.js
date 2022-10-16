@@ -578,7 +578,7 @@ export function* submitEditVendorCategorySaga(action) {
 
 export function* submitDeleteVendorCategorySaga(action) {
     try {
-        const response = yield axios.delete(baseEmployeeManggalaURL(action.param)).then(response => response.data);
+        const response = yield axios.delete(baseVendorCategoryURL(action.param)).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
         action.errorHandler(handleMessageError(error));
