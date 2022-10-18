@@ -500,7 +500,6 @@ const Routes = ({ location, ...props }) => {
 
                                 {/*Widgets*/}
                                 {/* <Route path="/widgets" component={waitFor(Widgets)}/> */}
-
                                 {/*Elements*/}
                                 {/* <Route path="/buttons" component={waitFor(Buttons)}/>
                                 <Route path="/notifications" component={waitFor(Notifications)}/>
