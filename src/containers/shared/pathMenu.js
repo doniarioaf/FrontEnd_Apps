@@ -95,3 +95,7 @@ export const editpricelist = `/form/edit/pricelist`;
 export const menuPaymentType = `/paymentitem`;
 export const addPaymentType = `/form/add/paymentitem`;
 export const editPaymentType = `/form/edit/paymentitem`;
+export const menuWorkOrder = `/workorder`;
+export const addWorkOrder = `/form/add/workorder`;
+export const detailWorkOrder = `/form/detail/workorder`;
+export const editWorkOrder = `/form/edit/workorder`;

@@ -291,7 +291,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_SALARY')}</span>
                                 <strong className="col-md-7">
-                                {value.gaji?(value.gaji !== ''?numToMoney(parseFloat(value.gaji)):'*******'):''}
+                                {value.gaji?(value.gaji !== ''?numToMoney(parseFloat(value.gaji)):'*******'):'*******'}
                                 </strong>
                             </div>
 

@@ -85,6 +85,10 @@ const DialogQuickSearch = props => {
                 obj.nodocument = InputSearchName;
                 obj.namacustomer = InputSearchName;
                 dispatch(actions.submitAddPriceList('/search',obj,successHandleSearch, props.errorHandler));
+            }else if(props.seacrhtype == 'CUSTOMERWO'){
+                let obj = new Object();
+                obj.nama = InputSearchName;
+                dispatch(actions.submitAddWorkOrder('/searchcustomer',obj,successHandleSearch, props.errorHandler));
             }
         }else{
             setErrInputSearch(i18n.t('forms.REQUIRED'));
@@ -102,6 +106,15 @@ const DialogQuickSearch = props => {
                         'id': el.id,
                         'name': el.namacustomer,
                         'nodoc': el.nodocument,
+                        'data':el
+                    }
+                ], []);
+            }else if(props.seacrhtype == 'CUSTOMERWO'){
+                theData = data.data.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        'id': el.id,
+                        'name': el.customername,
                         'data':el
                     }
                 ], []);

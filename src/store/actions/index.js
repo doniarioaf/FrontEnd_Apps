@@ -101,7 +101,11 @@ export {
     getPaymentTypeData,
     submitAddPaymentType,
     submitEditPaymentType,
-    submitDeletePaymentType
+    submitDeletePaymentType,
+    getWorkOrderData,
+    submitAddWorkOrder,
+    submitEditWorkOrder,
+    submitDeleteWorkOrder
 } from './admin';
 
 export {

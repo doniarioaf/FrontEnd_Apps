@@ -109,6 +109,16 @@
   "label_PAYMENT_TYPE": "Payment Item",
   "label_ADD_PAYMENT_TYPE": "Add Payment Item",
   "label_EDIT_PAYMENT_TYPE": "Edit Payment Item",
+  "label_WO_TYPE": "WO Type",
+  "label_WO_NUMBER": "WO Number",
+  "label_CARGO_NAME": "Cargo Name",
+  "label_MODA_TRANSPORTAION": "Moda Transportation",
+  "label_AJU_NUMBER": "AJU Number",
+  "label_NOPEN_DATE": "NOPEN Date",
+  "label_BL_NUMBER": "BL Number",
+  "label_BL_DATE": "BL Date",
+  "label_VOYAGE_NUMBER": "Voyage Number",
+  "label_SPPB_NPE_DATE": "SPPB/NPE Date",
   "validation": {
     "employeemanggala":{
       "noidentitas":{

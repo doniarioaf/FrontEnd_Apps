@@ -837,3 +837,41 @@ export const submitDeletePaymentType = (param, successHandler, errorHandler) => 
         errorHandler,
     }
 }
+
+export const getWorkOrderData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_WORKORDER_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddWorkOrder = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_WORKORDER,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditWorkOrder = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_WORKORDER,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteWorkOrder = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_WORKORDER,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

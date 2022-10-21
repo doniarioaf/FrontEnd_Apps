@@ -240,6 +240,11 @@ const menuPaymentType = lazy(() => import('./containers/PaymentType'));
 const addPaymentType = lazy(() => import('./containers/PaymentType/addPaymentType'));
 const editPaymentType = lazy(() => import('./containers/PaymentType/editPaymentType'));
 
+const menuWorkOrder = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderItem'));
+const addWorkOrder = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderItem/addWorkOrder'));
+const detailWorkOrder = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderItem/detail'));
+const editWorkOrder = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderItem/editWorkOrder'));
+
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -483,6 +488,12 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.menuPaymentType} component={waitFor(menuPaymentType)}/>
                             <Route path={pathmenu.addPaymentType} component={waitFor(addPaymentType)}/>
                             <Route path={pathmenu.editPaymentType+'/:id'} component={waitFor(editPaymentType)}/>
+
+                            <Route path={pathmenu.menuWorkOrder} component={waitFor(menuWorkOrder)}/>
+                            <Route path={pathmenu.addWorkOrder} component={waitFor(addWorkOrder)}/>
+                            <Route path={pathmenu.detailWorkOrder+'/:id'} component={waitFor(detailWorkOrder)}/>
+                            <Route path={pathmenu.editWorkOrder+'/:id'} component={waitFor(editWorkOrder)}/>
+                            
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>
@@ -500,7 +511,6 @@ const Routes = ({ location, ...props }) => {
 
                                 {/*Widgets*/}
                                 {/* <Route path="/widgets" component={waitFor(Widgets)}/> */}
-
                                 {/*Elements*/}
                                 {/* <Route path="/buttons" component={waitFor(Buttons)}/>
                                 <Route path="/notifications" component={waitFor(Notifications)}/>

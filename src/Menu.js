@@ -68,6 +68,36 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuBankAccount,
                 },
                 {
+                    name: 'Customer',
+                    path: pathmenu.menucustomers,
+                    translate: 'label_CUSTOMER',
+                    permission:permissionmenu.MenuCustomerManggala,
+                },
+                {
+                    name: 'Employee',
+                    path: pathmenu.menuemployeeManggala,
+                    translate: 'Employee',
+                    permission:permissionmenu.MenuEmployeeManggala,
+                },
+                {
+                    name: 'Vendor',
+                    path: pathmenu.menuvendor,
+                    translate: 'Vendor',
+                    permission:permissionmenu.MenuVendorCategory,
+                },
+                {
+                    name: 'Vendor Category',
+                    path: pathmenu.menuvendorcategory,
+                    translate: 'Vendor Category',
+                    permission:permissionmenu.MenuVendorCategory,
+                },
+                {
+                    name: 'Work Order Type',
+                    path: pathmenu.menuworkordertype,
+                    translate: 'Work Order Type',
+                    permission:permissionmenu.MenuWorkOrderType,
+                },
+                {
                     name: 'Partai',
                     path: pathmenu.menupartai,
                     translate: 'Partai',
@@ -90,7 +120,7 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuWarehouse,
                 },
                 {
-                    name: 'Invoice Type',
+                    name: 'Invoice Item',
                     path: pathmenu.menuInvoiceType,
                     translate: 'label_INVOICE_TYPE',
                     permission:permissionmenu.MenuInvoiceType,
@@ -129,68 +159,27 @@ const handleMenu = () => {
             ]
         },
         {
-            name: 'Customer',
+            name: 'Transaksi',
             icon: 'icon-user',
-            translate: 'Customer',
+            translate: 'Transaksi',
             submenu:[
                 {
-                    name: 'Customer',
-                    path: pathmenu.menucustomers,
-                    translate: 'label_CUSTOMER',
-                    permission:permissionmenu.MenuCustomerManggala,
-                },
-                // {
-                //     name: 'Customer Type',
-                //     path: pathmenu.menucustomertype,
-                //     translate: 'label_CUSTOMER_TYPE',
-                //     permission:permissionmenu.MenuCustomerType,
-                // }
-            ]
-        },
-        {
-            name: 'Employee',
-            icon: 'icon-user',
-            translate: 'Employee',
-            submenu:[
-                {
-                    name: 'Employee',
-                    path: pathmenu.menuemployeeManggala,
-                    translate: 'Employee',
-                    permission:permissionmenu.MenuEmployeeManggala,
-                },
-            ]
-        },{
-            name: 'Vendor',
-            icon: 'icon-user',
-            translate: 'Vendor',
-            submenu:[
-                {
-                    name: 'Vendor',
-                    path: pathmenu.menuvendor,
-                    translate: 'Vendor',
-                    permission:permissionmenu.MenuVendorCategory,
-                },
-                {
-                    name: 'Vendor Category',
-                    path: pathmenu.menuvendorcategory,
-                    translate: 'Vendor Category',
-                    permission:permissionmenu.MenuVendorCategory,
-                },
-            ]
-        },
-        {
-            name: 'Work Order',
-            icon: 'icon-user',
-            translate: 'Work Order',
-            submenu:[
-                {
-                    name: 'Work Order Type',
-                    path: pathmenu.menuworkordertype,
-                    translate: 'Work Order Type',
-                    permission:permissionmenu.MenuWorkOrderType,
+                    name: 'Work Order',
+                    path: pathmenu.menuWorkOrder,
+                    translate: 'Work Order',
+                    permission:permissionmenu.MenuWorkOrder,
                 }
             ]
-        }
+        },
+        {
+            name: 'Laporan',
+            icon: 'icon-user',
+            translate: 'Laporan',
+            submenu:[
+                
+            ]
+        },
+       
         // {
         //     name: 'Mobile',
         //     icon: 'icon-user',
