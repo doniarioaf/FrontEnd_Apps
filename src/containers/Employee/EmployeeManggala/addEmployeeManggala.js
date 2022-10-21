@@ -52,6 +52,7 @@ export default function AddEmployeeManggala(props) {
     const [ErrInputAlamat, setErrInputAlamat] = useState('');
 
     const [InputTanggalLahir, setInputTanggalLahir] = useState(new Date());
+    const [ErrInputTanggalLahir, setErrInputTanggalLahir] = useState('');
 
     const [ListStatus, setListStatus] = useState([]);
     const [SelStatus, setSelStatus] = useState('');
@@ -65,6 +66,8 @@ export default function AddEmployeeManggala(props) {
     const [ErrInputNamePasangan, setErrInputNamePasangan] = useState('');
 
     const [InputTanggalLahirPasangan, setInputTanggalLahirPasangan] = useState(new Date());
+    const [ErrInputTanggalLahirPasangan, setErrInputTanggalLahirPasangan] = useState('');
+
 
     const [InputBank, setInputBank] = useState('');
     const [ErrInputBank, setErrInputBank] = useState('');
@@ -79,6 +82,8 @@ export default function AddEmployeeManggala(props) {
     const [ErrInputGaji, setErrInputGaji] = useState('');
 
     const [InputTanggalMulai, setInputTanggalMulai] = useState(new Date());
+    const [ErrInputTanggalMulai, setErrInputTanggalMulai] = useState('');
+
     const [InputTanggalResign, setInputTanggalResign] = useState(null);
 
     const [InputIsActive, setInputIsActive] = useState(true);
@@ -89,6 +94,8 @@ export default function AddEmployeeManggala(props) {
     const [ErrInfoFamilyNamaAnak, setErrInfoFamilyNamaAnak] = useState('');
     const [ErrInfoFamilyJenisKelamin, setErrInfoFamilyJenisKelamin] = useState('');
     const [ErrInfoFamilyStatus, setErrInfoFamilyStatus] = useState('');
+    const [ErrInfoFamilyTanggalLahir, setErrInfoFamilyTanggalLahir] = useState('');
+
 
     const [documents, setDocuments] = useState({
         mainpicture: null,
@@ -210,13 +217,19 @@ export default function AddEmployeeManggala(props) {
         }
 
         const handleTanggalLahir = (data) =>{
-            //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
-            setInputTanggalLahir(moment(data, "DD MMMM YYYY").toDate())
+            if(data !== null){
+                setInputTanggalLahir(moment(data, "DD MMMM YYYY").toDate());
+            }else{
+                setInputTanggalLahir(null)
+            }
         }
 
         const handleTanggalLahirPasangan = (data) =>{
-            //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
-            setInputTanggalLahirPasangan(moment(data, "DD MMMM YYYY").toDate())
+            if(data !== null){
+                setInputTanggalLahirPasangan(moment(data, "DD MMMM YYYY").toDate())
+            }else{
+                setInputTanggalLahirPasangan(null)
+            }
         }
         const handleInputNamaBank = (data) =>{
             let val = data.target.value;
@@ -236,12 +249,18 @@ export default function AddEmployeeManggala(props) {
             setInputAtasNama(val)
         }
         const handleTanggalMulai = (data) =>{
-            //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
-            setInputTanggalMulai(moment(data, "DD MMMM YYYY").toDate())
+            if(data !== null){
+                setInputTanggalMulai(moment(data, "DD MMMM YYYY").toDate())
+            }else{
+                setInputTanggalMulai(null)
+            }
         }
         const handleTanggalResign = (data) =>{
-            //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
-            setInputTanggalResign(moment(data, "DD MMMM YYYY").toDate())
+            if(data !== null){
+                setInputTanggalResign(moment(data, "DD MMMM YYYY").toDate())
+            }else{
+                setInputTanggalResign(null)
+            }            
         }
         const handleInputGaji = (data) =>{
             let val = data.target.value;
@@ -270,6 +289,11 @@ export default function AddEmployeeManggala(props) {
             setErrInfoFamilyNamaAnak('');
             setErrInfoFamilyJenisKelamin('');
             setErrInfoFamilyStatus('');
+
+            setErrInputTanggalLahir('');
+            setErrInputTanggalLahirPasangan('');
+            setErrInputTanggalMulai('');
+            setErrInfoFamilyTanggalLahir('');
             
             if(InputListInfoFamily.length > 0){
                 for(let i=0; i < InputListInfoFamily.length; i++){
@@ -289,8 +313,23 @@ export default function AddEmployeeManggala(props) {
                             setErrInfoFamilyStatus('Status '+i18n.t('label_REQUIRED'));
                             flag = false;
                         }
+
+                        if(det.tanggallahir == null){
+                            setErrInfoFamilyTanggalLahir(i18n.t('label_DATE_OF_BIRTH')+' '+i18n.t('label_REQUIRED'));
+                            flag = false;
+                        }
                     }
                 }
+            }
+
+            if(InputTanggalLahir == null){
+                setErrInputTanggalLahir(i18n.t('label_REQUIRED'));
+                flag = false;
+            }
+
+            if(InputTanggalMulai == null){
+                setErrInputTanggalMulai(i18n.t('label_REQUIRED'));
+                flag = false;
             }
 
             if(SelStatusKaryawan == ''){
@@ -325,6 +364,11 @@ export default function AddEmployeeManggala(props) {
                 if(SelStatus == 'MENIKAH'){
                     if(InputNamePasangan == ''){
                         setErrInputNamePasangan(i18n.t('label_REQUIRED'));
+                        flag = false;
+                    }
+
+                    if(InputTanggalLahirPasangan == null){
+                        setErrInputTanggalLahirPasangan(i18n.t('label_REQUIRED'));
                         flag = false;
                     }
                     
@@ -411,7 +455,7 @@ export default function AddEmployeeManggala(props) {
                     for(let i=0; i < InputListInfoFamily.length; i++){
                         let det = InputListInfoFamily[i];
                         
-                        if(det.namaanak !== '' && det.jeniskelamin !== '' && det.status !== ''){
+                        if(det.namaanak !== '' && det.jeniskelamin !== '' && det.status !== '' && det.tanggallahir !== null){
                             let objinfofamily = new Object();
                             objinfofamily.namaanak = det.namaanak;
                             objinfofamily.tanggallahir = moment(det.tanggallahir).toDate().getTime();
@@ -735,6 +779,7 @@ export default function AddEmployeeManggala(props) {
                                         // style={{width: '25%'}}
                                         // disabled={ values.allmember}                                    
                                 />
+                                <div className="invalid-feedback-custom">{ErrInputTanggalLahir}</div>
 
                                 <label className="mt-3 form-label required" htmlFor="alamat">
                                 {i18n.t('label_ADDRESS')}
@@ -826,6 +871,7 @@ export default function AddEmployeeManggala(props) {
                                         // style={{width: '25%'}}
                                         // disabled={ values.allmember}                                    
                                 />
+                                <div className="invalid-feedback-custom">{ErrInputTanggalLahirPasangan}</div>
                                 </div>
 
                                 <label className="mt-3 form-label required" htmlFor="bank">
@@ -906,6 +952,7 @@ export default function AddEmployeeManggala(props) {
                                         // style={{width: '25%'}}
                                         // disabled={ values.allmember}                                    
                                 />
+                                <div className="invalid-feedback-custom">{ErrInputTanggalMulai}</div>
 
                                 <label className="mt-3 form-label required" htmlFor="tanggalresign">
                                     {i18n.t('label_RESIGN_DATE')}
@@ -969,6 +1016,7 @@ export default function AddEmployeeManggala(props) {
                                 <div className="invalid-feedback-custom">{ErrInfoFamilyNamaAnak}</div>
                                 <div className="invalid-feedback-custom">{ErrInfoFamilyJenisKelamin}</div>
                                 <div className="invalid-feedback-custom">{ErrInfoFamilyStatus}</div>
+                                <div className="invalid-feedback-custom">{ErrInfoFamilyTanggalLahir}</div>
                                 {
                                     InputListInfoFamily.length == 0?'':
                                     <table id="tablegrid">
