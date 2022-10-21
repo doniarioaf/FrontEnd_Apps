@@ -93,6 +93,10 @@ export const addPaymentType_Permission = ['READ_PAYMENTTYPE','CREATE_PAYMENTTYPE
 export const editPaymentType_Permission = ['READ_PAYMENTTYPE','EDIT_PAYMENTTYPE'];
 export const deletePaymentType_Permission = ['DELETE_PAYMENTTYPE'];
 
+export const addWorkOrder_Permission = ['READ_WORKORDER','CREATE_WORKORDER'];
+export const editWorkOrder_Permission = ['READ_WORKORDER','EDIT_WORKORDER'];
+export const deleteWorkOrder_Permission = ['DELETE_WORKORDER'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -122,3 +126,4 @@ export const MenuWarehouse = ['READ_WAREHOUSE'];
 export const MenuInvoiceType = ['READ_INVOICETYPE'];
 export const MenuPriceList = ['READ_PRICELIST'];
 export const MenuPaymentType = ['READ_PAYMENTTYPE'];
+export const MenuWorkOrder = ['READ_WORKORDER'];

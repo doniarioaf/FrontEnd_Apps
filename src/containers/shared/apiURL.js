@@ -31,3 +31,4 @@ export const baseWarehouseURL = param => `${baseApiURL}/warehouse${param}`;
 export const baseInvoiceTypeURL = param => `${baseApiURL}/invoicetype${param}`;
 export const basePriceListURL = param => `${baseApiURL}/pricelist${param}`;
 export const basePaymentTypeURL = param => `${baseApiURL}/paymenttype${param}`;
+export const baseWorkOrderURL = param => `${baseApiURL}/workorder${param}`;

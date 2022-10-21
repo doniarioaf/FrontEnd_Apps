@@ -109,6 +109,16 @@
     "label_PAYMENT_TYPE": "Jenis Pembayaran",
     "label_ADD_PAYMENT_TYPE": "Tambah Jenis Pembayaran",
     "label_EDIT_PAYMENT_TYPE": "Ubah Jenis Pembayaran",
+    "label_WO_TYPE": "Jenis WO",
+    "label_WO_NUMBER": "Nomor WO",
+    "label_CARGO_NAME": "Nama Cargo",
+    "label_MODA_TRANSPORTAION": "Moda Transportasi",
+    "label_AJU_NUMBER": "Nomor AJU",
+    "label_NOPEN_DATE": "Tanggal Nopen",
+    "label_BL_NUMBER": "Nomor BL",
+    "label_BL_DATE": "Tanggal BL",
+    "label_VOYAGE_NUMBER": "Nomor Voyage",
+    "label_SPPB_NPE_DATE": "SPPB/NPE Tanggal",
     "validation": {
       "employeemanggala":{
         "noidentitas":{

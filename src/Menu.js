@@ -165,9 +165,9 @@ const handleMenu = () => {
             submenu:[
                 {
                     name: 'Work Order',
-                    path: '',
+                    path: pathmenu.menuWorkOrder,
                     translate: 'Work Order',
-                    permission:permissionmenu.MenuInternalUser,
+                    permission:permissionmenu.MenuWorkOrder,
                 }
             ]
         },
