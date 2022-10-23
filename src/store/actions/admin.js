@@ -875,3 +875,41 @@ export const submitDeleteWorkOrder = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getSuratJalanData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_SURATJALAN_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddSuratJalan = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_SURATJALAN,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditSuratJalan = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_SURATJALAN,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteSuratJalan = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_SURATJALAN,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

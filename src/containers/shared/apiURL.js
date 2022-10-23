@@ -32,3 +32,4 @@ export const baseInvoiceTypeURL = param => `${baseApiURL}/invoicetype${param}`;
 export const basePriceListURL = param => `${baseApiURL}/pricelist${param}`;
 export const basePaymentTypeURL = param => `${baseApiURL}/paymenttype${param}`;
 export const baseWorkOrderURL = param => `${baseApiURL}/workorder${param}`;
+export const baseSuratJalanURL = param => `${baseApiURL}/suratjalan${param}`;

@@ -2,7 +2,7 @@ import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
     baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL, baseProjectURL,baseBankAccountURL,baseCustomerManggalaURL,
     baseAddressURL,baseEmployeeManggalaURL,baseVendorCategoryURL,baseVendorURL,baseWorkOrderTypeURL,basePartaiURL,basePortURL, baseParameterManggalaURL,
-    baseWarehouseURL,baseInvoiceTypeURL,basePriceListURL,basePaymentTypeURL,baseWorkOrderURL} from '../../containers/shared/apiURL';
+    baseWarehouseURL,baseInvoiceTypeURL,basePriceListURL,basePaymentTypeURL,baseWorkOrderURL,baseSuratJalanURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -939,6 +939,42 @@ export function* submitEditWorkOrderSaga(action) {
 export function* submitDeleteWorkOrderSaga(action) {
     try {
         const response = yield axios.delete(baseWorkOrderURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getSuratJalanSaga(action) {
+    try {
+        const response = yield axios.get(baseSuratJalanURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitAddSuratJalanSaga(action) {
+    try {
+        const response = yield axios.post(baseSuratJalanURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitEditSuratJalanSaga(action) {
+    try {
+        const response = yield axios.put(baseSuratJalanURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitDeleteSuratJalanSaga(action) {
+    try {
+        const response = yield axios.delete(baseSuratJalanURL(action.param)).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
         action.errorHandler(handleMessageError(error));

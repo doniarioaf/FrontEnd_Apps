@@ -105,7 +105,11 @@ export {
     getWorkOrderData,
     submitAddWorkOrder,
     submitEditWorkOrder,
-    submitDeleteWorkOrder
+    submitDeleteWorkOrder,
+    getSuratJalanData,
+    submitAddSuratJalan,
+    submitEditSuratJalan,
+    submitDeleteSuratJalan
 } from './admin';
 
 export {
