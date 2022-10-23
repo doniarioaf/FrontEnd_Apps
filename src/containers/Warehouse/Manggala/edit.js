@@ -204,9 +204,9 @@ export default function EditWarehouse(props) {
     const handleInputChangeContactNumber = (e, index) => {
         const { name, value } = e.target;
         let flag = true;
-        let repVal = new String(value).replaceAll('(','');
-        repVal = new String(repVal).replaceAll(')','')
-        if(name == 'contactnumber' && isNaN(repVal)){
+        // let repVal = new String(value).replaceAll('(','');
+        // repVal = new String(repVal).replaceAll(')','')
+        if(name == 'contactnumber' && new String(value).includes(',')){
             flag = false;
         }
         if(flag){
@@ -594,6 +594,60 @@ export default function EditWarehouse(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputAncerAncer}</div>
 
+                            <label className="mt-3 form-label required" htmlFor="contactnumber">
+                                {i18n.t('label_CONTACT_NAME')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <table style={{width:'110%',marginTop:'-5px'}}>
+                                {
+                                    InputListContactNumber.map((x, i) => {
+                                        return (
+                                            <tr>
+                                                <td>
+                                                <Input
+                                                name="contactnumber"
+                                                // className={
+                                                //     touched.amount && errors.amount
+                                                //         ? "w-50 input-error"
+                                                //         : "w-50"
+                                                // }
+                                                type="text"
+                                                id="contactnumber"
+                                                // mask="(9999)999-9999"
+                                                // tag={InputMask}
+                                                onChange={val => handleInputChangeContactNumber(val,i)}
+                                                onBlur={handleBlur}
+                                                // placeholder={i18n.t('label_AMOUNT')}
+                                                // style={{width: '25%'}}
+                                                // value={values.amount}
+                                                value={x.contactnumber}
+                                                disabled={false}
+                                                />
+                                                </td>
+                                                
+                                                <td hidden={i > 0}>
+                                                <IconButton color={'primary'} hidden={i > 0}
+                                                    onClick={() => handleAddClickContactNumber()}
+                                                // hidden={showplusdebit}
+                                                >
+                                                    <AddIcon style={{ fontSize: 18 }}/>
+                                                </IconButton>
+                                                </td>
+                                                <td hidden={i == 0}>
+                                                <IconButton color={'primary'} hidden={i == 0}
+                                                onClick={() => handleRemoveClickContactNumber(i)}
+                                                // hidden={showplusdebit}
+                                                >
+                                                    <RemoveIcon style={{ fontSize: 18 }}/>
+                                                </IconButton>    
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </table>
+                            <div className="invalid-feedback-custom">{ErrInputContactNumber}</div>
+
                             <label className="mt-3 form-label required" htmlFor="contacthp">
                                 {i18n.t('Contact Hp')}
                                 <span style={{color:'red'}}>*</span>
@@ -648,59 +702,7 @@ export default function EditWarehouse(props) {
                             </table>
                             <div className="invalid-feedback-custom">{ErrInputContactHp}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="contactnumber">
-                                {i18n.t('Contact Number')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <table style={{width:'110%',marginTop:'-5px'}}>
-                                {
-                                    InputListContactNumber.map((x, i) => {
-                                        return (
-                                            <tr>
-                                                <td>
-                                                <Input
-                                                name="contactnumber"
-                                                // className={
-                                                //     touched.amount && errors.amount
-                                                //         ? "w-50 input-error"
-                                                //         : "w-50"
-                                                // }
-                                                type="text"
-                                                id="contactnumber"
-                                                // mask="(9999)999-9999"
-                                                // tag={InputMask}
-                                                onChange={val => handleInputChangeContactNumber(val,i)}
-                                                onBlur={handleBlur}
-                                                // placeholder={i18n.t('label_AMOUNT')}
-                                                // style={{width: '25%'}}
-                                                // value={values.amount}
-                                                value={x.contactnumber}
-                                                disabled={false}
-                                                />
-                                                </td>
-                                                
-                                                <td hidden={i > 0}>
-                                                <IconButton color={'primary'} hidden={i > 0}
-                                                    onClick={() => handleAddClickContactNumber()}
-                                                // hidden={showplusdebit}
-                                                >
-                                                    <AddIcon style={{ fontSize: 18 }}/>
-                                                </IconButton>
-                                                </td>
-                                                <td hidden={i == 0}>
-                                                <IconButton color={'primary'} hidden={i == 0}
-                                                onClick={() => handleRemoveClickContactNumber(i)}
-                                                // hidden={showplusdebit}
-                                                >
-                                                    <RemoveIcon style={{ fontSize: 18 }}/>
-                                                </IconButton>    
-                                                </td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </table>
-                            <div className="invalid-feedback-custom">{ErrInputContactNumber}</div>
+                            
 
                             <label className="mt-3 form-label required" htmlFor="note">
                                 {i18n.t('label_NOTE')}

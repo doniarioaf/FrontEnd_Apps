@@ -30,6 +30,7 @@ import React, {useState,
   import '../../CSS/table.css';
   import Avatar           from '../../../components/Avatar/index';
   import { numToMoney } from '../../shared/globalFunc';
+  import { formatdatetime,formatdate } from '../../shared/constantValue';
 
   import Grid                         from '../../../components/TableGrid';
 
@@ -58,7 +59,7 @@ import React, {useState,
     const [isprint, setIsPrint] = useState(false);
 
     const [rows, setRows] = useState([]);
-    const [columns] = useState([
+    const [columns,Setcolumns] = useState([
         {name: 'id', title: 'id'},
         // {name: 'code', title: i18n.t('Code')},
         {name: 'statusemployee', title: 'Status '+i18n.t('label_EMPLOYEE')},
@@ -136,9 +137,9 @@ import React, {useState,
                 {
                     'id': el.id,
                     // 'code':el.code?el.code:'',
-                    'statusemployee': el.statusemployee ?el.statusemployee:'',
-                    'gaji':el.gaji?numToMoney(parseFloat(el.gaji)):'',
-                    'tanggal': el.tanggal?moment (new Date(el.tanggal)).format('DD MMMM YYYY'):'',
+                    'statusemployee': getStatusEmp(el.statusemployee ?el.statusemployee:'',template.statusKaryawanOptions?template.statusKaryawanOptions:[]),
+                    'gaji':getGaji(el.gaji?el.gaji:''),//el.gaji?numToMoney(parseFloat(el.gaji)):'',
+                    'tanggal': el.tanggal?moment (new Date(el.tanggal)).format(formatdatetime):'',
                 }
             ], []);
             setRows(theData);
@@ -147,7 +148,51 @@ import React, {useState,
 
         setLoading(false);
     }
+    const getStatusEmp = (data,statusKaryawanOptions) => {
+        if(data !== ''){
+            let cek = data.includes('|');
+            if(cek){
+                let arr = data.split('|');
+                let oldVal = arr[0];
+                let OldNew = arr[1];
 
+                let listfilterOld = statusKaryawanOptions.filter(output => output.code == oldVal);
+                if(listfilterOld.length > 0){
+                    oldVal = listfilterOld[0].codename;
+                }
+
+                let listfilterNew = statusKaryawanOptions.filter(output => output.code == OldNew);
+                if(listfilterNew.length > 0){
+                    OldNew = listfilterNew[0].codename;
+                }
+
+                return oldVal +' > '+OldNew
+            }else{
+                let listfilter = statusKaryawanOptions.filter(output => output.code == data);
+                if(listfilter.length > 0){
+                    return listfilter[0].codename;
+                }
+
+                return data;
+            }
+        }
+        return '';
+    }
+
+    const getGaji = (data) => {
+        if(data !== ''){
+            let cek = data.includes('|');
+            if(cek){
+                let arr = data.split('|');
+                let oldVal = arr[0];
+                let OldNew = arr[1];
+                return numToMoney(parseFloat(oldVal)) +' > '+numToMoney(parseFloat(OldNew))
+            }else{
+                return numToMoney(parseFloat(data));
+            }
+        }
+        return '';
+    }
     const getOptionsParameter = (data,action) => {
         let list = [];
         if(action == 'STATUSKARYAWAN'){
@@ -312,7 +357,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_DATE_OF_BIRTH')}</span>
                                 <strong className="col-md-7">
-                                {value.tanggallahir?moment (new Date(value.tanggallahir)).format('DD MMMM YYYY'):''}
+                                {value.tanggallahir?moment (new Date(value.tanggallahir)).format(formatdate):''}
                                 </strong>
                             </div>
 
@@ -330,7 +375,7 @@ import React, {useState,
                                 </strong>
                             </div>
 
-                            <div hidden={value.status? (value.status == 'MENIKAH') :true}>
+                            <div hidden={value.status? !(value.status == 'MENIKAH') :true}>
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_COUPLE_NAME')}</span>
                                 <strong className="col-md-7">
@@ -341,7 +386,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_COUPLE_BIRTH_DATE')}</span>
                                 <strong className="col-md-7">
-                                {value.tanggallahirpasangan?moment (new Date(value.tanggallahirpasangan)).format('DD MMMM YYYY'):''}
+                                {value.tanggallahirpasangan?moment (new Date(value.tanggallahirpasangan)).format(formatdate):''}
                                 </strong>
                             </div>
 
@@ -371,14 +416,14 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_START_DATE')}</span>
                                 <strong className="col-md-7">
-                                {value.tanggalmulai?moment (new Date(value.tanggalmulai)).format('DD MMMM YYYY'):''}
+                                {value.tanggalmulai?moment (new Date(value.tanggalmulai)).format(formatdate):''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_RESIGN_DATE')}</span>
                                 <strong className="col-md-7">
-                                {value.tanggalresign?moment (new Date(value.tanggalresign)).format('DD MMMM YYYY'):''}
+                                {value.tanggalresign?moment (new Date(value.tanggalresign)).format(formatdate):''}
                                 </strong>
                             </div>
 
@@ -430,24 +475,35 @@ import React, {useState,
                 }
 
 
-            <div className="table-responsive">
-            <div><h3>{i18n.t('History')}</h3></div>
-            <Grid
-                rows={rows}
-                columns={columns}
-                totalCounts={rows.length}
-                loading={loading}
-                columnextension={tableColumnExtensions}
-                permissionadd={true}
-                onclickadd={onClickAdd}
-                permissionview={true}
-                onclickview={onClickView}
-                listfilterdisabled={['tanggal','statusemployee','gaji']}
-            />
-            </div>
+            
 
             </Card>
             </Container>
+            
+            {
+                value.historyEmployee?
+                (
+                    <Container fluid className="center-parent">
+                    <div className="table-responsive">
+                    <div><h3>{i18n.t('History')}</h3></div>
+                    <Grid
+                        rows={rows}
+                        columns={columns}
+                        totalCounts={rows.length}
+                        loading={loading}
+                        columnextension={tableColumnExtensions}
+                        permissionadd={true}
+                        onclickadd={onClickAdd}
+                        permissionview={true}
+                        onclickview={onClickView}
+                        listfilterdisabled={['tanggal','statusemployee','gaji']}
+                    />
+                    </div>
+                    </Container>
+                ):''
+            }
+            
+           
 
             <div className={classes.root}>
         <Paper className={classes.paper}>

@@ -16,6 +16,7 @@ import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { addBankAccount_Permission } from '../../shared/permissionMenu';
 import * as pathmenu           from '../../shared/pathMenu';
 import "react-widgets/dist/css/react-widgets.css";
+import { formatdate } from '../../shared/constantValue';
 
 export default function AddBankAccount(props) {
     reloadToHomeNotAuthorize(addBankAccount_Permission,'TRANSACTION');
@@ -71,7 +72,7 @@ export default function AddBankAccount(props) {
 
     const handleDateOpen = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
-        setInputDateOpen(moment(data, "DD MMMM YYYY").toDate())
+        setInputDateOpen(moment(data, formatdate).toDate())
     }
 
     const checkColumnMandatory = () => {
@@ -266,7 +267,7 @@ export default function AddBankAccount(props) {
                                     onChange={val => handleDateOpen(val)}
                                     onBlur={handleBlur}
                                     // defaultValue={Date(moment([]))}
-                                    format={'DD MMMM YYYY'}
+                                    format={formatdate}
                                     value={values.dateopen}
                                     // style={{width: '25%'}}
                                     // disabled={ values.allmember}                                    

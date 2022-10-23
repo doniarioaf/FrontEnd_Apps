@@ -28,6 +28,7 @@ import React, {useState,
   import { editWorkOrder_Permission,deleteWorkOrder_Permission,MenuWorkOrder } from '../../../shared/permissionMenu';
   import moment                       from "moment/moment";
   import '../../../CSS/table.css';
+  import { formatdate } from '../../../shared/constantValue';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -202,7 +203,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_DATE')}</span>
                             <strong className="col-md-7">
-                            {value.tanggal?moment (new Date(value.tanggal)).format('DD MMMM YYYY'):''}
+                            {value.tanggal?moment (new Date(value.tanggal)).format(formatdate):''}
                             </strong>
                             </div>
 
@@ -244,14 +245,14 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('ETD')}</span>
                             <strong className="col-md-7">
-                            {value.etd?moment (new Date(value.etd)).format('DD MMMM YYYY'):''}
+                            {value.etd?moment (new Date(value.etd)).format(formatdate):''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('ETA')}</span>
                             <strong className="col-md-7">
-                            {value.eta?moment (new Date(value.eta)).format('DD MMMM YYYY'):''}
+                            {value.eta?moment (new Date(value.eta)).format(formatdate):''}
                             </strong>
                             </div>
 
@@ -293,7 +294,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_NOPEN_DATE')}</span>
                             <strong className="col-md-7">
-                            {value.tanggalnopen?moment (new Date(value.tanggalnopen)).format('DD MMMM YYYY'):''}
+                            {value.tanggalnopen?moment (new Date(value.tanggalnopen)).format(formatdate):''}
                             </strong>
                             </div>
 
@@ -307,7 +308,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_BL_DATE')}</span>
                             <strong className="col-md-7">
-                            {value.tanggalbl?moment (new Date(value.tanggalbl)).format('DD MMMM YYYY'):''}
+                            {value.tanggalbl?moment (new Date(value.tanggalbl)).format(formatdate):''}
                             </strong>
                             </div>
 
@@ -349,7 +350,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_SPPB_NPE_DATE')}</span>
                             <strong className="col-md-7">
-                            {value.tanggalsppb_npe?moment (new Date(value.tanggalsppb_npe)).format('DD MMMM YYYY'):''}
+                            {value.tanggalsppb_npe?moment (new Date(value.tanggalsppb_npe)).format(formatdate):''}
                             </strong>
                             </div>
 

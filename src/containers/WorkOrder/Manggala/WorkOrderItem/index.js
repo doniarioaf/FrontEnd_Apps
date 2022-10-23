@@ -10,6 +10,7 @@ import * as actions                 from '../../../../store/actions';
 import * as pathmenu           from '../../../shared/pathMenu';
 import { reloadToHomeNotAuthorize,isGetPermissions } from '../../../shared/globalFunc';
 import { MenuWorkOrder,addWorkOrder_Permission } from '../../../shared/permissionMenu';
+import { formatdate } from '../../../shared/constantValue';
 import {useHistory}                 from 'react-router-dom';
 import moment                       from "moment/moment";
 
@@ -44,7 +45,7 @@ const MenuIndex = () => {
                     'nodocument':el.nodocument?el.nodocument:'',
                     'customer': el.namaCustomer ?el.namaCustomer:'',
                     'status':el.status?el.status:'',
-                    'tanggal': el.tanggal?moment (new Date(el.tanggal)).format('DD MMMM YYYY'):''
+                    'tanggal': el.tanggal?moment (new Date(el.tanggal)).format(formatdate):''
                 }
             ], []);
             setRows(theData);
