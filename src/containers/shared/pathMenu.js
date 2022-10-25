@@ -101,3 +101,5 @@ export const detailWorkOrder = `/form/detail/workorder`;
 export const editWorkOrder = `/form/edit/workorder`;
 export const menuSuratJalan = `/suratjalan`;
 export const addSuratJalan = `/form/add/suratjalan`;
+export const detailSuratJalan = `/form/detail/suratjalan`;
+export const editSuratJalan = `/form/edit/suratjalan`;

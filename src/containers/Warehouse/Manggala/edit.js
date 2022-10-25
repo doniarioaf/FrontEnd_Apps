@@ -97,7 +97,7 @@ export default function EditWarehouse(props) {
             }
 
             let listcontacthp = [];
-            if(det.contactnumber){
+            if(det.contacthp){
                 let cek = new String(det.contacthp).includes(',');
                 if(cek){
                     let arrList = new String(det.contacthp).split(',');

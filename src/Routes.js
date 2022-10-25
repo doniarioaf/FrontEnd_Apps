@@ -247,6 +247,8 @@ const editWorkOrder = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrd
 
 const menuSuratJalan = lazy(() => import('./containers/SuratJalan'));
 const addSuratJalan = lazy(() => import('./containers/SuratJalan/addSuratJalan'));
+const detailSuratJalan = lazy(() => import('./containers/SuratJalan/detail'));
+const editSuratJalan = lazy(() => import('./containers/SuratJalan/editSuratJalan'));
 
 // List of routes that uses the page layout
 // listed here to Switch between layouts
@@ -499,8 +501,8 @@ const Routes = ({ location, ...props }) => {
 
                             <Route path={pathmenu.menuSuratJalan} component={waitFor(menuSuratJalan)}/>
                             <Route path={pathmenu.addSuratJalan} component={waitFor(addSuratJalan)}/>
-                            
-                            
+                            <Route path={pathmenu.detailSuratJalan+'/:id'} component={waitFor(detailSuratJalan)}/>
+                            <Route path={pathmenu.editSuratJalan+'/:id'} component={waitFor(editSuratJalan)}/>
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>

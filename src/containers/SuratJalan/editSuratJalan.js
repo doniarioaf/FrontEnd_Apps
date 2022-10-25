@@ -3,6 +3,7 @@ import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../components/Layout/ContentHeading';
+import DragDrop                     from '../../components/DragDrops/DragDrop';
 // import {Input,Button,FormGroup,Label} from 'reactstrap';
 import {Input,Button,Label,FormGroup,Container} from 'reactstrap';
 import * as actions                 from '../../store/actions';
@@ -11,7 +12,7 @@ import { Loading } from '../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import { reloadToHomeNotAuthorize } from '../shared/globalFunc';
-import { addSuratJalan_Permission} from '../shared/permissionMenu';
+import { editSuratJalan_Permission} from '../shared/permissionMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
 import {DatePicker}      from 'react-widgets';
@@ -23,17 +24,18 @@ import '../CSS/table.css';
 import { formatdate } from '../shared/constantValue';
 
 export default function MenuAdd(props) {
-    reloadToHomeNotAuthorize(addSuratJalan_Permission,'TRANSACTION');
+    reloadToHomeNotAuthorize(editSuratJalan_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     momentLocalizer();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
 
-    const [InputTanggal] = useState(new Date());
+    const [InputTanggal,SetInputTanggal] = useState(new Date());
 
     const [ListWorkOrder, setListWorkOrder] = useState([]);
     const [SelWorkOrder, setSelWorkOrder] = useState('');
+    const [SelWorkOrderTable, setSelWorkOrderTable] = useState('');
     const [ErrSelWorkOrder, setErrSelWorkOrder] = useState('');
 
     const [InputCustomerID, setInputCustomerID] = useState('');
@@ -54,6 +56,7 @@ export default function MenuAdd(props) {
 
     const [ListContainer, setListContainer] = useState([]);
     const [SelContainer, setSelContainer] = useState('');
+    const [SelContainerTable, setSelContainerTable] = useState('');
     const [ErrSelContainer, setErrSelContainer] = useState('');
 
     const [InputPartai, setInputPartai] = useState('');
@@ -63,25 +66,93 @@ export default function MenuAdd(props) {
     const [InputKeterangan, setInputKeterangan] = useState('');
     const [InputCatatan, setInputCatatan] = useState('');
 
+    const [InputNoDoc, setInputNoDoc] = useState('');
+
     const [InputIsActive, setInputIsActive] = useState(true);
+
+    const id = props.match.params.id;
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getSuratJalanData('/template',successHandlerTemplate, errorHandler));
+        dispatch(actions.getSuratJalanData('/template/'+id,successHandlerTemplate, errorHandler));
     }, []);
 
     const successHandlerTemplate = (data) =>{
         if(data.data){
-            setListWorkOrder(data.data.woOptions.reduce((obj, el) => (
+            let det = data.data;
+            let template = det.template;
+
+            setInputNoDoc(det.nodocument?det.nodocument:'');
+            SetInputTanggal(det.tanggal?moment(new Date(det.tanggal), formatdate).toDate():new Date());
+            setSelWorkOrder(det.idworkorder?det.idworkorder:'');
+            setSelWorkOrderTable(det.idworkorder?det.idworkorder:'');
+            setInputCustomerID(det.idcustomer?det.idcustomer:'');
+            setInputCustomer(det.namacustomer?det.namacustomer:'');
+            setInputKeterangan(det.keterangan?det.keterangan:'');
+            setSelWarehouse(det.idwarehouse?det.idwarehouse:'');
+            // setInputListContactNumber(det.warehousecontactname?det.warehousecontactname:'');
+            let listcontactnumber = [];
+            if(det.warehousecontactname){
+                let cek = new String(det.warehousecontactname).includes(',');
+                if(cek){
+                    let arrList = new String(det.warehousecontactname).split(',');
+                    for(let i=0; i < arrList.length; i++){
+                        listcontactnumber.push({ contactnumber: arrList[i]});
+                    }
+                }else{
+                    listcontactnumber.push({ contactnumber: det.warehousecontactname});
+                }
+                if(listcontactnumber.length > 0){
+                    setInputListContactNumber(listcontactnumber);
+                }
+                
+            }
+
+            // setInputListContactHp(det.warehousecontactno?det.warehousecontactno:'');
+
+            let listcontacthp = [];
+            if(det.warehousecontactno){
+                let cek = new String(det.warehousecontactno).includes(',');
+                if(cek){
+                    let arrList = new String(det.warehousecontactno).split(',');
+                    for(let i=0; i < arrList.length; i++){
+                        listcontacthp.push({ contacthp: arrList[i]});
+                    }
+                }else{
+                    listcontacthp.push({ contacthp: det.warehousecontactno});
+                }
+                if(listcontacthp.length > 0){
+                    setInputListContactHp(listcontacthp);
+                }
+                
+            }
+
+            setInputContactAddress(det.warehouseaddress?det.warehouseaddress:'');
+            setInputCatatan(det.catatan?det.catatan:'');
+            setInputNoBL(det.noblWO?det.noblWO:'');
+            setInputNoAju(det.noajuWO?det.noajuWO:'');
+            setInputBarang(det.namacargoWO?det.namacargoWO:'');
+            setSelContainer(det.nocantainer?det.nocantainer:'');
+            setSelContainerTable(det.nocantainer?det.nocantainer:'');
+            setInputPartai(det.containerpartai?det.containerpartai:'');
+            setInputKoli(det.containerjumlahkoli?det.containerjumlahkoli:'');
+            setInputKg(det.containerjumlahkg?det.containerjumlahkg:'');
+            
+
+            setListWorkOrder(template.woOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nodocument+' - '+el.namaCustomer+' - '+el.namacargo,
                     dataval:el
                 }]
             ), []));
+            
+            let nocontainer = det.nocantainer?det.nocantainer:'0';
+            dispatch(actions.getWorkOrderData('/listcontainer/'+det.idworkorder+'/'+nocontainer,successHandlerContainer, errorHandler));
+            dispatch(actions.getCustomerManggalaData('/warehouse/'+det.idcustomer,successHandlerWarehouse, errorHandler));
         }
 
-        setLoading(false);
+        // setLoading(false);
     }
 
     const handleChangeContainer = (data) =>{
@@ -117,7 +188,13 @@ export default function MenuAdd(props) {
         setInputKg('');
 
         setLoading(true);
-        dispatch(actions.getWorkOrderData('/listcontainer/'+id+'/0',successHandlerContainer, errorHandler));
+
+        if(SelWorkOrderTable == id){
+            dispatch(actions.getWorkOrderData('/listcontainer/'+id+'/'+SelContainerTable,successHandlerContainer, errorHandler));
+        }else{
+            dispatch(actions.getWorkOrderData('/listcontainer/'+id+'/0',successHandlerContainer, errorHandler));
+        }
+        
         dispatch(actions.getCustomerManggalaData('/warehouse/'+dataval.idcustomer,successHandlerWarehouse, errorHandler));
     }
     const successHandlerContainer = (data) =>{
@@ -256,7 +333,7 @@ export default function MenuAdd(props) {
             obj.catatan = InputCatatan;
             obj.nocantainer = SelContainer;
             obj.isactive = InputIsActive;
-            dispatch(actions.submitAddSuratJalan('',obj,succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitEditSuratJalan('/'+id,obj,succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -327,7 +404,7 @@ export default function MenuAdd(props) {
                     return(
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormMenuAdd">
                             <ContentWrapper>
-                            <ContentHeading history={history} link={pathmenu.addSuratJalan} label={'Add Surat Jalan'} labeldefault={'Add Surat Jalan'} />
+                            <ContentHeading history={history} link={pathmenu.editSuratJalan} label={'Edit Surat Jalan'} labeldefault={'Edit Surat Jalan'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="tanggal">

@@ -9,11 +9,11 @@ import Swal                         from 'sweetalert2';
 import * as actions                 from '../../store/actions';
 import * as pathmenu           from '../shared/pathMenu';
 import { reloadToHomeNotAuthorize,isGetPermissions } from '../shared/globalFunc';
-import { MenuPriceList,addPriceList_Permission } from '../shared/permissionMenu';
+import { MenuSuratJalan,addSuratJalan_Permission } from '../shared/permissionMenu';
 import {useHistory}                 from 'react-router-dom';
 
 const MenuIndex = () => {
-    reloadToHomeNotAuthorize(MenuPriceList,'READ');
+    reloadToHomeNotAuthorize(MenuSuratJalan,'READ');
     const history = useHistory();
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
@@ -67,12 +67,12 @@ const MenuIndex = () => {
         history.push(pathmenu.addSuratJalan);
     }
     function onClickView(id) {
-        history.push(pathmenu.detailpricelist+'/'+id);
+        history.push(pathmenu.detailSuratJalan+'/'+id);
     }
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuPriceList} label={'Surat Jalan'} labeldefault={'Surat Jalan'} />
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuSuratJalan} label={'Surat Jalan'} labeldefault={'Surat Jalan'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -84,9 +84,9 @@ const MenuIndex = () => {
                 totalCounts={rows.length}
                 loading={loading}
                 columnextension={tableColumnExtensions}
-                permissionadd={!isGetPermissions(addPriceList_Permission,'TRANSACTION')}
+                permissionadd={!isGetPermissions(addSuratJalan_Permission,'TRANSACTION')}
                 onclickadd={onClickAdd}
-                permissionview={!isGetPermissions(MenuPriceList,'READ')}
+                permissionview={!isGetPermissions(MenuSuratJalan,'READ')}
                 onclickview={onClickView}
             />
             </div>
