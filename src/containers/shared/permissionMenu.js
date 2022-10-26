@@ -101,6 +101,7 @@ export const addSuratJalan_Permission = ['READ_SURATJALAN','CREATE_SURATJALAN','
 export const editSuratJalan_Permission = ['READ_SURATJALAN','EDIT_SURATJALAN','READ_WORKORDER','READ_CUSTOMER_MANGGALA'];
 export const deleteSuratJalan_Permission = ['DELETE_SURATJALAN'];
 export const editStatusSuratJalan_Permission = ['EDIT_STATUS_SURATJALAN'];
+export const printSuratJalan_Permission = ['READ_PRINT_SURATJALAN'];
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];

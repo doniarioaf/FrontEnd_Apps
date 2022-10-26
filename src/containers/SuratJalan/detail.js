@@ -25,7 +25,7 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../components/Common/Loading';
   import { isGetPermissions,reloadToHomeNotAuthorize } from '../shared/globalFunc';
-  import { editSuratJalan_Permission,deleteSuratJalan_Permission,editStatusSuratJalan_Permission,MenuSuratJalan } from '../shared/permissionMenu';
+  import { printSuratJalan_Permission,editSuratJalan_Permission,deleteSuratJalan_Permission,editStatusSuratJalan_Permission,MenuSuratJalan } from '../shared/permissionMenu';
   import { formatdate,formatdatetime } from '../shared/constantValue';
   import moment                       from "moment/moment";
    
@@ -543,9 +543,10 @@ const StyledDialog = styled(Dialog)`
                     {
                         isprint ? 
                         (<div>
-                            {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
+                            {/* <MenuItem hidden={!isGetPermissions(editSuratJalan_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.printSuratJalan+'/'+id)}>{i18n.t('Surat Jalan')}</MenuItem> */}
                         </div>)
                         :(<div>
+                            <MenuItem hidden={!isGetPermissions(printSuratJalan_Permission,'READ')}  onClick={() => history.push(pathmenu.printSuratJalan+'/'+id)}>{i18n.t('Print Surat Jalan')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editStatusSuratJalan_Permission,'TRANSACTION')} onClick={() => setShowStatus(true)} >{i18n.t('Change Status')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editSuratJalan_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editSuratJalan+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteSuratJalan_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
