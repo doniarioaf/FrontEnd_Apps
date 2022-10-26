@@ -435,7 +435,7 @@ import React, {useState,
                     <th>{i18n.t('label_SEND_AREA')}</th>
                     <th>{i18n.t('label_ADDRESS')}</th>
                     <th>{i18n.t('Ancer Ancer')}</th>
-                    <th>{i18n.t('label_CONTACT_NUMBER')}</th>
+                    <th>{i18n.t('label_CONTACT_NAME')}</th>
                     <th>{i18n.t('label_CONTACT_NUMBER')+'(HP)'}</th>
                     <th>{i18n.t('label_NOTE')}</th>
                     </tr>

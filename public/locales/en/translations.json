@@ -119,6 +119,7 @@
   "label_BL_DATE": "BL Date",
   "label_VOYAGE_NUMBER": "Voyage Number",
   "label_SPPB_NPE_DATE": "SPPB/NPE Date",
+  "label_WAREHOUSE_ADDRESS":"Warehouse Address",
   "validation": {
     "employeemanggala":{
       "noidentitas":{

@@ -97,6 +97,12 @@ export const addWorkOrder_Permission = ['READ_WORKORDER','CREATE_WORKORDER'];
 export const editWorkOrder_Permission = ['READ_WORKORDER','EDIT_WORKORDER'];
 export const deleteWorkOrder_Permission = ['DELETE_WORKORDER'];
 
+export const addSuratJalan_Permission = ['READ_SURATJALAN','CREATE_SURATJALAN','READ_WORKORDER','READ_CUSTOMER_MANGGALA'];
+export const editSuratJalan_Permission = ['READ_SURATJALAN','EDIT_SURATJALAN','READ_WORKORDER','READ_CUSTOMER_MANGGALA'];
+export const deleteSuratJalan_Permission = ['DELETE_SURATJALAN'];
+export const editStatusSuratJalan_Permission = ['EDIT_STATUS_SURATJALAN'];
+export const printSuratJalan_Permission = ['READ_PRINT_SURATJALAN'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -127,3 +133,4 @@ export const MenuInvoiceType = ['READ_INVOICETYPE'];
 export const MenuPriceList = ['READ_PRICELIST'];
 export const MenuPaymentType = ['READ_PAYMENTTYPE'];
 export const MenuWorkOrder = ['READ_WORKORDER'];
+export const MenuSuratJalan = ['READ_SURATJALAN'];

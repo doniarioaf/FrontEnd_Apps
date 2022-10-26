@@ -27,6 +27,7 @@ import React, {useState,
   import {Loading}                    from '../../../components/Common/Loading';
   import { isGetPermissions,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { deleteBankAccount_Permission,editBankAccount_Permission,MenuBankAccount } from '../../shared/permissionMenu';
+  import { formatdate } from '../../shared/constantValue';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -202,7 +203,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_OPENING_DATE')}</span>
                                 <strong className="col-md-7">
-                                {value.dateopen?moment (new Date(value.dateopen)).format('DD MMMM YYYY'):''}
+                                {value.dateopen?moment (new Date(value.dateopen)).format(formatdate):''}
                                 </strong>
                             </div>
 

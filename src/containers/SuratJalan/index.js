@@ -1,31 +1,30 @@
 import React, {useState, useEffect} from 'react';
 import {Container, Card, CardBody}  from 'reactstrap';
 import {useTranslation}      from 'react-i18next';
-import Grid                         from '../../../../components/TableGrid';
-import ContentWrapper               from '../../../../components/Layout/ContentWrapper';
-import ContentHeading               from '../../../../components/Layout/ContentHeading';
+import Grid                         from '../../components/TableGrid';
+import ContentWrapper               from '../../components/Layout/ContentWrapper';
+import ContentHeading               from '../../components/Layout/ContentHeading';
 import {useDispatch}   from 'react-redux';
 import Swal                         from 'sweetalert2';
-import * as actions                 from '../../../../store/actions';
-import * as pathmenu           from '../../../shared/pathMenu';
-import { reloadToHomeNotAuthorize,isGetPermissions } from '../../../shared/globalFunc';
-import { MenuWorkOrder,addWorkOrder_Permission } from '../../../shared/permissionMenu';
-import { formatdate } from '../../../shared/constantValue';
+import * as actions                 from '../../store/actions';
+import * as pathmenu           from '../shared/pathMenu';
+import { reloadToHomeNotAuthorize,isGetPermissions } from '../shared/globalFunc';
+import { MenuSuratJalan,addSuratJalan_Permission } from '../shared/permissionMenu';
 import {useHistory}                 from 'react-router-dom';
-import moment                       from "moment/moment";
 
 const MenuIndex = () => {
-    reloadToHomeNotAuthorize(MenuWorkOrder,'READ');
+    reloadToHomeNotAuthorize(MenuSuratJalan,'READ');
     const history = useHistory();
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
         {name: 'id', title: 'id'},
-        {name: 'nodocument', title: i18n.t('No Document')},
-        {name: 'customer', title: i18n.t('Customer')},
+        // {name: 'code', title: i18n.t('Code')},
+        {name: 'nodocument', title: i18n.t('label_NO_DOCUMENT')},
+        {name: 'customer', title: i18n.t('label_CUSTOMER')},
+        {name: 'nocontainer', title: i18n.t('No Container')},
+        {name: 'namacargo', title: i18n.t('Nama Cargo')},
         {name: 'status', title: i18n.t('Status')},
-        {name: 'tanggal', title: i18n.t('Tanggal')},
-        // {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -33,7 +32,7 @@ const MenuIndex = () => {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getWorkOrderData('',successHandler, errorHandler));
+        dispatch(actions.getSuratJalanData('',successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
@@ -42,10 +41,12 @@ const MenuIndex = () => {
                 ...obj,
                 {
                     'id': el.id,
-                    'nodocument':el.nodocument?el.nodocument:'',
-                    'customer': el.namaCustomer ?el.namaCustomer:'',
-                    'status':el.status?el.status:'',
-                    'tanggal': el.tanggal?moment (new Date(el.tanggal)).format(formatdate):''
+                    // 'code':el.code?el.code:'',
+                    'nodocument': el.nodocument ?el.nodocument:'',
+                    'customer':el.namacustomer?el.namacustomer:'',
+                    'nocontainer':el.nocantainer?el.nocantainer:'',
+                    'namacargo':el.namacargoWO?el.namacargoWO:'',
+                    'status':el.statusname?el.statusname:''
                 }
             ], []);
             setRows(theData);
@@ -63,15 +64,15 @@ const MenuIndex = () => {
     }
 
     function onClickAdd() {
-        history.push(pathmenu.addWorkOrder);
+        history.push(pathmenu.addSuratJalan);
     }
     function onClickView(id) {
-        history.push(pathmenu.detailWorkOrder+'/'+id);
+        history.push(pathmenu.detailSuratJalan+'/'+id);
     }
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuWorkOrder} label={'Work Order Item'} labeldefault={'Work Order Item'} />
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuSuratJalan} label={'Surat Jalan'} labeldefault={'Surat Jalan'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -83,9 +84,9 @@ const MenuIndex = () => {
                 totalCounts={rows.length}
                 loading={loading}
                 columnextension={tableColumnExtensions}
-                permissionadd={!isGetPermissions(addWorkOrder_Permission,'TRANSACTION')}
+                permissionadd={!isGetPermissions(addSuratJalan_Permission,'TRANSACTION')}
                 onclickadd={onClickAdd}
-                permissionview={!isGetPermissions(MenuWorkOrder,'READ')}
+                permissionview={!isGetPermissions(MenuSuratJalan,'READ')}
                 onclickview={onClickView}
             />
             </div>
@@ -94,7 +95,6 @@ const MenuIndex = () => {
             </Card>
             </Container>
         </ContentWrapper>
-        
     );
 };
 export default MenuIndex;

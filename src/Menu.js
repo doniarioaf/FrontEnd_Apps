@@ -168,6 +168,12 @@ const handleMenu = () => {
                     path: pathmenu.menuWorkOrder,
                     translate: 'Work Order',
                     permission:permissionmenu.MenuWorkOrder,
+                },
+                {
+                    name: 'Surat Jalan',
+                    path: pathmenu.menuSuratJalan,
+                    translate: 'Surat Jalan',
+                    permission:permissionmenu.MenuSuratJalan,
                 }
             ]
         },

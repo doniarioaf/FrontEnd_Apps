@@ -16,7 +16,7 @@ import { addWorkOrder_Permission} from '../../../shared/permissionMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
 import {DatePicker}      from 'react-widgets';
-
+import { formatdate} from '../../../shared/constantValue';
 import * as pathmenu           from '../../../shared/pathMenu';
 import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
@@ -25,6 +25,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
 import '../../../CSS/table.css';
+
 
 import SearchIcon from '@material-ui/icons/Search';
 import FormSearch from '../../../../components/FormSearch';
@@ -197,7 +198,7 @@ export default function AddForm(props) {
     const handleChangeETD = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
-            setInputETD(moment(data, "DD MMMM YYYY").toDate())
+            setInputETD(moment(data, formatdate).toDate())
         }else{
             setInputETD(null)
         }
@@ -207,7 +208,7 @@ export default function AddForm(props) {
     const handleChangeETA = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
-            setInputETA(moment(data, "DD MMMM YYYY").toDate())
+            setInputETA(moment(data, formatdate).toDate())
         }else{
             setInputETA(null)
         }
@@ -246,7 +247,7 @@ export default function AddForm(props) {
     const handleChangeTanggalNopen = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
-            setInputTanggalNopen(moment(data, "DD MMMM YYYY").toDate())
+            setInputTanggalNopen(moment(data, formatdate).toDate())
         }else{
             setInputTanggalNopen(null)
         }
@@ -263,7 +264,7 @@ export default function AddForm(props) {
     const handleChangeTanggalBL = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
-            setInputTanggalBL(moment(data, "DD MMMM YYYY").toDate())
+            setInputTanggalBL(moment(data, formatdate).toDate())
         }else{
             setInputTanggalBL(null)
         }
@@ -300,7 +301,7 @@ export default function AddForm(props) {
     const handleChangeTanggalSppbNpe = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
-            setInputTanggalSppbNPE(moment(data, "DD MMMM YYYY").toDate())
+            setInputTanggalSppbNPE(moment(data, formatdate).toDate())
         }else{
             setInputTanggalSppbNPE(null)
         }
@@ -693,7 +694,7 @@ export default function AddForm(props) {
                                     // onChange={val => handleTanggalLahir(val)}
                                     onBlur={handleBlur}
                                     // defaultValue={Date(moment([]))}
-                                    format={'DD MMMM YYYY'}
+                                    format={formatdate}
                                     value={values.tanggal}
                                     // style={{width: '25%'}}
                                     disabled={true}                       
@@ -839,7 +840,7 @@ export default function AddForm(props) {
                                     onChange={val => handleChangeETD(val)}
                                     onBlur={handleBlur}
                                     // defaultValue={Date(moment([]))}
-                                    format={'DD MMMM YYYY'}
+                                    format={formatdate}
                                     value={values.etd}
                                                   
                             />
@@ -858,7 +859,7 @@ export default function AddForm(props) {
                                     onChange={val => handleChangeETA(val)}
                                     onBlur={handleBlur}
                                     // defaultValue={Date(moment([]))}
-                                    format={'DD MMMM YYYY'}
+                                    format={formatdate}
                                     value={values.eta}
                                                   
                             />
@@ -1000,7 +1001,7 @@ export default function AddForm(props) {
                                                 onChange={val => handleChangeTanggalNopen(val)}
                                                 onBlur={handleBlur}
                                                 // defaultValue={Date(moment([]))}
-                                                format={'DD MMMM YYYY'}
+                                                format={formatdate}
                                                 value={values.tanggalnopen}
                                                             
                                         />
@@ -1056,7 +1057,7 @@ export default function AddForm(props) {
                                                 onChange={val => handleChangeTanggalBL(val)}
                                                 onBlur={handleBlur}
                                                 // defaultValue={Date(moment([]))}
-                                                format={'DD MMMM YYYY'}
+                                                format={formatdate}
                                                 value={values.tanggalbl}
                                                             
                                         />
@@ -1213,7 +1214,7 @@ export default function AddForm(props) {
                                             onChange={val => handleChangeTanggalSppbNpe(val)}
                                             onBlur={handleBlur}
                                             // defaultValue={Date(moment([]))}
-                                            format={'DD MMMM YYYY'}
+                                            format={formatdate}
                                             value={values.tanggalsppbnpe}
                                                         
                                         />

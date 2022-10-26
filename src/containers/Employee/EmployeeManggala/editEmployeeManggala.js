@@ -25,6 +25,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import { IconButton } from '@material-ui/core';
 import '../../CSS/table.css';
 import { numToMoney } from '../../shared/globalFunc';
+import { formatdate } from '../../shared/constantValue';
 
 export default function EditEmployeeManggala(props) {
     reloadToHomeNotAuthorize(editEmployeeManggala_Permission,'TRANSACTION');
@@ -125,15 +126,15 @@ export default function EditEmployeeManggala(props) {
             setInputName(det.nama);
             setInputNoIdentitas(det.noidentitas);
             setInputAlamat(det.alamat);
-            setInputTanggalLahir(det.tanggallahir?moment(new Date(det.tanggallahir), "DD MMMM YYYY").toDate():null);
+            setInputTanggalLahir(det.tanggallahir?moment(new Date(det.tanggallahir), formatdate).toDate():null);
             setSelStatus(det.status);
             setInputNamePasangan(det.namapasangan);
-            setInputTanggalLahirPasangan(det.tanggallahirpasangan?moment(new Date(det.tanggallahirpasangan), "DD MMMM YYYY").toDate():null);
+            setInputTanggalLahirPasangan(det.tanggallahirpasangan?moment(new Date(det.tanggallahirpasangan), formatdate).toDate():null);
             setInputBank(det.namabank);
             setInputNoRek(det.norekening);
             setInputAtasNama(det.atasnama);
-            setInputTanggalMulai(det.tanggalmulai?moment(new Date(det.tanggalmulai), "DD MMMM YYYY").toDate():null);
-            setInputTanggalResign(det.tanggalresign?moment(new Date(det.tanggalresign), "DD MMMM YYYY").toDate():null);
+            setInputTanggalMulai(det.tanggalmulai?moment(new Date(det.tanggalmulai), formatdate).toDate():null);
+            setInputTanggalResign(det.tanggalresign?moment(new Date(det.tanggalresign), formatdate).toDate():null);
             setInputGaji(det.gaji);
             setSelJenisKelamin(det.jeniskelamin);
             setInputIsActive(det.isactive);
@@ -258,7 +259,7 @@ export default function EditEmployeeManggala(props) {
 
         const handleTanggalLahir = (data) =>{
             if(data !== null){
-                setInputTanggalLahir(moment(data, "DD MMMM YYYY").toDate());
+                setInputTanggalLahir(moment(data, formatdate).toDate());
             }else{
                 setInputTanggalLahir(null)
             }
@@ -266,7 +267,7 @@ export default function EditEmployeeManggala(props) {
 
         const handleTanggalLahirPasangan = (data) =>{
             if(data !== null){
-                setInputTanggalLahirPasangan(moment(data, "DD MMMM YYYY").toDate())
+                setInputTanggalLahirPasangan(moment(data, formatdate).toDate())
             }else{
                 setInputTanggalLahirPasangan(null)
             }
@@ -289,14 +290,14 @@ export default function EditEmployeeManggala(props) {
         }
         const handleTanggalMulai = (data) =>{
             if(data !== null){
-                setInputTanggalMulai(moment(data, "DD MMMM YYYY").toDate())
+                setInputTanggalMulai(moment(data, formatdate).toDate())
             }else{
                 setInputTanggalMulai(null)
             }
         }
         const handleTanggalResign = (data) =>{
             if(data !== null){
-                setInputTanggalResign(moment(data, "DD MMMM YYYY").toDate())
+                setInputTanggalResign(moment(data, formatdate).toDate())
             }else{
                 setInputTanggalResign(null)
             }   
@@ -806,7 +807,7 @@ export default function EditEmployeeManggala(props) {
                                         onChange={val => handleTanggalLahir(val)}
                                         onBlur={handleBlur}
                                         // defaultValue={Date(moment([]))}
-                                        format={'DD MMMM YYYY'}
+                                        format={formatdate}
                                         value={values.tanggallahir}
                                         // style={{width: '25%'}}
                                         // disabled={ values.allmember}                                    
@@ -897,7 +898,7 @@ export default function EditEmployeeManggala(props) {
                                         onChange={val => handleTanggalLahirPasangan(val)}
                                         onBlur={handleBlur}
                                         // defaultValue={Date(moment([]))}
-                                        format={'DD MMMM YYYY'}
+                                        format={formatdate}
                                         value={values.tanggallahirpasangan}
                                         // style={{width: '25%'}}
                                         // disabled={ values.allmember}                                    
@@ -978,7 +979,7 @@ export default function EditEmployeeManggala(props) {
                                         onChange={val => handleTanggalMulai(val)}
                                         onBlur={handleBlur}
                                         // defaultValue={Date(moment([]))}
-                                        format={'DD MMMM YYYY'}
+                                        format={formatdate}
                                         value={values.tanggalmulai}
                                         // style={{width: '25%'}}
                                         // disabled={ values.allmember}                                    
@@ -998,7 +999,7 @@ export default function EditEmployeeManggala(props) {
                                         onChange={val => handleTanggalResign(val)}
                                         onBlur={handleBlur}
                                         // defaultValue={Date(moment([]))}
-                                        format={'DD MMMM YYYY'}
+                                        format={formatdate}
                                         value={values.tanggalresign}
                                         // style={{width: '25%'}}
                                         // disabled={ values.allmember}                                    
@@ -1099,7 +1100,7 @@ export default function EditEmployeeManggala(props) {
                                                                     onChange={val => handleDatePickerChange(val,i,"tanggallahir")}
                                                                     onBlur={handleBlur}
                                                                     // defaultValue={Date(moment([]))}
-                                                                    format={'DD MMMM YYYY'}
+                                                                    format={formatdate}
                                                                     value={x.tanggallahir}
                                                                     // style={{width: '25%'}}
                                                                     // disabled={ values.allmember}                                    

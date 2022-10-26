@@ -16,6 +16,7 @@ import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { addBankAccount_Permission } from '../../shared/permissionMenu';
 import * as pathmenu           from '../../shared/pathMenu';
 import "react-widgets/dist/css/react-widgets.css";
+import { formatdate } from '../../shared/constantValue';
 
 export default function EditBankAccount(props) {
     reloadToHomeNotAuthorize(addBankAccount_Permission,'TRANSACTION');
@@ -285,7 +286,7 @@ export default function EditBankAccount(props) {
                                     onChange={val => handleDateOpen(val)}
                                     onBlur={handleBlur}
                                     // defaultValue={Date(moment([]))}
-                                    format={'DD MMMM YYYY'}
+                                    format={formatdate}
                                     value={values.dateopen}
                                     // style={{width: '25%'}}
                                     // disabled={ values.allmember}                                    

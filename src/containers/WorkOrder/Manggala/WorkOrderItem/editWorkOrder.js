@@ -15,7 +15,7 @@ import { editWorkOrder_Permission} from '../../../shared/permissionMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
 import {DatePicker}      from 'react-widgets';
-
+import { formatdate} from '../../../shared/constantValue';
 import * as pathmenu           from '../../../shared/pathMenu';
 import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
@@ -140,28 +140,28 @@ export default function EditForm(props) {
 
             setInputNoDoc(val.nodocument?val.nodocument:'');
             setInputStatus(val.status?val.status:'');
-            setInputTanggal(val.tanggal?moment(new Date(val.tanggal), "DD MMMM YYYY").toDate():null);
+            setInputTanggal(val.tanggal?moment(new Date(val.tanggal), formatdate).toDate():null);
             setInputCustomerID(val.idcustomer?val.idcustomer:'');
             setInputCustomer(val.namaCustomer?val.namaCustomer:'');
             setInputNamaCargo(val.namacargo?val.namacargo:'');
             setSelWoType(val.jeniswo?val.jeniswo:'');
             setSelModaTransport(val.modatransportasi?val.modatransportasi:'');
-            setInputETD(val.etd?moment(new Date(val.etd), "DD MMMM YYYY").toDate():null);
-            setInputETA(val.eta?moment(new Date(val.eta), "DD MMMM YYYY").toDate():null);
+            setInputETD(val.etd?moment(new Date(val.etd), formatdate).toDate():null);
+            setInputETA(val.eta?moment(new Date(val.eta), formatdate).toDate():null);
             setSelPortAsal(val.portasal?val.portasal:'');
             setSelPortTujuan(val.porttujuan?val.porttujuan:'');
             setSelJalur(val.jalur?val.jalur:'');
             setInputNoAju(val.noaju?val.noaju:'');
             setInputNoPen(val.nopen?val.nopen:'');
-            setInputTanggalNopen(val.tanggalnopen?moment(new Date(val.tanggalnopen), "DD MMMM YYYY").toDate():null);
+            setInputTanggalNopen(val.tanggalnopen?moment(new Date(val.tanggalnopen), formatdate).toDate():null);
             setInputNoBL(val.nobl?val.nobl:'');
-            setInputTanggalBL(val.tanggalbl?moment(new Date(val.tanggalbl), "DD MMMM YYYY").toDate():null);
+            setInputTanggalBL(val.tanggalbl?moment(new Date(val.tanggalbl), formatdate).toDate():null);
             setSelPelayaran(val.pelayaran?val.pelayaran:'');
             setSelImportir(val.importir?val.importir:'');
             setSelEksportir(val.eksportir?val.eksportir:'');
             setSelQQ(val.qq?val.qq:'');
             setInputVoyageNumber(val.voyagenumber?val.voyagenumber:'');
-            setInputTanggalSppbNPE(val.tanggalsppb_npe?moment(new Date(val.tanggalsppb_npe), "DD MMMM YYYY").toDate():null);
+            setInputTanggalSppbNPE(val.tanggalsppb_npe?moment(new Date(val.tanggalsppb_npe), formatdate).toDate():null);
             setInputDepo(val.depo?val.depo:'');
             setInputIsActive(val.isactive);
 
@@ -240,7 +240,7 @@ export default function EditForm(props) {
     const handleChangeETD = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
-            setInputETD(moment(data, "DD MMMM YYYY").toDate())
+            setInputETD(moment(data, formatdate).toDate())
         }else{
             setInputETD(null)
         }
@@ -250,7 +250,7 @@ export default function EditForm(props) {
     const handleChangeETA = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
-            setInputETA(moment(data, "DD MMMM YYYY").toDate())
+            setInputETA(moment(data, formatdate).toDate())
         }else{
             setInputETA(null)
         }
@@ -289,7 +289,7 @@ export default function EditForm(props) {
     const handleChangeTanggalNopen = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
-            setInputTanggalNopen(moment(data, "DD MMMM YYYY").toDate())
+            setInputTanggalNopen(moment(data, formatdate).toDate())
         }else{
             setInputTanggalNopen(null)
         }
@@ -306,7 +306,7 @@ export default function EditForm(props) {
     const handleChangeTanggalBL = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
-            setInputTanggalBL(moment(data, "DD MMMM YYYY").toDate())
+            setInputTanggalBL(moment(data, formatdate).toDate())
         }else{
             setInputTanggalBL(null)
         }
@@ -343,7 +343,7 @@ export default function EditForm(props) {
     const handleChangeTanggalSppbNpe = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
-            setInputTanggalSppbNPE(moment(data, "DD MMMM YYYY").toDate())
+            setInputTanggalSppbNPE(moment(data, formatdate).toDate())
         }else{
             setInputTanggalSppbNPE(null)
         }
@@ -756,7 +756,7 @@ export default function EditForm(props) {
                                     // onChange={val => handleTanggalLahir(val)}
                                     onBlur={handleBlur}
                                     // defaultValue={Date(moment([]))}
-                                    format={'DD MMMM YYYY'}
+                                    format={formatdate}
                                     value={values.tanggal}
                                     // style={{width: '25%'}}
                                     disabled={true}                       
@@ -902,7 +902,7 @@ export default function EditForm(props) {
                                     onChange={val => handleChangeETD(val)}
                                     onBlur={handleBlur}
                                     // defaultValue={Date(moment([]))}
-                                    format={'DD MMMM YYYY'}
+                                    format={formatdate}
                                     value={values.etd}
                                                   
                             />
@@ -921,7 +921,7 @@ export default function EditForm(props) {
                                     onChange={val => handleChangeETA(val)}
                                     onBlur={handleBlur}
                                     // defaultValue={Date(moment([]))}
-                                    format={'DD MMMM YYYY'}
+                                    format={formatdate}
                                     value={values.eta}
                                                   
                             />
@@ -1063,7 +1063,7 @@ export default function EditForm(props) {
                                                 onChange={val => handleChangeTanggalNopen(val)}
                                                 onBlur={handleBlur}
                                                 // defaultValue={Date(moment([]))}
-                                                format={'DD MMMM YYYY'}
+                                                format={formatdate}
                                                 value={values.tanggalnopen}
                                                             
                                         />
@@ -1119,7 +1119,7 @@ export default function EditForm(props) {
                                                 onChange={val => handleChangeTanggalBL(val)}
                                                 onBlur={handleBlur}
                                                 // defaultValue={Date(moment([]))}
-                                                format={'DD MMMM YYYY'}
+                                                format={formatdate}
                                                 value={values.tanggalbl}
                                                             
                                         />
@@ -1276,7 +1276,7 @@ export default function EditForm(props) {
                                             onChange={val => handleChangeTanggalSppbNpe(val)}
                                             onBlur={handleBlur}
                                             // defaultValue={Date(moment([]))}
-                                            format={'DD MMMM YYYY'}
+                                            format={formatdate}
                                             value={values.tanggalsppbnpe}
                                                         
                                         />
