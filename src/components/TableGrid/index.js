@@ -29,6 +29,7 @@ import IconView from '../../components/Icons/iconView';
 import IconAdd from '../../components/Icons/IconAdd';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 // import * as pathmenu           from '../../shared/pathMenu';
 import {Loading}                    from '../../components/Common/Loading';
 // import { isGetPermissions } from '../../shared/globalFunc';
@@ -131,6 +132,15 @@ const TableGrid = props => {
                         onClick={() => props.onclickview?props.onclickview(row.id):''}
                         >
                             <IconView/>
+                        </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title={i18n.t('Download')}>
+                        <IconButton color={'primary'} 
+                        hidden={props.permissiondownload !== undefined?props.permissiondownload:true}
+                        onClick={() => props.onclickdownload?props.onclickdownload(row.id):''}
+                        >
+                            <CloudDownloadIcon/>
                         </IconButton>
                     </Tooltip>
                 </TableEditColumn.Cell>

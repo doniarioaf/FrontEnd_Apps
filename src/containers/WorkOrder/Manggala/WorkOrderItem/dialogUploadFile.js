@@ -1,9 +1,8 @@
-import React, {useEffect,useState} from 'react';
+import React, {useState} from 'react';
 import {useDispatch}                from 'react-redux';
 import DialogContent                from '@material-ui/core/DialogContent';
 import DialogActions                from '@material-ui/core/DialogActions';
-import {DropdownList}      from 'react-widgets';
-import * as actions                 from '../../store/actions';
+import * as actions                 from '../../../../store/actions';
 import {useTranslation}             from 'react-i18next';
 import {withStyles}                 from '@material-ui/core/styles';
 import MuiDialogTitle               from '@material-ui/core/DialogTitle';
@@ -13,12 +12,21 @@ import CloseIcon                    from '@material-ui/icons/Close';
 import {Button}                                   from 'reactstrap';
 import "react-widgets/dist/css/react-widgets.css";
 
-const DialogStatus = props => {
-    const [ListStatus, SetListStatus] = useState([]);
-    const [SelStatus, SetSelStatus] = useState('');
-    const [ErrSelStatus, SetErrSelStatus] = useState('');
+const DialogUploadFile = props => {
     const i18n = useTranslation('translations');
     const dispatch = useDispatch();
+
+    const [selectedFile, setSelectedFile] = useState();
+    const [isSelected, setIsSelected] = useState(false);
+
+    
+    const changeHandler = (event) => {
+
+		setSelectedFile(event.target.files[0]);
+
+		setIsSelected(true);
+
+	};
 
     const styles = (theme) => ({
         root: {
@@ -47,67 +55,55 @@ const DialogStatus = props => {
         );
       });
 
-      useEffect(() => {
-        props.flagloadingsend(true);
-        // if(props.liststatus){
-            dispatch(actions.getSuratJalanData('/template',successHandlerTemplate, props.errorhandler));
-            
-        // }
-    }, []);
-    const successHandlerTemplate = (data) =>{
-        SetListStatus(data.data.statusSJOptions.reduce((obj, el) => (
-            [...obj, {
-                value: el.code,
-                label: el.codename
-            }]
-        ), []));
-        SetSelStatus(props.status);
-        props.flagloadingsend(false);
-    }
-    const handleChangeStatus = (data) =>{
-        let id = data?.value ? data.value : '';
-        SetSelStatus(id);
-    }
-
     function submitTrans(){
-        if(SelStatus !== ''){
+        if(isSelected && selectedFile !== undefined && selectedFile !== null){
             props.flagloadingsend(true);
-            var obj = new Object();
-            obj.status = SelStatus;
-            dispatch(actions.submitAddSuratJalan('/status/'+props.idsuratjalan,obj,props.handlesubmit, props.errorhandler));
-        }
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            dispatch(actions.submitAddWorkOrder('/document/'+props.idworkorder,formData,props.handlesubmit, props.errorhandler));
+        }   
     }
 
+   
     return (
         <div>
             <DialogTitle id="confirmation-dialog-title" onClose={() => props.showflag(false)}>
-            {i18n.t('Change Status')}
+            {i18n.t('Upload File')}
             </DialogTitle>
+
             <DialogContent dividers style={{height:"260px"}}>
             <label className="mt-3 form-label required" htmlFor="Status">
-                {i18n.t('Status')}
+                {i18n.t('File')}
                 <span style={{color:'red'}}>*</span>
             </label>
 
-            <DropdownList
-                // className={
-                //     touched.branch && errors.branch
-                //         ? "input-error" : ""
-                // }
-                name="workorder"
-                filter='contains'
-                placeholder={i18n.t('select.SELECT_OPTION')}
-                
-                onChange={val => handleChangeStatus(val)}
-                data={ListStatus}
-                textField={'label'}
-                valueField={'value'}
-                // style={{width: '25%'}}
-                // disabled={values.isdisabledcountry}
-                value={SelStatus}
-            />
-            </DialogContent>
+            <input type="file" name="file" onChange={changeHandler} />
+            {isSelected && selectedFile !== undefined && selectedFile !== null ? (
 
+            <div>
+                
+                <p>Nama File: {selectedFile.name || selectedFile.name !== undefined?selectedFile.name:''}</p>
+
+                <p>Tipe File: {selectedFile.type || selectedFile.type !== undefined?selectedFile.type:''}</p>
+
+                <p>Ukuran Dalam KB: {selectedFile.size || selectedFile.size !== undefined?selectedFile.size / 1024:0}</p>
+
+                {/* <p>
+
+                    Terakhir Diubah:{' '}
+
+                    {selectedFile.lastModifiedDate || selectedFile.lastModifiedDate !== undefined?selectedFile.lastModifiedDate.toLocaleDateString():''}
+
+                </p> */}
+
+            </div>
+
+            ) : (
+
+            <p>Silahkan Pilih File</p>
+
+            )}
+            </DialogContent>
             <DialogActions>
             <Button autoFocus 
                 onClick={() => props.showflag(false)} 
@@ -121,7 +117,6 @@ const DialogStatus = props => {
                 </Button>
             </DialogActions>
         </div>
-
     )
 };
-export default DialogStatus;
+export default DialogUploadFile;

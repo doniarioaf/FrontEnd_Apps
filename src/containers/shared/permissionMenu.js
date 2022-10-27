@@ -96,6 +96,9 @@ export const deletePaymentType_Permission = ['DELETE_PAYMENTTYPE'];
 export const addWorkOrder_Permission = ['READ_WORKORDER','CREATE_WORKORDER'];
 export const editWorkOrder_Permission = ['READ_WORKORDER','EDIT_WORKORDER'];
 export const deleteWorkOrder_Permission = ['DELETE_WORKORDER'];
+export const addDocumentWorkOrder_Permission = ['CREATE_DOCUMENT_WORKORDER'];
+export const deleteDocumentWorkOrder_Permission = ['DELETE_DOCUMENT_WORKORDER'];
+export const downloadDocumentWorkOrder_Permission = ['READ_DOCUMENT_WORKORDER'];
 
 export const addSuratJalan_Permission = ['READ_SURATJALAN','CREATE_SURATJALAN','READ_WORKORDER','READ_CUSTOMER_MANGGALA'];
 export const editSuratJalan_Permission = ['READ_SURATJALAN','EDIT_SURATJALAN','READ_WORKORDER','READ_CUSTOMER_MANGGALA'];

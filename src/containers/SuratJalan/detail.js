@@ -213,6 +213,7 @@ const StyledDialog = styled(Dialog)`
     const succesHandlerSubmitChangeStatus = (data) => {
         setLoading(false);
         setShowStatus(false);
+        setLoadingSend(false);
         Swal.fire({
             icon: 'success',
             title: 'SUCCESS',
@@ -227,6 +228,7 @@ const StyledDialog = styled(Dialog)`
     function errorHandler(error) {
         setLoading(false);
         setShowStatus(false);
+        setLoadingSend(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
