@@ -232,7 +232,7 @@ const StyledDialog = styled(Dialog)`
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: '' + error
+            text: error.msg
         })
     }
 
@@ -549,7 +549,7 @@ const StyledDialog = styled(Dialog)`
                         </div>)
                         :(<div>
                             <MenuItem hidden={!isGetPermissions(printSuratJalan_Permission,'READ')}  onClick={() => history.push(pathmenu.printSuratJalan+'/'+id)}>{i18n.t('Print Surat Jalan')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(editStatusSuratJalan_Permission,'TRANSACTION')} onClick={() => setShowStatus(true)} >{i18n.t('Change Status')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editStatusSuratJalan_Permission,'TRANSACTION')} onClick={() => setShowStatus(true)} >{i18n.t('Penandaan Surat Jalan')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editSuratJalan_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editSuratJalan+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteSuratJalan_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
                             
@@ -571,9 +571,9 @@ const StyledDialog = styled(Dialog)`
             <StyledDialog
                 disableBackdropClick
                 disableEscapeKeyDown
-                maxWidth="sm"
+                maxWidth="md"
                 fullWidth={true}
-                style={{height: '80%'}}
+                // style={{height: '100%'}}
                 open={ShowStatus}
             >
                 <DialogStatus
@@ -583,6 +583,7 @@ const StyledDialog = styled(Dialog)`
                     idsuratjalan = {props.match.params.id}
                     handlesubmit = {succesHandlerSubmitChangeStatus}
                     status = {value.status}
+                    detail = {value}
                     // getAutoDebitid= {getAutoDebitid}
                 />
                 {LoadingSend && <Loading/>}

@@ -68,7 +68,7 @@ const DialogUploadFile = props => {
     return (
         <div>
             <DialogTitle id="confirmation-dialog-title" onClose={() => props.showflag(false)}>
-            {i18n.t('Upload File')}
+            {i18n.t('Upload File (PDF,JPEG,JPG,PNG)')}
             </DialogTitle>
 
             <DialogContent dividers style={{height:"260px"}}>

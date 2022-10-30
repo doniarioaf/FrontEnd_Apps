@@ -213,7 +213,7 @@ import React, {useState,
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: '' + error
+            text: error.msg
         })
     }
 

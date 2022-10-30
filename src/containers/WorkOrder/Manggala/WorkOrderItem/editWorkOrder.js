@@ -273,6 +273,7 @@ export default function EditForm(props) {
 
     const handleInputNomorAju = (data) =>{
         let val = data.target.value;
+        val = new String(val).replaceAll(' ','');
         if(val == '' || !isNaN(val)){
             setInputNoAju(val)
         }

@@ -3,7 +3,7 @@ import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../../../components/Layout/ContentHeading';
-import DragDrop                     from '../../../../components/DragDrops/DragDrop';
+// import DragDrop                     from '../../../../components/DragDrops/DragDrop';
 // import {Input,Button,FormGroup,Label} from 'reactstrap';
 import {Input,Button,Label,FormGroup,Container} from 'reactstrap';
 import * as actions                 from '../../../../store/actions';
@@ -231,6 +231,7 @@ export default function AddForm(props) {
 
     const handleInputNomorAju = (data) =>{
         let val = data.target.value;
+        val = new String(val).replaceAll(' ','');
         if(val == '' || !isNaN(val)){
             setInputNoAju(val)
         }
