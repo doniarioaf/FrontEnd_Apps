@@ -135,7 +135,6 @@ export default function AddFormIndex(props) {
                         obj.price = numToMoney(parseFloat(dethijau.price));
                         obj.ismandatory = dethijau.ismandatory;
 
-                        console.log('hijau ',detWarehouse.value);
                         listhijau.push({"idwarehouse":detWarehouse.value,"idinvoicetype":dethijau.idinvoicetype, "price":numToMoney(parseFloat(dethijau.price)) ,"ismandatory":dethijau.ismandatory,"jalur":"HIJAU"})
                         
                         // addToListHijau(obj);

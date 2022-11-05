@@ -182,7 +182,12 @@ const handleMenu = () => {
             icon: 'icon-user',
             translate: 'Laporan',
             submenu:[
-                
+                {
+                    name: 'Bongkar Muat Dan Depo',
+                    path: pathmenu.reportbongkarmuatdepo,
+                    translate: 'Bongkar Muat Dan Depo',
+                    permission:permissionmenu.MenuWorkOrder,
+                }
             ]
         },
        

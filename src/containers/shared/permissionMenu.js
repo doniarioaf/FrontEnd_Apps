@@ -41,6 +41,7 @@ export const deleteProject_Permission = ['DELETE_PROJECT'];
 export const addBankAccount_Permission = ['CREATE_BANK_ACCOUNT'];
 export const editBankAccount_Permission = ['EDIT_BANK_ACCOUNT','READ_BANK_ACCOUNT'];
 export const deleteBankAccount_Permission = ['DELETE_BANK_ACCOUNT'];
+export const saldoawal_Permission = ['CREATE_SALDO_AWAL'];
 
 export const addCustomerManggala_Permission = ['READ_CUSTOMER_MANGGALA','READ_ADDRESS','CREATE_CUSTOMER_MANGGALA'];
 export const editCustomerManggala_Permission = ['READ_CUSTOMER_MANGGALA','READ_ADDRESS','EDIT_CUSTOMER_MANGGALA'];

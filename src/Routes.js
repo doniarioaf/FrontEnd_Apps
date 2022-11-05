@@ -250,6 +250,8 @@ const addSuratJalan = lazy(() => import('./containers/SuratJalan/addSuratJalan')
 const detailSuratJalan = lazy(() => import('./containers/SuratJalan/detail'));
 const editSuratJalan = lazy(() => import('./containers/SuratJalan/editSuratJalan'));
 const printSuratJalan = lazy(() => import('./containers/SuratJalan/file/pdf'));
+
+const reportBongkarMuatDepo = lazy(() => import('./containers/Report/Manggala/reportBongkarMuatDepo'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -504,6 +506,7 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.detailSuratJalan+'/:id'} component={waitFor(detailSuratJalan)}/>
                             <Route path={pathmenu.editSuratJalan+'/:id'} component={waitFor(editSuratJalan)}/>
                             <Route path={pathmenu.printSuratJalan+'/:id'} component={waitFor(printSuratJalan)}/>
+                            <Route path={pathmenu.reportbongkarmuatdepo} component={waitFor(reportBongkarMuatDepo)}/>
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>

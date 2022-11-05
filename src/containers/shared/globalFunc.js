@@ -167,6 +167,16 @@ const handleSubMenu = (submenu)  =>{
     return listsubmenu;
 }
 
+export const inputJustNumberAndCommaDot = (temp) =>{
+    let lengthVal = temp.length;
+    let endchar = temp.charAt(lengthVal-1);
+    if(endchar === ',' || !isNaN(endchar) || endchar === '.'){
+        return true
+    }else{
+        return false;
+    }
+}
+
 export const numToMoney = (amount) =>{
     
     if(amount !== null && !isNaN(amount)){
@@ -224,3 +234,11 @@ export const formatMoney = (amount) => {
         return returnamount;
     }
 };
+
+export const numToMoneyWithComma = (amount) =>{
+    let string = numeral(amount).format('0,0.00');
+    let befcomma = string.split('.')[0].replaceAll(',','.');
+    let aftercomma = string.split('.')[1];
+    string = befcomma+','+aftercomma;
+    return string;
+}

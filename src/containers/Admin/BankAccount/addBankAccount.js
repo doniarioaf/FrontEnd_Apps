@@ -12,8 +12,8 @@ import {DatePicker}      from 'react-widgets';
 import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { addBankAccount_Permission } from '../../shared/permissionMenu';
+import { reloadToHomeNotAuthorize,isGetPermissions,inputJustNumberAndCommaDot,formatMoney } from '../../shared/globalFunc';
+import { addBankAccount_Permission,saldoawal_Permission } from '../../shared/permissionMenu';
 import * as pathmenu           from '../../shared/pathMenu';
 import "react-widgets/dist/css/react-widgets.css";
 import { formatdate } from '../../shared/constantValue';
@@ -36,6 +36,17 @@ export default function AddBankAccount(props) {
     const [InputCatatan1, setInputCatatan1] = useState('');
     const [InputCatatan2, setInputCatatan2] = useState('');
     const [InputIsActive, setInputIsActive] = useState(true);
+    const [InputSaldoAwal, setInputSaldoAwal] = useState('');
+    const flagSaldoAwal = isGetPermissions(saldoawal_Permission,'TRANSACTION');
+
+    const handleInputSaldoAwal = (data) =>{
+    let val = data.target.value;
+    let flagReg = inputJustNumberAndCommaDot(val);
+        if(flagReg){
+            setInputSaldoAwal(formatMoney(val));
+        }
+    
+    }
 
     const handleInputNamaBank = (data) =>{
         let val = data.target.value;
@@ -123,6 +134,7 @@ export default function AddBankAccount(props) {
             obj.catatan1 = InputCatatan1;
             obj.catatan2 = InputCatatan2;
             obj.isactive = InputIsActive;
+            obj.saldoawal = InputSaldoAwal == ''?0:new String(InputSaldoAwal).replaceAll('.','').replaceAll(',','.');
             dispatch(actions.submitAddBankAccount('',obj,succesHandlerSubmit, errorHandler));
         }
     }
@@ -164,7 +176,8 @@ export default function AddBankAccount(props) {
                 dateopen:InputDateOpen,
                 catatan1:InputCatatan1,
                 catatan2:InputCatatan2,
-                isactive:InputIsActive
+                isactive:InputIsActive,
+                saldoawal:InputSaldoAwal
             }
         }
         validate={values => {
@@ -252,6 +265,26 @@ export default function AddBankAccount(props) {
                                 value={values.norekening}
                             />
                             <div className="invalid-feedback-custom">{ErrInputNoRek}</div>
+
+                            <div hidden={!flagSaldoAwal}>
+                            <label className="mt-3 form-label required" htmlFor="saldoawal">
+                                {i18n.t('Saldo Awal')}
+                            </label>
+                            <Input
+                                name="saldoawal"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="saldoawal"
+                                onChange={val => handleInputSaldoAwal(val)}
+                                onBlur={handleBlur}
+                                value={values.saldoawal}
+                            />
+                            </div>
+
                             </div>
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="dateopen">

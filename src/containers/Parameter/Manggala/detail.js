@@ -24,8 +24,10 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,reloadToHomeNotAuthorize,numToMoney } from '../../shared/globalFunc';
+  import { isGetPermissions,reloadToHomeNotAuthorize,numToMoney,numToMoneyWithComma } from '../../shared/globalFunc';
   import { editParameterManggala_Permission,deleteParameterManggala_Permission,MenuParameterManggala } from '../../shared/permissionMenu';
+  import moment                          from 'moment';
+  import { formatdate } from '../../shared/constantValue';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -90,6 +92,14 @@ import React, {useState,
         setValue(data.data);
         setLoading(false);
     }
+
+    function getParamNameType(data,listparam) {
+        let filterid = listparam.filter(output => output.code == data);
+        if(filterid.length > 0){
+            return filterid[0].codename;
+        }
+        return '';
+    }
     
 
     const submitHandlerDelete = () => {
@@ -132,9 +142,11 @@ import React, {useState,
         })
     }
 
-    function checkValue(data) {
-        if(!isNaN(data)){
-            return numToMoney(parseFloat(data));
+    function checkValue(data,paramdate,type) {
+        if(type == 'NUMBER'){
+            return numToMoneyWithComma(parseFloat(data));
+        }else if(type == 'DATE'){
+            return moment(new Date(paramdate)).format(formatdate);
         }
         return data;
     }
@@ -200,9 +212,16 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Type')}</span>
+                            <strong className="col-md-7">
+                                {value.paramtype?getParamNameType(value.paramtype,value.template.parameterTypeOptions):''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Value')}</span>
                                 <strong className="col-md-7">
-                                {value.paramvalue?checkValue(value.paramvalue):''}
+                                {value.paramvalue || value.paramdate?checkValue(value.paramvalue,value.paramdate,value.paramtype):''}
                                 </strong>
                             </div>
 

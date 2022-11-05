@@ -104,3 +104,4 @@ export const addSuratJalan = `/form/add/suratjalan`;
 export const detailSuratJalan = `/form/detail/suratjalan`;
 export const editSuratJalan = `/form/edit/suratjalan`;
 export const printSuratJalan = `/form/print/suratjalan`;
+export const reportbongkarmuatdepo = `/report/bongkarmuatdepo`;

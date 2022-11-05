@@ -120,6 +120,8 @@
     "label_VOYAGE_NUMBER": "Nomor Voyage",
     "label_SPPB_NPE_DATE": "SPPB/NPE Tanggal",
     "label_WAREHOUSE_ADDRESS":"Alamat Gudang",
+    "label_FROM_DATE":"Dari Tanggal",
+    "label_THRU_DATE":"Sampai Tanggal",
     "validation": {
       "employeemanggala":{
         "noidentitas":{

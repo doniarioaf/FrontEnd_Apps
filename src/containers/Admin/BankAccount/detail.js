@@ -25,8 +25,8 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import moment                       from "moment/moment";
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { deleteBankAccount_Permission,editBankAccount_Permission,MenuBankAccount } from '../../shared/permissionMenu';
+  import { isGetPermissions,reloadToHomeNotAuthorize,numToMoneyWithComma } from '../../shared/globalFunc';
+  import { deleteBankAccount_Permission,editBankAccount_Permission,MenuBankAccount,saldoawal_Permission } from '../../shared/permissionMenu';
   import { formatdate } from '../../shared/constantValue';
 
   const useStyles = makeStyles((theme) => ({
@@ -50,6 +50,7 @@ import React, {useState,
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
+    const flagSaldoAwal = isGetPermissions(saldoawal_Permission,'TRANSACTION');
 
     const id = props.match.params.id;
 
@@ -197,6 +198,13 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('label_NUMBER_ACCOUNT')}</span>
                                 <strong className="col-md-7">
                                 {value.norekening?value.norekening:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Saldo Awal')}</span>
+                                <strong className="col-md-7">
+                                {value.saldoawal?(value.saldoawal !== ''? (flagSaldoAwal? numToMoneyWithComma(parseFloat(value.saldoawal)):'*******' ):'*******'):'*******'}
                                 </strong>
                             </div>
 

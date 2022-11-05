@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
         width: 75
     },
     labeldikirimoleh: {
-        width: 75,
+        width: 150,
         textAlign:'center'
     },
     ttddikirimoleh: {
@@ -120,11 +120,31 @@ const getContact = (data) => {
     return data;
 }
 
+const getKalimat1 = (data) => {
+    let text = 'Kami kirimkan barang-barang tersebut dibawah ini dengan kendaraan......';
+    if(data == 'EX'){
+        text = 'Mohon dapat dimuat barang tersebut dibawah ini untuk kiriman export';
+    }else if(data == 'IM'){
+        text = 'Kami kirimkan barang impor tersebut dibawah ini : ';
+    }
+    return text;
+}
+
+const getKalimat2 = (data) => {
+    let text = 'kosongan container dikirim Ke/diambil dari :';
+    if(data == 'EX'){
+        text = 'Kosongan diambil dari : ';
+    }else if(data == 'IM'){
+        text = 'Kosongan dikirim ke : ';
+    }
+    return text;
+}
+
 const GenerateSuratJalan = ({ valuedata }) => (
     <Fragment>
     <View style={styles.container}>
     <View style={styles.leftposition}>
-        <Text style={styles.companyname}>{'PT. ATAP LOGISTIK INDONESIA'}</Text>        
+        <Text style={styles.companyname}>{valuedata != null?valuedata.companyname:''}</Text>        
     </View>
 
     <View style={styles.noBLContainer}>
@@ -152,7 +172,7 @@ const GenerateSuratJalan = ({ valuedata }) => (
         {/* {valuedata != null?moment (new Date(valuedata.tanggal)).format(formatdateDDMMMMYYYY):''} */}
     </View>
 
-    <Text >{'Kami kirimkan barang-barang tersebut dibawah ini dengan kendaraan......'}</Text>
+    <Text >{valuedata != null?getKalimat1(valuedata.woType):''}</Text>
 
     <View style={styles.customerContainer}>
         <Text style={styles.labelcustomer}>Customer: </Text>
@@ -181,17 +201,17 @@ const GenerateSuratJalan = ({ valuedata }) => (
 
     <ContaineritemsTable data = {valuedata != null?valuedata:[]} />
 
-    <Text >{'kosongan container dikirim Ke/diambil dari depo '+(valuedata != null?valuedata.depoWO:'')}</Text>
+    <Text >{(valuedata != null?getKalimat2(valuedata.woType):'')+(valuedata != null?valuedata.depoWO:'')}</Text>
 
     <View style={styles.containerttd}>
 
     <View style={{marginTop:20}}>
-    <Text style={styles.labeldikirimoleh} >{'dikirim Oleh'}</Text>
-    <Text style={styles.ttddikirimoleh} >{'(..................)'}</Text>
+    <Text style={styles.labeldikirimoleh} >{'Dikirim Oleh'}</Text>
+    <Text style={styles.ttddikirimoleh} >{'(.......................................................)'}</Text>
     </View>
 
-    <View style={{marginTop:20,marginLeft:60}}>
-    <Text >{'diterima oleh (Diisi lengkap dan cap perusahaan)'}</Text>
+    <View style={{marginTop:20,marginLeft:140}}>
+    <Text >{'Diterima oleh (Diisi lengkap dan cap perusahaan)'}</Text>
     <View style={styles.namaditerimaoleh}>
         <Text style={{width:'60'}}>Nama: </Text>
         <Text >{'..................'}</Text>
