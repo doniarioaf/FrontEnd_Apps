@@ -161,7 +161,6 @@ const TableGrid = props => {
         };
 
     useEffect(() => {
-        console.log('props.permissionadd ',props.permissionadd);
         if (props.loading !== loading) {
             setLoading(props.loading);
         }

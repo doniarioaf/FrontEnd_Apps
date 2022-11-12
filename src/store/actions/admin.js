@@ -913,3 +913,41 @@ export const submitDeleteSuratJalan = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getPenerimaanKasBankData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PENERIMAANKASBANK_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddPenerimaanKasBank = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PENERIMAANKASBANK,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditPenerimaanKasBank = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PENERIMAANKASBANK,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeletePenerimaanKasBank = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_PENERIMAANKASBANK,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

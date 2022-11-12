@@ -174,6 +174,12 @@ const handleMenu = () => {
                     path: pathmenu.menuSuratJalan,
                     translate: 'Surat Jalan',
                     permission:permissionmenu.MenuSuratJalan,
+                },
+                {
+                    name: 'Penerimaan Kas Bank',
+                    path: pathmenu.menuPenerimaanKasBank,
+                    translate: 'Surat Jalan',
+                    permission:permissionmenu.MenuSuratJalan,
                 }
             ]
         },

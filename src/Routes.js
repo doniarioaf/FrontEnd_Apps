@@ -252,6 +252,11 @@ const editSuratJalan = lazy(() => import('./containers/SuratJalan/editSuratJalan
 const printSuratJalan = lazy(() => import('./containers/SuratJalan/file/pdf'));
 
 const reportBongkarMuatDepo = lazy(() => import('./containers/Report/Manggala/reportBongkarMuatDepo'));
+
+const menuPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank'));
+const addPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank/addPenerimaanKasBank'));
+const detailPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank/detail'));
+const editPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank/editPenerimaanKasBank'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -507,6 +512,10 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.editSuratJalan+'/:id'} component={waitFor(editSuratJalan)}/>
                             <Route path={pathmenu.printSuratJalan+'/:id'} component={waitFor(printSuratJalan)}/>
                             <Route path={pathmenu.reportbongkarmuatdepo} component={waitFor(reportBongkarMuatDepo)}/>
+                            <Route path={pathmenu.menuPenerimaanKasBank} component={waitFor(menuPenerimaanKasBank)}/>
+                            <Route path={pathmenu.addpenerimaankasbank} component={waitFor(addPenerimaanKasBank)}/>
+                            <Route path={pathmenu.detailpenerimaankasbank+'/:id'} component={waitFor(detailPenerimaanKasBank)}/>
+                            <Route path={pathmenu.editpenerimaankasbank+'/:id'} component={waitFor(editPenerimaanKasBank)}/>
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>

@@ -105,3 +105,7 @@ export const detailSuratJalan = `/form/detail/suratjalan`;
 export const editSuratJalan = `/form/edit/suratjalan`;
 export const printSuratJalan = `/form/print/suratjalan`;
 export const reportbongkarmuatdepo = `/report/bongkarmuatdepo`;
+export const menuPenerimaanKasBank = `/penerimaankasbank`;
+export const addpenerimaankasbank = `/form/add/penerimaankasbank`;
+export const detailpenerimaankasbank = `/form/detail/penerimaankasbank`;
+export const editpenerimaankasbank = `/form/edit/penerimaankasbank`;

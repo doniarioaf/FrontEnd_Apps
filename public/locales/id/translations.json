@@ -122,6 +122,8 @@
     "label_WAREHOUSE_ADDRESS":"Alamat Gudang",
     "label_FROM_DATE":"Dari Tanggal",
     "label_THRU_DATE":"Sampai Tanggal",
+    "label_RECEIVE_DATE":"Diterima Tanggal",
+    "label_RECEIVE_FROM":"Diterima Dari",
     "validation": {
       "employeemanggala":{
         "noidentitas":{

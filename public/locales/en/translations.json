@@ -122,6 +122,8 @@
   "label_WAREHOUSE_ADDRESS":"Warehouse Address",
   "label_FROM_DATE":"From Date",
   "label_THRU_DATE":"Thru Date",
+  "label_RECEIVE_DATE":"Receive Date",
+  "label_RECEIVE_FROM":"Receive From",
   "validation": {
     "employeemanggala":{
       "noidentitas":{

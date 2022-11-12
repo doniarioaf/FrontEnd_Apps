@@ -107,6 +107,10 @@ export const deleteSuratJalan_Permission = ['DELETE_SURATJALAN'];
 export const editStatusSuratJalan_Permission = ['EDIT_STATUS_SURATJALAN'];
 export const printSuratJalan_Permission = ['READ_PRINT_SURATJALAN'];
 
+export const addPenerimaanKasBank_Permission = ['READ_PENERIMAAN_KASBANK','CREATE_PENERIMAAN_KASBANK'];
+export const editPenerimaanKasBank_Permission = ['READ_PENERIMAAN_KASBANK','EDIT_PENERIMAAN_KASBANK'];
+export const deletePenerimaanKasBank_Permission = ['DELETE_PENERIMAAN_KASBANK'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -138,3 +142,4 @@ export const MenuPriceList = ['READ_PRICELIST'];
 export const MenuPaymentType = ['READ_PAYMENTTYPE'];
 export const MenuWorkOrder = ['READ_WORKORDER'];
 export const MenuSuratJalan = ['READ_SURATJALAN'];
+export const MenuPenerimaanKasBank = ['READ_PENERIMAAN_KASBANK'];

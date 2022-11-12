@@ -109,7 +109,11 @@ export {
     getSuratJalanData,
     submitAddSuratJalan,
     submitEditSuratJalan,
-    submitDeleteSuratJalan
+    submitDeleteSuratJalan,
+    getPenerimaanKasBankData,
+    submitAddPenerimaanKasBank,
+    submitEditPenerimaanKasBank,
+    submitDeletePenerimaanKasBank
 } from './admin';
 
 export {

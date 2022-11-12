@@ -4,6 +4,7 @@
     width: 100%;
     align-content: center;
     margin-bottom: 50px;
+    font-size: 12px;
   }
   
   #tablegrid td, #tablegrid th {
