@@ -9,8 +9,8 @@ import {useDispatch}   from 'react-redux';
 import { Loading } from '../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-import { reloadToHomeNotAuthorize,inputJustNumberAndCommaDot,formatMoney } from '../shared/globalFunc';
-import { addPenerimaanKasBank_Permission} from '../shared/permissionMenu';
+import { reloadToHomeNotAuthorize,inputJustNumberAndCommaDot,formatMoney, numToMoney } from '../shared/globalFunc';
+import { editPengeluaranKasBank_Permission} from '../shared/permissionMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
 import {DatePicker}      from 'react-widgets';
@@ -25,19 +25,19 @@ import { IconButton } from '@material-ui/core';
 import '../CSS/table.css';
 
 
-export default function AddForm(props) {
-    reloadToHomeNotAuthorize(addPenerimaanKasBank_Permission,'TRANSACTION');
+export default function EditForm(props) {
+    reloadToHomeNotAuthorize(editPengeluaranKasBank_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     momentLocalizer();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
+    const [InputNoDoc, setInputNoDoc] = useState('');
+    const [InputPaymentDate, setInputPaymentDate] = useState(new Date());
+    const [ErrInputPaymentDate, setErrInputPaymentDate] = useState('');
 
-    const [InputReceiveDate, setInputReceiveDate] = useState(new Date());
-    const [ErrInputReceiveDate, setErrInputReceiveDate] = useState('');
-
-    const [InputReceiveFrom, setInputReceiveFrom] = useState('');
-    const [ErrInputReceiveFrom, setErrInputReceiveFrom] = useState('');
+    const [InputPaymentTo, setInputPaymentTo] = useState('');
+    const [ErrInputPaymentTo, setErrInputPaymentTo] = useState('');
 
     const [ListCOA, setListCOA] = useState([]);
     const [SelCOA, setSelCOA] = useState('');
@@ -49,40 +49,55 @@ export default function AddForm(props) {
 
     const [InputKeterangan, setInputKeterangan] = useState('');
 
-    const [ListWO, setListWO] = useState([]);
     const [ListChooseYN, setListChooseYN] = useState([]);
+    const [ListAsset, setListAsset] = useState([]);
 
-    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",idworkorder:""}]);
+    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",idasset:""}]);
     const [ErrInputCatatan, setErrInputCatatan] = useState('');
     const [ErrInputAmount, setErrInputAmount] = useState('');
-    const [ErrIsDownPayment, setErrIsDownPayment] = useState('');
     const [ErrItems, setErrItems] = useState('');
 
+    const id = props.match.params.id;
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getPenerimaanKasBankData('/template',successHandlerTemplate, errorHandler));
+        dispatch(actions.getPengeluaranKasBankData('/template/'+id,successHandlerTemplate, errorHandler));
     }, []);
 
     const successHandlerTemplate = (data) =>{
         if(data.data){
-            setListCOA(data.data.coaOptions.reduce((obj, el) => (
+            let det = data.data;
+            let template = det.template;
+
+            setInputNoDoc(det.nodocument);
+            setInputPaymentDate(det.paymentdate?moment(new Date(det.paymentdate), formatdate).toDate():null);
+            setInputPaymentTo(det.paymentto);
+            setSelCOA(det.idcoa);
+            setSelBank(det.idbank);
+            setInputKeterangan(det.keterangan);
+
+            let listitems = [];
+            if(data.data.details){
+                for(let i=0; i < data.data.details.length; i++){
+                    let det = data.data.details[i];
+                    //idcoa:"",catatan: "",amount:"",idasset:""
+                    listitems.push({ idcoa:det.idcoa,catatan: det.catatan,amount:numToMoney(parseFloat(det.amount)),idasset:(det.idasset || det.idasset !== 0?det.idasset:'')});
+                }
+            }
+            if(listitems.length > 0){
+                setInputListItem(listitems);
+            }
+
+            setListCOA(template.coaOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama+' ('+el.code+')'
                 }]
             ), []));
 
-            setListBank(data.data.bankOptions.reduce((obj, el) => (
+            setListBank(template.bankOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.namabank
-                }]
-            ), []));
-
-            setListWO(data.data.woOptions.reduce((obj, el) => (
-                [...obj, {
-                    value: el.id,
-                    label: el.nodocument+' ('+el.namaCustomer+')'
                 }]
             ), []));
 
@@ -91,9 +106,9 @@ export default function AddForm(props) {
         setLoading(false);
     }
 
-    const handleInputReceiveFrom = (data) =>{
+    const handleInputPaymentTo = (data) =>{
         let val = data.target.value;
-        setInputReceiveFrom(val)
+        setInputPaymentTo(val)
     }
 
     const handleInputKeterangan = (data) =>{
@@ -111,31 +126,30 @@ export default function AddForm(props) {
         setSelBank(id);
     }
 
-    const handleChangeReceiveDate = (data) =>{
+    const handleChangePaymentDate = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
-            setInputReceiveDate(moment(data, formatdate).toDate())
+            setInputPaymentDate(moment(data, formatdate).toDate())
         }else{
-            setInputReceiveDate(null)
+            setInputPaymentDate(null);
         }
     }
 
     const checkColumnMandatory = () => {
         let flag = true;
-        setErrInputReceiveDate('');
-        setErrInputReceiveFrom('');
+        setErrInputPaymentDate('');
+        setErrInputPaymentTo('');
         setErrSelCOA('');
         setErrSelBank('');
         setErrInputCatatan('');
         setErrInputAmount('');
-        setErrIsDownPayment('');
         setErrItems('');
 
         let listitems = [];
         if(InputListItem.length > 0){
             for(let i=0; i < InputListItem.length; i++){
                 let det = InputListItem[i];
-                if(det.idcoa !== '' || det.catatan !== '' || det.amount !== '' || det.isdownpayment !== '' || det.idinvoice !== '' || det.idworkorder !== '' ){
+                if(det.idcoa !== '' || det.catatan !== '' || det.amount !== '' ){
                     if(det.catatan == ''){
                         setErrInputCatatan(i18n.t('Catatan')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
@@ -146,8 +160,8 @@ export default function AddForm(props) {
                         flag = false;
                     }
 
-                    if(det.isdownpayment == ''){
-                        setErrIsDownPayment(i18n.t('DP')+' '+i18n.t('label_REQUIRED'));
+                    if(det.idcoa == ''){
+                        setErrSelCOA(i18n.t('DP')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
                     listitems.push(det);
@@ -160,13 +174,13 @@ export default function AddForm(props) {
             flag = false;
         }
 
-        if(InputReceiveDate == null){
-            setErrInputReceiveDate(i18n.t('label_REQUIRED'));
+        if(InputPaymentDate == null){
+            setErrInputPaymentDate(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
-        if(InputReceiveFrom == ''){
-            setErrInputReceiveFrom(i18n.t('label_REQUIRED'));
+        if(InputPaymentTo == ''){
+            setErrInputPaymentTo(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
@@ -206,8 +220,8 @@ export default function AddForm(props) {
         if(flag){
             setLoading(true);
             let obj = new Object();
-            obj.receivedate = moment(InputReceiveDate).toDate().getTime();
-            obj.receivefrom = InputReceiveFrom;
+            obj.paymentdate = moment(InputPaymentDate).toDate().getTime();
+            obj.paymentto = InputPaymentTo;
             obj.idcoa = SelCOA;
             obj.idbank = SelBank;
             obj.keterangan = InputKeterangan;
@@ -216,20 +230,18 @@ export default function AddForm(props) {
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
                     let det = InputListItem[i];
-                    if(det.catatan !== '' && det.amount !== '' && det.isdownpayment !== ''){
+                    if(det.catatan !== '' && det.amount !== '' && det.idcoa !== ''){
                         let objDet = new Object();
                         objDet.idcoa = det.idcoa !== '' ? det.idcoa:null;
                         objDet.catatan = det.catatan;
                         objDet.amount = new String(det.amount).replaceAll('.','').replaceAll(',','.');
-                        objDet.isdownpayment = det.isdownpayment;
-                        objDet.idinvoice = det.idinvoice !== '' ? det.idinvoice:null;
-                        objDet.idworkorder = det.idworkorder !== '' ? det.idworkorder:null;
+                        objDet.idasset = det.idasset !== '' ? det.idasset:null;
                         listdetails.push(objDet);
                     }
                 }
             }
             obj.details = listdetails;
-            dispatch(actions.submitAddPenerimaanKasBank('',obj,succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitEditPengeluaranKasBank('/'+id,obj,succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -279,7 +291,7 @@ export default function AddForm(props) {
     };    
 
     const handleAddClick = () => {
-        setInputListItem([...InputListItem, { idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",idworkorder:""}]);
+        setInputListItem([...InputListItem, { idcoa:"",catatan: "",amount:"",idasset:""}]);
     };
     
     const handleRemoveClick = index => {
@@ -292,8 +304,9 @@ export default function AddForm(props) {
         <Formik
         initialValues={
             {
-                receivedate:InputReceiveDate,
-                receivefrom:InputReceiveFrom,
+                nodoc:InputNoDoc,
+                paymentdate:InputPaymentDate,
+                paymentto:InputPaymentTo,
                 coa:SelCOA,
                 bank:SelBank,
                 keterangan:InputKeterangan,
@@ -323,34 +336,54 @@ export default function AddForm(props) {
                     } = formikProps;
 
                     return(
-                        <form className="mb-6" onSubmit={handleSubmit}  name="FormAddPenerimaanKasBank">
+                        <form className="mb-6" onSubmit={handleSubmit}  name="FormAddPengeluaranKasBank">
                             <ContentWrapper>
-                            <ContentHeading history={history} link={pathmenu.addpenerimaankasbank} label={'Add Penerimaan Kas/Bank'} labeldefault={'Add Penerimaan Kas/Bank'} />
+                            <ContentHeading history={history} link={pathmenu.editpengeluarankasbank+'/'+id} label={'Edit Pengeluaran Kas/Bank'} labeldefault={'Edit Pengeluaran Kas/Bank'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
-                            <label className="mt-3 form-label required" htmlFor="receivedate">
-                                {i18n.t('label_RECEIVE_DATE')}
+                            <label className="mt-3 form-label required" htmlFor="nodoc">
+                                {i18n.t('label_NO_DOCUMENT')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <Input
+                                name="nodoc"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="nodoc"
+                                maxLength={30}
+                                // onChange={val => handleInput(val)}
+                                onBlur={handleBlur}
+                                value={values.nodoc}
+                                disabled={true}
+                            />
+
+                            <label className="mt-3 form-label required" htmlFor="paymentdate">
+                                {i18n.t('Payment Date')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
 
                             <DatePicker
-                                    name="receivedate"
+                                    name="paymentdate"
                                     // onChange={(val) => {
                                     //         setFieldValue("startdate", val);
                                     //     }
                                     // }
-                                    onChange={val => handleChangeReceiveDate(val)}
+                                    onChange={val => handleChangePaymentDate(val)}
                                     onBlur={handleBlur}
                                     // defaultValue={Date(moment([]))}
                                     format={formatdate}
-                                    value={values.receivedate}
+                                    value={values.paymentdate}
                                     max={new Date()}
                                     // style={{width: '25%'}}
                             />
-                            <div className="invalid-feedback-custom">{ErrInputReceiveDate}</div>
+                            <div className="invalid-feedback-custom">{ErrInputPaymentDate}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="receivefrom">
-                                {i18n.t('label_RECEIVE_FROM')}
+                            <label className="mt-3 form-label required" htmlFor="paymentto">
+                                {i18n.t('Payment To')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <Input
@@ -361,13 +394,13 @@ export default function AddForm(props) {
                                 //         : "w-50"
                                 // }
                                 type="text"
-                                id="receivefrom"
+                                id="paymentto"
                                 maxLength={200}
-                                onChange={val => handleInputReceiveFrom(val)}
+                                onChange={val => handleInputPaymentTo(val)}
                                 onBlur={handleBlur}
-                                value={values.receivefrom}
+                                value={values.paymentto}
                             />
-                            <div className="invalid-feedback-custom">{ErrInputReceiveFrom}</div>
+                            <div className="invalid-feedback-custom">{ErrInputPaymentTo}</div>
 
                             <label className="mt-3 form-label required" htmlFor="coa">
                                 {i18n.t('COA')}
@@ -395,7 +428,7 @@ export default function AddForm(props) {
                                 <div className="invalid-feedback-custom">{ErrSelCOA}</div>
 
                             <label className="mt-3 form-label required" htmlFor="bank">
-                                {i18n.t('To Kas/Bank')}
+                                {i18n.t('From Kas/Bank')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
 
@@ -443,7 +476,6 @@ export default function AddForm(props) {
                             <div className="invalid-feedback-custom">{ErrItems}</div>
                             <div className="invalid-feedback-custom">{ErrInputCatatan}</div>
                             <div className="invalid-feedback-custom">{ErrInputAmount}</div>
-                            <div className="invalid-feedback-custom">{ErrIsDownPayment}</div>
                             {
                                 InputListItem.length == 0?'':
                                 <table id="tablegrid">
@@ -451,9 +483,7 @@ export default function AddForm(props) {
                                         <th>{i18n.t('COA')}</th>
                                         <th>{i18n.t('label_NOTE')}</th>
                                         <th>{i18n.t('Amount')}</th>
-                                        <th>{i18n.t('DP')}</th>
-                                        <th>{i18n.t('Invoice Number')}</th>
-                                        <th>{i18n.t('label_WO_NUMBER')}</th>
+                                        <th>{i18n.t('Asset')}</th>
                                         <th>{i18n.t('Action')}</th>
                                     </tr>
                                     <tbody>
@@ -515,44 +545,16 @@ export default function AddForm(props) {
                                                     </td>
                                                     <td>
                                                     <DropdownList
-                                                        name="isdownpayment"
+                                                        name="idasset"
                                                         filter='contains'
                                                         // placeholder={i18n.t('select.SELECT_OPTION')}
                                                         
-                                                        onChange={val => handleInputDropDownChange(val,i,'isdownpayment')}
-                                                        data={ListChooseYN}
-                                                        textField={'label'}
-                                                        valueField={'value'}
-                                                        style={{width: '130px'}}
-                                                        value={x.isdownpayment}
-                                                    />
-                                                    </td>
-                                                    <td>
-                                                    <DropdownList
-                                                        name="idinvoice"
-                                                        filter='contains'
-                                                        // placeholder={i18n.t('select.SELECT_OPTION')}
-                                                        
-                                                        onChange={val => handleInputDropDownChange(val,i,'idinvoice')}
+                                                        onChange={val => handleInputDropDownChange(val,i,'idasset')}
                                                         data={[]}
                                                         textField={'label'}
                                                         valueField={'value'}
                                                         style={{width: '130px'}}
-                                                        value={x.idinvoice}
-                                                    />
-                                                    </td>
-                                                    <td>
-                                                    <DropdownList
-                                                        name="idworkorder"
-                                                        filter='contains'
-                                                        // placeholder={i18n.t('select.SELECT_OPTION')}
-                                                        
-                                                        onChange={val => handleInputDropDownChange(val,i,'idworkorder')}
-                                                        data={ListWO}
-                                                        textField={'label'}
-                                                        valueField={'value'}
-                                                        style={{width: '130px'}}
-                                                        value={x.idworkorder}
+                                                        value={x.idasset}
                                                     />
                                                     </td>
                                                     <td>

@@ -109,3 +109,7 @@ export const menuPenerimaanKasBank = `/penerimaankasbank`;
 export const addpenerimaankasbank = `/form/add/penerimaankasbank`;
 export const detailpenerimaankasbank = `/form/detail/penerimaankasbank`;
 export const editpenerimaankasbank = `/form/edit/penerimaankasbank`;
+export const menuPengeluaranKasBank = `/pengeluarankasbank`;
+export const addpengeluarankasbank = `/form/add/pengeluarankasbank`;
+export const detailpengeluarankasbank = `/form/detail/pengeluarankasbank`;
+export const editpengeluarankasbank = `/form/edit/pengeluarankasbank`;

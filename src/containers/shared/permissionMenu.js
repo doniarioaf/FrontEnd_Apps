@@ -111,6 +111,10 @@ export const addPenerimaanKasBank_Permission = ['READ_PENERIMAAN_KASBANK','CREAT
 export const editPenerimaanKasBank_Permission = ['READ_PENERIMAAN_KASBANK','EDIT_PENERIMAAN_KASBANK'];
 export const deletePenerimaanKasBank_Permission = ['DELETE_PENERIMAAN_KASBANK'];
 
+export const addPengeluaranKasBank_Permission = ['READ_PENGELUARAN_KASBANK','CREATE_PENGELUARAN_KASBANK'];
+export const editPengeluaranKasBank_Permission = ['READ_PENGELUARAN_KASBANK','EDIT_PENGELUARAN_KASBANK'];
+export const deletePengeluaranKasBank_Permission = ['DELETE_PENGELUARAN_KASBANK'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -143,3 +147,4 @@ export const MenuPaymentType = ['READ_PAYMENTTYPE'];
 export const MenuWorkOrder = ['READ_WORKORDER'];
 export const MenuSuratJalan = ['READ_SURATJALAN'];
 export const MenuPenerimaanKasBank = ['READ_PENERIMAAN_KASBANK'];
+export const MenuPengeluaranKasBank = ['READ_PENGELUARAN_KASBANK'];

@@ -108,7 +108,11 @@ import {
     getPenerimaanKasBankSaga,
     submitAddPenerimaanKasBankSaga,
     submitEditPenerimaanKasBankSaga,
-    submitDeletePenerimaanKasBankSaga
+    submitDeletePenerimaanKasBankSaga,
+    getPengeluaranKasBankSaga,
+    submitAddPengeluaranKasBankSaga,
+    submitEditPengeluaranKasBankSaga,
+    submitDeletePengeluaranKasBankSaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga, submitUploadFileCustomerCallPlanSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
@@ -252,5 +256,9 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_ADD_PENERIMAANKASBANK, submitAddPenerimaanKasBankSaga),
         takeEvery(actions.SUBMIT_EDIT_PENERIMAANKASBANK, submitEditPenerimaanKasBankSaga),
         takeEvery(actions.SUBMIT_DELETE_PENERIMAANKASBANK, submitDeletePenerimaanKasBankSaga),
+        takeEvery(actions.GET_PENGELUARANKASBANK_DATA, getPengeluaranKasBankSaga),
+        takeEvery(actions.SUBMIT_ADD_PENGELUARANKASBANK, submitAddPengeluaranKasBankSaga),
+        takeEvery(actions.SUBMIT_EDIT_PENGELUARANKASBANK, submitEditPengeluaranKasBankSaga),
+        takeEvery(actions.SUBMIT_DELETE_PENGELUARANKASBANK, submitDeletePengeluaranKasBankSaga),
     ]);
 }

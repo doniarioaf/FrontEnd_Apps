@@ -113,7 +113,11 @@ export {
     getPenerimaanKasBankData,
     submitAddPenerimaanKasBank,
     submitEditPenerimaanKasBank,
-    submitDeletePenerimaanKasBank
+    submitDeletePenerimaanKasBank,
+    getPengeluaranKasBankData,
+    submitAddPengeluaranKasBank,
+    submitEditPengeluaranKasBank,
+    submitDeletePengeluaranKasBank
 } from './admin';
 
 export {

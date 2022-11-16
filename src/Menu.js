@@ -178,8 +178,14 @@ const handleMenu = () => {
                 {
                     name: 'Penerimaan Kas Bank',
                     path: pathmenu.menuPenerimaanKasBank,
-                    translate: 'Surat Jalan',
-                    permission:permissionmenu.MenuSuratJalan,
+                    translate: 'Penerimaan Kas Bank',
+                    permission:permissionmenu.MenuPenerimaanKasBank,
+                },
+                {
+                    name: 'Pengeluaran Kas Bank',
+                    path: pathmenu.menuPengeluaranKasBank,
+                    translate: 'Pengeluaran Kas Bank',
+                    permission:permissionmenu.MenuPengeluaranKasBank,
                 }
             ]
         },

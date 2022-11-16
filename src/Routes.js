@@ -257,6 +257,11 @@ const menuPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank'
 const addPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank/addPenerimaanKasBank'));
 const detailPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank/detail'));
 const editPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank/editPenerimaanKasBank'));
+
+const menuPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank'));
+const addPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank/addPengeluaranKasBank'));
+const detailPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank/detail'));
+const editPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank/editPengeluaranKasBank'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -516,6 +521,11 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addpenerimaankasbank} component={waitFor(addPenerimaanKasBank)}/>
                             <Route path={pathmenu.detailpenerimaankasbank+'/:id'} component={waitFor(detailPenerimaanKasBank)}/>
                             <Route path={pathmenu.editpenerimaankasbank+'/:id'} component={waitFor(editPenerimaanKasBank)}/>
+
+                            <Route path={pathmenu.menuPengeluaranKasBank} component={waitFor(menuPengeluaranKasBank)}/>
+                            <Route path={pathmenu.addpengeluarankasbank} component={waitFor(addPengeluaranKasBank)}/>
+                            <Route path={pathmenu.detailpengeluarankasbank+'/:id'} component={waitFor(detailPengeluaranKasBank)}/>
+                            <Route path={pathmenu.editpengeluarankasbank+'/:id'} component={waitFor(editPengeluaranKasBank)}/>
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>

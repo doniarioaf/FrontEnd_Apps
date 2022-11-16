@@ -951,3 +951,41 @@ export const submitDeletePenerimaanKasBank = (param, successHandler, errorHandle
         errorHandler,
     }
 }
+
+export const getPengeluaranKasBankData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PENGELUARANKASBANK_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddPengeluaranKasBank = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PENGELUARANKASBANK,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditPengeluaranKasBank = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PENGELUARANKASBANK,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeletePengeluaranKasBank = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_PENGELUARANKASBANK,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
