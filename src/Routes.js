@@ -262,6 +262,11 @@ const menuPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBan
 const addPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank/addPengeluaranKasBank'));
 const detailPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank/detail'));
 const editPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank/editPengeluaranKasBank'));
+
+const menuInvoice = lazy(() => import('./containers/Invoice/FormInvoice'));
+const addInvoice = lazy(() => import('./containers/Invoice/FormInvoice/addInvoice'));
+const detailInvoice = lazy(() => import('./containers/Invoice/FormInvoice/detail'));
+const editInvoice = lazy(() => import('./containers/Invoice/FormInvoice/editInvoice'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -526,6 +531,11 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addpengeluarankasbank} component={waitFor(addPengeluaranKasBank)}/>
                             <Route path={pathmenu.detailpengeluarankasbank+'/:id'} component={waitFor(detailPengeluaranKasBank)}/>
                             <Route path={pathmenu.editpengeluarankasbank+'/:id'} component={waitFor(editPengeluaranKasBank)}/>
+
+                            <Route path={pathmenu.menuInvoice} component={waitFor(menuInvoice)}/>
+                            <Route path={pathmenu.addInvoice} component={waitFor(addInvoice)}/>
+                            <Route path={pathmenu.detailInvoice+'/:id'} component={waitFor(detailInvoice)}/>
+                            <Route path={pathmenu.editInvoice+'/:id'} component={waitFor(editInvoice)}/>
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>
@@ -533,6 +543,7 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.editcustomers+'/:id'} component={waitFor(editFormCustomer)}/> */}
                             
                             <Route path={pathmenu.invoice} component={waitFor(InvoiceMenu)}/>
+                            
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

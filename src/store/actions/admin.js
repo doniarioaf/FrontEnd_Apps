@@ -989,3 +989,41 @@ export const submitDeletePengeluaranKasBank = (param, successHandler, errorHandl
         errorHandler,
     }
 }
+
+export const getInvoiceData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_INVOICE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddInvoice = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_INVOICE,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditInvoice = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_INVOICE,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteInvoice = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_INVOICE,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

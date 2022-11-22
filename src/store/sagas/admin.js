@@ -2,7 +2,7 @@ import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
     baseProductTypeURL,baseProductURL,baseReportURL, baseCustomerURL, baseCustomerTypeURL, baseProjectURL,baseBankAccountURL,baseCustomerManggalaURL,
     baseAddressURL,baseEmployeeManggalaURL,baseVendorCategoryURL,baseVendorURL,baseWorkOrderTypeURL,basePartaiURL,basePortURL, baseParameterManggalaURL,
-    baseWarehouseURL,baseInvoiceTypeURL,basePriceListURL,basePaymentTypeURL,baseWorkOrderURL,baseSuratJalanURL, basePenerimaanKasBankURL, basePengeluaranKasBankURL} from '../../containers/shared/apiURL';
+    baseWarehouseURL,baseInvoiceTypeURL,basePriceListURL,basePaymentTypeURL,baseWorkOrderURL,baseSuratJalanURL, basePenerimaanKasBankURL, basePengeluaranKasBankURL, baseInvoiceURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -1047,6 +1047,42 @@ export function* submitEditPengeluaranKasBankSaga(action) {
 export function* submitDeletePengeluaranKasBankSaga(action) {
     try {
         const response = yield axios.delete(basePengeluaranKasBankURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getInvoiceDataSaga(action) {
+    try {
+        const response = yield axios.get(baseInvoiceURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitAddInvoiceSaga(action) {
+    try {
+        const response = yield axios.post(baseInvoiceURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitEditInvoiceSaga(action) {
+    try {
+        const response = yield axios.put(baseInvoiceURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitDeleteInvoiceSaga(action) {
+    try {
+        const response = yield axios.delete(baseInvoiceURL(action.param)).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
         action.errorHandler(handleMessageError(error));

@@ -113,3 +113,7 @@ export const menuPengeluaranKasBank = `/pengeluarankasbank`;
 export const addpengeluarankasbank = `/form/add/pengeluarankasbank`;
 export const detailpengeluarankasbank = `/form/detail/pengeluarankasbank`;
 export const editpengeluarankasbank = `/form/edit/pengeluarankasbank`;
+export const menuInvoice = `/invoice`;
+export const addInvoice = `/form/add/invoice`;
+export const detailInvoice = `/form/detail/invoice`;
+export const editInvoice = `/form/edit/invoice`;

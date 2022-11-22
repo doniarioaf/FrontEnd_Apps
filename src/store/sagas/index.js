@@ -112,7 +112,11 @@ import {
     getPengeluaranKasBankSaga,
     submitAddPengeluaranKasBankSaga,
     submitEditPengeluaranKasBankSaga,
-    submitDeletePengeluaranKasBankSaga
+    submitDeletePengeluaranKasBankSaga,
+    getInvoiceDataSaga,
+    submitAddInvoiceSaga,
+    submitEditInvoiceSaga,
+    submitDeleteInvoiceSaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga, submitUploadFileCustomerCallPlanSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
@@ -260,5 +264,9 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_ADD_PENGELUARANKASBANK, submitAddPengeluaranKasBankSaga),
         takeEvery(actions.SUBMIT_EDIT_PENGELUARANKASBANK, submitEditPengeluaranKasBankSaga),
         takeEvery(actions.SUBMIT_DELETE_PENGELUARANKASBANK, submitDeletePengeluaranKasBankSaga),
+        takeEvery(actions.GET_INVOICE_DATA, getInvoiceDataSaga),
+        takeEvery(actions.SUBMIT_ADD_INVOICE, submitAddInvoiceSaga),
+        takeEvery(actions.SUBMIT_EDIT_INVOICE, submitEditInvoiceSaga),
+        takeEvery(actions.SUBMIT_DELETE_INVOICE, submitDeleteInvoiceSaga),
     ]);
 }

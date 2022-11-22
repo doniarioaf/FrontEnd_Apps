@@ -35,3 +35,4 @@ export const baseWorkOrderURL = param => `${baseApiURL}/workorder${param}`;
 export const baseSuratJalanURL = param => `${baseApiURL}/suratjalan${param}`;
 export const basePenerimaanKasBankURL = param => `${baseApiURL}/penerimaankasbank${param}`;
 export const basePengeluaranKasBankURL = param => `${baseApiURL}/pengeluarankasbank${param}`;
+export const baseInvoiceURL = param => `${baseApiURL}/invoice${param}`;

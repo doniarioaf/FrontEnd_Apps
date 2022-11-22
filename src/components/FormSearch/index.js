@@ -73,7 +73,11 @@ const DialogQuickSearch = props => {
 
     const handleChangeSearchName = (data) =>{
         let value = data.target.value;
-        setInputSearchName(value);
+        if(value.includes("`")){
+        }else{
+            setInputSearchName(value);
+        }
+        
     }
 
     const handleSearch = () =>{
@@ -89,6 +93,10 @@ const DialogQuickSearch = props => {
                 let obj = new Object();
                 obj.nama = InputSearchName;
                 dispatch(actions.submitAddWorkOrder('/searchcustomer',obj,successHandleSearch, props.errorHandler));
+            }else if(props.seacrhtype == 'CUSTOMERINVOICE'){
+                let obj = new Object();
+                obj.nama = InputSearchName;
+                dispatch(actions.submitAddInvoice('/searchcustomer',obj,successHandleSearch, props.errorHandler));
             }
         }else{
             setErrInputSearch(i18n.t('forms.REQUIRED'));
@@ -110,6 +118,15 @@ const DialogQuickSearch = props => {
                     }
                 ], []);
             }else if(props.seacrhtype == 'CUSTOMERWO'){
+                theData = data.data.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        'id': el.id,
+                        'name': el.customername,
+                        'data':el
+                    }
+                ], []);
+            }else if(props.seacrhtype == 'CUSTOMERINVOICE'){
                 theData = data.data.reduce((obj, el) => [
                     ...obj,
                     {
