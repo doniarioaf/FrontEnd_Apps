@@ -20,10 +20,19 @@ import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-// import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
 import '../CSS/table.css';
 
+import SearchIcon from '@material-ui/icons/Search';
+import FormSearch from '../../components/FormSearch';
+import styled                       from "styled-components";
+import Dialog                       from '@material-ui/core/Dialog';
+const StyledDialog = styled(Dialog)`
+  & > .MuiDialog-container > .MuiPaper-root {
+    height: 500px;
+  }
+`;
 
 export default function AddForm(props) {
     reloadToHomeNotAuthorize(editPenerimaanKasBank_Permission,'TRANSACTION');
@@ -32,6 +41,13 @@ export default function AddForm(props) {
     momentLocalizer();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
+
+    const [ShowQuickSearchWO, setShowQuickSearchWO] = useState(false);
+    const [ShowQuickSearchINV, setShowQuickSearchINV] = useState(false);
+    const [InputIndex, setInputIndex] = useState('');
+    const [InputIndexIdWo, setInputIndexIdWo] = useState('');
+    const [LoadingSend, setLoadingSend] = useState(false);
+
     const [InputNoDoc, setInputNoDoc] = useState('');
     const [InputReceiveDate, setInputReceiveDate] = useState(new Date());
     const [ErrInputReceiveDate, setErrInputReceiveDate] = useState('');
@@ -52,10 +68,11 @@ export default function AddForm(props) {
     const [ListWO, setListWO] = useState([]);
     const [ListChooseYN, setListChooseYN] = useState([]);
 
-    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",idworkorder:""}]);
+    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:""}]);
     const [ErrInputCatatan, setErrInputCatatan] = useState('');
     const [ErrInputAmount, setErrInputAmount] = useState('');
     const [ErrIsDownPayment, setErrIsDownPayment] = useState('');
+    const [ErrSelWO, setErrSelWO] = useState('');
     const [ErrItems, setErrItems] = useState('');
 
     const id = props.match.params.id;
@@ -76,12 +93,12 @@ export default function AddForm(props) {
             setSelCOA(det.idcoa);
             setSelBank(det.idbank);
             setInputKeterangan(det.keterangan);
-
+            
             let listitems = [];
             if(data.data.details){
                 for(let i=0; i < data.data.details.length; i++){
                     let det = data.data.details[i];
-                    listitems.push({ idcoa:det.idcoa,catatan: det.catatan,amount:numToMoney(parseFloat(det.amount)),isdownpayment:det.isdownpayment ,idinvoice:det.idinvoice?det.idinvoice:'',idworkorder:det.idworkorder?det.idworkorder:''});
+                    listitems.push({ idcoa:det.idcoa,catatan: det.catatan,amount:numToMoney(parseFloat(det.amount)),isdownpayment:det.isdownpayment ,idinvoice:(det.idinvoice?det.idinvoice:''),nodocinv:det.nodocinvoice,idworkorder:(det.idworkorder?det.idworkorder:''),nodocwo:det.nodocworkorder});
                 }
             }
             if(listitems.length > 0){
@@ -153,6 +170,7 @@ export default function AddForm(props) {
         setErrInputCatatan('');
         setErrInputAmount('');
         setErrIsDownPayment('');
+        setErrSelWO('');
         setErrItems('');
 
         let listitems = [];
@@ -173,6 +191,13 @@ export default function AddForm(props) {
                     if(det.isdownpayment == ''){
                         setErrIsDownPayment(i18n.t('DP')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
+                    }else{
+                        if(det.isdownpayment == 'Y'){
+                            if(det.idworkorder == ''){
+                                setErrSelWO(i18n.t('WO')+' '+i18n.t('label_REQUIRED'));
+                                flag = false;
+                            }
+                        }
                     }
                     listitems.push(det);
                 }
@@ -303,7 +328,7 @@ export default function AddForm(props) {
     };    
 
     const handleAddClick = () => {
-        setInputListItem([...InputListItem, { idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",idworkorder:""}]);
+        setInputListItem([...InputListItem, { idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:""}]);
     };
     
     const handleRemoveClick = index => {
@@ -311,6 +336,68 @@ export default function AddForm(props) {
         list.splice(index, 1);
         setInputListItem(list);
     };
+
+    const handleDeleteWO = (e, index) => {
+        const list = [...InputListItem];
+        list[index]['idworkorder'] = '';
+        list[index]['nodocwo'] = '';
+
+        list[index]['idinvoice'] = '';
+        list[index]['nodocinv'] = '';
+        setInputListItem(list);
+    };
+
+    const handleDeletehINV = (e, index) => {
+        const list = [...InputListItem];
+        list[index]['idinvoice'] = '';
+        list[index]['nodocinv'] = '';
+        setInputListItem(list);
+    };
+
+    const handleShowQuickSearchWO = (e, index) => {
+        setShowQuickSearchWO(true);
+        setInputIndex(index);
+    };
+
+    const handleShowQuickSearchInv = (e, index) => {
+        const list = [...InputListItem];
+        setShowQuickSearchINV(true);
+        setInputIndex(index);
+        setInputIndexIdWo(list[index]['idworkorder']);
+    };
+
+    const handleQuickSeacrhWO = (data) =>{
+        setShowQuickSearchWO(false);
+
+        const list = [...InputListItem];
+        list[InputIndex]['idworkorder'] = data.id;
+        list[InputIndex]['nodocwo'] = data.nodocument;
+
+        list[InputIndex]['idinvoice'] = '';
+        list[InputIndex]['nodocinv'] = '';
+        setInputListItem(list);
+        setInputIndex('');
+        //idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:""
+    }
+
+    const handleQuickSeacrhINV = (data) =>{
+        setShowQuickSearchINV(false);
+        let idwo = data.idwo != undefined && data.idwo != null && data.idwo != ''?data.idwo:0;
+
+        const list = [...InputListItem];
+        list[InputIndex]['idinvoice'] = data.id;
+        list[InputIndex]['nodocinv'] = data.nodocument;
+
+        let noocumentwo = data.noocumentwo?data.noocumentwo:'';
+        if(noocumentwo !== ''){
+            list[InputIndex]['idworkorder'] = idwo;
+            list[InputIndex]['nodocwo'] = data.noocumentwo;
+        }
+        
+        setInputListItem(list);
+        setInputIndex('');
+    }
+
 
     return (
         <Formik
@@ -487,6 +574,7 @@ export default function AddForm(props) {
                             </div>
 
                             <div className="invalid-feedback-custom">{ErrItems}</div>
+                            <div className="invalid-feedback-custom">{ErrSelWO}</div>
                             <div className="invalid-feedback-custom">{ErrInputCatatan}</div>
                             <div className="invalid-feedback-custom">{ErrInputAmount}</div>
                             <div className="invalid-feedback-custom">{ErrIsDownPayment}</div>
@@ -574,7 +662,47 @@ export default function AddForm(props) {
                                                     />
                                                     </td>
                                                     <td>
-                                                    <DropdownList
+                                                    
+                                                    <table style={{width:'100%'}}>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>
+                                                        <Input
+                                                        name="nodocinv"
+                                                        // className={
+                                                        //     touched.namebranch && errors.namebranch
+                                                        //         ? "w-50 input-error"
+                                                        //         : "w-50"
+                                                        // }
+                                                        type="text"
+                                                        id="nodocinv"
+                                                        // maxLength={200}
+                                                        onChange={val => handleInputChange(val,i)}
+                                                        // onBlur={handleBlur}
+                                                        disabled={true}
+                                                        value={x.nodocinv}
+                                                        />
+                                                        
+                                                        </td>
+                                                        <td hidden={x.nodocinv !== ''}>
+                                                        <IconButton color={'primary'}
+                                                            onClick={val =>handleShowQuickSearchInv(val,i)}
+                                                        >
+                                                            <SearchIcon style={{ fontSize: 18 }}/>
+                                                        </IconButton>
+                                                        </td>
+                                                        <td hidden={x.nodocinv == ''}>
+                                                        <IconButton color={'primary'}
+                                                            onClick={val =>handleDeletehINV(val,i)}
+                                                        >
+                                                            <DeleteIcon style={{ fontSize: 18 }}/>
+                                                        </IconButton>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                    </table>
+
+                                                    {/* <DropdownList
                                                         name="idinvoice"
                                                         filter='contains'
                                                         // placeholder={i18n.t('select.SELECT_OPTION')}
@@ -585,10 +713,52 @@ export default function AddForm(props) {
                                                         valueField={'value'}
                                                         style={{width: '130px'}}
                                                         value={x.idinvoice}
-                                                    />
+                                                    /> */}
                                                     </td>
                                                     <td>
-                                                    <DropdownList
+                                                    
+                                                    <table style={{width:'100%'}}>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>
+                                                        <Input
+                                                        name="nodocwo"
+                                                        // className={
+                                                        //     touched.namebranch && errors.namebranch
+                                                        //         ? "w-50 input-error"
+                                                        //         : "w-50"
+                                                        // }
+                                                        type="text"
+                                                        id="nodocwo"
+                                                        // maxLength={200}
+                                                        onChange={val => handleInputChange(val,i)}
+                                                        // onBlur={handleBlur}
+                                                        disabled={true}
+                                                        value={x.nodocwo}
+                                                        />
+                                                        
+                                                        </td>
+
+                                                        <td hidden={x.nodocwo !== ''}>
+                                                        <IconButton color={'primary'}
+                                                            onClick={val =>handleShowQuickSearchWO(val,i)}
+                                                        >
+                                                            <SearchIcon style={{ fontSize: 18 }}/>
+                                                        </IconButton>
+                                                        </td>
+
+                                                        <td hidden={x.nodocwo == ''}>
+                                                        <IconButton color={'primary'}
+                                                            onClick={val =>handleDeleteWO(val,i)}
+                                                        >
+                                                            <DeleteIcon style={{ fontSize: 18 }}/>
+                                                        </IconButton>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                    </table>
+
+                                                    {/* <DropdownList
                                                         name="idworkorder"
                                                         filter='contains'
                                                         // placeholder={i18n.t('select.SELECT_OPTION')}
@@ -599,7 +769,7 @@ export default function AddForm(props) {
                                                         valueField={'value'}
                                                         style={{width: '130px'}}
                                                         value={x.idworkorder}
-                                                    />
+                                                    /> */}
                                                     </td>
                                                     <td>
                                                         <IconButton color={'primary'} hidden={i > 0}
@@ -641,6 +811,45 @@ export default function AddForm(props) {
                                 {'Submit'}
                                 </Button>
                                 </div>
+
+                                <StyledDialog
+                                    disableBackdropClick
+                                    disableEscapeKeyDown
+                                    maxWidth="md"
+                                    fullWidth={true}
+                                    // style={{height: '80%'}}
+                                    open={ShowQuickSearchINV}
+                                >
+                                        <FormSearch
+                                            showflag = {setShowQuickSearchINV}
+                                            flagloadingsend = {setLoadingSend}
+                                            seacrhtype = {'PENERIMAANINVOICE'}
+                                            errorHandler = {errorHandler}
+                                            handlesearch = {handleQuickSeacrhINV}
+                                            placeholder = {'Pencarian Berdasarkan No Document atau Nama Customer'}
+                                            idwo = {InputIndexIdWo}
+                                        ></FormSearch>
+                                        {LoadingSend && <Loading/>}
+                                </StyledDialog>
+
+                                <StyledDialog
+                                    disableBackdropClick
+                                    disableEscapeKeyDown
+                                    maxWidth="md"
+                                    fullWidth={true}
+                                    // style={{height: '80%'}}
+                                    open={ShowQuickSearchWO}
+                                >
+                                        <FormSearch
+                                            showflag = {setShowQuickSearchWO}
+                                            flagloadingsend = {setLoadingSend}
+                                            seacrhtype = {'PENERIMAANWO'}
+                                            errorHandler = {errorHandler}
+                                            handlesearch = {handleQuickSeacrhWO}
+                                            placeholder = {'Pencarian Berdasarkan No Document atau Nama Customer atau Nama Cargo'}
+                                        ></FormSearch>
+                                        {LoadingSend && <Loading/>}
+                                </StyledDialog>
                         </form>
 
                     )

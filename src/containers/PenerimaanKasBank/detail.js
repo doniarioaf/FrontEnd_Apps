@@ -48,7 +48,7 @@ import React, {useState,
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
 
-    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",idworkorder:""}]);
+    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:""}]);
 
     const classes = useStyles();
     const [open, setOpen] = useState(false);
@@ -99,7 +99,7 @@ import React, {useState,
         if(data.data.details){
             for(let i=0; i < data.data.details.length; i++){
                 let det = data.data.details[i];
-                listitems.push({ idcoa:det.coaname,catatan: det.catatan,amount:det.amount,isdownpayment:(det.isdownpayment == 'Y'?'Yes':'No'),idinvoice:det.idinvoice,idworkorder:det.idworkorder});
+                listitems.push({ idcoa:det.coaname,catatan: det.catatan,amount:det.amount,isdownpayment:(det.isdownpayment == 'Y'?'Yes':'No'),idinvoice:det.idinvoice,nodocinv:det.nodocinvoice,idworkorder:det.idworkorder,nodocwo:det.nodocworkorder});
             }
         }
         setInputListItem(listitems);
@@ -264,8 +264,8 @@ import React, {useState,
                                         <td>{x.catatan}</td>
                                         <td>{numToMoney(parseFloat(x.amount))}</td>
                                         <td>{x.isdownpayment}</td>
-                                        <td>{x.idinvoice}</td>
-                                        <td>{x.idworkorder}</td>
+                                        <td>{x.nodocinv}</td>
+                                        <td>{x.nodocwo}</td>
                                     </tr>
 
                                 )
