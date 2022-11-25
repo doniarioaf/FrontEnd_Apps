@@ -97,8 +97,8 @@ export default function AddForm(props) {
         if(data.data){
             setListInvoiceType(data.data.invoiceTypeOptions.reduce((obj, el) => (
                 [...obj, {
-                    value: el.id,
-                    label: el.invoicetypename
+                    value: el.code,
+                    label: el.codename
                 }]
             ), []));
         }
@@ -135,11 +135,15 @@ export default function AddForm(props) {
 
     const handleChangeWo = (data) =>{
         let id = data?.value ? data.value : '';
+        let jalur = data?.jalur ? data.jalur : '';
         setSelWO(id);
+        setInputJalur(jalur);
         setSelSJ('');
         setListSJ([]);
+        setInputWarehouseID('');
         setSelPriceList('');
         setListPriceList([]);
+        setInputListItem([]);
 
         setLoading(true);
         dispatch(actions.getInvoiceData('/searchsj/'+id,successHandlerSj, errorHandler));
@@ -150,7 +154,8 @@ export default function AddForm(props) {
             setListSJ(data.data.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument
+                    label: el.nodocument,
+                    idwarehouse: el.idwarehouse
                 }]
             ), []));
         }
@@ -162,6 +167,7 @@ export default function AddForm(props) {
         setSelSJ(id);
         setSelPriceList('');
         setListPriceList([]);
+        setInputListItem([]);
     }
 
     const handleChangeInvType = (data) =>{
@@ -169,6 +175,7 @@ export default function AddForm(props) {
         setSelInvoiceType(id);
         setSelPriceList('');
         setListPriceList([]);
+        setInputListItem([]);
     }
 
     const handleChangePriceList = (data) =>{
@@ -357,11 +364,13 @@ export default function AddForm(props) {
         setInputCustomer(data.customername);
         setInputCustomerID(data.id);
         setSelWO('');
+        setInputJalur('');
         setListWO([]);
         setSelSJ('');
         setListSJ([]);
         setSelPriceList('');
         setListPriceList([]);
+        setInputWarehouseID('');
         setLoading(true);
         dispatch(actions.getInvoiceData('/searchwo/'+data.id,successHandlerWO, errorHandler));
     }
@@ -371,7 +380,8 @@ export default function AddForm(props) {
             setListWO(data.data.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument
+                    label: el.nodocument,
+                    jalur: el.jalur
                 }]
             ), []));
         }

@@ -117,3 +117,4 @@ export const menuInvoice = `/invoice`;
 export const addInvoice = `/form/add/invoice`;
 export const detailInvoice = `/form/detail/invoice`;
 export const editInvoice = `/form/edit/invoice`;
+export const printInvoice = `/form/print/invoice`;

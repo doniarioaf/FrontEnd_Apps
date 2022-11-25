@@ -194,11 +194,16 @@ export default function EditForm(props) {
 
     const handleChangeWo = (data) =>{
         let id = data?.value ? data.value : '';
+        let jalur = data?.jalur ? data.jalur : '';
         setSelWO(id);
+        setInputJalur(jalur);
         setSelSJ('');
         setListSJ([]);
+        setInputWarehouseID('');
         setSelPriceList('');
         setListPriceList([]);
+        setInputListItem([]);
+        
 
         setLoading(true);
         dispatch(actions.getInvoiceData('/searchsj/'+id,successHandlerSj, errorHandler));
@@ -209,7 +214,8 @@ export default function EditForm(props) {
             setListSJ(data.data.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument
+                    label: el.nodocument,
+                    idwarehouse: el.idwarehouse
                 }]
             ), []));
         }
@@ -218,9 +224,12 @@ export default function EditForm(props) {
 
     const handleChangeSj = (data) =>{
         let id = data?.value ? data.value : '';
+        let idwarehouse = data?.idwarehouse ? data.idwarehouse : '';
         setSelSJ(id);
+        setInputWarehouseID(idwarehouse);
         setSelPriceList('');
         setListPriceList([]);
+        setInputListItem([]);
     }
 
     const handleChangeInvType = (data) =>{
@@ -228,6 +237,7 @@ export default function EditForm(props) {
         setSelInvoiceType(id);
         setSelPriceList('');
         setListPriceList([]);
+        setInputListItem([]);
     }
 
     const handleChangePriceList = (data) =>{
@@ -417,10 +427,12 @@ export default function EditForm(props) {
         setInputCustomerID(data.id);
         setSelWO('');
         setListWO([]);
+        setInputJalur('');
         setSelSJ('');
         setListSJ([]);
         setSelPriceList('');
         setListPriceList([]);
+        setInputWarehouseID('');
         setLoading(true);
         dispatch(actions.getInvoiceData('/searchwo/'+data.id,successHandlerWO, errorHandler));
     }
@@ -430,7 +442,8 @@ export default function EditForm(props) {
             setListWO(data.data.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument
+                    label: el.nodocument,
+                    jalur: el.jalur
                 }]
             ), []));
         }

@@ -1,7 +1,7 @@
 import React from "react";
 import { Page, Document, StyleSheet, Image } from "@react-pdf/renderer";
-import GenerateSuratJalan from "./GenerateSuratJalan";
-import logo from "./kseilogo.png";
+import GenerateInvoice from "./GenerateInvoice";
+import logo from "./logoinvoice.png";
 
 const styles = StyleSheet.create({
     page: {
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     logo: {
-        width: 84,
+        width: '100%',
         height: 70,
         marginLeft: 'auto',
         marginRight: 'auto'
@@ -26,7 +26,8 @@ const PdfDocument = ({ data }) => {
         return (
             <Document>
                 <Page size="A4" style={styles.page} >
-                <GenerateSuratJalan valuedata={data}/>
+                <Image style={styles.logo} src={logo} />
+                <GenerateInvoice valuedata={data}/>
                 </Page>
             </Document>
         )

@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     tableContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginTop: 10,
+        marginTop: 100,
         marginBottom: 10,
         borderWidth: 1,
         // borderColor: '#3778C2',
@@ -17,20 +17,20 @@ const styles = StyleSheet.create({
     },
 });
 
-const dummycontainer = [
-    {no:1,nocontainer:'BHB090293',type:'40ft',koli:'1.231',kg:'25,123'}
-]
+// const dummycontainer = [
+//     {no:1,nocontainer:'BHB090293',type:'40ft',koli:'1.231',kg:'25,123'}
+// ]
 
-const setData = (data) =>{
-    return [
-        {no:1,nocontainer:data.nocantainer,type:data.containerpartai,koli:data.containerjumlahkoli,kg:data.containerjumlahkg}
-    ]
-}
+// const setData = (data) =>{
+//     return [
+//         {no:1,nocontainer:data.nocantainer,type:data.containerpartai,koli:data.containerjumlahkoli,kg:data.containerjumlahkg}
+//     ]
+// }
 
 const ContainerItemsTable = ({ data }) => (
     <View style={styles.tableContainer}>
-        <ContainerTableHeader />
-        <ContainerTableItemsValue items={setData(data)} />
+        <ContainerTableHeader type ={data.idinvoicetype} />
+        <ContainerTableItemsValue items={data} />
         {/* <InvoiceTableFooter items={invoice.items} /> */}
     </View>
 );

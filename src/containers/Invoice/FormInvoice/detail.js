@@ -46,6 +46,7 @@ import React, {useState,
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [IsHide, setIsHide] = useState(false);
+    const [IsPrintInvoiceHide, setIsPrintInvoiceHide] = useState(false);
     const [value, setValue] = useState([]);
 
     const classes = useStyles();
@@ -97,6 +98,19 @@ import React, {useState,
                 setIsHide(true);
             }
         }
+        //setIsPrintInvoiceHide
+        if(data.data.detailspenerimaan){
+            let totalpenerimaan = 0;
+            for(let i=0; i < data.data.detailspenerimaan.length; i++){
+                let val = data.data.detailspenerimaan[i];
+                totalpenerimaan += val.amount?parseFloat(val.amount):0;
+            }
+            let totalInvoice = data.data?.totalinvoice?parseFloat(data.data.totalinvoice):0;
+            if(totalInvoice == 0 || totalpenerimaan >= totalInvoice){
+                setIsPrintInvoiceHide(true);
+            }
+        }
+
         // let listitems = [];
         // if(data.data.details){
         //     for(let i=0; i < data.data.details.length; i++){
@@ -373,6 +387,7 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
+                            <MenuItem hidden={IsPrintInvoiceHide || !isGetPermissions(MenuInvoice,'READ')} onClick={() => history.push(pathmenu.printInvoice+'/'+id)} >{i18n.t('Cetak')}</MenuItem>
                             <MenuItem hidden={IsHide || !isGetPermissions(editInvoice_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editInvoice+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={IsHide || !isGetPermissions(deleteInvoice_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
                             
