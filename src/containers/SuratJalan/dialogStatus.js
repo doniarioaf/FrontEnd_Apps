@@ -40,6 +40,9 @@ const DialogStatus = props => {
 
     const [InputTanggalKembali, setInputTanggalKembali] = useState(null);
 
+    const [ListAsset, SetListAsset] = useState([]);
+    const [SelAsset, SetSelAsset] = useState('');
+
     const i18n = useTranslation('translations');
     const dispatch = useDispatch();
     momentLocalizer();
@@ -114,6 +117,14 @@ const DialogStatus = props => {
             }]
         ), []));
 
+        SetListAsset(data.data.assetOptions.reduce((obj, el) => (
+            [...obj, {
+                value: el.id,
+                label: el.kepala_nama+'('+el.kodeasset+')'
+            }]
+        ), []));
+
+        SetSelAsset(props.detail.idasset != 0?props.detail.idasset:'');
         SetSelStatus(props.status);
         SetSelKepemilikanMobil(props.detail?.kepemilikanmobil?props.detail.kepemilikanmobil:'');
         SetSelSupir(props.detail?.idemployee_supir?(props.detail.idemployee_supir == 0?'':props.detail.idemployee_supir):'');
@@ -122,6 +133,12 @@ const DialogStatus = props => {
         setInputTanggalKembali(props.detail?.tanggalkembali?moment(new Date(props.detail.tanggalkembali), formatdate).toDate():null);
         props.flagloadingsend(false);
     }
+
+    const handleChangeAsset = (data) =>{
+        let id = data?.value ? data.value : '';
+        SetSelAsset(id);
+    }
+
     const handleChangeStatus = (data) =>{
         let id = data?.value ? data.value : '';
         SetSelStatus(id);
@@ -166,12 +183,13 @@ const DialogStatus = props => {
             if(SelKepemilikanMobil == 'MOBILSENDIRI' ){
                 obj.idvendormobil = 0;
                 obj.idemployee_supir = SelSupir;
+                obj.idasset = SelAsset;
             }else if(SelKepemilikanMobil == 'MOBILLUAR' ){
                 obj.idvendormobil = SelVendor;
                 obj.idemployee_supir = 0;
+                obj.idasset = 0;
             }
             
-            obj.idasset = 0;
             obj.lembur = SelIsLembur;
             if(InputTanggalKembali != null && InputTanggalKembali != undefined && InputTanggalKembali != ''){
                 obj.tanggalkembali = moment(InputTanggalKembali).toDate().getTime();
@@ -251,6 +269,30 @@ const DialogStatus = props => {
 
             <div className="mt-2 col-lg-6 ft-detail mb-5">
             <div hidden={SelKepemilikanMobil == 'MOBILLUAR' || SelKepemilikanMobil == ''}>
+            
+            <label className="mt-3 form-label required" htmlFor="SelAsset">
+                {i18n.t('Asset')}
+                <span style={{color:'red'}}>*</span>
+            </label>
+
+            <DropdownList
+                // className={
+                //     touched.branch && errors.branch
+                //         ? "input-error" : ""
+                // }
+                name="SelAsset"
+                filter='contains'
+                placeholder={i18n.t('select.SELECT_OPTION')}
+                
+                onChange={val => handleChangeAsset(val)}
+                data={ListAsset}
+                textField={'label'}
+                valueField={'value'}
+                // style={{width: '25%'}}
+                // disabled={values.isdisabledcountry}
+                value={SelAsset}
+            />
+
             <label className="mt-3 form-label required" htmlFor="SelSupir">
                 {i18n.t('Supir')}
                 <span style={{color:'red'}}>*</span>
