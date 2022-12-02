@@ -9,7 +9,7 @@ import {useDispatch}   from 'react-redux';
 import { Loading } from '../../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-import { reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
+import { numToMoney, reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
 import { addWorkOrder_Permission} from '../../../shared/permissionMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
@@ -549,6 +549,8 @@ export default function AddForm(props) {
                 for(let i=0; i < InputListItem.length; i++){
                     let det = InputListItem[i];
                     if(det.idpartai !== '' && det.barang !== '' && det.jumlahkg !== '' && det.jumlahkoli !== '' && det.nocontainer !== '' && det.noseal !== '' ){
+                        det.jumlahkg = new String(det.jumlahkg).replaceAll('.','');
+                        det.jumlahkoli = new String(det.jumlahkoli).replaceAll('.','');
                         listdetails.push(det);
                     }
                 }
@@ -584,8 +586,16 @@ export default function AddForm(props) {
     const handleInputChange = (e, index) => {
         const { name, value } = e.target;
         const list = [...InputListItem];
-        list[index][name] = value;
+        if(name == 'jumlahkoli' || name == 'jumlahkg'){
+            let valTemp = new String(value).replaceAll('.','');
+            if(!isNaN(valTemp)){
+                list[index][name] = numToMoney(parseFloat(valTemp));    
+            }
+        }else{
+            list[index][name] = value;
+        }
         setInputListItem(list);
+        
     };
 
     const handleInputDropDownChange = (e, index,name) => {
@@ -677,7 +687,7 @@ export default function AddForm(props) {
                     return(
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddWorkOrder">
                             <ContentWrapper>
-                            <ContentHeading history={history} link={pathmenu.addemployeeManggala} label={'Add Employee'} labeldefault={'Add Employee'} />
+                            <ContentHeading history={history} link={pathmenu.addWorkOrder} label={'Add Work Order'} labeldefault={'Add Work Order'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="tanggal">

@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../../components/Common/Loading';
-  import { isGetPermissions,reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
+  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
   import { editWorkOrder_Permission,deleteWorkOrder_Permission,MenuWorkOrder,addDocumentWorkOrder_Permission,deleteDocumentWorkOrder_Permission,downloadDocumentWorkOrder_Permission } from '../../../shared/permissionMenu';
   import moment                       from "moment/moment";
   import '../../../CSS/table.css';
@@ -499,8 +499,8 @@ import React, {useState,
                                 return (
                                     <tr>
                                         <td>{x.idpartai}</td>
-                                        <td>{x.jumlahkoli}</td>
-                                        <td>{x.jumlahkg}</td>
+                                        <td>{numToMoney(parseFloat(x.jumlahkoli))}</td>
+                                        <td>{numToMoney(parseFloat(x.jumlahkg)) }</td>
                                         <td>{x.nocontainer}</td>
                                         <td>{x.noseal}</td>
                                         <td>{x.barang}</td>
@@ -554,8 +554,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editWorkOrder_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editWorkOrder+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deleteWorkOrder_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={value.status == 'CLOSE' || !isGetPermissions(editWorkOrder_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editWorkOrder+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={value.status == 'CLOSE' || !isGetPermissions(deleteWorkOrder_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
                             
                         </div>)
                         

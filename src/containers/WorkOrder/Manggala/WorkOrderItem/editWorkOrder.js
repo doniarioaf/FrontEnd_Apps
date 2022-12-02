@@ -10,7 +10,7 @@ import {useDispatch}   from 'react-redux';
 import { Loading } from '../../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-import { reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
+import { numToMoney, reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
 import { editWorkOrder_Permission} from '../../../shared/permissionMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
@@ -169,7 +169,7 @@ export default function EditForm(props) {
             if(data.data.details){
                 for(let i=0; i < data.data.details.length; i++){
                     let det = data.data.details[i];
-                    listitems.push({ idpartai:det.idpartai,jumlahkoli: det.jumlahkoli,jumlahkg:det.jumlahkg,nocontainer:det.nocontainer,noseal:det.noseal,barang:det.barang});
+                    listitems.push({ idpartai:det.idpartai,jumlahkoli: numToMoney(parseFloat(det.jumlahkoli)),jumlahkg:numToMoney(parseFloat(det.jumlahkg)),nocontainer:det.nocontainer,noseal:det.noseal,barang:det.barang});
                 }
             }
             if(listitems.length > 0){
@@ -593,6 +593,8 @@ export default function EditForm(props) {
                 for(let i=0; i < InputListItem.length; i++){
                     let det = InputListItem[i];
                     if(det.idpartai !== '' && det.barang !== '' && det.jumlahkg !== '' && det.jumlahkoli !== '' && det.nocontainer !== '' && det.noseal !== '' ){
+                        det.jumlahkg = new String(det.jumlahkg).replaceAll('.','');
+                        det.jumlahkoli = new String(det.jumlahkoli).replaceAll('.','');
                         listdetails.push(det);
                     }
                 }
@@ -628,7 +630,14 @@ export default function EditForm(props) {
     const handleInputChange = (e, index) => {
         const { name, value } = e.target;
         const list = [...InputListItem];
-        list[index][name] = value;
+        if(name == 'jumlahkoli' || name == 'jumlahkg'){
+            let valTemp = new String(value).replaceAll('.','');
+            if(!isNaN(valTemp)){
+                list[index][name] = numToMoney(parseFloat(valTemp));    
+            }
+        }else{
+            list[index][name] = value;
+        }
         setInputListItem(list);
     };
 

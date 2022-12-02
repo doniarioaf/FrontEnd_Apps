@@ -71,7 +71,7 @@ const MenuIndex = () => {
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuWorkOrder} label={'Work Order Item'} labeldefault={'Work Order Item'} />
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuWorkOrder} label={'Work Order'} labeldefault={'Work Order'} />
             <Container fluid>
             <Card>
             <CardBody>

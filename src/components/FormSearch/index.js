@@ -127,7 +127,7 @@ const DialogQuickSearch = props => {
                 dispatch(actions.submitAddPenerimaanKasBank('/searchwo',obj,successHandleSearch, props.errorHandler));
             }
         }else{
-            setErrInputSearch(i18n.t('forms.REQUIRED'));
+            setErrInputSearch(i18n.t('label_REQUIRED'));
         }
         
     }
