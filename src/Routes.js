@@ -269,6 +269,11 @@ const detailInvoice = lazy(() => import('./containers/Invoice/FormInvoice/detail
 const editInvoice = lazy(() => import('./containers/Invoice/FormInvoice/editInvoice'));
 
 const printInvoice = lazy(() => import('./containers/Invoice/FormInvoice/File/Pdf'));
+
+const menuAsset = lazy(() => import('./containers/Asset'));
+const addAsset = lazy(() => import('./containers/Asset/addAsset'));
+const detailAsset = lazy(() => import('./containers/Asset/detail'));
+const editAsset = lazy(() => import('./containers/Asset/editAsset'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -539,6 +544,11 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.detailInvoice+'/:id'} component={waitFor(detailInvoice)}/>
                             <Route path={pathmenu.editInvoice+'/:id'} component={waitFor(editInvoice)}/>
                             <Route path={pathmenu.printInvoice+'/:id'} component={waitFor(printInvoice)}/>
+                            
+                            <Route path={pathmenu.menuAsset} component={waitFor(menuAsset)}/>
+                            <Route path={pathmenu.addAsset} component={waitFor(addAsset)}/>
+                            <Route path={pathmenu.detailAsset+'/:id'} component={waitFor(detailAsset)}/>
+                            <Route path={pathmenu.editAsset+'/:id'} component={waitFor(editAsset)}/>
                             
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>

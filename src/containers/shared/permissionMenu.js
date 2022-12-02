@@ -119,6 +119,12 @@ export const addInvoice_Permission = ['READ_INVOICE','CREATE_INVOICE'];
 export const editInvoice_Permission = ['READ_INVOICE','EDIT_INVOICE'];
 export const deleteInvoice_Permission = ['DELETE_INVOICE'];
 
+export const addAsset_Permission = ['READ_ASSET','CREATE_ASSET'];
+export const editAsset_Permission = ['READ_ASSET','EDIT_ASSET'];
+export const deleteAsset_Permission = ['DELETE_ASSET'];
+export const addAssetMapping_Permission = ['CREATE_ASSET_MAPPING'];
+export const deleteHistoryAssetMapping_Permission = ['DELETE_HISTORY_ASSET_MAPPING'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -153,3 +159,4 @@ export const MenuSuratJalan = ['READ_SURATJALAN'];
 export const MenuPenerimaanKasBank = ['READ_PENERIMAAN_KASBANK'];
 export const MenuPengeluaranKasBank = ['READ_PENGELUARAN_KASBANK'];
 export const MenuInvoice = ['READ_INVOICE'];
+export const MenuAsset = ['READ_ASSET'];

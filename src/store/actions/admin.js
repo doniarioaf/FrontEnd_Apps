@@ -1027,3 +1027,42 @@ export const submitDeleteInvoice = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+
+export const getAssetData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_ASSET_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddAsset = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_ASSET,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditAsset = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_ASSET,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteAsset = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_ASSET,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

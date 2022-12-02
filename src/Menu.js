@@ -62,6 +62,12 @@ const handleMenu = () => {
             translate: 'Master',
             submenu:[
                 {
+                    name: 'Asset',
+                    path: pathmenu.menuAsset,
+                    translate: 'Asset',
+                    permission:permissionmenu.MenuAsset,
+                },
+                {
                     name: 'Bank Account',
                     path: pathmenu.menubankaccount,
                     translate: 'Bank Account',
