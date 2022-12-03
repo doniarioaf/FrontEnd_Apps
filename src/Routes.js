@@ -274,6 +274,8 @@ const menuAsset = lazy(() => import('./containers/Asset'));
 const addAsset = lazy(() => import('./containers/Asset/addAsset'));
 const detailAsset = lazy(() => import('./containers/Asset/detail'));
 const editAsset = lazy(() => import('./containers/Asset/editAsset'));
+
+const ReportStatusInvoice = lazy(() => import('./containers/Report/Manggala/ReportStatusInvoice'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -549,6 +551,7 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addAsset} component={waitFor(addAsset)}/>
                             <Route path={pathmenu.detailAsset+'/:id'} component={waitFor(detailAsset)}/>
                             <Route path={pathmenu.editAsset+'/:id'} component={waitFor(editAsset)}/>
+                            <Route path={pathmenu.reportstatusinvoice} component={waitFor(ReportStatusInvoice)}/>
                             
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>

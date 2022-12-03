@@ -122,3 +122,4 @@ export const menuAsset = `/asset`;
 export const addAsset = `/form/add/asset`;
 export const detailAsset = `/form/detail/asset`;
 export const editAsset = `/form/edit/asset`;
+export const reportstatusinvoice = `/report/statusinvoice`;

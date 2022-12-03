@@ -210,7 +210,13 @@ const handleMenu = () => {
                     name: 'Bongkar Muat Dan Depo',
                     path: pathmenu.reportbongkarmuatdepo,
                     translate: 'Bongkar Muat Dan Depo',
-                    permission:permissionmenu.MenuWorkOrder,
+                    permission:permissionmenu.MenuReportBongkarMuat,
+                },
+                {
+                    name: 'Status Invoice',
+                    path: pathmenu.reportstatusinvoice,
+                    translate: 'Status Invoice',
+                    permission:permissionmenu.MenuReportStatusInvoice,
                 }
             ]
         },

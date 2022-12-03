@@ -15,16 +15,22 @@ import momentLocalizer                 from 'react-widgets-moment';
 import { DatePicker}      from 'react-widgets';
 // import { listTypeReport } from '../../shared/globalFunc';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { MenuReportBongkarMuat } from '../../shared/permissionMenu';
+import { MenuReportStatusInvoice } from '../../shared/permissionMenu';
 import { formatdate } from '../../shared/constantValue';
 import * as pathmenu           from '../../shared/pathMenu';
+import {DropdownList}      from 'react-widgets';
+import "react-widgets/dist/css/react-widgets.css";
 
-export default function ReportBongkarMuatDepo(props) {
-    reloadToHomeNotAuthorize(MenuReportBongkarMuat,'READ');
+export default function ReportStatusInvoice(props) {
+    reloadToHomeNotAuthorize(MenuReportStatusInvoice,'READ');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
     momentLocalizer();
+
+    const [ListStatus, setListStatus] = useState([{value:'OPEN',label:'Open'},{value:'CLOSE',label:'Close'}]);
+    const [SelStatus, setSelStatus] = useState('');
+    const [ErrSelStatus, setErrSelStatus] = useState('');
 
     const [start, setStart] = useState(new Date());
     const [end, setEnd] = useState(new Date());
@@ -41,13 +47,18 @@ export default function ReportBongkarMuatDepo(props) {
         }
     }
 
+    const handleChangeStatus = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelStatus(id);
+    }
+
     const submitHandler = () => {
-        if(start != null && end != null){
+        if(start != null && end != null && SelStatus !== ''){
             setLoading(true);
             let startDate = moment(start).toDate().getTime();//moment(start).format('YYYY-MM-DD');
             let thruDate = moment(end).toDate().getTime();//moment(end).format('YYYY-MM-DD');
             let typereport = output; 
-            let pathURL = '/manggala/bongkarmuatdepo?from='+startDate+'&thru='+thruDate+'&type='+typereport;
+            let pathURL = '/manggala/statusinvoice?from='+startDate+'&thru='+thruDate+'&type='+typereport+'&status='+SelStatus;
             if(output == 'XLSX'){
                 dispatch(actions.getReportData(pathURL,'application/vnd.ms-excel',succesHandlerSubmit, errorHandler));
             }
@@ -66,7 +77,7 @@ export default function ReportBongkarMuatDepo(props) {
         fileLink.href = dataUrl;
 
         // it forces the name of the downloaded file
-        fileLink.download = 'ReportBongkarMuatDepo.xlsx';
+        fileLink.download = 'ReportStatusInvoice.xlsx';
         fileLink.click();
         fileLink.remove();
         setLoading(false);
@@ -100,6 +111,7 @@ export default function ReportBongkarMuatDepo(props) {
             {
                 startdate:start !== null ? moment(start, formatdate).toDate() : new Date(),
                 enddate:end !== null ? moment(end, formatdate).toDate(): new Date(),
+                status:SelStatus
             }
         }
         validate={values => {
@@ -124,9 +136,9 @@ export default function ReportBongkarMuatDepo(props) {
                     } = formikProps;
 
                     return(
-                        <form className="mb-6" onSubmit={handleSubmit}  name="formReportBongkarMuatDepo">
+                        <form className="mb-6" onSubmit={handleSubmit}  name="formReportStatusInvoice">
                             <ContentWrapper>
-                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuemployeeManggala} label={'Employee'} labeldefault={'Employee'} />
+                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.reportstatusinvoice} label={'Report Status Invoice'} labeldefault={'Report Status Invoice'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="startdate">
@@ -166,6 +178,30 @@ export default function ReportBongkarMuatDepo(props) {
                                     // disabled={values.allmember}
                                     
                             />
+
+                            <label className="mt-3 form-label required" htmlFor="status">
+                                {i18n.t('Status')}
+                                
+                            </label>
+
+                                <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="wotype"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeStatus(val)}
+                                    onBlur={val => setFieldTouched("status", val?.value ? val.value : '')}
+                                    data={ListStatus}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.status}
+                                />
                             </div>
                             </div>
                             </ContentWrapper>

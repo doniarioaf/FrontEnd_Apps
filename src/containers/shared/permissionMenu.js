@@ -160,3 +160,5 @@ export const MenuPenerimaanKasBank = ['READ_PENERIMAAN_KASBANK'];
 export const MenuPengeluaranKasBank = ['READ_PENGELUARAN_KASBANK'];
 export const MenuInvoice = ['READ_INVOICE'];
 export const MenuAsset = ['READ_ASSET'];
+export const MenuReportBongkarMuat = ['READ_REPORT_BONGKARMUATDEPO'];
+export const MenuReportStatusInvoice = ['READ_REPORT_STATUS_INVOICE'];
