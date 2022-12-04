@@ -162,3 +162,4 @@ export const MenuInvoice = ['READ_INVOICE'];
 export const MenuAsset = ['READ_ASSET'];
 export const MenuReportBongkarMuat = ['READ_REPORT_BONGKARMUATDEPO'];
 export const MenuReportStatusInvoice = ['READ_REPORT_STATUS_INVOICE'];
+export const MenuReportKasBank = ['READ_REPORT_KAS_BANK'];

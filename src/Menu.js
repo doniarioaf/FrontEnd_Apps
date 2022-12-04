@@ -217,6 +217,12 @@ const handleMenu = () => {
                     path: pathmenu.reportstatusinvoice,
                     translate: 'Status Invoice',
                     permission:permissionmenu.MenuReportStatusInvoice,
+                },
+                {
+                    name: 'Kas Bank',
+                    path: pathmenu.reportKasBank,
+                    translate: 'Kas Bank',
+                    permission:permissionmenu.MenuReportKasBank,
                 }
             ]
         },
