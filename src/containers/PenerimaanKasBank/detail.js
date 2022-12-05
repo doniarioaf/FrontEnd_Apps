@@ -55,6 +55,8 @@ import React, {useState,
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
 
+    const [IsDisableBtn, setIsDisableBtn] = useState(false);
+
     const id = props.match.params.id;
 
     const handleToggle = (flag) => {
@@ -94,7 +96,7 @@ import React, {useState,
 
     function successHandler(data) {
         setValue(data.data);
-
+        setIsDisableBtn(data.data.disablededitordelete?true:false);
         let listitems = [];
         if(data.data.details){
             for(let i=0; i < data.data.details.length; i++){
@@ -294,8 +296,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editPenerimaanKasBank_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpenerimaankasbank+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deletePenerimaanKasBank_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={IsDisableBtn || !isGetPermissions(editPenerimaanKasBank_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpenerimaankasbank+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={IsDisableBtn || !isGetPermissions(deletePenerimaanKasBank_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
                             
                         </div>)
                         
