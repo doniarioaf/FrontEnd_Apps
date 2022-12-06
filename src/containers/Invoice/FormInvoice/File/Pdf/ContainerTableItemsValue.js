@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     },
     hargareimbursement: {
         width: '20%',
+        textAlign: 'center',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
@@ -153,6 +154,32 @@ const setItems = (items) =>{
             rowItem.push(<Text style={styleValueDiskon(styles.subtotaljasa,(items.diskonnota?checkDiskon(items.diskonnota):'0')) }>{items.diskonnota?checkDiskon(items.diskonnota):''}</Text>);
             rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
 
+            if(items.ppn !== null && items.ppn !== undefined && !isNaN(items.ppn)){
+                let valPPN = parseFloat(items.ppn);
+                if(valPPN > 0){
+                    let pembagiDpp = (100 + valPPN) / 100;
+                    let hasilDPP = parseFloat(gross) / pembagiDpp;
+                    let hasilPPN = parseFloat(gross) - parseFloat(hasilDPP);
+                    rowItem = [];
+                    no++;
+                    rowItem.push(<Text style={styles.no}>{''}</Text>);
+                    rowItem.push(<Text style={styles.jasa}>{''}</Text>);
+                    rowItem.push(<Text style={styles.discjasa}>{''}</Text>);
+                    rowItem.push(<Text style={styles.hargajasa}>{'DPP'}</Text>);
+                    rowItem.push(<Text style={styles.subtotaljasa}>{numToMoney(parseFloat(hasilDPP))}</Text>);
+                    rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+
+                    rowItem = [];
+                    no++;
+                    rowItem.push(<Text style={styles.no}>{''}</Text>);
+                    rowItem.push(<Text style={styles.jasa}>{''}</Text>);
+                    rowItem.push(<Text style={styles.discjasa}>{''}</Text>);
+                    rowItem.push(<Text style={styles.hargajasa}>{'PPN'}</Text>);
+                    rowItem.push(<Text style={styles.subtotaljasa}>{numToMoney(parseFloat(hasilPPN))}</Text>);
+                    rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+                }
+            }
+
             rowItem = [];
             no++;
             rowItem.push(<Text style={styles.no}>{''}</Text>);
@@ -161,6 +188,8 @@ const setItems = (items) =>{
             rowItem.push(<Text style={styles.hargajasa}>{'Total'}</Text>);
             rowItem.push(<Text style={styles.subtotaljasa}>{items.totalinvoice?numToMoney(parseFloat(items.totalinvoice)):0}</Text>);
             rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+
+            
 
             tagihan = items.totalinvoice?parseFloat(items.totalinvoice):0;
             if(tanggalDp !== '' && jumlahDp !== ''){

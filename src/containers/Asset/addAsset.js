@@ -260,6 +260,7 @@ export default function AddForm(props) {
     const handleInputSparePartBuntutNama = (data) =>{
         let val = data.target.value;
         setInputSparePartBuntutNama(val);
+        setNamaaa('',val,SelJenisAsset);
     }
     const handleChangeSparePartBuntutJenisSparePart = (data) =>{
         let id = data?.value ? data.value : '';
@@ -268,6 +269,7 @@ export default function AddForm(props) {
     const handleInputSparePartBuntutKeterangan = (data) =>{
         let val = data.target.value;
         setInputSparePartBuntutKeterangan(val);
+        setKeterangan('',val,SelJenisAsset);
     }
     const handleInputSparePartBuntut_BearingNoBearing = (data) =>{
         let val = data.target.value;
@@ -322,18 +324,46 @@ export default function AddForm(props) {
         setInputSparePartBuntut_LainnyaKeterangan(val);
     }
 
+    const setNamaaa = (kepNama,bunNama,jenisasset) =>{
+        if(jenisasset == 'SP_KEPALA'){
+            setInputSparePartKepala_BanNama(kepNama);
+            setInputSparePartKepala_LainnyaNama(kepNama);
+        }if(jenisasset == 'SP_BUNTUT'){
+            setInputSparePartBuntut_BanNama(bunNama);
+            setInputSparePartBuntut_LainnyaNama(bunNama);
+        }
+    }
 
+    const setKeterangan = (KepKet,bunKet,jenisasset) =>{
+        if(jenisasset == 'SP_KEPALA'){
+            setInputSparePartKepala_BanKeterangan(KepKet);
+            setInputSparePartKepala_LainnyaKeterangan(KepKet);
+        }if(jenisasset == 'SP_BUNTUT'){
+            setInputSparePartBuntut_BanKeterangan(bunKet);
+            setInputSparePartBuntut_LainnyaKeterangan(bunKet);
+        }
+    }
     const handleInputSparePartKepalaNama = (data) =>{
         let val = data.target.value;
         setInputSparePartKepalaNama(val);
+        setNamaaa(val,'',SelJenisAsset);
     }
     const handleChangeSparePartKepalaJenisSparePart = (data) =>{
         let id = data?.value ? data.value : '';
         setSelSparePartKepalaJenisSparePart(id);
+        if(id == 'SP_KEPALA'){
+            setNamaaa(InputSparePartKepalaNama,'',id);
+            setKeterangan(InputSparePartKepalaKeterangan,'',id);
+        }else if(id == 'SP_BUNTUT'){
+            setNamaaa('',InputSparePartBuntutNama,id);
+            setKeterangan('',InputSparePartBuntutKeterangan,id);
+        }
+        
     }
     const handleInputSparePartKepalaKeterangan = (data) =>{
         let val = data.target.value;
         setInputSparePartKepalaKeterangan(val);
+        setKeterangan(val,'',SelJenisAsset);
     }
     const handleInputSparePartKepala_BearingNoBearing = (data) =>{
         let val = data.target.value;
@@ -1525,6 +1555,7 @@ export default function AddForm(props) {
                                 </div>
 
                                 <div hidden={!(values.SparePartBuntutJenisSparePart == 'BAN' && values.jenisasset == 'SP_BUNTUT')}>
+                                    <div hidden={true}>
                                 <label className="mt-3 form-label required" htmlFor="SparePartBuntut_BanNama">
                                         {i18n.t('Nama')}
                                         <span style={{color:'red'}}>*</span>
@@ -1544,7 +1575,9 @@ export default function AddForm(props) {
                                         value={values.SparePartBuntut_BanNama}
                                     />
                                     <div className="invalid-feedback-custom">{ErrInputSparePartBuntut_BanNama}</div>
+                                    </div>
 
+                                    <div hidden={true}>
                                     <label className="mt-3 form-label required" htmlFor="SparePartBuntut_BanKeterangan">
                                         {i18n.t('Keterangan')}
                                         <span style={{color:'red'}}>*</span>
@@ -1563,6 +1596,7 @@ export default function AddForm(props) {
                                         onBlur={handleBlur}
                                         value={values.SparePartBuntut_BanKeterangan}
                                     />
+                                    </div>
 
                                     <label className="mt-3 form-label required" htmlFor="SparePartBuntut_BanPosisi">
                                     {i18n.t('Posisi')}
@@ -1666,7 +1700,8 @@ export default function AddForm(props) {
                                     <div className="invalid-feedback-custom">{ErrSelSparePartBuntut_BanStatus}</div>
                                 </div>
 
-                                <div hidden={!(values.SparePartBuntutJenisSparePart == 'LAINNYA' && values.jenisasset == 'SP_BUNTUT')}>
+                                <div hidden={true}>
+                                {/* <div hidden={!(values.SparePartBuntutJenisSparePart == 'LAINNYA' && values.jenisasset == 'SP_BUNTUT')}> */}
                                 <label className="mt-3 form-label required" htmlFor="SparePartBuntut_LainnyaNama">
                                         {i18n.t('Nama')}
                                         <span style={{color:'red'}}>*</span>
@@ -1825,6 +1860,7 @@ export default function AddForm(props) {
                                 </div>
 
                                 <div hidden={!(values.SparePartKepalaJenisSparePart == 'BAN' && values.jenisasset == 'SP_KEPALA')}>
+                                <div hidden={true}>
                                 <label className="mt-3 form-label required" htmlFor="SparePartKepala_BanNama">
                                         {i18n.t('Nama')}
                                         <span style={{color:'red'}}>*</span>
@@ -1863,6 +1899,7 @@ export default function AddForm(props) {
                                         onBlur={handleBlur}
                                         value={values.SparePartKepala_BanKeterangan}
                                     />
+                                    </div>
 
                                     <label className="mt-3 form-label required" htmlFor="SparePartKepala_BanPosisi">
                                     {i18n.t('Posisi')}
@@ -1966,7 +2003,8 @@ export default function AddForm(props) {
                                     <div className="invalid-feedback-custom">{ErrSelSparePartKepala_BanStatus}</div>
                                 </div>
 
-                                <div hidden={!(values.SparePartKepalaJenisSparePart == 'LAINNYA' && values.jenisasset == 'SP_KEPALA')}>
+                                <div hidden={true}>
+                                {/* <div hidden={!(values.SparePartKepalaJenisSparePart == 'LAINNYA' && values.jenisasset == 'SP_KEPALA')}> */}
                                 <label className="mt-3 form-label required" htmlFor="SparePartKepala_LainnyaNama">
                                         {i18n.t('Nama')}
                                         <span style={{color:'red'}}>*</span>

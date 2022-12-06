@@ -151,6 +151,7 @@ export default function EditForm(props) {
             if(idwo !== ''){
                 dispatch(actions.getInvoiceData('/searchsj/'+idwo,successHandlerSj, errorHandler));
             }
+            setSelSJ(det.idsuratjalan);
 
             let obj = new Object();
             obj.idcustomer = det.idcustomer;

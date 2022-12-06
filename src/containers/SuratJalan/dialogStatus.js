@@ -244,7 +244,7 @@ const DialogStatus = props => {
             />
 
             <label className="mt-3 form-label required" htmlFor="SelKepemilikanMobil">
-                {i18n.t('Kepimilikan Mobil')}
+                {i18n.t('Kepemilikan Mobil')}
                 <span style={{color:'red'}}>*</span>
             </label>
 
@@ -368,7 +368,7 @@ const DialogStatus = props => {
             />
 
         <label className="mt-3 form-label required" htmlFor="InputTanggalKembali">
-            {i18n.t('Tanggal Kembali')}
+            {i18n.t('Tanggal Loading/Unloading')}
         </label>
         <DatePicker
                 name="InputTanggalKembali"

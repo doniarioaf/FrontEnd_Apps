@@ -532,12 +532,12 @@ export default function EditCustomerManggala(props) {
                     }
 
                     if(det.alamat_email == ''){
-                        setErrInputAlamatEmail('Email '+i18n.t('label_REQUIRED'));
+                        setErrInputAlamatEmail('Email / Login '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
 
                     if(det.password_email == ''){
-                        setErrInputPasswordEmail('Password Email '+i18n.t('label_REQUIRED'));
+                        setErrInputPasswordEmail('Password '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
                 }
@@ -1232,8 +1232,8 @@ export default function EditCustomerManggala(props) {
                                     
                                 <tr>
                                     <th>{i18n.t('label_MINISTRY')}</th>
-                                    <th>{i18n.t('Email')}</th>
-                                    <th>{i18n.t('Password Email')}</th>
+                                    <th>{i18n.t('Email / Login')}</th>
+                                    <th>{i18n.t('Password')}</th>
                                     <th>{i18n.t('Action')}</th>
                                 </tr>
                                 {

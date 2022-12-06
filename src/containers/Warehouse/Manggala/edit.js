@@ -50,6 +50,8 @@ export default function EditWarehouse(props) {
     const [InputNote, setInputNote] = useState('');
     const [InputIsActive, setInputIsActive] = useState(true);
 
+    const [InputListContactPerson, setInputListContactPerson] = useState([{ contacthp: "",contactnumber:""}]);
+
     const [InputListContactHp, setInputListContactHp] = useState([{ contacthp: ""}]);
     const [InputListContactNumber, setInputListContactNumber] = useState([{ contactnumber: ""}]);
 
@@ -79,39 +81,56 @@ export default function EditWarehouse(props) {
             setInputNote(det.note);
             setInputIsActive(det.isactive);
 
-            let listcontactnumber = [];
-            if(det.contactnumber){
-                let cek = new String(det.contactnumber).includes(',');
-                if(cek){
-                    let arrList = new String(det.contactnumber).split(',');
-                    for(let i=0; i < arrList.length; i++){
-                        listcontactnumber.push({ contactnumber: arrList[i]});
-                    }
-                }else{
-                    listcontactnumber.push({ contactnumber: det.contactnumber});
-                }
-                if(listcontactnumber.length > 0){
-                    setInputListContactNumber(listcontactnumber);
-                }
-                
-            }
-
-            let listcontacthp = [];
+            let listcontactperson = [];
             if(det.contacthp){
                 let cek = new String(det.contacthp).includes(',');
                 if(cek){
-                    let arrList = new String(det.contacthp).split(',');
-                    for(let i=0; i < arrList.length; i++){
-                        listcontacthp.push({ contacthp: arrList[i]});
+                    let arrListNama = new String(det.contacthp).split(',');
+                    let arrListNo = new String(det.contactnumber).split(',');
+                    for(let i=0; i < arrListNama.length; i++){
+                        listcontactperson.push({ contacthp: arrListNama[i],contactnumber: arrListNo[i]});
                     }
                 }else{
-                    listcontacthp.push({ contacthp: det.contacthp});
+                    listcontactperson.push({ contacthp: det.contacthp,contactnumber: det.contactnumber});   
                 }
-                if(listcontacthp.length > 0){
-                    setInputListContactHp(listcontacthp);
+                if(listcontactperson.length > 0){
+                    setInputListContactPerson(listcontactperson);
                 }
-                
             }
+
+            // let listcontactnumber = [];
+            // if(det.contactnumber){
+            //     let cek = new String(det.contactnumber).includes(',');
+            //     if(cek){
+            //         let arrList = new String(det.contactnumber).split(',');
+            //         for(let i=0; i < arrList.length; i++){
+            //             listcontactnumber.push({ contactnumber: arrList[i]});
+            //         }
+            //     }else{
+            //         listcontactnumber.push({ contactnumber: det.contactnumber});
+            //     }
+            //     if(listcontactnumber.length > 0){
+            //         setInputListContactNumber(listcontactnumber);
+            //     }
+                
+            // }
+
+            // let listcontacthp = [];
+            // if(det.contacthp){
+            //     let cek = new String(det.contacthp).includes(',');
+            //     if(cek){
+            //         let arrList = new String(det.contacthp).split(',');
+            //         for(let i=0; i < arrList.length; i++){
+            //             listcontacthp.push({ contacthp: arrList[i]});
+            //         }
+            //     }else{
+            //         listcontacthp.push({ contacthp: det.contacthp});
+            //     }
+            //     if(listcontacthp.length > 0){
+            //         setInputListContactHp(listcontacthp);
+            //     }
+                
+            // }
 
             setListProvince(template.provinceOptions.reduce((obj, el) => (
                 [...obj, {
@@ -201,6 +220,24 @@ export default function EditWarehouse(props) {
         setInputIsActive(data.target.checked);
     }
 
+    const handleInputChangeContactPerson = (e, index) => {
+        const { name, value } = e.target;
+        let flag = true;
+        // let repVal = new String(value).replaceAll('(','');
+        // repVal = new String(repVal).replaceAll(')','')
+        if(name == 'contactnumber' && new String(value).includes(',')){
+            flag = false;
+        }
+        if(name == 'contacthp' && isNaN(value)){
+            flag = false;
+        }
+        if(flag){
+            const list = [...InputListContactPerson];
+            list[index][name] = value;
+            setInputListContactPerson(list);
+        }
+    }
+
     const handleInputChangeContactNumber = (e, index) => {
         const { name, value } = e.target;
         let flag = true;
@@ -227,6 +264,15 @@ export default function EditWarehouse(props) {
             list[index][name] = value;
             setInputListContactHp(list);
         }
+    };
+
+    const handleAddClickContactPerson = () => {
+        setInputListContactPerson([...InputListContactPerson, { contacthp: "",contactnumber:""}]);
+    };
+    const handleRemoveClickContactPerson = index => {
+        const list = [...InputListContactPerson];
+        list.splice(index, 1);
+        setInputListContactPerson(list);
     };
 
     const handleAddClickContactHp = () => {
@@ -289,23 +335,17 @@ export default function EditWarehouse(props) {
             setErrInputAncerAncer(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(InputListContactHp.length > 0){
-            for(let i=0; i < InputListContactHp.length; i++){
-                let det = InputListContactHp[i];
+
+        if(InputListContactPerson.length > 0){
+            for(let i=0; i < InputListContactPerson.length; i++){
+                let det = InputListContactPerson[i];
+
                 if(det.contacthp == ''){
                     setErrInputContactHp(i18n.t('label_REQUIRED'));
                     flag = false;
                     break;
                 }
-            }
-        }else{
-            setErrInputContactHp(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
 
-        if(InputListContactNumber.length > 0){
-            for(let i=0; i < InputListContactNumber.length; i++){
-                let det = InputListContactNumber[i];
                 if(det.contactnumber == ''){
                     setErrInputContactNumber(i18n.t('label_REQUIRED'));
                     flag = false;
@@ -314,8 +354,36 @@ export default function EditWarehouse(props) {
             }
         }else{
             setErrInputContactNumber(i18n.t('label_REQUIRED'));
+            setErrInputContactHp(i18n.t('label_REQUIRED'));
             flag = false;
         }
+        // if(InputListContactHp.length > 0){
+        //     for(let i=0; i < InputListContactHp.length; i++){
+        //         let det = InputListContactHp[i];
+        //         if(det.contacthp == ''){
+        //             setErrInputContactHp(i18n.t('label_REQUIRED'));
+        //             flag = false;
+        //             break;
+        //         }
+        //     }
+        // }else{
+        //     setErrInputContactHp(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
+
+        // if(InputListContactNumber.length > 0){
+        //     for(let i=0; i < InputListContactNumber.length; i++){
+        //         let det = InputListContactNumber[i];
+        //         if(det.contactnumber == ''){
+        //             setErrInputContactNumber(i18n.t('label_REQUIRED'));
+        //             flag = false;
+        //             break;
+        //         }
+        //     }
+        // }else{
+        //     setErrInputContactNumber(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         return flag;
     }
@@ -353,42 +421,65 @@ export default function EditWarehouse(props) {
             obj.note = InputNote;
 
             let listcontactnumber = '';
-            if(InputListContactNumber.length > 0){
+            let listcontacthp = '';
+            if(InputListContactPerson.length > 0){
                 let count =0;
-                for(let i=0; i < InputListContactNumber.length; i++){
-                    let no = InputListContactNumber[i].contactnumber.replaceAll('_','');
+                for(let i=0; i < InputListContactPerson.length; i++){
+                    let det = InputListContactPerson[i];
+                    let no = det.contactnumber.replaceAll('_','');
+                    let contacthp = det.contacthp.replaceAll('_','');
                     count++;
-                    if(no != ''){
-                        if(count == InputListContactNumber.length){
+                    if(no != '' && contacthp != ''){
+                        if(count == InputListContactPerson.length){
                             listcontactnumber += no;
+                            listcontacthp += contacthp;
                         }else{
                             listcontactnumber += no+',';
+                            listcontacthp += contacthp+',';
                         }
-                        
                     }
-                    
                 }
             }
             obj.contactnumber = listcontactnumber;
-
-            let listcontacthp = '';
-            if(InputListContactHp.length > 0){
-                let count =0;
-                for(let i=0; i < InputListContactHp.length; i++){
-                    let no = InputListContactHp[i].contacthp.replaceAll('_','');;
-                    count++;
-                    if(no != ''){
-                        if(count == InputListContactHp.length){
-                            listcontacthp += no;
-                        }else{
-                            listcontacthp += no+',';
-                        }
-                        
-                    }
-                    
-                }
-            }
             obj.contacthp = listcontacthp;
+
+            // let listcontactnumber = '';
+            // if(InputListContactNumber.length > 0){
+            //     let count =0;
+            //     for(let i=0; i < InputListContactNumber.length; i++){
+            //         let no = InputListContactNumber[i].contactnumber.replaceAll('_','');
+            //         count++;
+            //         if(no != ''){
+            //             if(count == InputListContactNumber.length){
+            //                 listcontactnumber += no;
+            //             }else{
+            //                 listcontactnumber += no+',';
+            //             }
+                        
+            //         }
+                    
+            //     }
+            // }
+            // obj.contactnumber = listcontactnumber;
+
+            // let listcontacthp = '';
+            // if(InputListContactHp.length > 0){
+            //     let count =0;
+            //     for(let i=0; i < InputListContactHp.length; i++){
+            //         let no = InputListContactHp[i].contacthp.replaceAll('_','');;
+            //         count++;
+            //         if(no != ''){
+            //             if(count == InputListContactHp.length){
+            //                 listcontacthp += no;
+            //             }else{
+            //                 listcontacthp += no+',';
+            //             }
+                        
+            //         }
+                    
+            //     }
+            // }
+            // obj.contacthp = listcontacthp;
             dispatch(actions.submitEditWarehouse('/'+id,obj,succesHandlerSubmit, errorHandler));
         }
     }
@@ -594,7 +685,7 @@ export default function EditWarehouse(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputAncerAncer}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="contactnumber">
+                            {/* <label className="mt-3 form-label required" htmlFor="contactnumber">
                                 {i18n.t('label_CONTACT_NAME')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
@@ -646,17 +737,40 @@ export default function EditWarehouse(props) {
                                     })
                                 }
                             </table>
-                            <div className="invalid-feedback-custom">{ErrInputContactNumber}</div>
+                            <div className="invalid-feedback-custom">{ErrInputContactNumber}</div> */}
 
                             <label className="mt-3 form-label required" htmlFor="contacthp">
-                                {i18n.t('Contact Hp')}
+                                {i18n.t('No Contact')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
-                            <table style={{width:'110%',marginTop:'-5px'}}>
+                            <table style={{width:'100%',marginTop:'-5px'}}>
                                 {
-                                    InputListContactHp.map((x, i) => {
+                                    InputListContactPerson.map((x, i) => {
                                         return (
                                             <tr>
+                                                <td>
+                                                <Input
+                                                name="contactnumber"
+                                                // className={
+                                                //     touched.amount && errors.amount
+                                                //         ? "w-50 input-error"
+                                                //         : "w-50"
+                                                // }
+                                                type="text"
+                                                id="contactnumber"
+                                                // mask="(9999)999-9999"
+                                                // tag={InputMask}
+                                                onChange={val => handleInputChangeContactPerson(val,i)}
+                                                onBlur={handleBlur}
+                                                // placeholder={i18n.t('label_AMOUNT')}
+                                                // style={{width: '25%'}}
+                                                // value={values.amount}
+                                                value={x.contactnumber}
+                                                disabled={false}
+                                                maxLength={16}
+                                                />
+                                                </td>
+
                                                 <td>
                                                 <Input
                                                 name="contacthp"
@@ -669,19 +783,22 @@ export default function EditWarehouse(props) {
                                                 id="contacthp"
                                                 // mask="9999-9999-9999"
                                                 // tag={InputMask}
-                                                onChange={val => handleInputChangeContacthp(val,i)}
+                                                onChange={val => handleInputChangeContactPerson(val,i)}
                                                 onBlur={handleBlur}
                                                 // placeholder={i18n.t('label_AMOUNT')}
                                                 // style={{width: '25%'}}
                                                 // value={values.amount}
                                                 value={x.contacthp}
                                                 disabled={false}
+                                                maxLength={15}
                                                 />
                                                 </td>
+
+                                                
                                                 
                                                 <td hidden={i > 0}>
                                                 <IconButton color={'primary'} hidden={i > 0}
-                                                    onClick={() => handleAddClickContactHp()}
+                                                    onClick={() => handleAddClickContactPerson()}
                                                 // hidden={showplusdebit}
                                                 >
                                                     <AddIcon style={{ fontSize: 18 }}/>
@@ -689,7 +806,7 @@ export default function EditWarehouse(props) {
                                                 </td>
                                                 <td hidden={i == 0}>
                                                 <IconButton color={'primary'} hidden={i == 0}
-                                                onClick={() => handleRemoveClickContactHp(i)}
+                                                onClick={() => handleRemoveClickContactPerson(i)}
                                                 // hidden={showplusdebit}
                                                 >
                                                     <RemoveIcon style={{ fontSize: 18 }}/>
@@ -701,8 +818,7 @@ export default function EditWarehouse(props) {
                                 }
                             </table>
                             <div className="invalid-feedback-custom">{ErrInputContactHp}</div>
-
-                            
+                            <div className="invalid-feedback-custom">{ErrInputContactNumber}</div>
 
                             <label className="mt-3 form-label required" htmlFor="note">
                                 {i18n.t('label_NOTE')}

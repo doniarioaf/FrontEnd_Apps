@@ -148,6 +148,8 @@ import React, {useState,
     function successHandler(data) {
         setValue(data.data);
         if(data.data){
+            // let filterid = RowsBranch.filter(output => output.id == SelBranch);
+
             const theData = data.data.historymapping.reduce((obj, el) => [
                 ...obj,
                 {
@@ -195,6 +197,19 @@ import React, {useState,
         })
     }
 
+    const succesHandlerSubmitHistory = (data) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(0);
+            }
+        })
+    }
+
     const succesHandlerSubmitDialog = (data) => {
         setLoading(false);
         setShowDialog(false);
@@ -216,9 +231,30 @@ import React, {useState,
     function onClickView(id) {
         // history.push(pathmenu.detailWorkOrder+'/'+id);
     }
+    
     function onClickDelete(id) {
-        setLoading(true);
-        dispatch(actions.submitDeleteAsset('/historyassetmapping/'+id,succesHandlerSubmit, errorHandler));
+        let Nama = '';
+        let filterid = rows.filter(output => output.id == id);
+        if(filterid.length > 0){
+            Nama = filterid[0].nama;
+        }
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE') +' ('+Nama+')',
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                setLoading(true);
+                dispatch(actions.submitDeleteAsset('/historyassetmapping/'+id,succesHandlerSubmitHistory, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+        
     }
 
     function errorHandler(error) {
@@ -439,7 +475,7 @@ import React, {useState,
 
 
                                 <div hidden={!(value.sparepartbuntut_jenis?(value.sparepartbuntut_jenis == 'BAN'):false)}>
-                                    <div className="row mt-3">
+                                    {/* <div className="row mt-3">
                                             <span className="col-md-5">{i18n.t('Nama')}</span>
                                             <strong className="col-md-7">
                                                 {value.sparepartbuntut_ban_nama?value.sparepartbuntut_ban_nama:''}
@@ -451,7 +487,7 @@ import React, {useState,
                                             <strong className="col-md-7">
                                                 {value.sparepartbuntut_ban_keterangan?value.sparepartbuntut_ban_keterangan:''}
                                             </strong>
-                                    </div>
+                                    </div> */}
 
                                     <div className="row mt-3">
                                             <span className="col-md-5">{i18n.t('Posisi')}</span>
@@ -483,7 +519,7 @@ import React, {useState,
                                 </div>
 
                                 <div hidden={!(value.sparepartbuntut_jenis?(value.sparepartbuntut_jenis == 'LAINNYA'):false)}>
-                                    <div className="row mt-3">
+                                    {/* <div className="row mt-3">
                                         <span className="col-md-5">{i18n.t('Nama')}</span>
                                         <strong className="col-md-7">
                                             {value.sparepartbuntut_lainnya_nama?value.sparepartbuntut_lainnya_nama:''}
@@ -495,7 +531,7 @@ import React, {useState,
                                         <strong className="col-md-7">
                                             {value.sparepartbuntut_lainnya_keterangan?value.sparepartbuntut_lainnya_keterangan:''}
                                         </strong>
-                                    </div>
+                                    </div> */}
                                 </div>
 
 
@@ -562,7 +598,7 @@ import React, {useState,
                                 </div>
 
                                 <div hidden={!(value.sparepartkepala_jenis?(value.sparepartkepala_jenis == 'BAN'):false)}>
-                                    <div className="row mt-3">
+                                    {/* <div className="row mt-3">
                                             <span className="col-md-5">{i18n.t('Nama')}</span>
                                             <strong className="col-md-7">
                                                 {value.sparepartkepala_ban_nama?value.sparepartkepala_ban_nama:''}
@@ -574,7 +610,7 @@ import React, {useState,
                                             <strong className="col-md-7">
                                                 {value.sparepartkepala_ban_keterangan?value.sparepartkepala_ban_keterangan:''}
                                             </strong>
-                                    </div>
+                                    </div> */}
 
                                     <div className="row mt-3">
                                             <span className="col-md-5">{i18n.t('Posisi')}</span>
@@ -607,7 +643,7 @@ import React, {useState,
                                 </div>
 
                                 <div hidden={!(value.sparepartkepala_jenis?(value.sparepartkepala_jenis == 'LAINNYA'):false)}>
-                                    <div className="row mt-3">
+                                    {/* <div className="row mt-3">
                                         <span className="col-md-5">{i18n.t('Nama')}</span>
                                         <strong className="col-md-7">
                                             {value.sparepartkepala_lainnya_nama?value.sparepartkepala_lainnya_nama:''}
@@ -619,7 +655,7 @@ import React, {useState,
                                         <strong className="col-md-7">
                                             {value.sparepartkepala_lainnya_keterangan?value.sparepartkepala_lainnya_keterangan:''}
                                         </strong>
-                                    </div>
+                                    </div> */}
                                 </div>
                                 
 
