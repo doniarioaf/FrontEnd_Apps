@@ -124,3 +124,4 @@ export const detailAsset = `/form/detail/asset`;
 export const editAsset = `/form/edit/asset`;
 export const reportstatusinvoice = `/report/statusinvoice`;
 export const reportKasBank = `/report/kasbank`;
+export const reportLabaRugi = `/report/labarugi`;

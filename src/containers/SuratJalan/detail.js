@@ -385,12 +385,12 @@ const StyledDialog = styled(Dialog)`
                                 </strong>
                                 </div>
 
-                                <div className="row mt-3">
+                                {/* <div className="row mt-3">
                                 <span className="col-md-5">{i18n.t('label_DESCRIPTION')}</span>
                                 <strong className="col-md-7">
                                     {value.keterangan?value.keterangan:''}
                                 </strong>
-                                </div>
+                                </div> */}
 
                                 <div className="row mt-3">
                                 <span className="col-md-5">{i18n.t('label_NOTE')}</span>

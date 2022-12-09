@@ -223,6 +223,12 @@ const handleMenu = () => {
                     path: pathmenu.reportKasBank,
                     translate: 'Kas Bank',
                     permission:permissionmenu.MenuReportKasBank,
+                },
+                {
+                    name: 'Laba Rugi',
+                    path: pathmenu.reportLabaRugi,
+                    translate: 'Laba Rugi',
+                    permission:permissionmenu.MenuReportKasBank,
                 }
             ]
         },

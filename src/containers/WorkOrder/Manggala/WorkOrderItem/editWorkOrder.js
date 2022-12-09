@@ -117,6 +117,10 @@ export default function EditForm(props) {
 
     const [InputIsActive, setInputIsActive] = useState(true);
 
+    const [ListDepo, setListDepo] = useState([]);
+    const [SelDepo, setSelDepo] = useState('');
+    const [ErrSelDepo, setErrSelDepo] = useState('');
+
     const [ListPartai, setListPartai] = useState([]);
     const [InputListItem, setInputListItem] = useState([{ idpartai:"",jumlahkoli: "",jumlahkg:"",nocontainer:"",noseal:"",barang:""}]);
     const [ErrItemPartai, setErrItemPartai] = useState('');
@@ -163,7 +167,9 @@ export default function EditForm(props) {
             setInputVoyageNumber(val.voyagenumber?val.voyagenumber:'');
             setInputTanggalSppbNPE(val.tanggalsppb_npe?moment(new Date(val.tanggalsppb_npe), formatdate).toDate():null);
             setInputDepo(val.depo?val.depo:'');
+            setSelDepo(val.idvendordepo != null && val.idvendordepo?val.idvendordepo:'')
             setInputIsActive(val.isactive);
+
 
             let listitems = [];
             if(data.data.details){
@@ -205,7 +211,16 @@ export default function EditForm(props) {
                 }]
             ), []));
 
-            setListVendor(template.vendorOptions.reduce((obj, el) => (
+            let listdepo = template.vendorOptions.filter(output => output.vendorcategoryname == 'Depo Kontainer');
+            let listvendor = template.vendorOptions.filter(output => output.vendorcategoryname == 'Consignee');
+            setListDepo(listdepo.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama
+                }]
+            ), []));
+
+            setListVendor(listvendor.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama
@@ -259,6 +274,11 @@ export default function EditForm(props) {
     const handleChangePortAsal = (data) =>{
         let id = data?.value ? data.value : '';
         setSelPortAsal(id);
+    }
+
+    const handleChangeDepo = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelDepo(id);
     }
 
     const handleChangePortTujuan = (data) =>{
@@ -377,6 +397,7 @@ export default function EditForm(props) {
         setErrSelQQ('');
         setErrInputVoyageNumber('');
         setErrInputDepo('');
+        setErrSelDepo('');
         setErrInputTanggalSppbNPE('');
         setErrInputTanggalBL('');
         setErrInputTanggalNopen('');
@@ -419,10 +440,10 @@ export default function EditForm(props) {
                         flag = false;
                     }
 
-                    if(det.barang == ''){
-                        setErrItemNoSeal(i18n.t('Barang')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.barang == ''){
+                    //     setErrItemNoSeal(i18n.t('Barang')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
                 }
             }
         }
@@ -532,8 +553,12 @@ export default function EditForm(props) {
             flag = false;
         }
 
-        if(InputDepo == ''){
-            setErrInputDepo(i18n.t('label_REQUIRED'));
+        // if(InputDepo == ''){
+        //     setErrInputDepo(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
+        if(SelDepo == ''){
+            setErrSelDepo(i18n.t('label_REQUIRED'));
             flag = false;
         }
     }
@@ -580,13 +605,14 @@ export default function EditForm(props) {
             obj.tanggalnopen = InputTanggalNopen !== null?moment(InputTanggalNopen).toDate().getTime():0;
             obj.nobl = InputNoBL;
             obj.tanggalbl = InputTanggalBL !== null? moment(InputTanggalBL).toDate().getTime():0;
-            obj.pelayaran = SelPelayaran;
-            obj.importir = SelImportir;
-            obj.eksportir = SelEksportir;
-            obj.qq = SelQQ;
+            obj.pelayaran = SelPelayaran !== ''?SelPelayaran:null;
+            obj.importir = SelImportir !== ''?SelImportir:null;
+            obj.eksportir = SelEksportir !== ''?SelEksportir:null;
+            obj.qq = SelQQ !== ''?SelQQ:null;
             obj.voyagenumber = InputVoyageNumber;
             obj.tanggalsppb_npe =InputTanggalSppbNPE !== null? moment(InputTanggalSppbNPE).toDate().getTime():0;
             obj.depo = InputDepo;
+            obj.idvendordepo = SelDepo !== ''?SelDepo:null;
             obj.isactive = InputIsActive;
             let listdetails = [];
             if(InputListItem.length > 0){
@@ -699,7 +725,7 @@ export default function EditForm(props) {
                 qq:SelQQ,
                 voyagenumber:InputVoyageNumber,
                 tanggalsppbnpe:InputTanggalSppbNPE,
-                depo:InputDepo,
+                depo:SelDepo,
                 items:InputListItem,
                 nodoc:InputNoDoc
 
@@ -1309,21 +1335,25 @@ export default function EditForm(props) {
                                 {i18n.t('Depo')}
                                 <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span>
                             </label>
-                            <Input
-                                name="depo"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="depo"
-                                maxLength={50}
-                                onChange={val => handleInputDepo(val)}
-                                onBlur={handleBlur}
-                                value={values.depo}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputDepo}</div>
+                            <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="depo"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeDepo(val)}
+                                    onBlur={val => setFieldTouched("depo", val?.value ? val.value : '')}
+                                    data={ListDepo}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.depo}
+                                />
+                            <div className="invalid-feedback-custom">{ErrSelDepo}</div>
 
                             </div>
 
@@ -1344,7 +1374,7 @@ export default function EditForm(props) {
                                         <th>{i18n.t('Jumlah Kg')}</th>
                                         <th>{i18n.t('No Container')}</th>
                                         <th>{i18n.t('No Seal')}</th>
-                                        <th>{i18n.t('Barang')}</th>
+                                        <th>{i18n.t('Catatan')}</th>
                                         <th>{i18n.t('Action')}</th>
                                     </tr>
                                     <tbody>

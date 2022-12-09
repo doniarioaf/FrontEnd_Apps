@@ -48,12 +48,14 @@ import React, {useState,
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
 
-    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",idasset:""}]);
+    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",idasset:"",idinvoiceitem:""}]);
 
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
+
+    const [IsDisableBtn, setIsDisableBtn] = useState(false);
 
     const id = props.match.params.id;
 
@@ -94,12 +96,12 @@ import React, {useState,
 
     function successHandler(data) {
         setValue(data.data);
-
+        setIsDisableBtn(data.data.disablededitordelete?true:false);
         let listitems = [];
         if(data.data.details){
             for(let i=0; i < data.data.details.length; i++){
                 let det = data.data.details[i];
-                listitems.push({ idcoa:det.coaName,catatan: det.catatan,amount:det.amount,idasset:det.assetName});
+                listitems.push({ idcoa:det.coaName,catatan: det.catatan,amount:det.amount,idasset:det.assetName,idinvoiceitem:det.invoiceitemName});
             }
         }
         setInputListItem(listitems);
@@ -235,6 +237,13 @@ import React, {useState,
                             </strong>
                             </div>
 
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('WO Number')}</span>
+                            <strong className="col-md-7">
+                                {value.nodocumentWO?value.nodocumentWO:''}
+                            </strong>
+                            </div>
+
 
                         </section>
                     )
@@ -251,6 +260,7 @@ import React, {useState,
                     <th>{i18n.t('COA')}</th>
                     <th>{i18n.t('label_NOTE')}</th>
                     <th>{i18n.t('Amount')}</th>
+                    <th>{i18n.t('Invoice Item')}</th>
                     <th>{i18n.t('Asset')}</th>
                     </tr>
                     <tbody>
@@ -261,6 +271,7 @@ import React, {useState,
                                         <td>{x.idcoa}</td>
                                         <td>{x.catatan}</td>
                                         <td>{numToMoney(parseFloat(x.amount))}</td>
+                                        <td>{x.idinvoiceitem}</td>
                                         <td>{x.idasset}</td>
                                     </tr>
 
@@ -290,8 +301,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editPengeluaranKasBank_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpengeluarankasbank+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deletePengeluaranKasBank_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={IsDisableBtn || !isGetPermissions(editPengeluaranKasBank_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpengeluarankasbank+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={IsDisableBtn || !isGetPermissions(deletePengeluaranKasBank_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
                             
                         </div>)
                         

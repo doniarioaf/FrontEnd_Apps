@@ -491,7 +491,7 @@ import React, {useState,
                     <th>{i18n.t('Jumlah Kg')}</th>
                     <th>{i18n.t('No Container')}</th>
                     <th>{i18n.t('No Seal')}</th>
-                    <th>{i18n.t('Barang')}</th>
+                    <th>{i18n.t('Catatan')}</th>
                     </tr>
                     <tbody>
                         {

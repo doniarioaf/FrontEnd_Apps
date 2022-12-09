@@ -642,7 +642,7 @@ export default function EditVendor(props) {
                                 textField={'label'}
                                 valueField={'value'}
                                 // style={{width: '25%'}}
-                                // disabled={values.isdisabledcountry}
+                                disabled={true}
                                 value={values.vendorcategory}
                             />
                             <div className="invalid-feedback-custom">{ErrSelVendorCategory}</div>

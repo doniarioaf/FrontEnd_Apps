@@ -43,6 +43,11 @@ export default function AddForm(props) {
     const [SelCOA, setSelCOA] = useState('');
     const [ErrSelCOA, setErrSelCOA] = useState('');
 
+    const [ListWO, setListWO] = useState([]);
+    const [SelWO, setSelWO] = useState('');
+
+    const [ListInvoiceItem, setListInvoiceItem] = useState([]);
+
     const [ListBank, setListBank] = useState([]);
     const [SelBank, setSelBank] = useState('');
     const [ErrSelBank, setErrSelBank] = useState('');
@@ -52,14 +57,15 @@ export default function AddForm(props) {
     const [ListChooseYN, setListChooseYN] = useState([]);
     const [ListAsset, setListAsset] = useState([]);
 
-    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",idasset:""}]);
+    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",idasset:"",idinvoiceitem:""}]);
     const [ErrInputCatatan, setErrInputCatatan] = useState('');
     const [ErrInputAmount, setErrInputAmount] = useState('');
+    const [ErrSelInvoiceItem, setErrSelInvoiceItem] = useState('');
     const [ErrItems, setErrItems] = useState('');
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getPenerimaanKasBankData('/template',successHandlerTemplate, errorHandler));
+        dispatch(actions.getPengeluaranKasBankData('/template',successHandlerTemplate, errorHandler));
     }, []);
 
     const successHandlerTemplate = (data) =>{
@@ -70,11 +76,26 @@ export default function AddForm(props) {
                     label: el.nama+' ('+el.code+')'
                 }]
             ), []));
+            
 
             setListBank(data.data.bankOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.namabank
+                }]
+            ), []));
+            
+            setListInvoiceItem(data.data.invoiceItemOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama
+                }]
+            ), []));
+
+            setListWO(data.data.woOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nodocument
                 }]
             ), []));
 
@@ -103,6 +124,11 @@ export default function AddForm(props) {
         setSelBank(id);
     }
 
+    const handleChangeWO = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelWO(id);
+    }
+
     const handleChangePaymentDate = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
@@ -121,12 +147,13 @@ export default function AddForm(props) {
         setErrInputCatatan('');
         setErrInputAmount('');
         setErrItems('');
+        setErrSelInvoiceItem('');
 
         let listitems = [];
         if(InputListItem.length > 0){
             for(let i=0; i < InputListItem.length; i++){
                 let det = InputListItem[i];
-                if(det.idcoa !== '' || det.catatan !== '' || det.amount !== '' ){
+                if(det.idcoa !== '' || det.catatan !== '' || det.amount !== '' || det.idinvoiceitem !== '' ){
                     if(det.catatan == ''){
                         setErrInputCatatan(i18n.t('Catatan')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
@@ -141,6 +168,13 @@ export default function AddForm(props) {
                         setErrSelCOA(i18n.t('DP')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
+                    if(SelWO !== ''){
+                        if(det.idinvoiceitem == ''){
+                            setErrSelInvoiceItem(i18n.t('Invoice Item')+' '+i18n.t('label_REQUIRED'));
+                            flag = false;
+                        }
+                    }
+
                     listitems.push(det);
                 }
             }
@@ -202,6 +236,7 @@ export default function AddForm(props) {
             obj.idcoa = SelCOA;
             obj.idbank = SelBank;
             obj.keterangan = InputKeterangan;
+            obj.idwo = SelWO !== ''?SelWO:null;
             obj.isactive = true;
             let listdetails = [];
             if(InputListItem.length > 0){
@@ -213,6 +248,7 @@ export default function AddForm(props) {
                         objDet.catatan = det.catatan;
                         objDet.amount = new String(det.amount).replaceAll('.','').replaceAll(',','.');
                         objDet.idasset = det.idasset !== '' ? det.idasset:null;
+                        objDet.idinvoiceitem = det.idinvoiceitem !== '' ? det.idinvoiceitem:null;
                         listdetails.push(objDet);
                     }
                 }
@@ -268,7 +304,7 @@ export default function AddForm(props) {
     };    
 
     const handleAddClick = () => {
-        setInputListItem([...InputListItem, { idcoa:"",catatan: "",amount:"",idasset:""}]);
+        setInputListItem([...InputListItem, { idcoa:"",catatan: "",amount:"",idasset:"",idinvoiceitem:""}]);
     };
     
     const handleRemoveClick = index => {
@@ -286,7 +322,8 @@ export default function AddForm(props) {
                 coa:SelCOA,
                 bank:SelBank,
                 keterangan:InputKeterangan,
-                items:InputListItem
+                items:InputListItem,
+                idwo:SelWO
             }
         }
         validate={values => {
@@ -426,12 +463,36 @@ export default function AddForm(props) {
                                 value={values.keterangan}
                             />
 
+                            <label className="mt-3 form-label required" htmlFor="idwo">
+                                {i18n.t('WO Number')}
+                            </label>
+
+                                <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="idwo"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeWO(val)}
+                                    onBlur={val => setFieldTouched("idwo", val?.value ? val.value : '')}
+                                    data={ListWO}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.idwo}
+                                />
+
                             </div>
                             </div>
 
                             <div className="invalid-feedback-custom">{ErrItems}</div>
                             <div className="invalid-feedback-custom">{ErrInputCatatan}</div>
                             <div className="invalid-feedback-custom">{ErrInputAmount}</div>
+                            <div className="invalid-feedback-custom">{ErrSelInvoiceItem}</div>
                             {
                                 InputListItem.length == 0?'':
                                 <table id="tablegrid">
@@ -439,6 +500,7 @@ export default function AddForm(props) {
                                         <th>{i18n.t('COA')}</th>
                                         <th>{i18n.t('label_NOTE')}</th>
                                         <th>{i18n.t('Amount')}</th>
+                                        <th>{i18n.t('Invoice Item')}</th>
                                         <th>{i18n.t('Asset')}</th>
                                         <th>{i18n.t('Action')}</th>
                                     </tr>
@@ -497,6 +559,20 @@ export default function AddForm(props) {
                                                         // value={values.amount}
                                                         value={x.amount}
                                                         disabled={false}
+                                                    />
+                                                    </td>
+                                                    <td>
+                                                    <DropdownList
+                                                        name="idinvoiceitem"
+                                                        filter='contains'
+                                                        // placeholder={i18n.t('select.SELECT_OPTION')}
+                                                        
+                                                        onChange={val => handleInputDropDownChange(val,i,'idinvoiceitem')}
+                                                        data={ListInvoiceItem}
+                                                        textField={'label'}
+                                                        valueField={'value'}
+                                                        style={{width: '130px'}}
+                                                        value={x.idinvoiceitem}
                                                     />
                                                     </td>
                                                     <td>

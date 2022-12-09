@@ -2,6 +2,7 @@ import React,{ Fragment } from 'react';
 import { Text, View, StyleSheet,Image } from '@react-pdf/renderer';
 import logo from "./kseilogo.png";
 import ContaineritemsTable from "./ContaineritemsTable";
+import { formatdate } from '../../../shared/constantValue';
 
 const styles = StyleSheet.create({
     container:{
@@ -73,6 +74,19 @@ const styles = StyleSheet.create({
         height: 4,
         fontStyle: 'bold',
         marginBottom:5
+    },
+    suratJalanCatatan: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginTop: -15,
+    },
+    suratJalanAlamat: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        // width:'100px'
+    },
+    suratJalanAlamatCatatan: {
+        flexDirection: 'row',
     },
     label: {
         width: 25
@@ -163,13 +177,13 @@ const GenerateSuratJalan = ({ valuedata }) => (
     </View>
     <View style={styles.suratJalanNoContainer}>
         <Text style={styles.label}>No: </Text>
-        <Text >{valuedata != null?valuedata.nodocument:''}</Text>
+        <Text >{valuedata != null?valuedata.nodocument+'   ':''}</Text>
     </View>
 
     <View style={styles.suratJalanDateContainer}>
         <Text style={styles.label}>Date: </Text>
         <Text >{valuedata != null?valuedata.tanggal:''}</Text>
-        {/* {valuedata != null?moment (new Date(valuedata.tanggal)).format(formatdateDDMMMMYYYY):''} */}
+        {/* {valuedata != null?moment (new Date(valuedata.tanggal)).format(formatdate):''} */}
     </View>
 
     <Text >{valuedata != null?getKalimat1(valuedata.woType):''}</Text>
@@ -179,17 +193,21 @@ const GenerateSuratJalan = ({ valuedata }) => (
         <Text >{valuedata != null?valuedata.namacustomer:''}</Text>
     </View>
 
-    {/* <Text >{'Jl. Anggrek Raya Blok K No 1'}</Text> */}
+    <View>
     <Text >{valuedata != null?valuedata.customerAddress:''}</Text>
-    {/* <Text >{'Kirim Mobil Harus Malam'}</Text> */}
-    <Text >{valuedata != null?valuedata.catatan:''}</Text>
+    </View>
+
+    <View style={styles.suratJalanAlamat}>
     <Text >{valuedata != null?(valuedata.customerProvince+', '+valuedata.customerCity+', '+valuedata.customerDistrict+', '+valuedata.customerKodePos):''}</Text>
-    {/* <Text >{'Jawa Barat, Bogor, Gunung Sindur, Gunung Sindur, 16340'}</Text> */}
+    </View>
+
+    <View style={styles.suratJalanCatatan}>
+    <Text >{valuedata != null?valuedata.catatan:''}</Text>    
+    </View>
     
     <View style={styles.contactPersonContainer}>
         <Text style={styles.labelcontactperson}>Contact Person: </Text>
         <Text >{(getContact(valuedata != null?valuedata.warehousecontactname:''))+'/'+(getContact(valuedata != null?valuedata.warehousecontactno:''))+'/'+(valuedata != null?valuedata.warehouseaddress:'')}</Text>
-        {/* <Text >{'Yenti/0812.3232.3231/Pergudangan Sigma Kartika'}</Text> */}
     </View>
 
     <View style={styles.horizontalline}/>

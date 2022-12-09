@@ -174,6 +174,7 @@ export default function EditBankAccount(props) {
                                 onChange={val => handleInputNama(val)}
                                 onBlur={handleBlur}
                                 value={values.nama}
+                                disabled={true}
                             />
                             <div className="invalid-feedback-custom">{ErrInputNama}</div>
 

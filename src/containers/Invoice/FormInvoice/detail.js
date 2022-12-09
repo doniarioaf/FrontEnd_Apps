@@ -293,10 +293,17 @@ import React, {useState,
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            <div className="row mt-3" hidden={value.idinvoicetype?(value.idinvoicetype == 'REIMBURSEMENT'?true:false):true}>
                             <span className="col-md-5">{i18n.t('Price List')}</span>
                             <strong className="col-md-7">
                             {value.detailsprice?(value.detailsprice.length > 0?value.detailsprice[0].nodocumentpricelist:''):''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3" hidden={value.idinvoicetype?(value.idinvoicetype == 'REIMBURSEMENT'?false:true):true}>
+                            <span className="col-md-5">{i18n.t('Pengeluaran')}</span>
+                            <strong className="col-md-7">
+                            {value.detailsprice?(value.detailsprice.length > 0?value.detailsprice[0].nodocumentpengeluaran:''):''}
                             </strong>
                             </div>
 
@@ -314,7 +321,7 @@ import React, {useState,
                     <tr>
                         <th>{i18n.t('Invoice Type')}</th>
                         <th>{i18n.t('Harga')}</th>
-                        <th>{i18n.t('Is Mandatory')}</th>
+                        {/* <th>{i18n.t('Is Mandatory')}</th> */}
                         <th>{i18n.t('Jalur')}</th>
                         <th>{i18n.t('Qty')}</th>
                         <th>{i18n.t('Diskon')}</th>
@@ -328,7 +335,7 @@ import React, {useState,
                                     <tr>
                                         <td>{x.invoicetypename}</td>
                                         <td>{numToMoney(parseFloat(x.price))}</td>
-                                        <td style={{width:'50px'}}>{x.ismandatory == 'Y'?'Yes':'No'}</td>
+                                        {/* <td style={{width:'50px'}}>{x.ismandatory == 'Y'?'Yes':'No'}</td> */}
                                         <td style={{backgroundColor:x.jalur !== ''? (x.jalur == 'HIJAU'?'greenyellow':'red'):''}}>{x.jalur == 'MERAH'?'Merah':'Hijau'}</td>
                                         <td>{x.qty}</td>
                                         <td>{numToMoney(parseFloat(x.diskon))}</td>

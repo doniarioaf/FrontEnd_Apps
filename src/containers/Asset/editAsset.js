@@ -525,7 +525,7 @@ export default function EditForm(props) {
     }
     const handleInputBuntutMerkAxel = (data) =>{
         let val = data.target.value;
-        setInputBuntutMerkAxel(val);
+        setInputBuntutMerkAxel(new String(val).toUpperCase());
     }
     const handleChangeJenisAxel = (data) =>{
         let id = data?.value ? data.value : '';

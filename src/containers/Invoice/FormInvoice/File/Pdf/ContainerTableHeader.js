@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
 
 const setHeader = (type) =>{
     let list = [];
-    console.log('setHeader ',type);
     if(type.type == 'JASA'){
         list.push(<Text style={styles.no}>No</Text>);
         list.push(<Text style={styles.jasa}>Jasa PPJK</Text>);

@@ -464,7 +464,7 @@ export default function MenuAdd(props) {
                                 value={values.customer}
                             />
 
-                            <label className="mt-3 form-label required" htmlFor="keterangan">
+                            {/* <label className="mt-3 form-label required" htmlFor="keterangan">
                                 {i18n.t('label_DESCRIPTION')}
                             </label>
                             <Input
@@ -479,7 +479,7 @@ export default function MenuAdd(props) {
                                 onChange={val => handleInputKeterangan(val)}
                                 onBlur={handleBlur}
                                 value={values.keterangan}
-                            />
+                            /> */}
 
                             <label className="mt-3 form-label required" htmlFor="warehouse">
                                 {i18n.t('label_WAREHOUSE')}
