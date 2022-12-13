@@ -30,7 +30,7 @@ export default function AddJalurHijau(props) {
     const [SelGudang, setSelGudang] = useState('');
     const [InputHarga, setInputHarga] = useState('0');
     const [SelJasa, setSelJasa] = useState('');
-    const [SelIsMandatory, setSelIsMandatory] = useState('Y');
+    const [SelIsMandatory, setSelIsMandatory] = useState('N');
 
     const handleChangeGudang = (data) =>{
         let id = data?.value ? data.value : '';
@@ -68,7 +68,7 @@ export default function AddJalurHijau(props) {
             setSelGudang('');
             setSelJasa('');
             setInputHarga('0');
-            setSelIsMandatory('Y');
+            setSelIsMandatory('N');
             props.addtolist(obj);
         }
         
@@ -115,7 +115,7 @@ export default function AddJalurHijau(props) {
                                             <td>{i18n.t('label_WAREHOUSE')}<span style={{color:'red'}}>*</span></td>
                                             <td>{'Jasa'}<span style={{color:'red'}}>*</span></td>
                                             <td>{i18n.t('label_PRICE')}<span style={{color:'red'}}>*</span></td>
-                                            <td>{'Is Mandatory'}<span style={{color:'red'}}>*</span></td>
+                                            <td hidden={true}>{'Is Mandatory'}<span style={{color:'red'}}>*</span></td>
                                             <td>{''}</td>
                                         </tr>
                                         <tr>
@@ -180,7 +180,7 @@ export default function AddJalurHijau(props) {
                                                 disabled={false}
                                             />
                                             </td>
-                                            <td>
+                                            <td hidden={true}>
                                             <DropdownList
                                                 // className={
                                                 //     touched.branch && errors.branch
@@ -220,7 +220,7 @@ export default function AddJalurHijau(props) {
                                             <th>{i18n.t('label_WAREHOUSE')}</th>
                                             <th>{i18n.t('Jasa')}</th>
                                             <th>{i18n.t('label_PRICE')}</th>
-                                            <th>{i18n.t('Is Mandatory')}</th>
+                                            <th hidden={true}>{i18n.t('Is Mandatory')}</th>
                                             <th>{i18n.t('Action')}</th>
                                         </tr>
                                             {
@@ -277,7 +277,7 @@ export default function AddJalurHijau(props) {
                                                             />
                                                             </td>
 
-                                                            <td>
+                                                            <td hidden={true}>
                                                             <DropdownList
                                                                 name="ismandatory"
                                                                 filter='contains'

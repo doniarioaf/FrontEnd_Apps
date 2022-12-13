@@ -67,13 +67,31 @@ const DialogQuickSearch = props => {
                 {name: 'nodoc', title: 'No Document'},
                 {name: 'name', title: i18n.t('label_NAME')},
             ]
+        }else if(props.seacrhtype == 'PENERIMAANINVOICE'){
+            data = [
+                {name: 'id', title: 'id'},
+                {name: 'noinv', title: 'No Invoice'},
+                {name: 'nowo', title: 'No Work Order'},
+                {name: 'name', title: i18n.t('label_NAME')},
+            ]
+        }else if(props.seacrhtype == 'PENERIMAANWO'){
+            data = [
+                {name: 'id', title: 'id'},
+                {name: 'nowo', title: 'No Work Order'},
+                {name: 'namacargo', title: 'Nama Cargo'},
+                {name: 'name', title: i18n.t('label_NAME')},
+            ]
         }
         setColumns(data);
     }, []);
 
     const handleChangeSearchName = (data) =>{
         let value = data.target.value;
-        setInputSearchName(value);
+        if(value.includes("`")){
+        }else{
+            setInputSearchName(value);
+        }
+        
     }
 
     const handleSearch = () =>{
@@ -89,9 +107,27 @@ const DialogQuickSearch = props => {
                 let obj = new Object();
                 obj.nama = InputSearchName;
                 dispatch(actions.submitAddWorkOrder('/searchcustomer',obj,successHandleSearch, props.errorHandler));
+            }else if(props.seacrhtype == 'CUSTOMERINVOICE'){
+                let obj = new Object();
+                obj.nama = InputSearchName;
+                dispatch(actions.submitAddInvoice('/searchcustomer',obj,successHandleSearch, props.errorHandler));
+            }else if(props.seacrhtype == 'PENERIMAANINVOICE'){
+                let obj = new Object();
+                obj.nodocument = InputSearchName;
+                obj.namacustomer = InputSearchName;
+                obj.idwo = props.idwo == ''?0:props.idwo;
+                obj.type = 'PENERIMAAN';
+                dispatch(actions.submitAddPenerimaanKasBank('/searchinvoice',obj,successHandleSearch, props.errorHandler));
+            }else if(props.seacrhtype == 'PENERIMAANWO'){
+                let obj = new Object();
+                obj.nodocument = InputSearchName;
+                obj.namacustomer = InputSearchName;
+                obj.namacargo = InputSearchName;
+                obj.idwo = 0;
+                dispatch(actions.submitAddPenerimaanKasBank('/searchwo',obj,successHandleSearch, props.errorHandler));
             }
         }else{
-            setErrInputSearch(i18n.t('forms.REQUIRED'));
+            setErrInputSearch(i18n.t('label_REQUIRED'));
         }
         
     }
@@ -115,6 +151,45 @@ const DialogQuickSearch = props => {
                     {
                         'id': el.id,
                         'name': el.customername,
+                        'data':el
+                    }
+                ], []);
+            }else if(props.seacrhtype == 'CUSTOMERINVOICE'){
+                theData = data.data.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        'id': el.id,
+                        'name': el.customername,
+                        'data':el
+                    }
+                ], []);
+            }else if(props.seacrhtype == 'PENERIMAANINVOICE'){
+                // {name: 'id', title: 'id'},
+                // {name: 'noinv', title: 'No Invoice'},
+                // {name: 'nowo', title: 'No Work Order'},
+                // {name: 'name', title: i18n.t('label_NAME')},
+                theData = data.data.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        'id': el.id,
+                        'noinv': el.nodocument,
+                        'nowo': el.noocumentwo,
+                        'name': el.namaCustomer,
+                        'data':el
+                    }
+                ], []);
+            }else if(props.seacrhtype == 'PENERIMAANWO'){
+                // {name: 'id', title: 'id'},
+                // {name: 'nowo', title: 'No Work Order'},
+                // {name: 'namacargo', title: 'Nama Cargo'},
+                // {name: 'name', title: i18n.t('label_NAME')},
+                theData = data.data.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        'id': el.id,
+                        'nowo': el.nodocument,
+                        'namacargo': el.namacargo,
+                        'name': el.namaCustomer,
                         'data':el
                     }
                 ], []);

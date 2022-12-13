@@ -276,7 +276,7 @@ import '../CSS/table.css';
                 <th>{i18n.t('label_WAREHOUSE')}</th>
                 <th>{i18n.t('Jasa')}</th>
                 <th>{i18n.t('label_PRICE')}</th>
-                <th>{i18n.t('Is Mandatory')}</th>
+                {/* <th>{i18n.t('Is Mandatory')}</th> */}
             </tr>
             {
                 InputListHijau.map((x, i) => {
@@ -285,7 +285,7 @@ import '../CSS/table.css';
                         <td>{x.warehouse}</td>
                         <td>{x.invoicetype}</td>
                         <td>{numToMoney(parseFloat(x.price))}</td>
-                        <td>{x.ismandatory}</td>
+                        {/* <td>{x.ismandatory}</td> */}
                     </tr>
                     )
                 })
@@ -301,7 +301,7 @@ import '../CSS/table.css';
                 <th>{i18n.t('label_WAREHOUSE')}</th>
                 <th>{i18n.t('Jasa')}</th>
                 <th>{i18n.t('label_PRICE')}</th>
-                <th>{i18n.t('Is Mandatory')}</th>
+                {/* <th>{i18n.t('Is Mandatory')}</th> */}
             </tr>
             {
                 InputListMerah.map((x, i) => {
@@ -310,7 +310,7 @@ import '../CSS/table.css';
                         <td>{x.warehouse}</td>
                         <td>{x.invoicetype}</td>
                         <td>{numToMoney(parseFloat(x.price))}</td>
-                        <td>{x.ismandatory}</td>
+                        {/* <td>{x.ismandatory}</td> */}
                     </tr>
                     )
                 })

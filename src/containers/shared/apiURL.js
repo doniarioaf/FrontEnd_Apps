@@ -1,5 +1,6 @@
 export const baseApiURL = 
-    // 'http://localhost:8080/manggala/v1';
+    // 'http://localhost:8080/manggala/v1'; //Irsan
+    // 'http://localhost:8189/manggala/v1'; //Doni
     'http://localhost:8080/v1';
     // 'http://147.139.139.25:80/sinarmediasakti/v1';
 export const loginURL = `${baseApiURL}/login`;
@@ -33,3 +34,7 @@ export const basePriceListURL = param => `${baseApiURL}/pricelist${param}`;
 export const basePaymentTypeURL = param => `${baseApiURL}/paymenttype${param}`;
 export const baseWorkOrderURL = param => `${baseApiURL}/workorder${param}`;
 export const baseSuratJalanURL = param => `${baseApiURL}/suratjalan${param}`;
+export const basePenerimaanKasBankURL = param => `${baseApiURL}/penerimaankasbank${param}`;
+export const basePengeluaranKasBankURL = param => `${baseApiURL}/pengeluarankasbank${param}`;
+export const baseInvoiceURL = param => `${baseApiURL}/invoice${param}`;
+export const baseAssetURL = param => `${baseApiURL}/asset${param}`;

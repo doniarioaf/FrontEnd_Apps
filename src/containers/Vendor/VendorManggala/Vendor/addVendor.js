@@ -137,7 +137,25 @@ export default function AddVendor(props) {
 
     const handleInputNpwp = (data) =>{
         let val = data.target.value;
-        setInputNpwp(val);
+        let value = new String(val).replaceAll('.','').replaceAll('-','');
+        let flag = false;
+        if(new String(val).includes('.')){
+            flag = true;
+        }
+        if(new String(val).includes('-')){
+            flag = true;
+        }
+        if(!isNaN(value)){
+            flag = true;
+        }else{
+            flag = false;
+        }
+        if(flag){
+            setInputNpwp(val);
+        }else if(val == ''){
+            setInputNpwp('');
+        }
+        
     }
 
     const handleInputAddress = (data) =>{
@@ -652,8 +670,9 @@ export default function AddVendor(props) {
                                 // }
                                 type="text"
                                 id="npwp"
-                                mask="99.999.999.9-999.999"
-                                tag={InputMask}
+                                // mask="99.999.999.9-999.999"
+                                // tag={InputMask}
+                                maxLength={40}
                                 onChange={val => handleInputNpwp(val)}
                                 onBlur={handleBlur}
                                 value={values.npwp}

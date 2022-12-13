@@ -365,8 +365,8 @@ import React, {useState,
                 <table id="tablegrid">
                     <tr>
                         <th>{i18n.t('label_MINISTRY')}</th>
-                        <th>{i18n.t('Email')}</th>
-                        <th>{i18n.t('Password Email')}</th>
+                        <th>{i18n.t('Email / Login')}</th>
+                        <th>{i18n.t('Password')}</th>
                     </tr>
                     {
                         value.detailsInfoKementerian.map((x, i) => {

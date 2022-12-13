@@ -132,16 +132,17 @@ import React, {useState,
         })
     }
 
-    const listContact = (data) => {
+    const listContact = (data,datacontactno) => {
         let list = [];
         let cek = new String(data).includes(',');
         if(cek){
             let arrList = new String(data).split(',');
+            let arrListNo = new String(datacontactno).split(',');
             for(let i=0; i < arrList.length; i++){
                 list.push(
                     <div className="row mt-1">
-                    <strong className="col-md-7">
-                    {arrList[i]}
+                    <strong className="col-md-10">
+                    {arrList[i]+' - '+arrListNo[i]}
                     </strong>
                     </div>
                 )
@@ -150,7 +151,7 @@ import React, {useState,
             list.push(
                 <div className="row mt-1">
                 <strong className="col-md-7">
-                {data}
+                {data+' - '+datacontactno}
                 </strong>
                 </div>
             )
@@ -260,7 +261,7 @@ import React, {useState,
                                 </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_CONTACT_NAME')}</span>
                             <strong className="col-md-7">
                                 {listContact(value.contactnumber?value.contactnumber:'')}
@@ -268,9 +269,16 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Contact HP')}</span>
+                            <span className="col-md-5">{i18n.t('No Contact HP')}</span>
                             <strong className="col-md-7">
                                 {listContact(value.contacthp?value.contacthp:'')}
+                            </strong>
+                            </div> */}
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('No Contact')}</span>
+                            <strong className="col-md-7">
+                                {listContact((value.contactnumber?value.contactnumber:''),(value.contacthp?value.contacthp:''))}
                             </strong>
                             </div>
 

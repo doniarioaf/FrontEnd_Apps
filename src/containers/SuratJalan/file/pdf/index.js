@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Container, Card, CardBody}  from 'reactstrap';
-import {Trans, useTranslation}      from 'react-i18next';
+// import {Trans, useTranslation}      from 'react-i18next';
 import ContentWrapper               from '../../../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../../../components/Layout/ContentHeading';
 import * as pathmenu           from '../../../shared/pathMenu';
@@ -12,7 +12,7 @@ import {useHistory}                 from 'react-router-dom';
 import {useDispatch}   from 'react-redux';
 import * as actions                 from '../../../../store/actions';
 import Swal             from "sweetalert2";
-import { formatdateDDMMMMYYYY } from '../../../shared/constantValue';
+import { formatdate, formatdateDDMMMMYYYY } from '../../../shared/constantValue';
 import moment                          from 'moment';
 
 const SuratJalanIndex = (props) => {
@@ -34,7 +34,7 @@ const SuratJalanIndex = (props) => {
         if(data.data){
             let dettemp = data.data;
             let det = data.data;
-            det.tanggal = dettemp.tanggal ?moment (new Date(dettemp.tanggal)).format(formatdateDDMMMMYYYY):'';
+            det.tanggal = dettemp.tanggal ?moment (new Date(dettemp.tanggal)).format(formatdate):'';
             setValue(det);
 
             // setIsReady(true);

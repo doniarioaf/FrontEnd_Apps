@@ -8,9 +8,11 @@ import {useDispatch}   from 'react-redux';
 import Swal                         from 'sweetalert2';
 import * as actions                 from '../../../store/actions';
 import * as pathmenu           from '../../shared/pathMenu';
-import { reloadToHomeNotAuthorize,isGetPermissions,numToMoney } from '../../shared/globalFunc';
+import { reloadToHomeNotAuthorize,isGetPermissions,numToMoney,numToMoneyWithComma } from '../../shared/globalFunc';
 import { MenuParameterManggala,addParameterManggala_Permission } from '../../shared/permissionMenu';
+import { formatdate } from '../../shared/constantValue';
 import {useHistory}                 from 'react-router-dom';
+import moment                          from 'moment';
 
 const PortIndex = () => {
     reloadToHomeNotAuthorize(MenuParameterManggala,'READ');
@@ -21,6 +23,7 @@ const PortIndex = () => {
         {name: 'id', title: 'id'},
         // {name: 'code', title: i18n.t('Code')},
         {name: 'name', title: i18n.t('label_NAME')},
+        {name: 'type', title: i18n.t('Type')},
         {name: 'value', title: i18n.t('Value')},
         // {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);
@@ -41,7 +44,8 @@ const PortIndex = () => {
                     'id': el.id,
                     // 'code':el.code?el.code:'',
                     'name': el.paramname ?el.paramname:'',
-                    'value':el.paramvalue?checkValue(el.paramvalue):'',
+                    'type': el.paramtype ?el.paramtype:'',
+                    'value':el.paramvalue || el.paramdate?checkValue(el.paramvalue,el.paramdate,el.paramtype):'',
                     'isactive': el.isactive?'Yes':'No'
                 }
             ], []);
@@ -50,10 +54,13 @@ const PortIndex = () => {
         setLoading(false);
     }
 
-    function checkValue(data) {
-        if(!isNaN(data)){
-            return numToMoney(parseFloat(data));
+    function checkValue(data,paramdate,type) {
+        if(type == 'NUMBER'){
+            return numToMoneyWithComma(parseFloat(data));
+        }else if(type == 'DATE'){
+            return moment(new Date(paramdate)).format(formatdate);
         }
+        
         return data;
     }
 
@@ -91,6 +98,7 @@ const PortIndex = () => {
                 onclickadd={onClickAdd}
                 permissionview={!isGetPermissions(MenuParameterManggala,'READ')}
                 onclickview={onClickView}
+                listfilterdisabled = {['value']}
             />
             </div>
             </Container>

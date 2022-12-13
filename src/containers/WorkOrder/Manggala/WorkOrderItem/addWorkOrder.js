@@ -3,15 +3,13 @@ import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../../../components/Layout/ContentHeading';
-import DragDrop                     from '../../../../components/DragDrops/DragDrop';
-// import {Input,Button,FormGroup,Label} from 'reactstrap';
 import {Input,Button,Label,FormGroup,Container} from 'reactstrap';
 import * as actions                 from '../../../../store/actions';
 import {useDispatch}   from 'react-redux';
 import { Loading } from '../../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-import { reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
+import { numToMoney, reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
 import { addWorkOrder_Permission} from '../../../shared/permissionMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
@@ -118,6 +116,10 @@ export default function AddForm(props) {
 
     const [InputIsActive, setInputIsActive] = useState(true);
 
+    const [ListDepo, setListDepo] = useState([]);
+    const [SelDepo, setSelDepo] = useState('');
+    const [ErrSelDepo, setErrSelDepo] = useState('');
+
     const [ListPartai, setListPartai] = useState([]);
     const [InputListItem, setInputListItem] = useState([{ idpartai:"",jumlahkoli: "",jumlahkg:"",nocontainer:"",noseal:"",barang:""}]);
     const [ErrItemPartai, setErrItemPartai] = useState('');
@@ -162,8 +164,18 @@ export default function AddForm(props) {
                     label: el.name
                 }]
             ), []));
+            
+            let listdepo = data.data.vendorOptions.filter(output => output.vendorcategoryname == 'Depo Kontainer');
+            let listvendor = data.data.vendorOptions.filter(output => output.vendorcategoryname == 'Consignee');
+            
+            setListDepo(listdepo.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama
+                }]
+            ), []));
 
-            setListVendor(data.data.vendorOptions.reduce((obj, el) => (
+            setListVendor(listvendor.vendorOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama
@@ -188,6 +200,11 @@ export default function AddForm(props) {
     const handleChangeWoType = (data) =>{
         let id = data?.value ? data.value : '';
         setSelWoType(id);
+    }
+
+    const handleChangeDepo = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelDepo(id);
     }
 
     const handleChangeModaTransport = (data) =>{
@@ -231,6 +248,7 @@ export default function AddForm(props) {
 
     const handleInputNomorAju = (data) =>{
         let val = data.target.value;
+        val = new String(val).replaceAll(' ','');
         if(val == '' || !isNaN(val)){
             setInputNoAju(val)
         }
@@ -334,6 +352,7 @@ export default function AddForm(props) {
         setErrSelQQ('');
         setErrInputVoyageNumber('');
         setErrInputDepo('');
+        setErrSelDepo('');
         setErrInputTanggalSppbNPE('');
         setErrInputTanggalBL('');
         setErrInputTanggalNopen('');
@@ -376,10 +395,10 @@ export default function AddForm(props) {
                         flag = false;
                     }
 
-                    if(det.barang == ''){
-                        setErrItemNoSeal(i18n.t('Barang')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.barang == ''){
+                    //     setErrItemBarang(i18n.t('Barang')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
                 }
             }
         }
@@ -489,8 +508,13 @@ export default function AddForm(props) {
             flag = false;
         }
 
-        if(InputDepo == ''){
-            setErrInputDepo(i18n.t('label_REQUIRED'));
+        // if(InputDepo == ''){
+        //     setErrInputDepo(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
+
+        if(SelDepo == ''){
+            setErrSelDepo(i18n.t('label_REQUIRED'));
             flag = false;
         }
     }
@@ -537,19 +561,22 @@ export default function AddForm(props) {
             obj.tanggalnopen = InputTanggalNopen !== null?moment(InputTanggalNopen).toDate().getTime():0;
             obj.nobl = InputNoBL;
             obj.tanggalbl = InputTanggalBL !== null? moment(InputTanggalBL).toDate().getTime():0;
-            obj.pelayaran = SelPelayaran;
-            obj.importir = SelImportir;
-            obj.eksportir = SelEksportir;
-            obj.qq = SelQQ;
+            obj.pelayaran = SelPelayaran !== ''?SelPelayaran:null;
+            obj.importir = SelImportir !== ''?SelImportir:null;
+            obj.eksportir = SelEksportir !== ''?SelEksportir:null;
+            obj.qq = SelQQ !== ''?SelQQ:null;
             obj.voyagenumber = InputVoyageNumber;
             obj.tanggalsppb_npe =InputTanggalSppbNPE !== null? moment(InputTanggalSppbNPE).toDate().getTime():0;
             obj.depo = InputDepo;
             obj.isactive = InputIsActive;
+            obj.idvendordepo = SelDepo !== ''?SelDepo:null;
             let listdetails = [];
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
                     let det = InputListItem[i];
                     if(det.idpartai !== '' && det.barang !== '' && det.jumlahkg !== '' && det.jumlahkoli !== '' && det.nocontainer !== '' && det.noseal !== '' ){
+                        det.jumlahkg = new String(det.jumlahkg).replaceAll('.','');
+                        det.jumlahkoli = new String(det.jumlahkoli).replaceAll('.','');
                         listdetails.push(det);
                     }
                 }
@@ -585,8 +612,16 @@ export default function AddForm(props) {
     const handleInputChange = (e, index) => {
         const { name, value } = e.target;
         const list = [...InputListItem];
-        list[index][name] = value;
+        if(name == 'jumlahkoli' || name == 'jumlahkg'){
+            let valTemp = new String(value).replaceAll('.','');
+            if(!isNaN(valTemp)){
+                list[index][name] = numToMoney(parseFloat(valTemp));    
+            }
+        }else{
+            list[index][name] = value;
+        }
         setInputListItem(list);
+        
     };
 
     const handleInputDropDownChange = (e, index,name) => {
@@ -647,7 +682,7 @@ export default function AddForm(props) {
                 qq:SelQQ,
                 voyagenumber:InputVoyageNumber,
                 tanggalsppbnpe:InputTanggalSppbNPE,
-                depo:InputDepo,
+                depo:SelDepo,
                 items:InputListItem
 
             }
@@ -678,7 +713,7 @@ export default function AddForm(props) {
                     return(
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddWorkOrder">
                             <ContentWrapper>
-                            <ContentHeading history={history} link={pathmenu.addemployeeManggala} label={'Add Employee'} labeldefault={'Add Employee'} />
+                            <ContentHeading history={history} link={pathmenu.addWorkOrder} label={'Add Work Order'} labeldefault={'Add Work Order'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="tanggal">
@@ -1237,21 +1272,25 @@ export default function AddForm(props) {
                                 {i18n.t('Depo')}
                                 <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span>
                             </label>
-                            <Input
-                                name="depo"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="depo"
-                                maxLength={50}
-                                onChange={val => handleInputDepo(val)}
-                                onBlur={handleBlur}
-                                value={values.depo}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputDepo}</div>
+                            <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="depo"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeDepo(val)}
+                                    onBlur={val => setFieldTouched("depo", val?.value ? val.value : '')}
+                                    data={ListDepo}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.depo}
+                                />
+                            <div className="invalid-feedback-custom">{ErrSelDepo}</div>
 
                             </div>
 
@@ -1272,7 +1311,7 @@ export default function AddForm(props) {
                                         <th>{i18n.t('Jumlah Kg')}</th>
                                         <th>{i18n.t('No Container')}</th>
                                         <th>{i18n.t('No Seal')}</th>
-                                        <th>{i18n.t('Barang')}</th>
+                                        <th>{i18n.t('Catatan')}</th>
                                         <th>{i18n.t('Action')}</th>
                                     </tr>
                                     <tbody>

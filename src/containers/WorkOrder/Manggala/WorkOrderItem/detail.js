@@ -24,12 +24,22 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../../components/Common/Loading';
-  import { isGetPermissions,reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
-  import { editWorkOrder_Permission,deleteWorkOrder_Permission,MenuWorkOrder } from '../../../shared/permissionMenu';
+  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
+  import { editWorkOrder_Permission,deleteWorkOrder_Permission,MenuWorkOrder,addDocumentWorkOrder_Permission,deleteDocumentWorkOrder_Permission,downloadDocumentWorkOrder_Permission } from '../../../shared/permissionMenu';
   import moment                       from "moment/moment";
   import '../../../CSS/table.css';
-  import { formatdate } from '../../../shared/constantValue';
+  import { formatdate,formatdatetime } from '../../../shared/constantValue';
+  import Grid                         from '../../../../components/TableGrid';
 
+  import DialogUploadFile from './dialogUploadFile';
+  import styled                       from "styled-components";
+  import Dialog                       from '@material-ui/core/Dialog';
+
+  const StyledDialog = styled(Dialog)`
+    & > .MuiDialog-container > .MuiPaper-root {
+        height: 500px;
+    }
+    `;
   const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
@@ -54,6 +64,18 @@ import React, {useState,
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
+
+    const [ShowDialog, setShowDialog] = useState(false);
+    const [LoadingSend, setLoadingSend] = useState(false);
+
+    const [rows, setRows] = useState([]);
+    const [columns] = useState([
+        {name: 'id', title: 'id'},
+        {name: 'document', title: i18n.t('Document')},
+        {name: 'tanggal', title: i18n.t('label_DATE')},
+        // {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
+    ]);
+    const [tableColumnExtensions] = useState([]);
 
     const id = props.match.params.id;
 
@@ -104,6 +126,18 @@ import React, {useState,
         }
         setInputListItem(listitems);
 
+        if(data.data){
+            const theData = data.data.documents.reduce((obj, el) => [
+                ...obj,
+                {
+                    'id': el.id,
+                    'document':el.filename?el.filename:'',
+                    'tanggal':el.tanggal?moment(new Date(el.tanggal)).format(formatdatetime):''
+                }
+            ], []);
+            setRows(theData);
+        }
+
         setLoading(false);
     }
 
@@ -125,6 +159,25 @@ import React, {useState,
           })
     }
 
+    const submitHandlerDeleteDocument = (iddocument) => {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                dispatch(actions.submitDeleteWorkOrder('/document/'+iddocument,succesHandlerSubmitDialog, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+    }
+
+
     const succesHandlerSubmit = (data) => {
         setLoading(false);
         Swal.fire({
@@ -138,13 +191,75 @@ import React, {useState,
         })
     }
 
+    const succesHandlerSubmitDialog = (data) => {
+        setLoading(false);
+        setShowDialog(false);
+        setLoadingSend(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(0);
+            }
+        })
+    }
+
     function errorHandler(error) {
         setLoading(false);
+        setShowDialog(false);
+        setLoadingSend(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: '' + error
+            text: error.msg
         })
+    }
+
+    function onClickAdd() {
+        setShowDialog(true);
+    }
+    function onClickView(id) {
+        // history.push(pathmenu.detailWorkOrder+'/'+id);
+    }
+    function onClickDelete(id) {
+        // history.push(pathmenu.detailWorkOrder+'/'+id);
+        submitHandlerDeleteDocument(id);
+    }
+
+    function onClickDownload(idval) {
+        setLoading(true);
+        dispatch(actions.getWorkOrderData('/document/'+idval,successHandlerDocument, errorHandler));
+    }
+
+    function successHandlerDocument(data) {
+        let contenttype = data.data.contenttype;
+        if(contenttype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+            contenttype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,';
+        }
+        var base64str = data.data.filedocument;
+
+        // decode base64 string, remove space for IE compatibility
+        var binary = window.atob(base64str.replace(/\s/g, ''));
+        var len = binary.length;
+        var buffer = new ArrayBuffer(len);
+        var view = new Uint8Array(buffer);
+        for (var i = 0; i < len; i++) {
+            view[i] = binary.charCodeAt(i);
+        }
+        var blob = new Blob([view,{ type: contenttype }]);
+        var dataUrl = URL.createObjectURL(blob);
+
+        var fileLink = document.createElement('a');
+        fileLink.href = dataUrl;
+
+        // it forces the name of the downloaded file
+        fileLink.download = data.data.filename;
+        fileLink.click();
+        fileLink.remove();
+
+        setLoading(false);
     }
 
     return (
@@ -376,7 +491,7 @@ import React, {useState,
                     <th>{i18n.t('Jumlah Kg')}</th>
                     <th>{i18n.t('No Container')}</th>
                     <th>{i18n.t('No Seal')}</th>
-                    <th>{i18n.t('Barang')}</th>
+                    <th>{i18n.t('Catatan')}</th>
                     </tr>
                     <tbody>
                         {
@@ -384,8 +499,8 @@ import React, {useState,
                                 return (
                                     <tr>
                                         <td>{x.idpartai}</td>
-                                        <td>{x.jumlahkoli}</td>
-                                        <td>{x.jumlahkg}</td>
+                                        <td>{numToMoney(parseFloat(x.jumlahkoli))}</td>
+                                        <td>{numToMoney(parseFloat(x.jumlahkg)) }</td>
                                         <td>{x.nocontainer}</td>
                                         <td>{x.noseal}</td>
                                         <td>{x.barang}</td>
@@ -396,6 +511,29 @@ import React, {useState,
                     </tbody>
                 </table>
             }
+
+        <Container fluid className="center-parent">
+            <div className="table-responsive">
+            <Grid
+                rows={rows}
+                columns={columns}
+                totalCounts={rows.length}
+                loading={loading}
+                columnextension={tableColumnExtensions}
+                permissionadd={!isGetPermissions(addDocumentWorkOrder_Permission,'TRANSACTION')}
+                onclickadd={onClickAdd}
+                permissionview={true}
+                onclickview={onClickView}
+                onclickdownload={onClickDownload}
+                permissiondownload={!isGetPermissions(downloadDocumentWorkOrder_Permission,'READ')}
+                permissiondelete={!isGetPermissions(deleteDocumentWorkOrder_Permission,'TRANSACTION')}
+                onclickdelete={onClickDelete}
+                listfilterdisabled={['tanggal']}
+                width={120}
+            />
+            </div>
+            </Container>
+
             </Card>
             </Container>
 
@@ -416,8 +554,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editWorkOrder_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editWorkOrder+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deleteWorkOrder_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={value.status == 'CLOSE' || !isGetPermissions(editWorkOrder_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editWorkOrder+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={value.status == 'CLOSE' || !isGetPermissions(deleteWorkOrder_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
                             
                         </div>)
                         
@@ -433,6 +571,25 @@ import React, {useState,
         </div>
 
             {loading && <Loading/>}
+
+            <StyledDialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                maxWidth="sm"
+                fullWidth={true}
+                style={{height: '80%'}}
+                open={ShowDialog}
+            >
+                <DialogUploadFile
+                    showflag = {setShowDialog}
+                    flagloadingsend = {setLoadingSend}
+                    errorhandler = {errorHandler}
+                    idworkorder = {props.match.params.id}
+                    handlesubmit = {succesHandlerSubmitDialog}
+                    // getAutoDebitid= {getAutoDebitid}
+                />
+                {LoadingSend && <Loading/>}
+            </StyledDialog>
         </ContentWrapper>
     )
   }

@@ -1,11 +1,13 @@
 import React, { Fragment } from 'react';
 import { Text, View, StyleSheet } from '@react-pdf/renderer';
 
-const borderColor = '#3778C2'
+// const borderColor = '#3778C2';
+const borderColor = 'black';
 const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
-        borderBottomColor: '#3778C2',
+        // borderBottomColor: '#3778C2',
+        borderBottomColor: 'black',
         borderBottomWidth: 1,
         alignItems: 'center',
         height: 24,

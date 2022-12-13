@@ -62,6 +62,12 @@ const handleMenu = () => {
             translate: 'Master',
             submenu:[
                 {
+                    name: 'Asset',
+                    path: pathmenu.menuAsset,
+                    translate: 'Asset',
+                    permission:permissionmenu.MenuAsset,
+                },
+                {
                     name: 'Bank Account',
                     path: pathmenu.menubankaccount,
                     translate: 'Bank Account',
@@ -174,6 +180,24 @@ const handleMenu = () => {
                     path: pathmenu.menuSuratJalan,
                     translate: 'Surat Jalan',
                     permission:permissionmenu.MenuSuratJalan,
+                },
+                {
+                    name: 'Penerimaan Kas Bank',
+                    path: pathmenu.menuPenerimaanKasBank,
+                    translate: 'Penerimaan Kas Bank',
+                    permission:permissionmenu.MenuPenerimaanKasBank,
+                },
+                {
+                    name: 'Pengeluaran Kas Bank',
+                    path: pathmenu.menuPengeluaranKasBank,
+                    translate: 'Pengeluaran Kas Bank',
+                    permission:permissionmenu.MenuPengeluaranKasBank,
+                },
+                {
+                    name: 'Invoice',
+                    path: pathmenu.menuInvoice,
+                    translate: 'Invoice',
+                    permission:permissionmenu.MenuPengeluaranKasBank,
                 }
             ]
         },
@@ -182,7 +206,30 @@ const handleMenu = () => {
             icon: 'icon-user',
             translate: 'Laporan',
             submenu:[
-                
+                {
+                    name: 'Bongkar Muat Dan Depo',
+                    path: pathmenu.reportbongkarmuatdepo,
+                    translate: 'Bongkar Muat Dan Depo',
+                    permission:permissionmenu.MenuReportBongkarMuat,
+                },
+                {
+                    name: 'Status Invoice',
+                    path: pathmenu.reportstatusinvoice,
+                    translate: 'Status Invoice',
+                    permission:permissionmenu.MenuReportStatusInvoice,
+                },
+                {
+                    name: 'Kas Bank',
+                    path: pathmenu.reportKasBank,
+                    translate: 'Kas Bank',
+                    permission:permissionmenu.MenuReportKasBank,
+                },
+                {
+                    name: 'Laba Rugi',
+                    path: pathmenu.reportLabaRugi,
+                    translate: 'Laba Rugi',
+                    permission:permissionmenu.MenuReportKasBank,
+                }
             ]
         },
        

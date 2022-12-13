@@ -913,3 +913,156 @@ export const submitDeleteSuratJalan = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getPenerimaanKasBankData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PENERIMAANKASBANK_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddPenerimaanKasBank = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PENERIMAANKASBANK,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditPenerimaanKasBank = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PENERIMAANKASBANK,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeletePenerimaanKasBank = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_PENERIMAANKASBANK,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getPengeluaranKasBankData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PENGELUARANKASBANK_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddPengeluaranKasBank = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PENGELUARANKASBANK,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditPengeluaranKasBank = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PENGELUARANKASBANK,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeletePengeluaranKasBank = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_PENGELUARANKASBANK,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getInvoiceData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_INVOICE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddInvoice = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_INVOICE,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditInvoice = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_INVOICE,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteInvoice = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_INVOICE,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+
+export const getAssetData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_ASSET_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddAsset = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_ASSET,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditAsset = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_ASSET,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteAsset = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_ASSET,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

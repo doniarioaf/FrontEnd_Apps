@@ -250,6 +250,34 @@ const addSuratJalan = lazy(() => import('./containers/SuratJalan/addSuratJalan')
 const detailSuratJalan = lazy(() => import('./containers/SuratJalan/detail'));
 const editSuratJalan = lazy(() => import('./containers/SuratJalan/editSuratJalan'));
 const printSuratJalan = lazy(() => import('./containers/SuratJalan/file/pdf'));
+
+const reportBongkarMuatDepo = lazy(() => import('./containers/Report/Manggala/reportBongkarMuatDepo'));
+
+const menuPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank'));
+const addPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank/addPenerimaanKasBank'));
+const detailPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank/detail'));
+const editPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank/editPenerimaanKasBank'));
+
+const menuPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank'));
+const addPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank/addPengeluaranKasBank'));
+const detailPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank/detail'));
+const editPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank/editPengeluaranKasBank'));
+
+const menuInvoice = lazy(() => import('./containers/Invoice/FormInvoice'));
+const addInvoice = lazy(() => import('./containers/Invoice/FormInvoice/addInvoice'));
+const detailInvoice = lazy(() => import('./containers/Invoice/FormInvoice/detail'));
+const editInvoice = lazy(() => import('./containers/Invoice/FormInvoice/editInvoice'));
+
+const printInvoice = lazy(() => import('./containers/Invoice/FormInvoice/File/Pdf'));
+
+const menuAsset = lazy(() => import('./containers/Asset'));
+const addAsset = lazy(() => import('./containers/Asset/addAsset'));
+const detailAsset = lazy(() => import('./containers/Asset/detail'));
+const editAsset = lazy(() => import('./containers/Asset/editAsset'));
+
+const ReportStatusInvoice = lazy(() => import('./containers/Report/Manggala/ReportStatusInvoice'));
+const ReportKasBank = lazy(() => import('./containers/Report/Manggala/ReportKasBank'));
+const reportLabaRugi = lazy(() => import('./containers/Report/Manggala/reportLabaRugi'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -504,6 +532,30 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.detailSuratJalan+'/:id'} component={waitFor(detailSuratJalan)}/>
                             <Route path={pathmenu.editSuratJalan+'/:id'} component={waitFor(editSuratJalan)}/>
                             <Route path={pathmenu.printSuratJalan+'/:id'} component={waitFor(printSuratJalan)}/>
+                            <Route path={pathmenu.reportbongkarmuatdepo} component={waitFor(reportBongkarMuatDepo)}/>
+                            <Route path={pathmenu.menuPenerimaanKasBank} component={waitFor(menuPenerimaanKasBank)}/>
+                            <Route path={pathmenu.addpenerimaankasbank} component={waitFor(addPenerimaanKasBank)}/>
+                            <Route path={pathmenu.detailpenerimaankasbank+'/:id'} component={waitFor(detailPenerimaanKasBank)}/>
+                            <Route path={pathmenu.editpenerimaankasbank+'/:id'} component={waitFor(editPenerimaanKasBank)}/>
+
+                            <Route path={pathmenu.menuPengeluaranKasBank} component={waitFor(menuPengeluaranKasBank)}/>
+                            <Route path={pathmenu.addpengeluarankasbank} component={waitFor(addPengeluaranKasBank)}/>
+                            <Route path={pathmenu.detailpengeluarankasbank+'/:id'} component={waitFor(detailPengeluaranKasBank)}/>
+                            <Route path={pathmenu.editpengeluarankasbank+'/:id'} component={waitFor(editPengeluaranKasBank)}/>
+
+                            <Route path={pathmenu.menuInvoice} component={waitFor(menuInvoice)}/>
+                            <Route path={pathmenu.addInvoice} component={waitFor(addInvoice)}/>
+                            <Route path={pathmenu.detailInvoice+'/:id'} component={waitFor(detailInvoice)}/>
+                            <Route path={pathmenu.editInvoice+'/:id'} component={waitFor(editInvoice)}/>
+                            <Route path={pathmenu.printInvoice+'/:id'} component={waitFor(printInvoice)}/>
+                            
+                            <Route path={pathmenu.menuAsset} component={waitFor(menuAsset)}/>
+                            <Route path={pathmenu.addAsset} component={waitFor(addAsset)}/>
+                            <Route path={pathmenu.detailAsset+'/:id'} component={waitFor(detailAsset)}/>
+                            <Route path={pathmenu.editAsset+'/:id'} component={waitFor(editAsset)}/>
+                            <Route path={pathmenu.reportstatusinvoice} component={waitFor(ReportStatusInvoice)}/>
+                            <Route path={pathmenu.reportKasBank} component={waitFor(ReportKasBank)}/>
+                            <Route path={pathmenu.reportLabaRugi} component={waitFor(reportLabaRugi)}/>
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>
@@ -511,6 +563,7 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.editcustomers+'/:id'} component={waitFor(editFormCustomer)}/> */}
                             
                             <Route path={pathmenu.invoice} component={waitFor(InvoiceMenu)}/>
+                            
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

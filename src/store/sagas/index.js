@@ -104,7 +104,23 @@ import {
     getSuratJalanSaga,
     submitAddSuratJalanSaga,
     submitEditSuratJalanSaga,
-    submitDeleteSuratJalanSaga
+    submitDeleteSuratJalanSaga,
+    getPenerimaanKasBankSaga,
+    submitAddPenerimaanKasBankSaga,
+    submitEditPenerimaanKasBankSaga,
+    submitDeletePenerimaanKasBankSaga,
+    getPengeluaranKasBankSaga,
+    submitAddPengeluaranKasBankSaga,
+    submitEditPengeluaranKasBankSaga,
+    submitDeletePengeluaranKasBankSaga,
+    getInvoiceDataSaga,
+    submitAddInvoiceSaga,
+    submitEditInvoiceSaga,
+    submitDeleteInvoiceSaga,
+    getAssetDataSaga,
+    submitAddAssetSaga,
+    submitEditAssetSaga,
+    submitDeleteAssetSaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga, submitUploadFileCustomerCallPlanSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
@@ -244,5 +260,21 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_ADD_SURATJALAN, submitAddSuratJalanSaga),
         takeEvery(actions.SUBMIT_EDIT_SURATJALAN, submitEditSuratJalanSaga),
         takeEvery(actions.SUBMIT_DELETE_SURATJALAN, submitDeleteSuratJalanSaga),
+        takeEvery(actions.GET_PENERIMAANKASBANK_DATA, getPenerimaanKasBankSaga),
+        takeEvery(actions.SUBMIT_ADD_PENERIMAANKASBANK, submitAddPenerimaanKasBankSaga),
+        takeEvery(actions.SUBMIT_EDIT_PENERIMAANKASBANK, submitEditPenerimaanKasBankSaga),
+        takeEvery(actions.SUBMIT_DELETE_PENERIMAANKASBANK, submitDeletePenerimaanKasBankSaga),
+        takeEvery(actions.GET_PENGELUARANKASBANK_DATA, getPengeluaranKasBankSaga),
+        takeEvery(actions.SUBMIT_ADD_PENGELUARANKASBANK, submitAddPengeluaranKasBankSaga),
+        takeEvery(actions.SUBMIT_EDIT_PENGELUARANKASBANK, submitEditPengeluaranKasBankSaga),
+        takeEvery(actions.SUBMIT_DELETE_PENGELUARANKASBANK, submitDeletePengeluaranKasBankSaga),
+        takeEvery(actions.GET_INVOICE_DATA, getInvoiceDataSaga),
+        takeEvery(actions.SUBMIT_ADD_INVOICE, submitAddInvoiceSaga),
+        takeEvery(actions.SUBMIT_EDIT_INVOICE, submitEditInvoiceSaga),
+        takeEvery(actions.SUBMIT_DELETE_INVOICE, submitDeleteInvoiceSaga),
+        takeEvery(actions.GET_ASSET_DATA, getAssetDataSaga),
+        takeEvery(actions.SUBMIT_ADD_ASSET, submitAddAssetSaga),
+        takeEvery(actions.SUBMIT_EDIT_ASSET, submitEditAssetSaga),
+        takeEvery(actions.SUBMIT_DELETE_ASSET, submitDeleteAssetSaga),
     ]);
 }

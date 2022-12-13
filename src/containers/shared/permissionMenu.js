@@ -41,6 +41,7 @@ export const deleteProject_Permission = ['DELETE_PROJECT'];
 export const addBankAccount_Permission = ['CREATE_BANK_ACCOUNT'];
 export const editBankAccount_Permission = ['EDIT_BANK_ACCOUNT','READ_BANK_ACCOUNT'];
 export const deleteBankAccount_Permission = ['DELETE_BANK_ACCOUNT'];
+export const saldoawal_Permission = ['CREATE_SALDO_AWAL'];
 
 export const addCustomerManggala_Permission = ['READ_CUSTOMER_MANGGALA','READ_ADDRESS','CREATE_CUSTOMER_MANGGALA'];
 export const editCustomerManggala_Permission = ['READ_CUSTOMER_MANGGALA','READ_ADDRESS','EDIT_CUSTOMER_MANGGALA'];
@@ -96,12 +97,33 @@ export const deletePaymentType_Permission = ['DELETE_PAYMENTTYPE'];
 export const addWorkOrder_Permission = ['READ_WORKORDER','CREATE_WORKORDER'];
 export const editWorkOrder_Permission = ['READ_WORKORDER','EDIT_WORKORDER'];
 export const deleteWorkOrder_Permission = ['DELETE_WORKORDER'];
+export const addDocumentWorkOrder_Permission = ['CREATE_DOCUMENT_WORKORDER'];
+export const deleteDocumentWorkOrder_Permission = ['DELETE_DOCUMENT_WORKORDER'];
+export const downloadDocumentWorkOrder_Permission = ['READ_DOCUMENT_WORKORDER'];
 
 export const addSuratJalan_Permission = ['READ_SURATJALAN','CREATE_SURATJALAN','READ_WORKORDER','READ_CUSTOMER_MANGGALA'];
 export const editSuratJalan_Permission = ['READ_SURATJALAN','EDIT_SURATJALAN','READ_WORKORDER','READ_CUSTOMER_MANGGALA'];
 export const deleteSuratJalan_Permission = ['DELETE_SURATJALAN'];
 export const editStatusSuratJalan_Permission = ['EDIT_STATUS_SURATJALAN'];
 export const printSuratJalan_Permission = ['READ_PRINT_SURATJALAN'];
+
+export const addPenerimaanKasBank_Permission = ['READ_PENERIMAAN_KASBANK','CREATE_PENERIMAAN_KASBANK'];
+export const editPenerimaanKasBank_Permission = ['READ_PENERIMAAN_KASBANK','EDIT_PENERIMAAN_KASBANK'];
+export const deletePenerimaanKasBank_Permission = ['DELETE_PENERIMAAN_KASBANK'];
+
+export const addPengeluaranKasBank_Permission = ['READ_PENGELUARAN_KASBANK','CREATE_PENGELUARAN_KASBANK'];
+export const editPengeluaranKasBank_Permission = ['READ_PENGELUARAN_KASBANK','EDIT_PENGELUARAN_KASBANK'];
+export const deletePengeluaranKasBank_Permission = ['DELETE_PENGELUARAN_KASBANK'];
+
+export const addInvoice_Permission = ['READ_INVOICE','CREATE_INVOICE'];
+export const editInvoice_Permission = ['READ_INVOICE','EDIT_INVOICE'];
+export const deleteInvoice_Permission = ['DELETE_INVOICE'];
+
+export const addAsset_Permission = ['READ_ASSET','CREATE_ASSET'];
+export const editAsset_Permission = ['READ_ASSET','EDIT_ASSET'];
+export const deleteAsset_Permission = ['DELETE_ASSET'];
+export const addAssetMapping_Permission = ['CREATE_ASSET_MAPPING'];
+export const deleteHistoryAssetMapping_Permission = ['DELETE_HISTORY_ASSET_MAPPING'];
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
@@ -134,3 +156,10 @@ export const MenuPriceList = ['READ_PRICELIST'];
 export const MenuPaymentType = ['READ_PAYMENTTYPE'];
 export const MenuWorkOrder = ['READ_WORKORDER'];
 export const MenuSuratJalan = ['READ_SURATJALAN'];
+export const MenuPenerimaanKasBank = ['READ_PENERIMAAN_KASBANK'];
+export const MenuPengeluaranKasBank = ['READ_PENGELUARAN_KASBANK'];
+export const MenuInvoice = ['READ_INVOICE'];
+export const MenuAsset = ['READ_ASSET'];
+export const MenuReportBongkarMuat = ['READ_REPORT_BONGKARMUATDEPO'];
+export const MenuReportStatusInvoice = ['READ_REPORT_STATUS_INVOICE'];
+export const MenuReportKasBank = ['READ_REPORT_KAS_BANK'];
