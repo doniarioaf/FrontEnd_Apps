@@ -122,9 +122,31 @@ export default function EditForm(props) {
                 }]
             ), []));
 
+            setListAsset(template.assetOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: getAssetName(el)
+                }]
+            ), []));
+
+            
+
             setListChooseYN([{value:'Y',label:'Yes'},{value:'N',label:'No'}])
         }
         setLoading(false);
+    }
+
+    const getAssetName = (data) =>{
+        if(data.kepala_nama){
+            if(data.kepala_nama !== ''){
+                return data.kepala_nama;
+            }
+        }
+        if(data.buntut_nama){
+            if(data.buntut_nama !== ''){
+                return data.buntut_nama;
+            }
+        }
     }
 
     const handleInputPaymentTo = (data) =>{
@@ -629,7 +651,7 @@ export default function EditForm(props) {
                                                         // placeholder={i18n.t('select.SELECT_OPTION')}
                                                         
                                                         onChange={val => handleInputDropDownChange(val,i,'idasset')}
-                                                        data={[]}
+                                                        data={ListAsset}
                                                         textField={'label'}
                                                         valueField={'value'}
                                                         style={{width: '130px'}}

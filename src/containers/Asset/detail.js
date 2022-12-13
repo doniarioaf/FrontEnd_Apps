@@ -163,7 +163,11 @@ import React, {useState,
             setRows(theData);
             setListAssetMapping(data.data.assetmapping);
         }
-        setLoading(false);
+        setTimeout(() => {
+            setLoading(false);
+            
+        }, 1000);
+        
     }
 
     const submitHandlerDelete = () => {
@@ -797,8 +801,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editAsset_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editAsset+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deleteAsset_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={loading || !isGetPermissions(editAsset_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editAsset+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={loading || !isGetPermissions(deleteAsset_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
                             
                         </div>)
                         

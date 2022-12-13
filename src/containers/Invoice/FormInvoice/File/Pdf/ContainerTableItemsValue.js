@@ -232,7 +232,7 @@ const setItems = (items) =>{
                 rowItem.push(<Text style={styles.reimbursement}>{det.invoicetypename}</Text>);
                 rowItem.push(<Text style={styleValueDiskon(styles.discreimbursement,(det.diskon?checkDiskon(det.diskon):'0'))}>{det.diskon?checkDiskon(det.diskon):'0'}</Text>);
                 rowItem.push(<Text style={styles.hargareimbursement}>{det.price?numToMoney(parseFloat(det.price)):0}</Text>);
-                rowItem.push(<Text style={styles.subtotalreimbursement}>{det.subtotal}</Text>);
+                rowItem.push(<Text style={styles.subtotalreimbursement}>{det.subtotal?numToMoney(parseFloat(det.subtotal)):0}</Text>);
 
                 rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
                 no++;

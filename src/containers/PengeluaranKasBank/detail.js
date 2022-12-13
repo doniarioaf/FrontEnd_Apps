@@ -101,7 +101,20 @@ import React, {useState,
         if(data.data.details){
             for(let i=0; i < data.data.details.length; i++){
                 let det = data.data.details[i];
-                listitems.push({ idcoa:det.coaName,catatan: det.catatan,amount:det.amount,idasset:det.assetName,idinvoiceitem:det.invoiceitemName});
+                // private String assetNameKepala;
+	            // private String assetNameBuntut;
+                let assetName = '';
+                if(det.assetNameKepala){
+                    if(det.assetNameKepala !== ''){
+                        assetName = det.assetNameKepala;
+                    }
+                }
+                if(det.assetNameBuntut){
+                    if(det.assetNameBuntut !== ''){
+                        assetName = det.assetNameBuntut;
+                    }
+                }
+                listitems.push({ idcoa:det.coaName,catatan: det.catatan,amount:det.amount,idasset:assetName,idinvoiceitem:det.invoiceitemName});
             }
         }
         setInputListItem(listitems);
