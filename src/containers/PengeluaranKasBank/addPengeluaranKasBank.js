@@ -24,6 +24,15 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import { IconButton } from '@material-ui/core';
 import '../CSS/table.css';
 
+import SearchIcon from '@material-ui/icons/Search';
+import FormSearch from '../../components/FormSearch';
+import styled                       from "styled-components";
+import Dialog                       from '@material-ui/core/Dialog';
+const StyledDialog = styled(Dialog)`
+  & > .MuiDialog-container > .MuiPaper-root {
+    height: 500px;
+  }
+`;
 
 export default function AddForm(props) {
     reloadToHomeNotAuthorize(addPengeluaranKasBank_Permission,'TRANSACTION');
@@ -32,11 +41,16 @@ export default function AddForm(props) {
     momentLocalizer();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
+    const [ShowQuickSearch, setShowQuickSearch] = useState(false);
+    const [LoadingSend, setLoadingSend] = useState(false);
+    const [SelPaymentTo, setSelPaymentTo] = useState('');
+    const [ListPaymentTo, setListPaymentTo] = useState([]);
 
     const [InputPaymentDate, setInputPaymentDate] = useState(new Date());
     const [ErrInputPaymentDate, setErrInputPaymentDate] = useState('');
 
     const [InputPaymentTo, setInputPaymentTo] = useState('');
+    const [InputPaymentToName, setInputPaymentToName] = useState('');
     const [ErrInputPaymentTo, setErrInputPaymentTo] = useState('');
 
     const [ListCOA, setListCOA] = useState([]);
@@ -70,6 +84,9 @@ export default function AddForm(props) {
 
     const successHandlerTemplate = (data) =>{
         if(data.data){
+            let listPaymentTo = [{value:'EMPLOYEE',label:'Employee'},{value:'CUSTOMER',label:'Customer'},{value:'VENDOR',label:'Vendor'}];
+            setListPaymentTo(listPaymentTo);
+
             setListCOA(data.data.coaOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
@@ -130,6 +147,19 @@ export default function AddForm(props) {
     const handleInputKeterangan = (data) =>{
         let val = data.target.value;
         setInputKeterangan(val)
+    }
+
+    const handleChangeListPaymentTo = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelPaymentTo(id);
+        setInputPaymentTo('');
+        setInputPaymentToName('');
+    }
+
+    const handleShowQuickSearch = () =>{
+        if(SelPaymentTo !== ''){
+            setShowQuickSearch(true);
+        }
     }
 
     const handleChangeCoa = (data) =>{
@@ -250,7 +280,21 @@ export default function AddForm(props) {
             setLoading(true);
             let obj = new Object();
             obj.paymentdate = moment(InputPaymentDate).toDate().getTime();
-            obj.paymentto = InputPaymentTo;
+            obj.paymentto = SelPaymentTo;
+            if(SelPaymentTo == 'EMPLOYEE'){
+                obj.idemployee = InputPaymentTo;
+                obj.idcustomer = null;
+                obj.idvendor = null;
+            }else if(SelPaymentTo == 'CUSTOMER'){
+                obj.idemployee = null;
+                obj.idcustomer = InputPaymentTo;
+                obj.idvendor = null;
+            }else if(SelPaymentTo == 'VENDOR'){
+                obj.idemployee = null;
+                obj.idcustomer = null;
+                obj.idvendor = InputPaymentTo;
+            }
+
             obj.idcoa = SelCOA;
             obj.idbank = SelBank;
             obj.keterangan = InputKeterangan;
@@ -291,6 +335,7 @@ export default function AddForm(props) {
 
     const errorHandler = (data) => {
         setLoading(false);
+        setShowQuickSearch(false);
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -324,6 +369,20 @@ export default function AddForm(props) {
     const handleAddClick = () => {
         setInputListItem([...InputListItem, { idcoa:"",catatan: "",amount:"",idasset:"",idinvoiceitem:""}]);
     };
+
+    const handleQuickSeacrh = (data) =>{
+        setShowQuickSearch(false);
+        setInputPaymentTo(data.id);
+        if(SelPaymentTo == 'EMPLOYEE'){
+            setInputPaymentToName(data.nama);
+        }else if(SelPaymentTo == 'CUSTOMER'){
+            setInputPaymentToName(data.customername);
+        }else if(SelPaymentTo == 'VENDOR'){
+            setInputPaymentToName(data.nama);
+        }
+        // setInputCustomer(data.customername);
+        // setInputCustomerID(data.id);
+    }
     
     const handleRemoveClick = index => {
         const list = [...InputListItem];
@@ -336,7 +395,8 @@ export default function AddForm(props) {
         initialValues={
             {
                 paymentdate:InputPaymentDate,
-                paymentto:InputPaymentTo,
+                paymentto:InputPaymentToName,
+                paymentotype:SelPaymentTo,
                 coa:SelCOA,
                 bank:SelBank,
                 keterangan:InputKeterangan,
@@ -397,21 +457,57 @@ export default function AddForm(props) {
                                 {i18n.t('Payment To')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
-                            <Input
-                                name="receivefrom"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="paymentto"
-                                maxLength={200}
-                                onChange={val => handleInputPaymentTo(val)}
-                                onBlur={handleBlur}
-                                value={values.paymentto}
-                            />
+
+                            <table style={{width:'100%'}}>
+                            <tbody>
+                                <td style={{width:'70%'}}>
+                                <Input
+                                    name="paymentto"
+                                    // className={
+                                    //     touched.namebranch && errors.namebranch
+                                    //         ? "w-50 input-error"
+                                    //         : "w-50"
+                                    // }
+                                    type="text"
+                                    id="paymentto"
+                                    maxLength={200}
+                                    // onChange={val => handleInputPaymentTo(val)}
+                                    onBlur={handleBlur}
+                                    disabled={true}
+                                    value={values.paymentto}
+                                />
+                                </td>
+                                <td style={{width:'30%'}}>
+                                <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="paymentotype"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeListPaymentTo(val)}
+                                    onBlur={val => setFieldTouched("paymentotype", val?.value ? val.value : '')}
+                                    data={ListPaymentTo}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.paymentotype}
+                                />
+                                </td>
+                                <td>
+                                <IconButton color={'primary'}
+                                    onClick={() =>handleShowQuickSearch()}
+                                >
+                                    <SearchIcon/>
+                                </IconButton>
+                                </td>
+                            </tbody>
+                            </table>
                             <div className="invalid-feedback-custom">{ErrInputPaymentTo}</div>
+                            
 
                             <label className="mt-3 form-label required" htmlFor="coa">
                                 {i18n.t('COA')}
@@ -647,6 +743,28 @@ export default function AddForm(props) {
                                 {'Submit'}
                                 </Button>
                                 </div>
+
+
+                                <StyledDialog
+                            disableBackdropClick
+                            disableEscapeKeyDown
+                            maxWidth="md"
+                            fullWidth={true}
+                            // style={{height: '80%'}}
+                            open={ShowQuickSearch}
+                        >
+                                <FormSearch
+                                    showflag = {setShowQuickSearch}
+                                    flagloadingsend = {setLoadingSend}
+                                    seacrhtype = {'PENGELUAARAN-KAS-BANK'}
+                                    seacrhtype1 = {SelPaymentTo}
+                                    errorHandler = {errorHandler}
+                                    handlesearch = {handleQuickSeacrh}
+                                    placeholder = {'Pencarian Berdasarkan Nama'}
+
+                                ></FormSearch>
+                                {LoadingSend && <Loading/>}
+                        </StyledDialog>
                         </form>
 
                     )

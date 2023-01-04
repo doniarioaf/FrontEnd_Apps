@@ -441,15 +441,23 @@ export default function EditForm(props) {
                     }
 
                     // if(det.barang == ''){
-                    //     setErrItemNoSeal(i18n.t('Barang')+' '+i18n.t('label_REQUIRED'));
+                    //     setErrItemBarang(i18n.t('Barang')+' '+i18n.t('label_REQUIRED'));
                     //     flag = false;
                     // }
                 }
             }
         }
+    if(SelWoType == ''){
+        setErrSelWoType(i18n.t('label_REQUIRED'));
+        flag = false;
+    }
 
-        
+    if(InputCustomer == ''){
+        setErrInputCustomer(i18n.t('label_REQUIRED'));
+        flag = false;
+    }
 
+    if(SelWoType !== 'TR'){
         if(InputETA == null){
             setErrInputETA(i18n.t('label_REQUIRED'));
             flag = false;
@@ -459,20 +467,14 @@ export default function EditForm(props) {
             setErrInputETD(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(InputCustomer == ''){
-            setErrInputCustomer(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        
         
         if(InputNamaCargo == ''){
             setErrInputNamaCargo(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
-        if(SelWoType == ''){
-            setErrSelWoType(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        
 
         if(SelModaTransport == ''){
             setErrSelModaTransport(i18n.t('label_REQUIRED'));
@@ -495,6 +497,7 @@ export default function EditForm(props) {
             setErrSelJalur(i18n.t('label_REQUIRED'));
             flag = false;
         }
+    }
 
         if(SelWoType !== 'JS' && SelWoType !== 'TR'){
 
@@ -557,6 +560,14 @@ export default function EditForm(props) {
         //     setErrInputDepo(i18n.t('label_REQUIRED'));
         //     flag = false;
         // }
+
+        if(SelDepo == ''){
+            setErrSelDepo(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+    }
+
+    if(SelWoType == 'TR'){
         if(SelDepo == ''){
             setErrSelDepo(i18n.t('label_REQUIRED'));
             flag = false;
@@ -854,27 +865,6 @@ export default function EditForm(props) {
                             </table>
                             <div className="invalid-feedback-custom">{ErrInputCustomer}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="namacargo">
-                                {i18n.t('label_CARGO_NAME')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <Input
-                                name="namacargo"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="namacargo"
-                                maxLength={200}
-                                onChange={val => handleInputNamaCargo(val)}
-                                onBlur={handleBlur}
-                                value={values.namacargo}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputNamaCargo}</div>
-                            
-
                             <label className="mt-3 form-label required" htmlFor="wotype">
                                 {i18n.t('label_WO_TYPE')}
                                 <span style={{color:'red'}}>*</span>
@@ -899,6 +889,27 @@ export default function EditForm(props) {
                                     value={values.wotype}
                                 />
                                 <div className="invalid-feedback-custom">{ErrSelWoType}</div>
+
+                                <div hidden={values.wotype == 'TR'}>
+                            <label className="mt-3 form-label required" htmlFor="namacargo">
+                                {i18n.t('label_CARGO_NAME')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <Input
+                                name="namacargo"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="namacargo"
+                                maxLength={200}
+                                onChange={val => handleInputNamaCargo(val)}
+                                onBlur={handleBlur}
+                                value={values.namacargo}
+                            />
+                            <div className="invalid-feedback-custom">{ErrInputNamaCargo}</div>
 
                             <label className="mt-3 form-label required" htmlFor="modatransport">
                                 {i18n.t('label_MODA_TRANSPORTAION')}
@@ -1037,12 +1048,13 @@ export default function EditForm(props) {
                                     value={values.jalur}
                                 />
                             <div className="invalid-feedback-custom">{ErrSelJalur}</div>
+                            </div>
 
                             </div>
 
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                            
-
+                            <div hidden={values.wotype == 'TR'}>
                             <label className="mt-3 form-label required" htmlFor="noaju">
                                 {i18n.t('label_AJU_NUMBER')}
                                 <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span>
@@ -1330,7 +1342,8 @@ export default function EditForm(props) {
                                 </tbody>
                             </table>
                             <div className="invalid-feedback-custom">{ErrInputTanggalSppbNPE}</div>
-
+                            </div>
+                            
                             <label className="mt-3 form-label required" htmlFor="depo">
                                 {i18n.t('Depo')}
                                 <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span>

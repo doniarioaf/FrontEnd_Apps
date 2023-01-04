@@ -81,6 +81,28 @@ const DialogQuickSearch = props => {
                 {name: 'namacargo', title: 'Nama Cargo'},
                 {name: 'name', title: i18n.t('label_NAME')},
             ]
+        }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK'){
+            if(props.seacrhtype1){
+                if(props.seacrhtype1 == 'EMPLOYEE'){
+                    data = [
+                        {name: 'id', title: 'id'},
+                        {name: 'nama', title: 'Nama'},
+                        {name: 'noidentitas', title: 'No Identitas'},
+                        {name: 'jabatan', title: i18n.t('Jabatan')},
+                    ]
+                }else if(props.seacrhtype1 == 'CUSTOMER'){
+                    data = [
+                        {name: 'id', title: 'id'},
+                        {name: 'name', title: i18n.t('label_NAME')},
+                    ]
+                }else if(props.seacrhtype1 == 'VENDOR'){
+                    data = [
+                        {name: 'id', title: 'id'},
+                        {name: 'name', title: i18n.t('label_NAME')},
+                        {name: 'category', title: i18n.t('Category')},
+                    ]
+                }
+            }
         }
         setColumns(data);
     }, []);
@@ -125,6 +147,22 @@ const DialogQuickSearch = props => {
                 obj.namacargo = InputSearchName;
                 obj.idwo = 0;
                 dispatch(actions.submitAddPenerimaanKasBank('/searchwo',obj,successHandleSearch, props.errorHandler));
+            }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK'){
+                if(props.seacrhtype1){
+                    if(props.seacrhtype1 == 'EMPLOYEE'){
+                        let obj = new Object();
+                        obj.nama = InputSearchName;
+                        dispatch(actions.submitAddPengeluaranKasBank('/searchemployee',obj,successHandleSearch, props.errorHandler));
+                    }else if(props.seacrhtype1 == 'CUSTOMER'){
+                        let obj = new Object();
+                        obj.nama = InputSearchName;
+                        dispatch(actions.submitAddPengeluaranKasBank('/searchcustomer',obj,successHandleSearch, props.errorHandler));
+                    }else if(props.seacrhtype1 == 'VENDOR'){
+                        let obj = new Object();
+                        obj.name = InputSearchName;
+                        dispatch(actions.submitAddPengeluaranKasBank('/searchvendor',obj,successHandleSearch, props.errorHandler));
+                    }
+                }
             }
         }else{
             setErrInputSearch(i18n.t('label_REQUIRED'));
@@ -193,6 +231,42 @@ const DialogQuickSearch = props => {
                         'data':el
                     }
                 ], []);
+            }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK'){
+                if(props.seacrhtype1){
+                    if(props.seacrhtype1 == 'EMPLOYEE'){
+                        theData = data.data.reduce((obj, el) => [
+                            ...obj,
+                            {
+                                'id': el.id,
+                                'nama': el.nama,
+                                'noidentitas': el.noidentitas,
+                                'jabatan': el.jabatan,
+                                'data':el
+                            }
+                        ], []);
+
+                    }else if(props.seacrhtype1 == 'CUSTOMER'){
+                        theData = data.data.reduce((obj, el) => [
+                            ...obj,
+                            {
+                                'id': el.id,
+                                'name': el.customername,
+                                'data':el
+                            }
+                        ], []);
+
+                    }else if(props.seacrhtype1 == 'VENDOR'){
+                        theData = data.data.reduce((obj, el) => [
+                            ...obj,
+                            {
+                                'id': el.id,
+                                'name': el.nama,
+                                'category': el.vendorcategoryname,
+                                'data':el
+                            }
+                        ], []);
+                    }
+                }
             }
         }
         

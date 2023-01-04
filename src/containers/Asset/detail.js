@@ -538,6 +538,40 @@ import React, {useState,
                                     </div> */}
                                 </div>
 
+                                <div hidden={!(value.sparepartbuntut_jenis?(value.sparepartbuntut_jenis == 'FILTER'):false)}>
+                                    <div className="row mt-3">
+                                        <span className="col-md-5">{i18n.t('Tipe')}</span>
+                                        <strong className="col-md-7">
+                                            {value.sparepartbuntut_filter_type_name?value.sparepartbuntut_filter_type_name:''}
+                                        </strong>
+                                    </div>
+
+                                    <div className="row mt-3">
+                                        <span className="col-md-5">{i18n.t('Posisi')}</span>
+                                        <strong className="col-md-7">
+                                            {value.sparepartbuntut_filter_posisi_name?value.sparepartbuntut_filter_posisi_name:''}
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <div hidden={!(value.sparepartbuntut_jenis?(value.sparepartbuntut_jenis == 'BOHLAM'):false)}>
+                                    <div className="row mt-3">
+                                            <span className="col-md-5">{i18n.t('Tipe')}</span>
+                                            <strong className="col-md-7">
+                                                {value.sparepartbuntut_bohlam_type_name?value.sparepartbuntut_bohlam_type_name:''}
+                                            </strong>
+                                        </div>
+                                </div>
+
+                                <div hidden={!(value.sparepartbuntut_jenis?(value.sparepartbuntut_jenis == 'SELANG'):false)}>
+                                    <div className="row mt-3">
+                                            <span className="col-md-5">{i18n.t('Tipe')}</span>
+                                            <strong className="col-md-7">
+                                                {value.sparepartbuntut_selang_type_name?value.sparepartbuntut_selang_type_name:''}
+                                            </strong>
+                                        </div>
+                                </div>
+
 
                             </div>
 
@@ -660,6 +694,40 @@ import React, {useState,
                                             {value.sparepartkepala_lainnya_keterangan?value.sparepartkepala_lainnya_keterangan:''}
                                         </strong>
                                     </div> */}
+                                </div>
+
+                                <div hidden={!(value.sparepartkepala_jenis?(value.sparepartkepala_jenis == 'FILTER'):false)}>
+                                    <div className="row mt-3">
+                                        <span className="col-md-5">{i18n.t('Tipe')}</span>
+                                        <strong className="col-md-7">
+                                            {value.sparepartkepala_filter_type_name?value.sparepartkepala_filter_type_name:''}
+                                        </strong>
+                                    </div>
+
+                                    <div className="row mt-3">
+                                        <span className="col-md-5">{i18n.t('Posisi')}</span>
+                                        <strong className="col-md-7">
+                                            {value.sparepartkepala_filter_posisi_name?value.sparepartkepala_filter_posisi_name:''}
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <div hidden={!(value.sparepartkepala_jenis?(value.sparepartkepala_jenis == 'BOHLAM'):false)}>
+                                <div className="row mt-3">
+                                        <span className="col-md-5">{i18n.t('Tipe')}</span>
+                                        <strong className="col-md-7">
+                                            {value.sparepartkepala_bohlam_type_name?value.sparepartkepala_bohlam_type_name:''}
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <div hidden={!(value.sparepartkepala_jenis?(value.sparepartkepala_jenis == 'SELANG'):false)}>
+                                <div className="row mt-3">
+                                        <span className="col-md-5">{i18n.t('Tipe')}</span>
+                                        <strong className="col-md-7">
+                                            {value.sparepartbuntut_selang_type_name?value.sparepartbuntut_selang_type_name:''}
+                                        </strong>
+                                    </div>
                                 </div>
                                 
 

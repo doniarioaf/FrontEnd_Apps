@@ -180,13 +180,13 @@ export const inputJustNumberAndCommaDot = (temp) =>{
 export const numToMoney = (amount) =>{
     
     if(amount !== null && !isNaN(amount)){
-            console.log('amount ',amount);
+            
             const amountInt = parseInt(amount);
-            console.log('amountInt ',amountInt);
+            
             const amountNum = amount.toFixed(2);
-            console.log('amountNum ',amountNum);
+            
             const amountStr = amountNum.toString();
-            console.log('amountStr ',amountStr);
+            
             let afterComma;
 
             if (amountStr.includes('.')) {

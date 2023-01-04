@@ -337,18 +337,21 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_WO_TYPE')}</span>
+                            <strong className="col-md-7">
+                                {value.jeniswoCodeName?value.jeniswoCodeName:''}
+                            </strong>
+                            </div>
+
+                            <div hidden={value.jeniswo?(value.jeniswo == 'TR'?true:false):false}>
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_CARGO_NAME')}</span>
                             <strong className="col-md-7">
                                 {value.namacargo?value.namacargo:''}
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_WO_TYPE')}</span>
-                            <strong className="col-md-7">
-                                {value.jeniswoCodeName?value.jeniswoCodeName:''}
-                            </strong>
-                            </div>
+                            
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_MODA_TRANSPORTAION')}</span>
@@ -468,7 +471,8 @@ import React, {useState,
                             {value.tanggalsppb_npe?moment (new Date(value.tanggalsppb_npe)).format(formatdate):''}
                             </strong>
                             </div>
-
+                            </div>
+                            
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Depo')}</span>
                             <strong className="col-md-7">

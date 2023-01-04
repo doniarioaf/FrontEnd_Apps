@@ -162,6 +162,21 @@ import React, {useState,
         })
     }
 
+    const getPaymentToName = (data) =>{
+        if(data.paymentto){
+            if(data.paymentto == 'EMPLOYEE'){
+                return data.employeeName?data.employeeName:''
+            }else if(data.paymentto == 'CUSTOMER'){
+                return data.customerName?data.customerName:''
+            }else if(data.paymentto == 'VENDOR'){
+                return data.vendorName?data.vendorName:''
+            }else{
+                return data.paymentto;
+            }
+        }
+        return '';
+    }
+
     return (
         <ContentWrapper>
             <ContentHeading history={history} link={pathmenu.detailpengeluarankasbank+'/'+id} label={'Detail Pengeluaran Kas/Bank'} labeldefault={'Detail Pengeluaran Kas/Bank'} />
@@ -225,7 +240,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Payment To')}</span>
                             <strong className="col-md-7">
-                                {value.paymentto?value.paymentto:''}
+                                {getPaymentToName(value)}
                             </strong>
                             </div>
 

@@ -35,6 +35,21 @@ const MenuIndex = () => {
         dispatch(actions.getPengeluaranKasBankData('',successHandler, errorHandler));
     }, []);
 
+    const getPaymentToName = (data) =>{
+        if(data.paymentto){
+            if(data.paymentto == 'EMPLOYEE'){
+                return data.employeeName?data.employeeName:''
+            }else if(data.paymentto == 'CUSTOMER'){
+                return data.customerName?data.customerName:''
+            }else if(data.paymentto == 'VENDOR'){
+                return data.vendorName?data.vendorName:''
+            }else{
+                return data.paymentto;
+            }
+        }
+        return '';
+    }
+
     function successHandler(data) {
         if(data.data){
             const theData = data.data.reduce((obj, el) => [
@@ -43,7 +58,7 @@ const MenuIndex = () => {
                     'id': el.id,
                     // 'code':el.code?el.code:'',
                     'nodocument': el.nodocument ?el.nodocument:'',
-                    'paymentto':el.paymentto?el.paymentto:'',
+                    'paymentto':getPaymentToName(el),
                     'paymentdate':el.paymentdate?moment (new Date(el.paymentdate)).format(formatdate):''
                 }
             ], []);
