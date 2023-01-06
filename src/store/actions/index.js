@@ -125,7 +125,8 @@ export {
     getAssetData,
     submitAddAsset,
     submitEditAsset,
-    submitDeleteAsset
+    submitDeleteAsset,
+    getInvoiceDataParam
 } from './admin';
 
 export {

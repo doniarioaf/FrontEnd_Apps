@@ -20,43 +20,48 @@ const styles = StyleSheet.create({
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
+    qty: {
+        width: '10%',
+        borderRightColor: borderColor,
+        borderRightWidth: 1,
+    },
     jasa: {
-        width: '35%',
+        width: '30%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     discjasa: {
-        width: '15%',
+        width: '12%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     hargajasa: {
-        width: '20%',
+        width: '19%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     subtotaljasa: {
-        width: '20%',
+        width: '19%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     reimbursement: {
-        width: '35%',
+        width: '30%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     discreimbursement: {
-        width: '15%',
+        width: '12%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     hargareimbursement: {
-        width: '20%',
+        width: '19%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     subtotalreimbursement: {
-        width: '20%',
+        width: '19%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
@@ -67,12 +72,14 @@ const setHeader = (type) =>{
     if(type.type == 'JASA'){
         list.push(<Text style={styles.no}>No</Text>);
         list.push(<Text style={styles.jasa}>Jasa PPJK</Text>);
+        list.push(<Text style={styles.qty}>Qty</Text>);
         list.push(<Text style={styles.discjasa}>Disc</Text>);
         list.push(<Text style={styles.hargajasa}>Harga</Text>);
         list.push(<Text style={styles.subtotaljasa}>Subtotal</Text>);
     }else{
         list.push(<Text style={styles.no}>No</Text>);
         list.push(<Text style={styles.reimbursement}>Reimbursement / Dana Talangan</Text>);
+        list.push(<Text style={styles.qty}>Qty</Text>);
         list.push(<Text style={styles.discreimbursement}>Disc</Text>);
         list.push(<Text style={styles.hargareimbursement}>Harga</Text>);
         list.push(<Text style={styles.subtotalreimbursement}>Subtotal</Text>);

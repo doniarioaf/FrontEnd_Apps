@@ -10,8 +10,8 @@ import {useDispatch}   from 'react-redux';
 import { Loading } from '../../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-import { numToMoney, reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
-import { editWorkOrder_Permission} from '../../../shared/permissionMenu';
+import { numToMoney, reloadToHomeNotAuthorize,isGetPermissions } from '../../../shared/globalFunc';
+import { editWorkOrder_Permission,editWorkOrderStatus_Permission} from '../../../shared/permissionMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
 import {DatePicker}      from 'react-widgets';
@@ -48,7 +48,9 @@ export default function EditForm(props) {
 
     const [InputNoDoc, setInputNoDoc] = useState('');
     const [InputTanggal, setInputTanggal] = useState(new Date());
-    const [InputStatus, setInputStatus] = useState('OPEN');
+
+    const [ListStatus, setListStatus] = useState([]);
+    const [InputStatus, setInputStatus] = useState('');
 
     const [InputCustomerID, setInputCustomerID] = useState('');
     const [InputCustomer, setInputCustomer] = useState('');
@@ -170,6 +172,10 @@ export default function EditForm(props) {
             setSelDepo(val.idvendordepo != null && val.idvendordepo?val.idvendordepo:'')
             setInputIsActive(val.isactive);
 
+            setListStatus([
+                {value:'OPEN',label:'OPEN'},
+                {value:'CLOSED',label:'CLOSED'}
+            ])
 
             let listitems = [];
             if(data.data.details){
@@ -245,6 +251,11 @@ export default function EditForm(props) {
     const handleChangeWoType = (data) =>{
         let id = data?.value ? data.value : '';
         setSelWoType(id);
+    }
+
+    const handleChangeStatus = (data) =>{
+        let id = data?.value ? data.value : '';
+        setInputStatus(id);
     }
 
     const handleChangeModaTransport = (data) =>{
@@ -603,7 +614,7 @@ export default function EditForm(props) {
             obj.tanggal = moment(InputTanggal).toDate().getTime();
             obj.idcustomer = InputCustomerID;
             obj.namacargo = InputNamaCargo;
-            obj.status = 'OPEN';
+            obj.status = InputStatus;
             obj.jeniswo = SelWoType;
             obj.modatransportasi = SelModaTransport;
             obj.etd = moment(InputETD).toDate().getTime();
@@ -642,14 +653,22 @@ export default function EditForm(props) {
     }
 
     const succesHandlerSubmit = (data) => {
-        setLoading(false);
+        
+        setTimeout(() => {
+            setLoading(false);
+                }, 1000);
         Swal.fire({
             icon: 'success',
             title: 'SUCCESS',
             text: i18n.t('label_SUCCESS')
         }).then((result) => {
             if (result.isConfirmed) {
-                history.goBack();
+                history.push(pathmenu.detailWorkOrder+'/'+id);
+                // setTimeout(() => {
+                //     history.goBack();
+
+                // }, 1000);
+                
             }
         })
     }
@@ -813,7 +832,26 @@ export default function EditForm(props) {
                                 {i18n.t('Status')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
-                                <Input
+                            <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="status"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeStatus(val)}
+                                    onBlur={val => setFieldTouched("status", val?.value ? val.value : '')}
+                                    data={ListStatus}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.status}
+                                    disabled={!isGetPermissions(editWorkOrderStatus_Permission,'TRANSACTION')}
+                                />
+                                {/* <Input
                                     name="status"
                                     // className={
                                     //     touched.namebranch && errors.namebranch
@@ -826,7 +864,7 @@ export default function EditForm(props) {
                                     disabled={true}
                                     onBlur={handleBlur}
                                     value={values.status}
-                            />
+                            /> */}
 
                             <label className="mt-3 form-label required" htmlFor="customer">
                                 {i18n.t('label_CUSTOMER')}

@@ -1124,3 +1124,12 @@ export function* submitDeleteAssetSaga(action) {
         action.errorHandler(handleMessageError(error));
     }
 }
+
+export function* getInvoiceDataParamSaga(action) {
+    try {
+        const response = yield axios.get(baseInvoiceURL(action.param)).then(response => response.data);
+        action.successHandler(response,action.paramobj);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error),action.paramobj);
+    }
+}

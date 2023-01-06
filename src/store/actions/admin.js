@@ -999,6 +999,16 @@ export const getInvoiceData = (param, successHandler, errorHandler) => {
     }
 }
 
+export const getInvoiceDataParam = (param,paramobj, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_INVOICE_DATA_PARAM,
+        param: param,
+        paramobj:paramobj,
+        successHandler,
+        errorHandler,
+    }
+}
+
 export const submitAddInvoice = (param,payload, successHandler, errorHandler) => {
     return {
         type: actions.SUBMIT_ADD_INVOICE,

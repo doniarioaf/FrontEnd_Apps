@@ -194,7 +194,7 @@ export default function EditForm(props) {
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getAssetData('/'+id,successHandler, errorHandler));
-        dispatch(actions.getAssetData('/template',successHandlerTemplate, errorHandler));
+        
     }, []);
     const successHandler = (data) =>{
         if(data.data){
@@ -274,6 +274,7 @@ export default function EditForm(props) {
             setSelSparePartBuntut_Bohlam_Type(det.sparepartbuntut_bohlam_type);
             setSelSparePartBuntut_Selang_Type(det.sparepartbuntut_selang_type);
         }
+        dispatch(actions.getAssetData('/template',successHandlerTemplate, errorHandler));
     }
     const successHandlerTemplate = (data) =>{
         if(data.data){

@@ -87,6 +87,8 @@ export default function AddForm(props) {
     const [InputCustomerID, setInputCustomerID] = useState('');
     const [InputCustomer, setInputCustomer] = useState('');
     const [ErrInputCustomer, setErrInputCustomer] = useState('');
+    const [ListSuratJalanWO, setListSuratJalanWO] = useState([]);
+    const [IsHideColumnWarehouse, setIsHideColumnWarehouse] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -144,9 +146,46 @@ export default function AddForm(props) {
         setSelPriceList('');
         setListPriceList([]);
         setInputListItem([]);
-
+        setListSuratJalanWO([]);
         setLoading(true);
+        dispatch(actions.getInvoiceData('/suratjalan/'+id,successHandlerSJJ, errorHandler));
         dispatch(actions.getInvoiceData('/searchsj/'+id,successHandlerSj, errorHandler));
+    }
+
+    function successHandlerSJJ(data) {
+        let list = [];
+        if(data.data.suratjalan){
+            for(let i=0; i < data.data.suratjalan.length ; i++){
+                let det = data.data.suratjalan[i];
+
+                let obj = new Object();
+                obj.nosj = det.nodocument;
+                obj.warehouse = det.warehousename;
+                obj.nocontainer = det.nocontainer;
+                obj.tanggal = det.tanggal?moment (new Date(det.tanggal)).format(formatdate):'';
+
+                if(data.data.partaiwo){
+                    let listpartai = data.data.partaiwo.filter(output => output.nocontainer == det.nocontainer);
+                    if(listpartai.length > 0){
+                        for(let j=0; j < listpartai.length ; j++){
+                            let obj1 = new Object();
+                            obj1 = obj;
+                            obj1.partai = listpartai[j].partainame;
+                            list.push(obj1);
+                        }
+                    }else{
+                        obj.partai = '';
+                        list.push(obj);
+                    }
+                }else{
+                    obj.partai = '';
+                    list.push(obj);
+                }
+                
+            }
+            
+        }
+        setListSuratJalanWO(list);
     }
 
     const successHandlerSj = (data) =>{
@@ -186,12 +225,15 @@ export default function AddForm(props) {
         setSelPriceList(id);
         setInputListItem([]);
         let listitem = [];
+        setIsHideColumnWarehouse(false);
         if(SelInvoiceType == 'REIMBURSEMENT'){
+            setIsHideColumnWarehouse(true);
             for(let i=0; i < dataval.length; i++){
                 let det = dataval[i];
                 let obj = new Object();
                 obj.idpricelist = 0;
                 obj.idwarehouse = 0;
+                obj.warehousename = '';
                 obj.idinvoicetype = det.idinvoiceitem;
                 obj.invoicetype = det.invoiceitemName;
                 obj.amount = det.amount;
@@ -211,6 +253,7 @@ export default function AddForm(props) {
                     let obj = new Object();
                     obj.idpricelist = det.idpricelist;
                     obj.idwarehouse = det.idwarehouse;
+                    obj.warehousename = det.warehouseName;
                     obj.idinvoicetype = det.idinvoicetype;
                     obj.invoicetype = det.invoicetypename;
                     obj.amount = det.price;
@@ -394,10 +437,18 @@ export default function AddForm(props) {
         setSelPriceList('');
         setListPriceList([]);
         setInputWarehouseID('');
+        setInputDeliveredTo('');
         setLoading(true);
+        dispatch(actions.getInvoiceData('/getdistrict/'+data.kodepos,successHandlerDistrict, errorHandler));
         dispatch(actions.getInvoiceData('/searchwo/'+data.id,successHandlerWO, errorHandler));
     }
-
+    const successHandlerDistrict = (data) => {
+        if(data.data){
+            if(data.data.length > 0){
+                setInputDeliveredTo(data.data[0].dis_name);
+            }
+        }
+    }
     const successHandlerWO = (data) => {
         if(data.data){
             setListWO(data.data.reduce((obj, el) => (
@@ -661,6 +712,27 @@ export default function AddForm(props) {
                             </table>
                             <div className="invalid-feedback-custom">{ErrInputCustomer}</div>
 
+                            <label className="mt-3 form-label required" htmlFor="deliveredto">
+                                {i18n.t('Delivered To')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <Input
+                                name="deliveredto"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="deliveredto"
+                                // maxLength={30}
+                                // onChange={val => handleInputDeliveredTo(val)}
+                                onBlur={handleBlur}
+                                disabled={true}
+                                value={values.deliveredto}
+                            />
+                            <div className="invalid-feedback-custom">{ErrInputDeliveredTo}</div>
+
                             <label className="mt-3 form-label required" htmlFor="refno">
                                 {i18n.t('Ref. No')}
                                 <span style={{color:'red'}}>*</span>
@@ -681,25 +753,7 @@ export default function AddForm(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputRefNo}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="deliveredto">
-                                {i18n.t('Delivered To')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <Input
-                                name="deliveredto"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="deliveredto"
-                                maxLength={30}
-                                onChange={val => handleInputDeliveredTo(val)}
-                                onBlur={handleBlur}
-                                value={values.deliveredto}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputDeliveredTo}</div>
+                            
 
                             <label className="mt-3 form-label required" htmlFor="delivereddate">
                                 {i18n.t('Delivery Date')}
@@ -871,13 +925,14 @@ export default function AddForm(props) {
                             </tbody>
                             </table>
                             {
-                                // values.items.length == 0?'':
+                                // values.items.length == 0?'': 
                                 <table id="tablegrid">
                                     <tr>
+                                        <th hidden={IsHideColumnWarehouse}>{i18n.t('Warehouse')}</th>
                                         <th>{i18n.t('Invoice Type')}</th>
                                         <th>{i18n.t('Harga')}</th>
                                         {/* <th>{i18n.t('Is Mandatory')}</th> */}
-                                        <th>{i18n.t('Jalur')}</th>
+                                        {/* <th>{i18n.t('Jalur')}</th> */}
                                         <th>{i18n.t('Qty')}</th>
                                         <th>{i18n.t('Diskon')}</th>
                                         <th>{i18n.t('Sub Total')}</th>
@@ -888,6 +943,25 @@ export default function AddForm(props) {
                                             values.items.map((x, i) => {
                                                 return (
                                                 <tr>
+                                                    <td width={'350px'} hidden={IsHideColumnWarehouse}>
+                                                    <Input
+                                                        name="warehousename"
+                                                        // className={
+                                                        //     touched.amount && errors.amount
+                                                        //         ? "w-50 input-error"
+                                                        //         : "w-50"
+                                                        // }
+                                                        type="text"
+                                                        id="warehousename"
+                                                        // onChange={val => handleInputChange(val,i)}
+                                                        onBlur={handleBlur}
+                                                        // placeholder={i18n.t('label_AMOUNT')}
+                                                        // style={{width: '25%'}}
+                                                        // value={values.amount}
+                                                        value={x.warehousename}
+                                                        disabled={true}
+                                                    />
+                                                    </td>
                                                     <td>
                                                     <Input
                                                         name="invoicetype"
@@ -945,7 +1019,7 @@ export default function AddForm(props) {
                                                         disabled={true}
                                                     />
                                                     </td> */}
-                                                    <td>
+                                                    {/* <td>
                                                     <Input
                                                         name="jalur"
                                                         // className={
@@ -964,7 +1038,7 @@ export default function AddForm(props) {
                                                         style={{backgroundColor:x.jalur !== ''? (x.jalur == 'HIJAU'?'greenyellow':'red'):''}}
                                                         disabled={true}
                                                     />
-                                                    </td>
+                                                    </td> */}
                                                     <td>
                                                     <Input
                                                         name="qty"
@@ -1029,6 +1103,33 @@ export default function AddForm(props) {
                                     </tbody>
                                 </table>
                             }
+
+                            {
+                                    <table id="tablegrid">
+                                        <tr>
+                                            <th>{i18n.t('No Surat Jalan')}</th>
+                                            <th>{i18n.t('Gudang')}</th>
+                                            <th>{i18n.t('No Container')}</th>
+                                            <th>{i18n.t('Tanggal Loading/Unloading')}</th>
+                                            <th>{i18n.t('Partai')}</th>
+                                        </tr>
+                                        <tbody>
+                                            {
+                                                ListSuratJalanWO.map((x, i) => {
+                                                    return(
+                                                        <tr>
+                                                            <td>{x.nosj}</td>
+                                                            <td>{x.warehouse}</td>
+                                                            <td>{x.nocontainer}</td>
+                                                            <td>{x.tanggal}</td>
+                                                            <td>{x.partai}</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
 
                             </ContentWrapper>
                             {loading && <Loading/>}

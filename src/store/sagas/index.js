@@ -120,7 +120,8 @@ import {
     getAssetDataSaga,
     submitAddAssetSaga,
     submitEditAssetSaga,
-    submitDeleteAssetSaga
+    submitDeleteAssetSaga,
+    getInvoiceDataParamSaga
 } from './admin';
 import { getDataCustomerSaga, getDataCustomerTypeSaga, submitAddCustomerSaga, submitAddCustomerTypeSaga, submitAEditCustomerTypeSaga, submitEditCustomerSaga, submitUploadFileCustomerCallPlanSaga } from './customer';
 import { getDataCallPlanSaga, getDataInfoSaga, getMonitoringDataSaga, submitAddCallPlanSaga, submitAddInfoSaga, submitDeleteCallPlanSaga, submitDeleteInfoSaga, submitEditCallPlanSaga, submitEditInfoSaga } from './mobile';
@@ -276,5 +277,6 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_ADD_ASSET, submitAddAssetSaga),
         takeEvery(actions.SUBMIT_EDIT_ASSET, submitEditAssetSaga),
         takeEvery(actions.SUBMIT_DELETE_ASSET, submitDeleteAssetSaga),
+        takeEvery(actions.GET_INVOICE_DATA_PARAM, getInvoiceDataParamSaga),
     ]);
 }

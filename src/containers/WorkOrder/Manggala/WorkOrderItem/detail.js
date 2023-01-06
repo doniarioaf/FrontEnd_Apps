@@ -77,6 +77,8 @@ import React, {useState,
     ]);
     const [tableColumnExtensions] = useState([]);
 
+    const [ListSuratJalanWO, setListSuratJalanWO] = useState([]);
+
     const id = props.match.params.id;
 
     const handleToggle = (flag) => {
@@ -114,6 +116,43 @@ import React, {useState,
         dispatch(actions.getWorkOrderData('/'+id,successHandler, errorHandler));
     }, []);
 
+    function successHandlerSJ(data) {
+        let list = [];
+        if(data.data.suratjalan){
+            for(let i=0; i < data.data.suratjalan.length ; i++){
+                let det = data.data.suratjalan[i];
+
+                let obj = new Object();
+                obj.nosj = det.nodocument;
+                obj.warehouse = det.warehousename;
+                obj.nocontainer = det.nocontainer;
+                obj.tanggal = det.tanggal?moment (new Date(det.tanggal)).format(formatdate):'';
+
+                if(data.data.partaiwo){
+                    let listpartai = data.data.partaiwo.filter(output => output.nocontainer == det.nocontainer);
+                    if(listpartai.length > 0){
+                        for(let j=0; j < listpartai.length ; j++){
+                            let obj1 = new Object();
+                            obj1 = obj;
+                            obj1.partai = listpartai[j].partainame;
+                            list.push(obj1);
+                        }
+                    }else{
+                        obj.partai = '';
+                        list.push(obj);
+                    }
+                }else{
+                    obj.partai = '';
+                    list.push(obj);
+                }
+                
+            }
+            
+        }
+        setListSuratJalanWO(list);
+        setLoading(false);
+    }
+
     function successHandler(data) {
         setValue(data.data);
 
@@ -138,7 +177,9 @@ import React, {useState,
             setRows(theData);
         }
 
-        setLoading(false);
+        dispatch(actions.getWorkOrderData('/suratjalan/'+id,successHandlerSJ, errorHandler));
+
+        
     }
 
     const submitHandlerDelete = () => {
@@ -508,6 +549,33 @@ import React, {useState,
                                         <td>{x.nocontainer}</td>
                                         <td>{x.noseal}</td>
                                         <td>{x.barang}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
+            }
+
+            {
+                <table id="tablegrid">
+                    <tr>
+                        <th>{i18n.t('No Surat Jalan')}</th>
+                        <th>{i18n.t('Gudang')}</th>
+                        <th>{i18n.t('No Container')}</th>
+                        <th>{i18n.t('Tanggal Loading/Unloading')}</th>
+                        <th>{i18n.t('Partai')}</th>
+                    </tr>
+                    <tbody>
+                        {
+                            ListSuratJalanWO.map((x, i) => {
+                                return(
+                                    <tr>
+                                        <td>{x.nosj}</td>
+                                        <td>{x.warehouse}</td>
+                                        <td>{x.nocontainer}</td>
+                                        <td>{x.tanggal}</td>
+                                        <td>{x.partai}</td>
                                     </tr>
                                 )
                             })
