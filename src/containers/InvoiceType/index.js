@@ -22,6 +22,7 @@ const MenuIndex = () => {
         // {name: 'code', title: i18n.t('Code')},
         {name: 'invoicetype', title: i18n.t('label_INVOICE_TYPE')},
         {name: 'nama', title: i18n.t('label_NAME')},
+        {name: 'coa', title: i18n.t('COA')},
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -41,6 +42,7 @@ const MenuIndex = () => {
                     // 'code':el.code?el.code:'',
                     'invoicetype': el.invoicetypename ?el.invoicetypename:'',
                     'nama':el.nama?el.nama:'',
+                    'coa':el.coaName?el.coaName:'',
                 }
             ], []);
             setRows(theData);

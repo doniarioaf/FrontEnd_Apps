@@ -48,7 +48,7 @@ import React, {useState,
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
 
-    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",idasset:"",idinvoiceitem:""}]);
+    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",idasset:"",idinvoiceitem:"",idpaymentitem:"",idassetsparepart:"",sparepartassettype:""}]);
 
     const classes = useStyles();
     const [open, setOpen] = useState(false);
@@ -114,7 +114,20 @@ import React, {useState,
                         assetName = det.assetNameBuntut;
                     }
                 }
-                listitems.push({ idcoa:det.coaName,catatan: det.catatan,amount:det.amount,idasset:assetName,idinvoiceitem:det.invoiceitemName});
+
+                let sparePartassetName = '';
+                if(det.assetsparepartNameKepala){
+                    if(det.assetsparepartNameKepala !== ''){
+                        sparePartassetName = det.assetsparepartNameKepala;
+                    }
+                }
+                if(det.assetsparepartNameBuntut){
+                    if(det.assetsparepartNameBuntut !== ''){
+                        sparePartassetName = det.assetsparepartNameBuntut;
+                    }
+                }
+                
+                listitems.push({ idcoa:det.coaName,catatan: det.catatan,amount:det.amount,idasset:assetName,idinvoiceitem:(det.invoiceitemName?det.invoiceitemName:''),idpaymentitem:(det.paymentitemName?det.paymentitemName:''),idassetsparepart:sparePartassetName,sparepartassettype:det.sparepartassettypeName});
             }
         }
         setInputListItem(listitems);
@@ -175,6 +188,65 @@ import React, {useState,
             }
         }
         return '';
+    }
+
+    const checkCategory = (data,type) =>{
+        if(type == 'invoiceitem' || type == 'wo'){
+            if(data == 'OPTIONS_PAYMENTITEM_TYPE_1'){
+                return false;
+            }
+        }else if(type == 'asset'){
+            if(data == 'OPTIONS_PAYMENTITEM_TYPE_3'){
+                return false;
+            }
+        }else if(type == 'all'){
+            return false;
+        }else if(type == 'invoiceitemtable'){
+            for(let i=0; i < InputListItem.length; i++){
+                let det = InputListItem[0];
+                let flag = true;
+                if(det.idpaymentitem !== ''){
+                    flag = true;
+                    // return true;
+
+                    // break;
+                    if(det.idpaymentitem == ''){
+                        if(data == 'OPTIONS_PAYMENTITEM_TYPE_1'){
+                            flag = false;
+                            // return false;
+                        }
+                    }
+                }else{
+                    if(data == 'OPTIONS_PAYMENTITEM_TYPE_1'){
+                        flag = false;
+                    }
+                }
+
+                return flag;
+            }
+            if(data == 'OPTIONS_PAYMENTITEM_TYPE_1'){
+                return false;
+            }
+            return true;
+        }else if(type == 'paymentitemtable'){
+            for(let i=0; i < InputListItem.length; i++){
+                let det = InputListItem[0];
+                let flag = false;
+                if(det.idinvoiceitem !== ''){
+                    flag = true;
+                    // return true;
+                    // break;
+                    if(det.idinvoiceitem == ''){
+                        // return false;
+                        flag = false;
+                    }
+                }
+                return flag;
+            }
+            return false;
+        }
+
+        return true;
     }
 
     return (
@@ -238,6 +310,13 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Category')}</span>
+                            <strong className="col-md-7">
+                            {value.paymenttypename?value.paymenttypename:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Payment To')}</span>
                             <strong className="col-md-7">
                                 {getPaymentToName(value)}
@@ -285,22 +364,28 @@ import React, {useState,
             {
                 <table id="tablegrid">
                     <tr>
-                    <th>{i18n.t('COA')}</th>
-                    <th>{i18n.t('label_NOTE')}</th>
+                    <th  hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','invoiceitemtable')}>{i18n.t('Reimbursement')}</th>
+                    <th  hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','paymentitemtable')}>{i18n.t('Non Reimbursement')}</th>
+                    <th hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{i18n.t('Kepala/Buntut')}</th>
+                    <th hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{i18n.t('Jenis Sparepart')}</th>
+                    <th hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{i18n.t('Asset Sparepart')}</th>
                     <th>{i18n.t('Amount')}</th>
-                    <th>{i18n.t('Invoice Item')}</th>
-                    <th>{i18n.t('Asset')}</th>
+                    <th>{i18n.t('label_NOTE')}</th>
+                    <th>{i18n.t('COA')}</th>
                     </tr>
                     <tbody>
                         {
                             InputListItem.map((x, i) => {
                                 return (
                                     <tr>
-                                        <td>{x.idcoa}</td>
-                                        <td>{x.catatan}</td>
+                                        <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','invoiceitemtable')}>{x.idinvoiceitem}</td>
+                                        <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','paymentitemtable')}>{x.idpaymentitem}</td>
+                                        <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{x.idasset}</td>
+                                        <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{x.sparepartassettype}</td>
+                                        <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{x.idassetsparepart}</td>
                                         <td>{numToMoney(parseFloat(x.amount))}</td>
-                                        <td>{x.idinvoiceitem}</td>
-                                        <td>{x.idasset}</td>
+                                        <td>{x.catatan}</td>
+                                        <td>{x.idcoa}</td>
                                     </tr>
 
                                 )
