@@ -156,12 +156,21 @@ export default function AddForm(props) {
                 }]
             ), []));
 
-            setListSparePartType(data.data.spareparttypeOptions.reduce((obj, el) => (
+            // setListSparePartType(data.data.spareparttypeOptions.reduce((obj, el) => (
+            //     [...obj, {
+            //         value: el.code,
+            //         label: el.codename
+            //     }]
+            // ), []));
+
+            let listSparePartType = template.spareparttypeOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.code,
                     label: el.codename
                 }]
-            ), []));
+            ), []);
+            listSparePartType.push({value: 'nodata',label: 'No Data'});
+            setListSparePartType(listSparePartType);
 
             setListChooseYN([{value:'Y',label:'Yes'},{value:'N',label:'No'}])
         }
@@ -365,7 +374,7 @@ export default function AddForm(props) {
                                 flag = false;
                             }
 
-                            if(det.sparepartassettype !== '' || det.sparepartassettype !== 'nodata'){
+                            if(det.sparepartassettype !== '' && det.sparepartassettype !== 'nodata'){
                                 if(det.idassetsparepart == '' || det.idassetsparepart == 'nodata'){
                                     setErrSelAsset(i18n.t('Asset')+' '+i18n.t('label_REQUIRED'));
                                     flag = false;
@@ -546,10 +555,12 @@ export default function AddForm(props) {
                             }]
                         ), []));
                     }else{
+                        list[index]['idassetsparepart'] = '';
                         setListAssetSparePart([]);
                     }
                 }
             }else{
+                list[index]['idassetsparepart'] = '';
                 setListAssetSparePart([]);
             }
 
@@ -560,7 +571,7 @@ export default function AddForm(props) {
             if(idinvoiceitem !== undefined && idinvoiceitem !== null && idinvoiceitem !== 0 && idinvoiceitem !== ''){
                 let listtemp = ListInvoiceItem.filter(output => output.value == idinvoiceitem);
                 if(listtemp.length > 0){
-                    list[index]['idcoa'] = listtemp[0].idcoa;
+                    list[index]['idcoa'] = listtemp[0].idcoa == 0?'':listtemp[0].idcoa;
                 }
             }
             
@@ -571,7 +582,7 @@ export default function AddForm(props) {
             if(idpaymentitem !== undefined && idpaymentitem !== null && idpaymentitem !== 0 && idpaymentitem !== ''){
                 let listtemp = ListPaymentItems.filter(output => output.value == idpaymentitem);
                 if(listtemp.length > 0){
-                    list[index]['idcoa'] = listtemp[0].idcoa;
+                    list[index]['idcoa'] = listtemp[0].idcoa == 0?'':listtemp[0].idcoa;
                 }
             }
         }

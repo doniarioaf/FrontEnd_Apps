@@ -124,6 +124,8 @@ export default function EditForm(props) {
 
             let listPaymentTo = [{value:'EMPLOYEE',label:'Employee'},{value:'CUSTOMER',label:'Customer'},{value:'VENDOR',label:'Vendor'}];
             setListPaymentTo(listPaymentTo);
+            setListDataAssetSparePart(template.assetSparePartOptions);
+            setListDataPaymentItems(template.paymentItemOptions);
 
             setInputNoDoc(det.nodocument);
             setInputPaymentDate(det.paymentdate?moment(new Date(det.paymentdate), formatdate).toDate():null);
@@ -141,12 +143,45 @@ export default function EditForm(props) {
                 for(let i=0; i < data.data.details.length; i++){
                     let det = data.data.details[i];
                     //idcoa:"",catatan: "",amount:"",idasset:""
-                    listitems.push({ idcoa:det.idcoa,catatan: det.catatan,amount:numToMoney(parseFloat(det.amount)),idasset:(det.idasset || det.idasset !== 0?det.idasset:''),idinvoiceitem:(det.idinvoiceitem || det.idinvoiceitem !== 0?det.idinvoiceitem:''),idpaymentitem:(det.idpaymentitem || det.idpaymentitem !== 0?det.idpaymentitem:''),idassetsparepart:(det.idassetsparepart || det.idassetsparepart !== 0?det.idassetsparepart:''),sparepartassettype:det.sparepartassettype});
+                    listitems.push({ idcoa:det.idcoa,catatan: det.catatan,amount:numToMoney(parseFloat(det.amount)),idasset:(det.idasset || det.idasset !== 0?det.idasset:''),idinvoiceitem:(det.idinvoiceitem || det.idinvoiceitem !== 0?det.idinvoiceitem:''),idpaymentitem:(det.idpaymentitem || det.idpaymentitem !== 0?det.idpaymentitem:''),idassetsparepart:(det.idassetsparepart || det.idassetsparepart !== 0?det.idassetsparepart:''),sparepartassettype:(det.sparepartassettype?det.sparepartassettype:'')});
                     // listitems.push({ idcoa:det.idcoa,catatan: det.catatan,amount:numToMoney(parseFloat(det.amount)),idasset:(det.idasset || det.idasset !== 0?det.idasset:''),idinvoiceitem:(det.idinvoiceitem?det.idinvoiceitem:'')});
                 }
             }
             if(listitems.length > 0){
+                let detval = listitems[0];
                 setInputListItem(listitems);
+
+                let idasset = detval.idasset;
+                let sparepartType = detval.sparepartassettype;
+                if(idasset !== '' && (sparepartType !== '' && sparepartType !== 'nodata')){
+                    let detasset = template.assetOptions.filter(output => output.id == idasset);
+                    if(detasset.length > 0){
+                        let val = detasset[0];
+                        let jenisAsset = val.assettype;
+                        if(jenisAsset == 'KEPALA'){
+                            let assetSpareparts = template.assetSparePartOptions.filter(output => output.assettype == 'SP_KEPALA' && output.sparepartkepala_jenis == sparepartType);
+                            //sparepartkepala_jenis
+                            setListAssetSparePart(assetSpareparts.reduce((obj, el) => (
+                                [...obj, {
+                                    value: el.id,
+                                    label: el.sparepartkepala_nama
+                                }]
+                            ), []));
+                        }else if(jenisAsset == 'BUNTUT'){
+                            let assetSpareparts = template.assetSparePartOptions.filter(output => output.assettype == 'SP_BUNTUT' && output.sparepartbuntut_jenis == sparepartType);
+                            setListAssetSparePart(assetSpareparts.reduce((obj, el) => (
+                                [...obj, {
+                                    value: el.id,
+                                    label: el.sparepartbuntut_nama
+                                }]
+                            ), []));
+                        }else{
+                            setListAssetSparePart([]);
+                        }
+                    }
+                }else{
+                    setListAssetSparePart([]);
+                }
             }
 
             setListCOA(template.coaOptions.reduce((obj, el) => (
@@ -208,12 +243,14 @@ export default function EditForm(props) {
                 }]
             ), []));
 
-            setListSparePartType(template.spareparttypeOptions.reduce((obj, el) => (
+            let listSparePartType = template.spareparttypeOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.code,
                     label: el.codename
                 }]
-            ), []));
+            ), []);
+            listSparePartType.push({value: 'nodata',label: 'No Data'});
+            setListSparePartType(listSparePartType);
 
             setListChooseYN([{value:'Y',label:'Yes'},{value:'N',label:'No'}])
         }
@@ -414,12 +451,15 @@ export default function EditForm(props) {
                         }
 
                         if(!checkCategory(SelCategory,'asset')){
+                            // console.log('det.idasset ',det.idasset);
+                            // console.log('det.sparepartassettype ',det.sparepartassettype);
+                            // console.log('det.idassetsparepart ',det.idassetsparepart);
                             if(det.idasset == ''){
                                 setErrSelAsset(i18n.t('Asset')+' '+i18n.t('label_REQUIRED'));
                                 flag = false;
                             }
 
-                            if(det.sparepartassettype !== '' || det.sparepartassettype !== 'nodata'){
+                            if(det.sparepartassettype !== '' && det.sparepartassettype !== 'nodata'){
                                 if(det.idassetsparepart == '' || det.idassetsparepart == 'nodata'){
                                     setErrSelAsset(i18n.t('Asset')+' '+i18n.t('label_REQUIRED'));
                                     flag = false;
@@ -575,7 +615,7 @@ export default function EditForm(props) {
         if(name == 'sparepartassettype' || name == 'idasset'){
             let idasset = list[index]['idasset'];
             let sparepartType = list[index]['sparepartassettype'];
-            if(idasset !== '' && (sparepartType !== '' || sparepartType !== 'nodata')){
+            if(idasset !== '' && (sparepartType !== '' && sparepartType !== 'nodata')){
                 let detasset = ListDataAssetOptions.filter(output => output.id == idasset);
                 if(detasset.length > 0){
                     let val = detasset[0];
@@ -599,10 +639,12 @@ export default function EditForm(props) {
                         ), []));
                     }else{
                         setListAssetSparePart([]);
+                        list[index]['idassetsparepart'] = '';
                     }
                 }
             }else{
                 setListAssetSparePart([]);
+                list[index]['idassetsparepart'] = '';
             }
 
         }
@@ -612,7 +654,7 @@ export default function EditForm(props) {
             if(idinvoiceitem !== undefined && idinvoiceitem !== null && idinvoiceitem !== 0 && idinvoiceitem !== ''){
                 let listtemp = ListInvoiceItem.filter(output => output.value == idinvoiceitem);
                 if(listtemp.length > 0){
-                    list[index]['idcoa'] = listtemp[0].idcoa;
+                    list[index]['idcoa'] = listtemp[0].idcoa == 0?'':listtemp[0].idcoa;
                 }
             }
             
@@ -623,7 +665,7 @@ export default function EditForm(props) {
             if(idpaymentitem !== undefined && idpaymentitem !== null && idpaymentitem !== 0 && idpaymentitem !== ''){
                 let listtemp = ListPaymentItems.filter(output => output.value == idpaymentitem);
                 if(listtemp.length > 0){
-                    list[index]['idcoa'] = listtemp[0].idcoa;
+                    list[index]['idcoa'] = listtemp[0].idcoa == 0?'':listtemp[0].idcoa;
                 }
             }
         }
@@ -889,6 +931,7 @@ export default function EditForm(props) {
                                 value={values.keterangan}
                             />
 
+                            <div hidden={checkCategory(values.category,'wo')}>
                             <label className="mt-3 form-label required" htmlFor="idwo">
                                 {i18n.t('WO Number')}
                             </label>
@@ -911,6 +954,7 @@ export default function EditForm(props) {
                                     // disabled={values.isdisabledcountry}
                                     value={values.idwo}
                                 />
+                                </div>
 
                             </div>
                             </div>

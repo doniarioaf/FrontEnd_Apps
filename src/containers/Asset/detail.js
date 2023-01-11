@@ -73,6 +73,7 @@ import React, {useState,
         {name: 'nama', title: i18n.t('Nama')},
         {name: 'kodeasset', title: i18n.t('Kode Asset')},
         {name: 'tipeasset', title: i18n.t('Tipe Asset')},
+        {name: 'nodocpengeluaran', title: i18n.t('No Document')},
         {name: 'tanggal', title: i18n.t('Tanggal')},
         // {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);
@@ -157,6 +158,7 @@ import React, {useState,
                     'nama':getNama(el),
                     'kodeasset':el.kodeasset?el.kodeasset:'Kosong',
                     'tipeasset':getTipeAsset(el),
+                    'nodocpengeluaran':el.noDocPengeluaranKasBank?el.noDocPengeluaranKasBank:'',
                     'tanggal':el.tanggal?moment(new Date(el.tanggal)).format(formatdatetime):''
                 }
             ], []);
@@ -235,7 +237,12 @@ import React, {useState,
     function onClickView(id) {
         // history.push(pathmenu.detailWorkOrder+'/'+id);
     }
-    
+    function handleDisbaledDelete(row) {
+        if(row.nodocpengeluaran !== ''){
+            return true;
+        }
+        return false;
+    }
     function onClickDelete(id) {
         let Nama = '';
         let filterid = rows.filter(output => output.id == id);
@@ -842,6 +849,7 @@ import React, {useState,
                 permissiondelete={!isGetPermissions(deleteHistoryAssetMapping_Permission,'TRANSACTION')}
                 onclickdelete={onClickDelete}
                 listfilterdisabled={['tanggal']}
+                deletedisabled = {handleDisbaledDelete}
                 width={80}
             />
             </div>

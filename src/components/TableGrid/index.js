@@ -112,6 +112,7 @@ const TableGrid = props => {
                         <IconButton color={'primary'} 
                         hidden={props.permissiondelete !== undefined?props.permissiondelete:true}
                         onClick={() => props.onclickdelete?props.onclickdelete(row.id):''}
+                        disabled={props.deletedisabled?props.deletedisabled(row):false}
                         >
                             <DeleteIcon/>
                         </IconButton>
