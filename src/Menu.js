@@ -229,7 +229,14 @@ const handleMenu = () => {
                     path: pathmenu.reportLabaRugi,
                     translate: 'Laba Rugi',
                     permission:permissionmenu.MenuReportKasBank,
-                }
+                },
+                {
+                    name: 'Summary Kegiatan Truck',
+                    path: pathmenu.reportsummarykegiatantruck,
+                    translate: 'Laba Rugi',
+                    permission:permissionmenu.MenuReportSummaryKegiatanTruck,
+                },
+                
             ]
         },
        
