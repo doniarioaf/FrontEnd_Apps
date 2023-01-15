@@ -85,6 +85,7 @@ export default function EditForm(props) {
     
     const [InputWarehouseID, setInputWarehouseID] = useState('');
     const [InputJalur, setInputJalur] = useState('');
+    const [InputJalurName, setInputJalurName] = useState('');
     const [InputCustomerID, setInputCustomerID] = useState('');
     const [InputCustomer, setInputCustomer] = useState('');
     const [ErrInputCustomer, setErrInputCustomer] = useState('');
@@ -251,8 +252,10 @@ export default function EditForm(props) {
     const handleChangeWo = (data) =>{
         let id = data?.value ? data.value : '';
         let jalur = data?.jalur ? data.jalur : '';
+        let jalurname = data?.jalurname ? data.jalurname : '';
         setSelWO(id);
         setInputJalur(jalur);
+        setInputJalurName(jalurname);
         setSelSJ('');
         setListSJ([]);
         setInputWarehouseID('');
@@ -511,6 +514,7 @@ export default function EditForm(props) {
         setSelWO('');
         setListWO([]);
         setInputJalur('');
+        setInputJalurName('');
         setSelSJ('');
         setListSJ([]);
         setSelPriceList('');
@@ -536,7 +540,8 @@ export default function EditForm(props) {
                 [...obj, {
                     value: el.id,
                     label: el.nodocument,
-                    jalur: el.jalur
+                    jalur: el.jalur,
+                    jalurname: el.jalurname,
                 }]
             ), []));
         }
@@ -705,7 +710,8 @@ export default function EditForm(props) {
                 total:InputTotalInvoice,
                 pricelist:SelPriceList,
                 items:InputListItem,
-                nodoc:InputNoDocument
+                nodoc:InputNoDocument,
+                jalurname:InputJalurName
             }
         }
 
@@ -925,6 +931,24 @@ export default function EditForm(props) {
                                     value={values.wo}
                                 />
 
+                            <label className="mt-3 form-label required" htmlFor="jalurname">
+                                {i18n.t('Penjaluran')}
+                            </label>
+                            <Input
+                                name="jalurname"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="jalurname"
+                                // maxLength={30}
+                                // onChange={val => handleInputDeliveredTo(val)}
+                                onBlur={handleBlur}
+                                disabled={true}
+                                value={values.jalurname}
+                            />
                             <label className="mt-3 form-label required" htmlFor="sj">
                                 {i18n.t('Surat Jalan')}
                             </label>

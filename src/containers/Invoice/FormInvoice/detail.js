@@ -325,6 +325,13 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Penjaluran')}</span>
+                            <strong className="col-md-7">
+                            {value.jalurname?value.jalurname:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Surat Jalan')}</span>
                             <strong className="col-md-7">
                             {value.noocumentsuratjalan?value.noocumentsuratjalan:''}

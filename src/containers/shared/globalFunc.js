@@ -246,3 +246,15 @@ export const numToMoneyWithComma = (amount) =>{
     string = befcomma+','+aftercomma;
     return string;
 }
+
+export const checkValuePDf = (data,valreturn) =>{
+    if(data == undefined){
+        return valreturn;
+    }else if(data == null){
+        return valreturn;
+    }else if(data == ''){
+        return valreturn;
+    }
+
+    return data;
+}

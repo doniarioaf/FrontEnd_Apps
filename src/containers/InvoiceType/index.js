@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Container, Card, CardBody}  from 'reactstrap';
+import {Container, Card, CardBody,Button}  from 'reactstrap';
 import {useTranslation}      from 'react-i18next';
 import Grid                         from '../../components/TableGrid';
 import ContentWrapper               from '../../components/Layout/ContentWrapper';
@@ -11,6 +11,17 @@ import * as pathmenu           from '../shared/pathMenu';
 import { reloadToHomeNotAuthorize,isGetPermissions } from '../shared/globalFunc';
 import { MenuInvoiceType,addInvoiceType_Permission,editInvoiceType_Permission,deleteInvoiceType_Permission } from '../shared/permissionMenu';
 import {useHistory}                 from 'react-router-dom';
+import {Loading}                    from '../../components/Common/Loading';
+
+import DialogMapping from './dialogMapping';
+import styled                       from "styled-components";
+import Dialog                       from '@material-ui/core/Dialog';
+
+const StyledDialog = styled(Dialog)`
+& > .MuiDialog-container > .MuiPaper-root {
+    height: 500px;
+}
+`;
 
 const MenuIndex = () => {
     reloadToHomeNotAuthorize(MenuInvoiceType,'READ');
@@ -26,6 +37,11 @@ const MenuIndex = () => {
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const [ShowDialogMapping, setShowDialogMapping] = useState(false);
+    const [LoadingSend, setLoadingSend] = useState(false);
+    const [ListMapping, setListMapping] = useState([]);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -35,6 +51,7 @@ const MenuIndex = () => {
 
     function successHandler(data) {
         if(data.data){
+            setListMapping(data.data);
             const theData = data.data.reduce((obj, el) => [
                 ...obj,
                 {
@@ -52,6 +69,8 @@ const MenuIndex = () => {
 
     function errorHandler(error) {
         setLoading(false);
+        setShowDialogMapping(false);
+        setLoadingSend(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -75,6 +94,21 @@ const MenuIndex = () => {
             //   Swal.fire('Changes are not saved', '', 'info')
             }
           })
+    }
+
+    const succesHandlerSubmitMapping = (data) => {
+        setLoading(false);
+        setShowDialogMapping(false);
+        setLoadingSend(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // history.push(0);
+            }
+        })
     }
 
     const succesHandlerSubmitDelete = (data) => {
@@ -102,12 +136,24 @@ const MenuIndex = () => {
         history.push(pathmenu.editInvoiceType+'/'+id);
     }
 
+    function onClickMapping() {
+        setShowDialogMapping(true)
+    }
+
     return (
         <ContentWrapper>
             <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuInvoiceType} label={'label_INVOICE_TYPE'} labeldefault={'Invoice Item'} />
             <Container fluid>
             <Card>
             <CardBody>
+            <Button
+                onClick={() => onClickMapping()}
+                // color="white"
+                // title={i18n.t('label_BACK')}
+                style={{float: 'right'}}
+            >
+                {i18n.t('Mapping')}
+            </Button>
             <Container fluid className="center-parent">
             <div className="table-responsive">
             <Grid
@@ -131,6 +177,29 @@ const MenuIndex = () => {
             </CardBody>
             </Card>
             </Container>
+
+            {
+                ListMapping.length > 0?
+                <StyledDialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                maxWidth="md"
+                fullWidth={true}
+                // style={{height: '100%'}}
+                open={ShowDialogMapping}
+            >
+                <DialogMapping
+                    showflag = {setShowDialogMapping}
+                    flagloadingsend = {setLoadingSend}
+                    errorhandler = {errorHandler}
+                    handlesubmit = {succesHandlerSubmitMapping}
+                    invoiceitemsdata = {ListMapping}
+                    // getAutoDebitid= {getAutoDebitid}
+                />
+                {LoadingSend && <Loading/>}
+            </StyledDialog>:''
+            }
+            
         </ContentWrapper>
         
     );

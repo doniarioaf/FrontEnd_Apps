@@ -163,7 +163,7 @@ export default function AddForm(props) {
             //     }]
             // ), []));
 
-            let listSparePartType = template.spareparttypeOptions.reduce((obj, el) => (
+            let listSparePartType = data.data.spareparttypeOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.code,
                     label: el.codename

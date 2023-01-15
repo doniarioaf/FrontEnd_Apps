@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Text, View, StyleSheet } from '@react-pdf/renderer';
-import { numToMoney } from '../../../../shared/globalFunc';
+import { checkValuePDf } from '../../../../shared/globalFunc';
 import moment                          from 'moment';
 import { formatdate } from '../../../../shared/constantValue';
 
@@ -65,7 +65,7 @@ const setItems = (items) =>{
                 obj.nosj = det.nodocument;
                 obj.warehouse = det.warehousename;
                 obj.nocontainer = det.nocontainer;
-                obj.tanggal = det.tanggal?moment (new Date(det.tanggal)).format(formatdate):'';
+                obj.tanggal = det.tanggalkembali?moment (new Date(det.tanggalkembali)).format(formatdate):'';
             if(lamp.partaiwo){
                 let listpartai = lamp.partaiwo.filter(output => output.nocontainer == det.nocontainer);
                 if(listpartai.length > 0){
@@ -93,11 +93,11 @@ const setItems = (items) =>{
                 let rowItem = [];
                 let det = list[i];
 
-                rowItem.push(<Text style={styles.nosuratjalan}>{det.nosj}</Text>);
-                rowItem.push(<Text style={styles.gudang}>{det.warehouse}</Text>);
-                rowItem.push(<Text style={styles.partai}>{det.partai}</Text>);
-                rowItem.push(<Text style={styles.nocontainer}>{det.nocontainer}</Text>);
-                rowItem.push(<Text style={styles.tanggal}>{det.tanggal}</Text>);
+                rowItem.push(<Text style={styles.nosuratjalan}>{checkValuePDf(det.nosj,' ')}</Text>);
+                rowItem.push(<Text style={styles.gudang}>{checkValuePDf(det.warehouse,' ')}</Text>);
+                rowItem.push(<Text style={styles.partai}>{checkValuePDf(det.partai,' ')}</Text>);
+                rowItem.push(<Text style={styles.nocontainer}>{checkValuePDf(det.nocontainer,' ')}</Text>);
+                rowItem.push(<Text style={styles.tanggal}>{checkValuePDf(det.tanggal,' ')}</Text>);
                 rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
                 no++;
             }

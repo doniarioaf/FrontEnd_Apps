@@ -231,6 +231,29 @@ import React, {useState,
         })
     }
 
+    const handleGantiSparePartBuntut = () => {
+        let listmapping = value.assetmapping;
+        let listfilteroutput = listmapping.filter(output => output.type == 'ARMADA');    
+        let msg = 'Tidak Ada Buntut';
+        if(listfilteroutput.length > 0){
+            let idbuntut = listfilteroutput[0].idasset_mapping?listfilteroutput[0].idasset_mapping:0;
+            if(idbuntut !== 0){
+                msg = '';
+                history.push(pathmenu.detailAsset+'/'+idbuntut);
+            }
+        }
+
+        if(msg !== ''){
+            Swal.fire({
+                icon: 'info',
+                title: '',
+                text: msg
+            })
+        }
+        
+    }
+
+    
     function onClickAdd() {
         setShowDialog(true);
     }
@@ -879,6 +902,7 @@ import React, {useState,
                         :(<div>
                             <MenuItem hidden={loading || !isGetPermissions(editAsset_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editAsset+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={loading || !isGetPermissions(deleteAsset_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!(value.assettype == 'KEPALA')}  onClick={() => handleGantiSparePartBuntut()}>{i18n.t('Ganti Sparepart Buntut')}</MenuItem>
                             
                         </div>)
                         
