@@ -136,7 +136,25 @@ export default function EditForm(props) {
             setSelBank(det.idbank);
             setInputKeterangan(det.keterangan);
             setSelWO(det.idwo?det.idwo:'');
-            setSelCategory(det.idpaymenttype?det.idpaymenttype:'');
+            let category = det.idpaymenttype?det.idpaymenttype:'';
+            setSelCategory(category);
+
+            let listPaymentItems = template.paymentItemOptions.filter(output => output.paymenttype == category);
+            if(listPaymentItems.length > 0){
+                let listData = listPaymentItems.reduce((obj, el) => (
+                    [...obj, {
+                        value: el.id,
+                        label: el.nama,
+                        idcoa:el.idcoa
+                    }]
+                ), []);
+                listData.push({
+                    value: 'nodata',
+                    label: 'No Data',
+                    idcoa:''
+                });
+                setListPaymentItems(listData);
+            }
 
             let listitems = [];
             if(data.data.details){
@@ -221,12 +239,27 @@ export default function EditForm(props) {
             );
             setListInvoiceItem(listInvItem);
 
-            setListWO(template.woOptions.reduce((obj, el) => (
+            let listWO = template.woOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nodocument
                 }]
-            ), []));
+            ), []);
+            listWO.push(
+                {
+                    value: 'nodata',
+                    label: 'No Data',
+                    idcoa: ''
+                }
+            );
+            setListWO(listWO);
+
+            // setListWO(template.woOptions.reduce((obj, el) => (
+            //     [...obj, {
+            //         value: el.id,
+            //         label: el.nodocument
+            //     }]
+            // ), []));
 
             setListAsset(template.assetOptions.reduce((obj, el) => (
                 [...obj, {
@@ -344,6 +377,13 @@ export default function EditForm(props) {
     const checkCategory = (data,type) =>{
         if(type == 'invoiceitem' || type == 'wo'){
             if(data == 'OPTIONS_PAYMENTITEM_TYPE_1'){
+                return false;
+            }
+            if(type == 'wo' && data == 'OPTIONS_PAYMENTITEM_TYPE_2'){
+                return false;
+            }
+
+            if(type == 'wo' && data == 'OPTIONS_PAYMENTITEM_TYPE_4'){
                 return false;
             }
         }else if(type == 'asset'){
@@ -545,7 +585,17 @@ export default function EditForm(props) {
             obj.idcoa = SelCOA;
             obj.idbank = SelBank;
             obj.keterangan = InputKeterangan;
-            obj.idwo = SelWO !== ''?SelWO:null;
+
+            let idwo = '';
+            if(SelWO == '' || SelWO == 'nodata'){
+                idwo = null;
+            }else{
+                idwo = SelWO;
+            }
+            if(checkCategory(SelCategory,'wo')){
+                idwo = null;
+            }
+            obj.idwo = idwo;//SelWO !== ''?SelWO:null;
             obj.isactive = true;
             let listdetails = [];
             if(InputListItem.length > 0){

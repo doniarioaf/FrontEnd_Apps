@@ -15,26 +15,18 @@ import momentLocalizer                 from 'react-widgets-moment';
 import { DatePicker}      from 'react-widgets';
 // import { listTypeReport } from '../../shared/globalFunc';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { MenuReportKasBank } from '../../shared/permissionMenu';
+import { MenuReportHistoryTruck } from '../../shared/permissionMenu';
 import { formatdate } from '../../shared/constantValue';
 import * as pathmenu           from '../../shared/pathMenu';
 import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 
-export default function ReportKasBank(props) {
-    reloadToHomeNotAuthorize(MenuReportKasBank,'READ');
+export default function ReportHistoryTruck(props) {
+    reloadToHomeNotAuthorize(MenuReportHistoryTruck,'READ');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
     momentLocalizer();
-
-    // const [ListStatus, setListStatus] = useState([{value:'OPEN',label:'Open'},{value:'CLOSE',label:'Close'}]);
-    // const [SelStatus, setSelStatus] = useState('');
-    // const [ErrSelStatus, setErrSelStatus] = useState('');
-
-    const [ListBank, setListBank] = useState([]);
-    const [SelBank, setSelBank] = useState('');
-    const [ErrSelBank, setErrSelBank] = useState('');
 
     const [start, setStart] = useState(new Date());
     const [end, setEnd] = useState(new Date());
@@ -42,42 +34,57 @@ export default function ReportKasBank(props) {
     const [listoutput, SetListOutPut] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    const [ListAssetKepala, setListAssetKepala] = useState([]);
+    const [SelAssetKepala, setSelAssetKepala] = useState('');
+
+    const [ListSparepartAsset, setListSparepartAsset] = useState([]);
+    const [SelSparepartAsset, setSelSparepartAsset] = useState('');
+
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getReportData('/manggala/kasbank/template','',succesHandlerSubmitTemplate, errorHandler));
+        dispatch(actions.getReportData('/manggala/historytruck/template','',succesHandlerSubmitTemplate, errorHandler));
     }, []);
     const succesHandlerSubmitTemplate = (data) =>{
         if(data.data){
-            setListBank(data.data.reduce((obj, el) => (
+            let listAsset = [];
+            listAsset = data.data.assetKepalaOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.namabank
+                    label: el.kepala_nama+' ('+el.kepala_nopolisi+')'
                 }]
-            ), []));
-        }
-        setLoading(false);
-    }
-    const handleStartDate = (data) =>{
-        // setStart(moment(data, "DD MMMM YYYY").toDate())
-        if(data !== null){
-            setStart(moment(data, formatdate).toDate())
-        }else{
-            setStart(new Date())
-        }
-    }
+            ), []);
+            
+            listAsset.push({value:'ALL',label:'All'});
+                
+            setListAssetKepala(listAsset);
+            setSelAssetKepala('ALL');
 
-    const handleChangeBank = (data) =>{
-        let id = data?.value ? data.value : '';
-        setSelBank(id);
+            let sparepartAssetOptions = [];
+            sparepartAssetOptions = data.data.sparepartAssetOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.assettype == 'SP_KEPALA'?el.sparepartkepala_nama:el.sparepartbuntut_nama,
+                }]
+            ), []);
+            
+            sparepartAssetOptions.push({value:'ALL',label:'All'});
+
+            setListSparepartAsset(sparepartAssetOptions);
+            setSelSparepartAsset('ALL');
+        }
+        
+        setLoading(false);  
     }
 
     const submitHandler = () => {
-        if(start != null && end != null && SelBank !== ''){
+        if(start != null && end != null && SelAssetKepala !== ''){
+            let idasset = SelAssetKepala == 'ALL'?0:SelAssetKepala;
+            let idassetsparepart = SelSparepartAsset == 'ALL'?0:SelSparepartAsset;
             setLoading(true);
             let startDate = moment(start).toDate().getTime();//moment(start).format('YYYY-MM-DD');
             let thruDate = moment(end).toDate().getTime();//moment(end).format('YYYY-MM-DD');
             let typereport = output; 
-            let pathURL = '/manggala/kasbank?from='+startDate+'&thru='+thruDate+'&type='+typereport+'&idbank='+SelBank;
+            let pathURL = '/manggala/historytruck?from='+startDate+'&thru='+thruDate+'&type='+typereport+'&idasset='+idasset+'&idassetsparepart='+idassetsparepart;
             if(output == 'XLSX'){
                 dispatch(actions.getReportData(pathURL,'application/vnd.ms-excel',succesHandlerSubmit, errorHandler));
             }
@@ -96,7 +103,7 @@ export default function ReportKasBank(props) {
         fileLink.href = dataUrl;
 
         // it forces the name of the downloaded file
-        fileLink.download = 'ReportKasBank.xlsx';
+        fileLink.download = 'ReportHistoryTruck.xlsx';
         fileLink.click();
         fileLink.remove();
         setLoading(false);
@@ -105,6 +112,24 @@ export default function ReportKasBank(props) {
         // setFileDoc(data);
     }
 
+    const handleChangeAsset = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelAssetKepala(id);
+    }
+
+    const handleChangeAssetSparepart = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelSparepartAsset(id);
+    }
+
+    const handleStartDate = (data) =>{
+        // setStart(moment(data, "DD MMMM YYYY").toDate())
+        if(data !== null){
+            setStart(moment(data, formatdate).toDate())
+        }else{
+            setStart(new Date())
+        }
+    }
 
     const handleEndDate = (data) =>{
         if(data !== null){
@@ -130,7 +155,8 @@ export default function ReportKasBank(props) {
             {
                 startdate:start !== null ? moment(start, formatdate).toDate() : new Date(),
                 enddate:end !== null ? moment(end, formatdate).toDate(): new Date(),
-                bank:SelBank
+                idasset:SelAssetKepala,
+                idassetsparepart:SelSparepartAsset
             }
         }
         validate={values => {
@@ -155,9 +181,9 @@ export default function ReportKasBank(props) {
                     } = formikProps;
 
                     return(
-                        <form className="mb-6" onSubmit={handleSubmit}  name="formReportStatusInvoice">
+                        <form className="mb-6" onSubmit={handleSubmit}  name="formReportSummaryKegiatanTruck">
                             <ContentWrapper>
-                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.reportKasBank} label={'Report Kas Bank'} labeldefault={'Report Kas Bank'} />
+                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.reportLabaRugi} label={'Report History Truck'} labeldefault={'Report History Truck'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="startdate">
@@ -197,31 +223,57 @@ export default function ReportKasBank(props) {
                                     // disabled={values.allmember}
                                     
                             />
+                            </div>
 
-                            <label className="mt-3 form-label required" htmlFor="bank">
-                                {i18n.t('Bank')}
-                                
+                            <div className="mt-2 col-lg-6 ft-detail mb-5">
+                            <label className="mt-3 form-label required" htmlFor="idasset">
+                                {i18n.t('Asset')}
                             </label>
 
-                                <DropdownList
+                            <DropdownList
                                     // className={
                                     //     touched.branch && errors.branch
                                     //         ? "input-error" : ""
                                     // }
-                                    name="bank"
+                                    name="idasset"
                                     filter='contains'
                                     placeholder={i18n.t('select.SELECT_OPTION')}
                                     
-                                    onChange={val => handleChangeBank(val)}
-                                    onBlur={val => setFieldTouched("status", val?.value ? val.value : '')}
-                                    data={ListBank}
+                                    onChange={val => handleChangeAsset(val)}
+                                    onBlur={val => setFieldTouched("idasset", val?.value ? val.value : '')}
+                                    data={ListAssetKepala}
                                     textField={'label'}
                                     valueField={'value'}
                                     // style={{width: '25%'}}
                                     // disabled={values.isdisabledcountry}
-                                    value={values.bank}
+                                    value={values.idasset}
                                 />
+
+                            <label className="mt-3 form-label required" htmlFor="idassetsparepart">
+                                {i18n.t('Sparepart')}
+                            </label>
+
+                            <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="idassetsparepart"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeAssetSparepart(val)}
+                                    onBlur={val => setFieldTouched("idassetsparepart", val?.value ? val.value : '')}
+                                    data={ListSparepartAsset}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.idassetsparepart}
+                                />
+
                             </div>
+                            
                             </div>
                             </ContentWrapper>
                             {loading && <Loading/>}
@@ -242,14 +294,10 @@ export default function ReportKasBank(props) {
                             {'Submit'}
                             </Button>
                             </div>
-
                         </form>
-
                     )
-
                 }
             }
-
         </Formik>
     )
 

@@ -109,8 +109,10 @@ const DialogStatus = props => {
                 label: el.nama
             }]
         ), []));
-
-        SetListVendor(data.data.vendorOptions.reduce((obj, el) => (
+        
+        //vendorcategoryname
+        let listvendor = data.data.vendorOptions.filter(output => new String(output.vendorcategoryname).toLowerCase() == 'trucking' || new String(output.vendorcategoryname).toLowerCase() == 'ppjk');
+        SetListVendor(listvendor.reduce((obj, el) => (
             [...obj, {
                 value: el.id,
                 label: el.nama

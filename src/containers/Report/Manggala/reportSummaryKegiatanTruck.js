@@ -69,7 +69,7 @@ export default function ReportSummaryKegiatanTruck(props) {
             
             listSupir.push({value:'ALL',label:'All'});
 
-            setListSupir(listAsset);
+            setListSupir(listSupir);
             setSelSupir('ALL');
         }
         
@@ -183,7 +183,7 @@ export default function ReportSummaryKegiatanTruck(props) {
                     return(
                         <form className="mb-6" onSubmit={handleSubmit}  name="formReportSummaryKegiatanTruck">
                             <ContentWrapper>
-                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.reportLabaRugi} label={'Report Laba Rugi'} labeldefault={'Report Laba Rugi'} />
+                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.reportLabaRugi} label={'Report Summary Kegiatan Truck'} labeldefault={'Report Summary Kegiatan Truck'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="startdate">

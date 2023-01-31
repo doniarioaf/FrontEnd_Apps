@@ -126,7 +126,7 @@ export default function ReportBongkarMuatDepo(props) {
                     return(
                         <form className="mb-6" onSubmit={handleSubmit}  name="formReportBongkarMuatDepo">
                             <ContentWrapper>
-                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuemployeeManggala} label={'Employee'} labeldefault={'Employee'} />
+                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.reportbongkarmuatdepo} label={'Report Bongkar Muat Dan Depo'} labeldefault={'Report Bongkar Muat Dan Depo'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="startdate">

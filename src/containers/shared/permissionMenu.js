@@ -165,3 +165,4 @@ export const MenuReportBongkarMuat = ['READ_REPORT_BONGKARMUATDEPO'];
 export const MenuReportStatusInvoice = ['READ_REPORT_STATUS_INVOICE'];
 export const MenuReportKasBank = ['READ_REPORT_KAS_BANK'];
 export const MenuReportSummaryKegiatanTruck = ['READ_REPORT_SUMMARY_KEGIATAN_TRUCK'];
+export const MenuReportHistoryTruck = ['READ_REPORT_HISTORY_TRUCK'];

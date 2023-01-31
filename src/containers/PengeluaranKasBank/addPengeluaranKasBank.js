@@ -134,12 +134,20 @@ export default function AddForm(props) {
             );
             setListInvoiceItem(listInvItem);
 
-            setListWO(data.data.woOptions.reduce((obj, el) => (
+            let listWO = data.data.woOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nodocument
                 }]
-            ), []));
+            ), []);
+            listWO.push(
+                {
+                    value: 'nodata',
+                    label: 'No Data',
+                    idcoa: ''
+                }
+            );
+            setListWO(listWO);
 
             setListAsset(data.data.assetOptions.reduce((obj, el) => (
                 [...obj, {
@@ -262,6 +270,13 @@ export default function AddForm(props) {
     const checkCategory = (data,type) =>{
         if(type == 'invoiceitem' || type == 'wo'){
             if(data == 'OPTIONS_PAYMENTITEM_TYPE_1'){
+                return false;
+            }
+            if(type == 'wo' && data == 'OPTIONS_PAYMENTITEM_TYPE_2'){
+                return false;
+            }
+
+            if(type == 'wo' && data == 'OPTIONS_PAYMENTITEM_TYPE_4'){
                 return false;
             }
         }else if(type == 'asset'){
@@ -461,7 +476,17 @@ export default function AddForm(props) {
             obj.idcoa = SelCOA;
             obj.idbank = SelBank;
             obj.keterangan = InputKeterangan;
-            obj.idwo = SelWO !== ''?SelWO:null;
+            let idwo = '';
+            if(SelWO == '' || SelWO == 'nodata'){
+                idwo = null;
+            }else{
+                idwo = SelWO;
+            }
+
+            if(checkCategory(SelCategory,'wo')){
+                idwo = null;
+            }
+            obj.idwo = idwo;//SelWO !== ''?SelWO:null;
             obj.isactive = true;
             let listdetails = [];
             if(InputListItem.length > 0){
