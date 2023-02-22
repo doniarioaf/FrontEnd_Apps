@@ -228,9 +228,9 @@ export default function EditWarehouse(props) {
         if(name == 'contactnumber' && new String(value).includes(',')){
             flag = false;
         }
-        if(name == 'contacthp' && isNaN(value)){
-            flag = false;
-        }
+        // if(name == 'contacthp' && isNaN(value)){
+        //     flag = false;
+        // }
         if(flag){
             const list = [...InputListContactPerson];
             list[index][name] = value;
@@ -620,7 +620,7 @@ export default function EditWarehouse(props) {
                             <div className="invalid-feedback-custom">{ErrSelCity}</div>
 
                             <label className="mt-3 form-label required" htmlFor="district">
-                                {i18n.t('label_DISTRICT')}
+                                {i18n.t('Kecamatan')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
 

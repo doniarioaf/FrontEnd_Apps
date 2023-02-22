@@ -49,6 +49,11 @@ export default function EditCustomerManggala(props) {
     const [SelCity, setSelCity] = useState('');
     const [ErrSelCity, setErrSelCity] = useState('');
 
+    const [ListDistrict, setListDistrict] = useState([]);
+    const [SelDistrict, setSelDistrict] = useState('');
+    const [ErrSelDistrict, setErrSelDistrict] = useState('');
+
+    const [DataKodePos, setDataKodePos] = useState([]);
     const [ListKodePos, setListKodePos] = useState([]);
     const [SelKodePos, setSelKodePos] = useState('');
     const [ErrSelKodePos, setErrSelKodePos] = useState('');
@@ -108,6 +113,7 @@ export default function EditCustomerManggala(props) {
             setInputAlamat(data.data.alamat);
             setSelProvinsi(parseInt(data.data.provinsi));
             setSelCity(parseInt(data.data.kota));
+            setSelDistrict(data.data.district?parseInt(data.data.district):'');
             setSelKodePos(parseInt(data.data.kodepos));
             setInputNpwp(data.data.npwp);
             setInputNib(data.data.nib);
@@ -230,6 +236,23 @@ export default function EditCustomerManggala(props) {
                 }]
             ), []));
 
+            let listfilteroutputDistrict = template.districtOptions.filter(output => output.city_id == data.data.kota);
+            if(listfilteroutputDistrict.length > 0){
+                setListDistrict(listfilteroutputDistrict.reduce((obj, el) => (
+                    [...obj, {
+                        value: el.dis_id,
+                        label: el.dis_name
+                    }]
+                ), []));
+            }
+
+            // setListDistrict(template.districtOptions.reduce((obj, el) => (
+            //     [...obj, {
+            //         value: el.dis_id,
+            //         label: el.dis_name
+            //     }]
+            // ), []));
+
             setListGudang(template.warehouseOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
@@ -249,8 +272,12 @@ export default function EditCustomerManggala(props) {
                 }else{
                     setListCity([]);
                 }
+            if(data.data.district){
+                dispatch(actions.getAddressData('/postalcodebydistrict?districtid='+data.data.district,successHandlerPostalCode, errorHandler));
+            }else{
+                setLoading(false);
+            }
             
-            dispatch(actions.getAddressData('/postalcodebycityandprovince?cityid='+data.data.kota+'&provid='+data.data.provinsi,successHandlerPostalCode, errorHandler));
         }
 
         // setLoading(false);
@@ -339,6 +366,8 @@ export default function EditCustomerManggala(props) {
         setSelKodePos('');
         setListKodePos([]);
         setSelCity('');
+        setSelDistrict('');
+        setListDistrict([]);
         setKosongAreaKirim();
         let listfilteroutput = DataTemplate.cityOptions.filter(output => output.prov_id == id);
         if(listfilteroutput.length > 0){
@@ -358,12 +387,40 @@ export default function EditCustomerManggala(props) {
         let id = data?.value ? data.value : '';
         setSelCity(id);
         setSelKodePos('');
+        setSelDistrict('');
         setListKodePos([]);
         setKosongAreaKirim();
-        setLoading(true);
-        dispatch(actions.getAddressData('/postalcodebycityandprovince?cityid='+id+'&provid='+SelProvinsi,successHandlerPostalCode, errorHandler));
+        let listfilteroutput = DataTemplate.districtOptions.filter(output => output.city_id == id);
+        if(listfilteroutput.length > 0){
+            setListDistrict(listfilteroutput.reduce((obj, el) => (
+                [...obj, {
+                    value: el.dis_id,
+                    label: el.dis_name
+                }]
+            ), []));
+        }else{
+            setListDistrict([]);
+        }
+        // setLoading(true);
+        // dispatch(actions.getAddressData('/postalcodebycityandprovince?cityid='+id+'&provid='+SelProvinsi,successHandlerPostalCode, errorHandler));
     }
+
+    const handleChangeDistrict = (data) =>{
+        let id = data?.value ? data.value : '';
+
+        setKosongAreaKirim();
+        setSelKodePos('');
+        setListKodePos([]);
+        setSelDistrict(id);
+
+        setLoading(true);
+        dispatch(actions.getAddressData('/postalcodebydistrict?districtid='+id,successHandlerPostalCode, errorHandler));
+
+        
+    }
+
     const successHandlerPostalCode = (data) =>{
+        setDataKodePos(data.data);
         const result = Object.values(
             data.data.reduce((acc, obj) => ({ ...acc, [obj.postal_code]: obj }), {})
         );
@@ -415,6 +472,7 @@ export default function EditCustomerManggala(props) {
         setErrInputNpwp('');
         setErrSelProvinsi('');
         setErrSelCity('');
+        setErrSelDistrict('');
         setErrSelKodePos('');
         setErrSelCustomerType('');
         setErrInputKementtrian('');
@@ -489,32 +547,34 @@ export default function EditCustomerManggala(props) {
                         flag = false;
                     }
 
-                    if(det.namakontak == ''){
-                        setErrInputNamaKontak(i18n.t('label_CONTACT_NAME')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.namakontak == ''){
+                    //     setErrInputNamaKontak(i18n.t('label_CONTACT_NAME')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
-                    if(det.email == ''){
-                        setErrInputEmail('Email '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.email == ''){
+                    //     setErrInputEmail('Email '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
-                    if(det.noext == ''){
-                        setErrInputNoExt('No Ext '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.noext == ''){
+                    //     setErrInputNoExt('No Ext '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
-                    if(det.listnotelepon.length > 0){
-                        for(let j=0; j < det.listnotelepon.length; j++){
-                            let detnotlp = det.listnotelepon[j];
-                            if(detnotlp.notelepon == ''){
-                                setErrInputNotelepon(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
+                    if(det.namakontak !== ''){
+                        if(det.listnotelepon.length > 0){
+                            for(let j=0; j < det.listnotelepon.length; j++){
+                                let detnotlp = det.listnotelepon[j];
+                                if(detnotlp.notelepon == ''){
+                                    setErrInputNotelepon(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
+                                    flag = false;
+                                }
                             }
+                        }else{
+                            setErrInputNotelepon(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
+                            flag = false;
                         }
-                    }else{
-                        setErrInputNotelepon(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
                     }
                 }
 
@@ -568,6 +628,11 @@ export default function EditCustomerManggala(props) {
             flag = false;
         }
 
+        if(SelDistrict == ''){
+            setErrSelDistrict(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+
         if(SelKodePos == ''){
             setErrSelKodePos(i18n.t('label_REQUIRED'));
             flag = false;
@@ -611,6 +676,7 @@ export default function EditCustomerManggala(props) {
             obj.alamat = InputAlamat;
             obj.provinsi = SelProvinsi;
             obj.kota = SelCity;
+            obj.district = SelDistrict;
             obj.kodepos = SelKodePos;
             obj.npwp = new String(InputNpwp).replaceAll('_','');
             obj.nib = InputNib;
@@ -747,11 +813,11 @@ export default function EditCustomerManggala(props) {
     const handleInputChange = (e, index) => {
         const { name, value } = e.target;
         let flag = true;
-        let repVal = new String(value).replaceAll('(','');
-        repVal = new String(repVal).replaceAll(')','')
-        if(name == 'nokantor' && isNaN(repVal)){
-            flag = false;
-        }
+        // let repVal = new String(value).replaceAll('(','');
+        // repVal = new String(repVal).replaceAll(')','')
+        // if(name == 'nokantor' && isNaN(repVal)){
+        //     flag = false;
+        // }
         if(flag){
             const list = [...InputListNoKantor];
             list[index][name] = value;
@@ -883,9 +949,9 @@ export default function EditCustomerManggala(props) {
         // let paramlist = 'listnotelepon';
         const { name, value } = e.target;
         let flag = true;
-        if(name == 'notelepon' && isNaN(value)){
-            flag = false;
-        }
+        // if(name == 'notelepon' && isNaN(value)){
+        //     flag = false;
+        // }
         if(flag){
             const list = [...InputListInfoContact];
             const listnotelp = list[indexparent][paramparent];
@@ -914,6 +980,7 @@ export default function EditCustomerManggala(props) {
                 alias:InputAlis,
                 alamat:InputAlamat,
                 provinsi:SelProvinsi,
+                district:SelDistrict,
                 city:SelCity,
                 npwp:InputNpwp,
                 nib:InputNib,
@@ -1030,8 +1097,8 @@ export default function EditCustomerManggala(props) {
                                 // }
                                 type="text"
                                 id="npwp"
-                                mask="99.999.999.9-999.999"
-                                tag={InputMask}
+                                // mask="99.999.999.9-999.999"
+                                // tag={InputMask}
                                 onChange={val => handleInputNpwp(val)}
                                 onBlur={handleBlur}
                                 value={values.npwp}
@@ -1164,6 +1231,31 @@ export default function EditCustomerManggala(props) {
                                 value={values.city}
                             />
                             <div className="invalid-feedback-custom">{ErrSelCity}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="district">
+                                {i18n.t('Kecamatan')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="district"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeDistrict(val)}
+                                onBlur={val => setFieldTouched("district", val?.value ? val.value : '')}
+                                data={ListDistrict}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.district}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelDistrict}</div>
 
                             <label className="mt-3 form-label required" htmlFor="kodepos">
                             {i18n.t('label_POSTAL_CODE')}

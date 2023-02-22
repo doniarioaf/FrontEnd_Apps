@@ -111,7 +111,7 @@ const DialogMapping = props => {
             // let listBiayaOperasional = props.itemsdata.filter(output => output.paymenttype == 'OPTIONS_PAYMENTITEM_TYPE_2');
             // let listLainLain = props.itemsdata.filter(output => output.paymenttype == 'OPTIONS_PAYMENTITEM_TYPE_4');
             let listBiayaOperasional = props.itemsdata.filter(output => output.paymenttype == 'OPTIONS_PAYMENTITEM_TYPE_1');
-            let listLainLain = props.itemsdata.filter(output => output.paymenttype == 'OPTIONS_PAYMENTITEM_TYPE_1');
+            let listLainLain = props.itemsdata.filter(output => output.paymenttype == 'OPTIONS_PAYMENTITEM_TYPE_4');
             SetListUangJalan(listBiayaOperasional.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,

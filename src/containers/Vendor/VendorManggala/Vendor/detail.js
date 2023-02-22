@@ -182,6 +182,13 @@ import React, {useState,
             if(listfilteroutput.length > 0){
                 return listfilteroutput[0].city_name;
             }
+        }else if(action == 'kecamatan'){
+            let listfilteroutput = Template.districtOptions.filter(output => output.dis_id == data);
+            if(listfilteroutput.length > 0){
+                return listfilteroutput[0].dis_name;
+            }else{
+                return '';
+            }
         }
 
         return data;
@@ -295,6 +302,13 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('label_CITY')}</span>
                             <strong className="col-md-7">
                                 {value.kota?getValueOptions(value.kota,'kota'):''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Kecamatan')}</span>
+                            <strong className="col-md-7">
+                                {value.kota?getValueOptions(value.district,'kecamatan'):''}
                             </strong>
                             </div>
 

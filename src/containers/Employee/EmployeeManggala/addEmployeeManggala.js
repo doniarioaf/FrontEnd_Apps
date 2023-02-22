@@ -204,11 +204,12 @@ export default function AddEmployeeManggala(props) {
 
         const handleInputNoIdentitas = (data) =>{
             let val = data.target.value;
-            if(val == ''){
-                setInputNoIdentitas('');
-            }else if(!isNaN(val)){
-                setInputNoIdentitas(val)
-            }
+            setInputNoIdentitas(val);
+            // if(val == ''){
+            //     setInputNoIdentitas('');
+            // }else if(!isNaN(val)){
+            //     setInputNoIdentitas(val)
+            // }
             // setInputNoIdentitas(val)
         }
 
@@ -238,11 +239,12 @@ export default function AddEmployeeManggala(props) {
         }
         const handleInputNorek = (data) =>{
             let val = data.target.value;
-            if(val == ''){
-                setInputNoRek('');
-            }else if(!isNaN(val)){
-                setInputNoRek(val)
-            }
+            setInputNoRek(val);
+            // if(val == ''){
+            //     setInputNoRek('');
+            // }else if(!isNaN(val)){
+            //     setInputNoRek(val);
+            // }
             
         }
         const handleInputAtasNama = (data) =>{
