@@ -39,6 +39,8 @@ export default function AddCustomerManggala(props) {
     const [ErrInputAlis, setErrInputAlias] = useState('');
     const [InputAlamat, setInputAlamat] = useState('');
     const [ErrInputAlamat, setErrInputAlamat] = useState('');
+    const [InputAlamat2, setInputAlamat2] = useState('');
+    const [InputAlamat3, setInputAlamat3] = useState('');
 
     const [ListProvinsi, setListProvinsi] = useState([]);
     const [SelProvinsi, setSelProvinsi] = useState('');
@@ -152,6 +154,16 @@ export default function AddCustomerManggala(props) {
     const handleInputAlamat = (data) =>{
         let val = data.target.value;
         setInputAlamat(val)
+    }
+
+    const handleInputAlamat2 = (data) =>{
+        let val = data.target.value;
+        setInputAlamat2(val)
+    }
+
+    const handleInputAlamat3 = (data) =>{
+        let val = data.target.value;
+        setInputAlamat3(val)
     }
 
     const handleChangeProvinsi = (data) =>{
@@ -521,6 +533,8 @@ export default function AddCustomerManggala(props) {
             obj.customername = InputCustomerName;
             obj.alias = InputAlis;
             obj.alamat = InputAlamat;
+            obj.alamat2 = InputAlamat2;
+            obj.alamat3 = InputAlamat3;
             obj.provinsi = SelProvinsi;
             obj.kota = SelCity;
             obj.district = SelDistrict;
@@ -587,8 +601,9 @@ export default function AddCustomerManggala(props) {
                     let det = InputListInfoGudang[i];
                     let objinfogudang = new Object();
                     objinfogudang.idwarehouse = det.id;
-                    listinfogudang.push(objinfogudang);
-
+                    if(det.namagudang !== ''){
+                        listinfogudang.push(objinfogudang);
+                    }
                     // let listkontakgudang = '';
                     // let listhpkontakgudang = '';
                     // if(det.namagudang !== '' && det.areakirim !== '' && det.alamatgudang !== ''){
@@ -828,6 +843,8 @@ export default function AddCustomerManggala(props) {
                 customername:InputCustomerName,
                 alias:InputAlis,
                 alamat:InputAlamat,
+                alamat2:InputAlamat2,
+                alamat3:InputAlamat3,
                 provinsi:SelProvinsi,
                 district:SelDistrict,
                 city:SelCity,
@@ -1131,12 +1148,12 @@ export default function AddCustomerManggala(props) {
                             <div className="invalid-feedback-custom">{ErrSelKodePos}</div>
 
                             <label className="mt-3 form-label required" htmlFor="alamat">
-                                {i18n.t('label_ADDRESS')}
+                                {i18n.t('label_ADDRESS')+' 1'}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <Input
                                     name="alamat"
-                                    type="textarea"
+                                    type="text"
                                     id="alamat"
                                     onChange={val => handleInputAlamat(val)}
                                     onBlur={handleBlur}
@@ -1144,6 +1161,33 @@ export default function AddCustomerManggala(props) {
                                     disabled={false}
                             />
                             <div className="invalid-feedback-custom">{ErrInputAlamat}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="alamat2">
+                            {i18n.t('label_ADDRESS')+' 2'}
+                            </label>
+                            <Input
+                                    name="alamat2"
+                                    type="text"
+                                    id="alamat2"
+                                    onChange={val => handleInputAlamat2(val)}
+                                    onBlur={handleBlur}
+                                    value={values.alamat2}
+                                    disabled={false}
+                            />
+
+
+                            <label className="mt-3 form-label required" htmlFor="alamat3">
+                            {i18n.t('label_ADDRESS')+' 3'}
+                            </label>
+                            <Input
+                                    name="alamat3"
+                                    type="text"
+                                    id="alamat3"
+                                    onChange={val => handleInputAlamat3(val)}
+                                    onBlur={handleBlur}
+                                    value={values.alamat3}
+                                    disabled={false}
+                            />
 
                             {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 
@@ -1166,7 +1210,7 @@ export default function AddCustomerManggala(props) {
                             {
                                 InputListInfoKementerian.length == 0?'':
                                 
-                                <table id="tablegrid">
+                                <table id="tablegrid" style={{width:'950px'}}>
                                     
                                 <tr>
                                     <th>{i18n.t('label_MINISTRY')}</th>
@@ -1178,7 +1222,7 @@ export default function AddCustomerManggala(props) {
                                     InputListInfoKementerian.map((x, i) => {
                                         return (
                                             <tr>
-                                                <td>
+                                                <td style={{width:'300px'}}>
                                                 <Input
                                                 name="kementerian"
                                                 // className={
@@ -1198,7 +1242,7 @@ export default function AddCustomerManggala(props) {
                                                 />
                                                 </td>
 
-                                                <td>
+                                                <td style={{width:'300px'}}>
                                                 <Input
                                                 name="alamat_email"
                                                 // className={
@@ -1218,7 +1262,7 @@ export default function AddCustomerManggala(props) {
                                                 />
                                                 </td>
 
-                                                <td>
+                                                <td style={{width:'300px'}}>
                                                 <Input
                                                 name="password_email"
                                                 // className={
@@ -1238,7 +1282,7 @@ export default function AddCustomerManggala(props) {
                                                 />
                                                 </td>
 
-                                                <td>
+                                                <td style={{width:'50px'}}>
                                                 <IconButton color={'primary'} hidden={i > 0}
                                                     onClick={() => handleAddClickInfoKementerian()}
                                                 // hidden={showplusdebit}

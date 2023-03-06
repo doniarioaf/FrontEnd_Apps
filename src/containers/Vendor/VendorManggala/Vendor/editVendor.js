@@ -46,6 +46,8 @@ export default function EditVendor(props) {
 
     const [InputAddress, setInputAddress] = useState('');
     const [ErrInputAddress, setErrInputAddress] = useState('');
+    const [InputAlamat2, setInputAlamat2] = useState('');
+    const [InputAlamat3, setInputAlamat3] = useState('');
 
     const [SelProvince, setSelProvince] = useState('');
     const [ErrSelProvince, setErrSelProvince] = useState('');
@@ -101,6 +103,8 @@ export default function EditVendor(props) {
             setInputAlias(detail.alias);
             setInputNpwp(detail.npwp);
             setInputAddress(detail.address);
+            setInputAlamat2(detail.alamat2);
+            setInputAlamat3(detail.alamat3);
             setSelProvince(detail.provinsi?parseInt(detail.provinsi):'');
             setSelCity(detail.kota?parseInt(detail.kota):'');
             setSelDistrict(detail.district?parseInt(detail.district):'');
@@ -241,6 +245,17 @@ export default function EditVendor(props) {
         let val = data.target.value;
         setInputAddress(val);
     }
+
+    const handleInputAlamat2 = (data) =>{
+        let val = data.target.value;
+        setInputAlamat2(val)
+    }
+
+    const handleInputAlamat3 = (data) =>{
+        let val = data.target.value;
+        setInputAlamat3(val)
+    }
+
 
     const handleChangeProvinsi = (data) =>{
         let id = data?.value ? data.value : '';
@@ -501,6 +516,8 @@ export default function EditVendor(props) {
             obj.alias = InputAlias;
             obj.npwp = InputNpwp;
             obj.address = InputAddress;
+            obj.alamat2 = InputAlamat2;
+            obj.alamat3 = InputAlamat3;
             obj.provinsi = SelProvince;
             obj.kota = SelCity;
             obj.district = SelDistrict;
@@ -649,6 +666,8 @@ export default function EditVendor(props) {
                 alias:InputAlias,
                 npwp:InputNpwp,
                 address:InputAddress,
+                alamat2:InputAlamat2,
+                alamat3:InputAlamat3,
                 provinsi:SelProvince,
                 city:SelCity,
                 district:SelDistrict,
@@ -903,7 +922,7 @@ export default function EditVendor(props) {
                             <div className="invalid-feedback-custom">{ErrSelKodePos}</div>
 
                             <label className="mt-3 form-label required" htmlFor="address">
-                                {i18n.t('label_ADDRESS')}
+                                {i18n.t('label_ADDRESS')+' 1'}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <Input
@@ -920,6 +939,34 @@ export default function EditVendor(props) {
                                 value={values.address}
                             />
                             <div className="invalid-feedback-custom">{ErrInputAddress}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="alamat2">
+                            {i18n.t('label_ADDRESS')+' 2'}
+                            </label>
+                            <Input
+                                    name="alamat2"
+                                    type="text"
+                                    id="alamat2"
+                                    onChange={val => handleInputAlamat2(val)}
+                                    onBlur={handleBlur}
+                                    value={values.alamat2}
+                                    disabled={false}
+                            />
+
+
+                            <label className="mt-3 form-label required" htmlFor="alamat3">
+                            {i18n.t('label_ADDRESS')+' 3'}
+                            </label>
+                            <Input
+                                    name="alamat3"
+                                    type="text"
+                                    id="alamat3"
+                                    onChange={val => handleInputAlamat3(val)}
+                                    onBlur={handleBlur}
+                                    value={values.alamat3}
+                                    disabled={false}
+                            />
+
 
                             {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 

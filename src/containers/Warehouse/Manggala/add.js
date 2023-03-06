@@ -43,6 +43,8 @@ export default function AddWarehouse(props) {
 
     const [InputAlamat, setInputAlamat] = useState('');
     const [ErrInputAlamat, setErrInputAlamat] = useState('');
+    const [InputAlamat2, setInputAlamat2] = useState('');
+    const [InputAlamat3, setInputAlamat3] = useState('');
 
     const [InputAncerAncer, setInputAncerAncer] = useState('');
     const [ErrInputAncerAncer, setErrInputAncerAncer] = useState('');
@@ -128,6 +130,16 @@ export default function AddWarehouse(props) {
     const handleInputAlamat = (data) =>{
         let val = data.target.value;
         setInputAlamat(val);
+    }
+
+    const handleInputAlamat2 = (data) =>{
+        let val = data.target.value;
+        setInputAlamat2(val)
+    }
+
+    const handleInputAlamat3 = (data) =>{
+        let val = data.target.value;
+        setInputAlamat3(val)
     }
 
     const handleInputNote = (data) =>{
@@ -340,6 +352,8 @@ export default function AddWarehouse(props) {
             obj.kecamatan = SelDistrict;
             obj.nama = InputNama;
             obj.alamat = InputAlamat;
+            obj.alamat2 = InputAlamat2;
+            obj.alamat3 = InputAlamat3;
             obj.ancerancer = InputAncerAncer;
             obj.isactive = InputIsActive;
             obj.note = InputNote;
@@ -439,6 +453,8 @@ export default function AddWarehouse(props) {
                     district:SelDistrict,
                     nama:InputNama,
                     alamat:InputAlamat,
+                    alamat2:InputAlamat2,
+                    alamat3:InputAlamat3,
                     ancer:InputAncerAncer,
                     note:InputNote,
                     isactive:InputIsActive
@@ -569,7 +585,7 @@ export default function AddWarehouse(props) {
                             <div className="invalid-feedback-custom">{ErrSelDistrict}</div>
 
                             <label className="mt-3 form-label required" htmlFor="alamat">
-                                {i18n.t('label_ADDRESS')}
+                                {i18n.t('label_ADDRESS')+' 1'}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <Input
@@ -586,6 +602,33 @@ export default function AddWarehouse(props) {
                                 value={values.alamat}
                             />
                             <div className="invalid-feedback-custom">{ErrInputAlamat}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="alamat2">
+                            {i18n.t('label_ADDRESS')+' 2'}
+                            </label>
+                            <Input
+                                    name="alamat2"
+                                    type="text"
+                                    id="alamat2"
+                                    onChange={val => handleInputAlamat2(val)}
+                                    onBlur={handleBlur}
+                                    value={values.alamat2}
+                                    disabled={false}
+                            />
+
+
+                            <label className="mt-3 form-label required" htmlFor="alamat3">
+                            {i18n.t('label_ADDRESS')+' 3'}
+                            </label>
+                            <Input
+                                    name="alamat3"
+                                    type="text"
+                                    id="alamat3"
+                                    onChange={val => handleInputAlamat3(val)}
+                                    onBlur={handleBlur}
+                                    value={values.alamat3}
+                                    disabled={false}
+                            />
 
                             </div>    
 
