@@ -137,13 +137,15 @@ export default function EditVendor(props) {
         }
 
         setInputListInfoContact(listnoinfocontact);
+        let badanUsahaOptions = template.badanUsahaOptions.reduce((obj, el) => (
+            [...obj, {
+                value: el.code,
+                label: el.codename
+            }]
+        ), []);
+        badanUsahaOptions.push({value: 'kosong',label: 'Kosong'});
 
-            setListBadanUsaha(template.badanUsahaOptions.reduce((obj, el) => (
-                [...obj, {
-                    value: el.code,
-                    label: el.codename
-                }]
-            ), []));
+            setListBadanUsaha(badanUsahaOptions);
 
             setListProvince(template.provinceOptions.reduce((obj, el) => (
                 [...obj, {
@@ -385,20 +387,20 @@ export default function EditVendor(props) {
                         flag = false;
                     }
 
-                    if(det.email == ''){
-                        setErrEmail('Email '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.email == ''){
+                    //     setErrEmail('Email '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
                     if(det.contactofficenumber == ''){
                         setErrContactOfficeNumber(i18n.t('label_PHONE_OFFICE')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
 
-                    if(det.extention == ''){
-                        setErrExtention('Extention '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.extention == ''){
+                    //     setErrExtention('Extention '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
                     if(det.nocontacthp.length > 0){
                         for(let j=0; j < det.nocontacthp.length; j++){
@@ -443,10 +445,10 @@ export default function EditVendor(props) {
             flag = false;
         }
 
-        if(SelBadanUsaha == ''){
-            setErrSelBadanUsaha(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(SelBadanUsaha == ''){
+        //     setErrSelBadanUsaha(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         if(InputNama == ''){
             setErrInputNama(i18n.t('label_REQUIRED'));
@@ -467,25 +469,26 @@ export default function EditVendor(props) {
             setErrInputAddress(i18n.t('label_REQUIRED'));
             flag = false;
         }
+        if(SelBadanUsaha !== '' && SelBadanUsaha !== 'kosong'){
+            if(SelProvince == ''){
+                setErrSelProvince(i18n.t('label_REQUIRED'));
+                flag = false;
+            }
 
-        if(SelProvince == ''){
-            setErrSelProvince(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+            if(SelCity == ''){
+                setErrSelCity(i18n.t('label_REQUIRED'));
+                flag = false;
+            }
 
-        if(SelCity == ''){
-            setErrSelCity(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+            if(SelDistrict == ''){
+                setErrSelDistrict(i18n.t('label_REQUIRED'));
+                flag = false;
+            }
 
-        if(SelDistrict == ''){
-            setErrSelDistrict(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
-
-        if(SelKodePos == ''){
-            setErrSelKodePos(i18n.t('label_REQUIRED'));
-            flag = false;
+            if(SelKodePos == ''){
+                setErrSelKodePos(i18n.t('label_REQUIRED'));
+                flag = false;
+            }
         }
 
         return flag;
@@ -520,7 +523,7 @@ export default function EditVendor(props) {
             obj.alamat3 = InputAlamat3;
             obj.provinsi = SelProvince;
             obj.kota = SelCity;
-            obj.district = SelDistrict;
+            obj.district = SelDistrict !== ''?SelDistrict:null;
             obj.kodepos = SelKodePos;
             obj.isactive = InputIsActive;
             obj.detailsbank = InputListBank;

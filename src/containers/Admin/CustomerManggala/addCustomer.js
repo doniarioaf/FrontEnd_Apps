@@ -1018,7 +1018,7 @@ export default function AddCustomerManggala(props) {
                                                 // value={values.amount}
                                                 value={x.nokantor}
                                                 disabled={false}
-                                                maxLength={16}
+                                                maxLength={20}
                                                 />
                                                 </td>
                                                 
@@ -1384,7 +1384,7 @@ export default function AddCustomerManggala(props) {
                                                                             // value={values.amount}
                                                                             value={y.notelepon}
                                                                             disabled={false}
-                                                                            maxLength={16}
+                                                                            maxLength={20}
                                                                             />
                                                                             </td>
                                                                             

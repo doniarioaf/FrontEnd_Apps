@@ -812,7 +812,7 @@ export default function EditWarehouse(props) {
                                                 // value={values.amount}
                                                 value={x.contactnumber}
                                                 disabled={false}
-                                                maxLength={16}
+                                                maxLength={20}
                                                 />
                                                 </td>
 
@@ -835,7 +835,7 @@ export default function EditWarehouse(props) {
                                                 // value={values.amount}
                                                 value={x.contacthp}
                                                 disabled={false}
-                                                maxLength={15}
+                                                maxLength={20}
                                                 />
                                                 </td>
 

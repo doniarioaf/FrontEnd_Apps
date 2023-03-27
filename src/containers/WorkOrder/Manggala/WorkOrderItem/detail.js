@@ -458,7 +458,7 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_BL_NUMBER')}</span>
+                            <span className="col-md-5">{i18n.t('BL / AWB No.')}</span>
                             <strong className="col-md-7">
                                 {value.nobl?value.nobl:''}
                             </strong>
@@ -472,7 +472,7 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Pelayaran')}</span>
+                            <span className="col-md-5">{i18n.t('Pelayaran / Airline ')}</span>
                             <strong className="col-md-7">
                                 {value.pelayaranname?value.pelayaranname:''}
                             </strong>

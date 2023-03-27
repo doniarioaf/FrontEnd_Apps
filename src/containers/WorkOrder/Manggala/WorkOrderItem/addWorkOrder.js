@@ -501,10 +501,10 @@ export default function AddForm(props) {
             flag = false;
         }
 
-        if(SelQQ == ''){
-            setErrSelQQ(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(SelQQ == ''){
+        //     setErrSelQQ(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         if(InputVoyageNumber == ''){
             setErrInputVoyageNumber(i18n.t('label_REQUIRED'));
@@ -1068,7 +1068,7 @@ export default function AddForm(props) {
                             <div className="invalid-feedback-custom">{ErrInputTanggalNopen}</div>
                             
                             <label className="mt-3 form-label required" htmlFor="nobl">
-                                {i18n.t('label_BL_NUMBER')}
+                                {i18n.t('BL / AWB No.')}
                                 <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span>
                             </label>
                             <Input
@@ -1125,7 +1125,7 @@ export default function AddForm(props) {
                             
 
                             <label className="mt-3 form-label required" htmlFor="pelayaran">
-                                {i18n.t('Pelayaran')}
+                                {i18n.t('Pelayaran / Airline')}
                                 <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span>
                             </label>
 
@@ -1199,9 +1199,9 @@ export default function AddForm(props) {
                                 />
                             <div className="invalid-feedback-custom">{ErrSelEksportir}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="qq">
+                            <label className="mt-3 form-label" htmlFor="qq">
                                 {i18n.t('QQ')}
-                                <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span>
+                                {/* <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span> */}
                             </label>
 
                                 <DropdownList
