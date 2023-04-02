@@ -544,10 +544,10 @@ import React, {useState,
                                 return (
                                     <tr>
                                         <td>{x.idpartai}</td>
-                                        <td>{numToMoney(parseFloat(x.jumlahkoli))}</td>
-                                        <td>{numToMoney(parseFloat(x.jumlahkg)) }</td>
-                                        <td>{x.nocontainer}</td>
-                                        <td>{x.noseal}</td>
+                                        <td>{x.jumlahkoli !== ''?numToMoney(parseFloat(x.jumlahkoli)):""}</td>
+                                        <td>{x.jumlahkg !== ''? numToMoney(parseFloat(x.jumlahkg)):"" }</td>
+                                        <td>{new String(x.nocontainer).includes("NC-NODATA")?"":x.nocontainer}</td>
+                                        <td>{new String(x.noseal).includes("NS-NODATA")?"":x.noseal}</td>
                                         <td>{x.barang}</td>
                                     </tr>
                                 )

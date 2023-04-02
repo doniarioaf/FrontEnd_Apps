@@ -1,6 +1,6 @@
 export const baseApiURL = 
-    'http://localhost:8081/manggala/v1'; //Manggala
-    // 'http://localhost:8080/manggala/v1'; //Irsan
+    // 'http://localhost:8081/manggala/v1'; //Manggala
+    'http://localhost:8080/manggala/v1'; //Irsan
     // 'http://localhost:8189/manggala/v1'; //Doni
     // 'http://localhost:8080/v1';
     // 'http://147.139.139.25:80/sinarmediasakti/v1';

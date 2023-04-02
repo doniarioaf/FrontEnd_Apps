@@ -724,7 +724,7 @@ export default function EditCustomerManggala(props) {
                 for(let i=0; i < InputListInfoContact.length; i++){
                     let det = InputListInfoContact[i];
                     let listnotelpinfocontact = '';
-                    if(det.panggilan !== '' && det.namakontak !== '' && det.email !== '' && det.noext !== ''){
+                    if(det.panggilan !== '' && det.namakontak !== ''){
                         let count =0;
                         for(let j=0; j < det.listnotelepon.length; j++){
                             let no = det.listnotelepon[j].notelepon;

@@ -143,16 +143,19 @@ export default function EditVendor(props) {
                 label: el.codename
             }]
         ), []);
-        badanUsahaOptions.push({value: 'kosong',label: 'Kosong'});
+        badanUsahaOptions.push({value: 'kosong',label: 'No Data'});
 
             setListBadanUsaha(badanUsahaOptions);
 
-            setListProvince(template.provinceOptions.reduce((obj, el) => (
+            let listProvinceData = template.provinceOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.prov_id,
                     label: el.prov_name
                 }]
-            ), []));
+            ), []);
+            listProvinceData.push({value:'nodata',label:"No Data"});
+
+            setListProvince(listProvinceData);
 
             setListVendorCategory(template.vendorCategoryOptions.reduce((obj, el) => (
                 [...obj, {
@@ -170,24 +173,29 @@ export default function EditVendor(props) {
 
             let listfilteroutput = template.cityOptions.filter(output => output.prov_id == detail.provinsi);
             if(listfilteroutput.length > 0){
-                setListCity(listfilteroutput.reduce((obj, el) => (
+                let cityOptions = listfilteroutput.reduce((obj, el) => (
                     [...obj, {
                         value: el.city_id,
                         label: el.city_name
                     }]
-                ), []));
+                ), []);
+                cityOptions.push({value:"nodata",label:"No Data"});
+                setListCity(cityOptions);
             }else{
                 setListCity([]);
             }
 
             let listfilteroutputDistrict = template.districtOptions.filter(output => output.city_id == detail.kota);
             if(listfilteroutputDistrict.length > 0){
-                setListDistrict(listfilteroutputDistrict.reduce((obj, el) => (
+                let districtOptions = listfilteroutputDistrict.reduce((obj, el) => (
                     [...obj, {
                         value: el.dis_id,
                         label: el.dis_name
                     }]
-                ), []));
+                ), []);
+                districtOptions.push({value:"nodata",label:"No Data"});
+
+                setListDistrict(districtOptions);
             }else{
                 setListDistrict([]);
             }
@@ -269,12 +277,14 @@ export default function EditVendor(props) {
         setListDistrict([]);
         let listfilteroutput = DataTemplate.cityOptions.filter(output => output.prov_id == id);
         if(listfilteroutput.length > 0){
-            setListCity(listfilteroutput.reduce((obj, el) => (
+            let cityOptions = listfilteroutput.reduce((obj, el) => (
                 [...obj, {
                     value: el.city_id,
                     label: el.city_name
                 }]
-            ), []));
+            ), []);
+            cityOptions.push({value:"nodata",label:"No Data"});
+            setListCity(cityOptions);
         }else{
             setListCity([]);
         }
@@ -290,12 +300,15 @@ export default function EditVendor(props) {
 
         let listfilteroutput = DataTemplate.districtOptions.filter(output => output.city_id == id);
         if(listfilteroutput.length > 0){
-            setListDistrict(listfilteroutput.reduce((obj, el) => (
+            let districtOptions = listfilteroutput.reduce((obj, el) => (
                 [...obj, {
                     value: el.dis_id,
                     label: el.dis_name
                 }]
-            ), []));
+            ), []);
+            districtOptions.push({value:"nodata",label:"No Data"});
+
+            setListDistrict(districtOptions);
         }else{
             setListDistrict([]);
         }
@@ -324,12 +337,14 @@ export default function EditVendor(props) {
         const result = Object.values(
             data.data.reduce((acc, obj) => ({ ...acc, [obj.postal_code]: obj }), {})
         );
-        setListKodePos(result.reduce((obj, el) => (
+        let kodeposOptions = result.reduce((obj, el) => (
             [...obj, {
                 value: el.postal_code,
                 label: el.postal_code
             }]
-        ), []));
+        ), []);
+        kodeposOptions.push({value:'nodata',label:"No Data"});
+        setListKodePos(kodeposOptions);
         setLoading(false);
     }
 
@@ -392,10 +407,10 @@ export default function EditVendor(props) {
                     //     flag = false;
                     // }
 
-                    if(det.contactofficenumber == ''){
-                        setErrContactOfficeNumber(i18n.t('label_PHONE_OFFICE')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.contactofficenumber == ''){
+                    //     setErrContactOfficeNumber(i18n.t('label_PHONE_OFFICE')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
                     // if(det.extention == ''){
                     //     setErrExtention('Extention '+i18n.t('label_REQUIRED'));
@@ -465,30 +480,30 @@ export default function EditVendor(props) {
             flag = false;
         }
 
-        if(InputAddress == ''){
-            setErrInputAddress(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(InputAddress == ''){
+        //     setErrInputAddress(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
         if(SelBadanUsaha !== '' && SelBadanUsaha !== 'kosong'){
-            if(SelProvince == ''){
-                setErrSelProvince(i18n.t('label_REQUIRED'));
-                flag = false;
-            }
+            // if(SelProvince == ''){
+            //     setErrSelProvince(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
 
-            if(SelCity == ''){
-                setErrSelCity(i18n.t('label_REQUIRED'));
-                flag = false;
-            }
+            // if(SelCity == ''){
+            //     setErrSelCity(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
 
-            if(SelDistrict == ''){
-                setErrSelDistrict(i18n.t('label_REQUIRED'));
-                flag = false;
-            }
+            // if(SelDistrict == ''){
+            //     setErrSelDistrict(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
 
-            if(SelKodePos == ''){
-                setErrSelKodePos(i18n.t('label_REQUIRED'));
-                flag = false;
-            }
+            // if(SelKodePos == ''){
+            //     setErrSelKodePos(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
         }
 
         return flag;
@@ -521,10 +536,10 @@ export default function EditVendor(props) {
             obj.address = InputAddress;
             obj.alamat2 = InputAlamat2;
             obj.alamat3 = InputAlamat3;
-            obj.provinsi = SelProvince;
-            obj.kota = SelCity;
-            obj.district = SelDistrict !== ''?SelDistrict:null;
-            obj.kodepos = SelKodePos;
+            obj.provinsi = SelProvince !== 'nodata'?SelProvince:"";
+            obj.kota = SelCity !== 'nodata'?SelCity:"";
+            obj.district = SelDistrict !== '' && SelDistrict !== 'nodata'?SelDistrict:null;
+            obj.kodepos = SelKodePos !== 'nodata'?SelKodePos:"";
             obj.isactive = InputIsActive;
             obj.detailsbank = InputListBank;
 
@@ -826,7 +841,7 @@ export default function EditVendor(props) {
                             
                             <label className="mt-3 form-label required" htmlFor="provinsi">
                                 {i18n.t('label_PROVINCE')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
 
                             <DropdownList
@@ -851,7 +866,7 @@ export default function EditVendor(props) {
 
                             <label className="mt-3 form-label required" htmlFor="city">
                                 {i18n.t('label_CITY')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
 
                             <DropdownList
@@ -876,7 +891,7 @@ export default function EditVendor(props) {
 
                             <label className="mt-3 form-label required" htmlFor="district">
                                 {i18n.t('Kecamatan')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
 
                             <DropdownList
@@ -901,7 +916,7 @@ export default function EditVendor(props) {
 
                             <label className="mt-3 form-label required" htmlFor="kodepos">
                                 {i18n.t('label_POSTAL_CODE')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
 
                             <DropdownList
@@ -926,7 +941,7 @@ export default function EditVendor(props) {
 
                             <label className="mt-3 form-label required" htmlFor="address">
                                 {i18n.t('label_ADDRESS')+' 1'}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
                             <Input
                                 name="address"

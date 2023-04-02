@@ -4,7 +4,7 @@ import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../../../components/Layout/ContentHeading';
 // import {Input,Button,FormGroup,Label} from 'reactstrap';
-import {Input,Button,Label,FormGroup,Container} from 'reactstrap';
+import {Input,Button} from 'reactstrap';
 import * as actions                 from '../../../../store/actions';
 import {useDispatch}   from 'react-redux';
 import { Loading } from '../../../../components/Common/Loading';
@@ -99,6 +99,7 @@ export default function EditForm(props) {
     const [ErrInputTanggalBL, setErrInputTanggalBL] = useState('');
 
     const [ListVendor, setListVendor] = useState([]);
+    const [ListPelayaran, setListPelayaran] = useState([]);
     const [SelPelayaran, setSelPelayaran] = useState('');
     const [ErrSelPelayaran, setErrSelPelayaran] = useState('');
     const [SelEksportir, setSelEksportir] = useState('');
@@ -181,7 +182,7 @@ export default function EditForm(props) {
             if(data.data.details){
                 for(let i=0; i < data.data.details.length; i++){
                     let det = data.data.details[i];
-                    listitems.push({ idpartai:det.idpartai,jumlahkoli: numToMoney(parseFloat(det.jumlahkoli)),jumlahkg:numToMoney(parseFloat(det.jumlahkg)),nocontainer:det.nocontainer,noseal:det.noseal,barang:det.barang});
+                    listitems.push({ idpartai:det.idpartai,jumlahkoli: (det.jumlahkoli !== ''? numToMoney(parseFloat(det.jumlahkoli)):""),jumlahkg:(det.jumlahkg !== ''? numToMoney(parseFloat(det.jumlahkg)):""),nocontainer:(new String(det.nocontainer).includes("NC-NODATA")?"":det.nocontainer),noseal:(new String(det.noseal).includes("NS-NODATA")?"":det.noseal),barang:det.barang});
                 }
             }
             if(listitems.length > 0){
@@ -219,19 +220,32 @@ export default function EditForm(props) {
 
             let listdepo = template.vendorOptions.filter(output => output.vendorcategoryname == 'Depo Kontainer');
             let listvendor = template.vendorOptions.filter(output => output.vendorcategoryname == 'Consignee');
+            let listPelayaran = template.vendorOptions.filter(output => output.vendorcategoryname == 'Shipping Line' || output.vendorcategoryname == 'Airline');
             setListDepo(listdepo.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nama
+                    label: el.alias
                 }]
             ), []));
 
-            setListVendor(listvendor.reduce((obj, el) => (
+            let listPelayaranData = listPelayaran.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.alias
+                }]
+            ), []);
+            listPelayaranData.push({value:"nodata",label:"No Data"});
+            
+            setListPelayaran(listPelayaranData);
+
+            let listvendorData = listvendor.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama
                 }]
-            ), []));
+            ), []);
+            listvendorData.push({value:"nodata",label:"No Data"});
+            setListVendor(listvendorData);
 
             setListPartai(template.partaiOptions.reduce((obj, el) => (
                 [...obj, {
@@ -431,25 +445,25 @@ export default function EditForm(props) {
                         flag = false;
                     }
 
-                    if(det.jumlahkoli == ''){
-                        setErrItemJumlahKoli(i18n.t('Jumlah Koli')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.jumlahkoli == ''){
+                    //     setErrItemJumlahKoli(i18n.t('Jumlah Koli')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
-                    if(det.jumlahkg == ''){
-                        setErrItemJumlahKg(i18n.t('Jumlah Kg')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.jumlahkg == ''){
+                    //     setErrItemJumlahKg(i18n.t('Jumlah Kg')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
-                    if(det.nocontainer == ''){
-                        setErrItemNocantainer(i18n.t('No Container')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.nocontainer == ''){
+                    //     setErrItemNocantainer(i18n.t('No Container')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
-                    if(det.noseal == ''){
-                        setErrItemNoSeal(i18n.t('No Seal')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.noseal == ''){
+                    //     setErrItemNoSeal(i18n.t('No Seal')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
                     // if(det.barang == ''){
                     //     setErrItemBarang(i18n.t('Barang')+' '+i18n.t('label_REQUIRED'));
@@ -537,25 +551,25 @@ export default function EditForm(props) {
             flag = false;
         }
 
-        if(InputNoBL == ''){
-            setErrInputNoBL(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(InputNoBL == ''){
+        //     setErrInputNoBL(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
-        if(SelPelayaran == ''){
-            setErrSelPelayaran(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(SelPelayaran == ''){
+        //     setErrSelPelayaran(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
-        if(SelImportir == ''){
-            setErrSelImportir(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(SelImportir == ''){
+        //     setErrSelImportir(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
-        if(SelEksportir == ''){
-            setErrSelEksportir(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(SelEksportir == ''){
+        //     setErrSelEksportir(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         // if(SelQQ == ''){
         //     setErrSelQQ(i18n.t('label_REQUIRED'));
@@ -627,10 +641,10 @@ export default function EditForm(props) {
             obj.tanggalnopen = InputTanggalNopen !== null?moment(InputTanggalNopen).toDate().getTime():0;
             obj.nobl = InputNoBL;
             obj.tanggalbl = InputTanggalBL !== null? moment(InputTanggalBL).toDate().getTime():0;
-            obj.pelayaran = SelPelayaran !== ''?SelPelayaran:null;
-            obj.importir = SelImportir !== ''?SelImportir:null;
-            obj.eksportir = SelEksportir !== ''?SelEksportir:null;
-            obj.qq = SelQQ !== ''?SelQQ:null;
+            obj.pelayaran = SelPelayaran !== '' && SelPelayaran !== 'nodata' ?SelPelayaran:null;
+            obj.importir = SelImportir !== '' && SelImportir !== 'nodata'?SelImportir:null;
+            obj.eksportir = SelEksportir !== '' && SelEksportir !== 'nodata' ?SelEksportir:null;
+            obj.qq = SelQQ !== '' && SelQQ !== 'nodata'?SelQQ:null;
             obj.voyagenumber = InputVoyageNumber;
             obj.tanggalsppb_npe =InputTanggalSppbNPE !== null? moment(InputTanggalSppbNPE).toDate().getTime():0;
             obj.depo = InputDepo;
@@ -640,7 +654,7 @@ export default function EditForm(props) {
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
                     let det = InputListItem[i];
-                    if(det.idpartai !== '' && det.barang !== '' && det.jumlahkg !== '' && det.jumlahkoli !== '' && det.nocontainer !== '' && det.noseal !== '' ){
+                    if(det.idpartai !== ''){
                         det.jumlahkg = new String(det.jumlahkg).replaceAll('.','');
                         det.jumlahkoli = new String(det.jumlahkoli).replaceAll('.','');
                         listdetails.push(det);
@@ -688,7 +702,9 @@ export default function EditForm(props) {
         const list = [...InputListItem];
         if(name == 'jumlahkoli' || name == 'jumlahkg'){
             let valTemp = new String(value).replaceAll('.','');
-            if(!isNaN(valTemp)){
+            if(valTemp == ''){
+                list[index][name] = value;
+            }else if(!isNaN(valTemp)){
                 list[index][name] = numToMoney(parseFloat(valTemp));    
             }
         }else{
@@ -1227,7 +1243,7 @@ export default function EditForm(props) {
 
                             <label className="mt-3 form-label required" htmlFor="pelayaran">
                                 {i18n.t('Pelayaran / Airline')}
-                                <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span>
+                                {/* <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span> */}
                             </label>
 
                                 <DropdownList
@@ -1241,7 +1257,7 @@ export default function EditForm(props) {
                                     
                                     onChange={val => handleChangePelayaran(val)}
                                     onBlur={val => setFieldTouched("pelayaran", val?.value ? val.value : '')}
-                                    data={ListVendor}
+                                    data={ListPelayaran}
                                     textField={'label'}
                                     valueField={'value'}
                                     // style={{width: '25%'}}
@@ -1252,7 +1268,7 @@ export default function EditForm(props) {
 
                             <label className="mt-3 form-label required" htmlFor="importir">
                                 {i18n.t('Importir')}
-                                <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span>
+                                {/* <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span> */}
                             </label>
 
                                 <DropdownList
@@ -1277,7 +1293,7 @@ export default function EditForm(props) {
 
                             <label className="mt-3 form-label required" htmlFor="eksportir">
                                 {i18n.t('Eksportir')}
-                                <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span>
+                                {/* <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span> */}
                             </label>
 
                                 <DropdownList
@@ -1302,7 +1318,7 @@ export default function EditForm(props) {
 
                             <label className="mt-3 form-label" htmlFor="qq">
                                 {i18n.t('QQ')}
-                                <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span>
+                                {/* <span hidden={values.wotype == 'JS' || values.wotype == 'TR'} style={{color:'red'}}>*</span> */}
                             </label>
 
                                 <DropdownList
