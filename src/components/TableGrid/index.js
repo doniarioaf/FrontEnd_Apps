@@ -32,6 +32,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 // import * as pathmenu           from '../../shared/pathMenu';
 import {Loading}                    from '../../components/Common/Loading';
+import { valPageSize, valPageSizes } from '../../containers/shared/constantValue';
 // import { isGetPermissions } from '../../shared/globalFunc';
 // import { addBankAccount_Permission,MenuBankAccount } from '../../shared/permissionMenu';
 
@@ -52,10 +53,10 @@ const StatusFormatter = ({value}) => (
 const TableGrid = props => {
     const {i18n} = useTranslation();
     const [hiddenColumnNames] = useState(['id']);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(valPageSize);
     const [currentPage, setCurrentPage] = useState(0);
     const [sorting, setSorting] = useState([]);
-    const [pageSizes] = useState([10, 25, 50]);
+    const [pageSizes] = useState(valPageSizes);
     const [loading, setLoading] = useState(props.loading);
     const [integratedSortingColumnExtensions] = useState([]);
     const [tableColumnExtensions] = useState(props.columnextension);

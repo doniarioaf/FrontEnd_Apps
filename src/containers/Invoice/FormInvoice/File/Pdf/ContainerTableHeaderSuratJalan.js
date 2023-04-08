@@ -16,22 +16,22 @@ const styles = StyleSheet.create({
         flexGrow: 1,
     },
     nosuratjalan: {
-        width: '15%',
+        width: '20%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     gudang: {
-        width: '30%',
+        width: '35%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
-    partai: {
-        width: '15%',
-        borderRightColor: borderColor,
-        borderRightWidth: 1,
-    },
+    // partai: {
+    //     width: '15%',
+    //     borderRightColor: borderColor,
+    //     borderRightWidth: 1,
+    // },
     nocontainer: {
-        width: '20%',
+        width: '25%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
@@ -48,7 +48,7 @@ const ContainerTableHeader = (type) => (
     <View style={styles.container}>
         <Text style={styles.nosuratjalan}>No Surat Jalan</Text>
         <Text style={styles.gudang}>Gudang</Text>
-        <Text style={styles.partai}>Partai</Text>
+        {/* <Text style={styles.partai}>Partai</Text> */}
         <Text style={styles.nocontainer}>No Container</Text>
         <Text style={styles.tanggal}>Tanggal Load/Unload</Text>
     </View>

@@ -63,14 +63,14 @@ const GenerateInvoice = ({ valuedata }) => (
         <Text >{valuedata != null?valuedata.tanggal:''}</Text>        
         </View>
 
-        <View style={styles.customerIdContainer}>
+        {/* <View style={styles.customerIdContainer}>
         <Text >{'Customer ID : '}</Text>
         <Text >{valuedata != null?valuedata.idcustomer:''}</Text>        
-        </View>
+        </View> */}
 
         <View style={styles.refNoContainer}>
         <Text >{'Ref. No. : '}</Text>
-        <Text >{valuedata != null?valuedata.refno:''}</Text>        
+        <Text >{valuedata != null?valuedata.nobl:''}</Text>        
         </View>
 
         <View style={styles.deliveredToContainer}>

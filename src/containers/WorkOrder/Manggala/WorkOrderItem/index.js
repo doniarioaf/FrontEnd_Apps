@@ -21,6 +21,7 @@ const MenuIndex = () => {
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
         {name: 'id', title: 'id'},
+        {name: 'noaju', title: i18n.t('No AJU')},
         {name: 'nodocument', title: i18n.t('No Document')},
         {name: 'customer', title: i18n.t('Customer')},
         {name: 'status', title: i18n.t('Status')},
@@ -43,6 +44,7 @@ const MenuIndex = () => {
                 {
                     'id': el.id,
                     'nodocument':el.nodocument?el.nodocument:'',
+                    'noaju':el.noaju?el.noaju:'',
                     'customer': el.namaCustomer ?el.namaCustomer:'',
                     'status':el.status?el.status:'',
                     'tanggal': el.tanggal?moment (new Date(el.tanggal)).format(formatdate):''

@@ -3,7 +3,7 @@ import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../../components/Layout/ContentHeading';
-import {Input,Button,Label,FormGroup,Container} from 'reactstrap';
+import {Input,Button} from 'reactstrap';
 import * as actions                 from '../../../store/actions';
 import {useDispatch}   from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
@@ -21,7 +21,7 @@ import "react-widgets/dist/css/react-widgets.css";
 // import AddIcon from '@material-ui/icons/Add';
 // import RemoveIcon from '@material-ui/icons/Remove';
 // import DeleteIcon from '@material-ui/icons/Delete';
-import { IconButton } from '@material-ui/core';
+import { IconButton, setRef } from '@material-ui/core';
 import '../../CSS/table.css';
 
 import SearchIcon from '@material-ui/icons/Search';
@@ -47,9 +47,9 @@ export default function AddForm(props) {
     const [InputTanggal, setInputTanggal] = useState(new Date());
     const [ErrInputTanggal, setErrInputTanggal] = useState('');
 
-    const [ListCustomer, setListCustomer] = useState([]);
-    const [SelCust, setSelCust] = useState('');
-    const [ErrSelCust, setErrSelCust] = useState('');
+    // const [ListCustomer, setListCustomer] = useState([]);
+    // const [SelCust, setSelCust] = useState('');
+    // const [ErrSelCust, setErrSelCust] = useState('');
 
     const [InputRefNo, setInputRefNo] = useState('');
     const [ErrInputRefNo, setErrInputRefNo] = useState('');
@@ -57,7 +57,7 @@ export default function AddForm(props) {
     const [InputDeliveredTo, setInputDeliveredTo] = useState('');
     const [ErrInputDeliveredTo, setErrInputDeliveredTo] = useState('');
 
-    const [InputDeliveredDate, setInputDeliveredDate] = useState(new Date());
+    const [InputDeliveredDate, setInputDeliveredDate] = useState(null);
     const [ErrInputDeliveredDate, setErrInputDeliveredDate] = useState('');
 
     const [ListWO, setListWO] = useState([]);
@@ -75,6 +75,8 @@ export default function AddForm(props) {
 
     const [InputDiskonNota, setInputDiskonNota] = useState('');
     const [InputTotalInvoice, setInputTotalInvoice] = useState('');
+
+    const [InputPPN, setInputPPN] = useState('');
 
     // const [InputListItem, setInputListItem] = useState([{ idinvoicetype:"",invoicetype:"",amount: "",ismandatory:"",jalur:"",qty:"",diskon:"",subtotal:""}]);
     const [InputListItem, setInputListItem] = useState([])
@@ -104,7 +106,10 @@ export default function AddForm(props) {
                     label: el.codename
                 }]
             ), []));
+
+            setInputPPN(data.data.defaultPPN?numToMoney(parseFloat(data.data.defaultPPN)):'');
         }
+        
         setLoading(false);
     }
 
@@ -140,6 +145,7 @@ export default function AddForm(props) {
         let id = data?.value ? data.value : '';
         let jalur = data?.jalur ? data.jalur : '';
         let jalurname = data?.jalurname ? data.jalurname : '';
+        let noblawb = data?.noblawb ? data.noblawb : '';
         setSelWO(id);
         setInputJalur(jalur);
         setInputJalurName(jalurname);
@@ -150,13 +156,17 @@ export default function AddForm(props) {
         setListPriceList([]);
         setInputListItem([]);
         setListSuratJalanWO([]);
+        setInputRefNo(noblawb);
         setLoading(true);
+        localStorage.setItem('idwo',id);
         dispatch(actions.getInvoiceData('/suratjalan/'+id,successHandlerSJJ, errorHandler));
-        dispatch(actions.getInvoiceData('/searchsj/'+id,successHandlerSj, errorHandler));
+        // dispatch(actions.getInvoiceData('/searchsj/'+id,successHandlerSj, errorHandler));
     }
 
     function successHandlerSJJ(data) {
         let list = [];
+        let delivDate = null;
+        let idSj = '';
         if(data.data.suratjalan){
             for(let i=0; i < data.data.suratjalan.length ; i++){
                 let det = data.data.suratjalan[i];
@@ -166,7 +176,15 @@ export default function AddForm(props) {
                 obj.warehouse = det.warehousename;
                 obj.nocontainer = det.nocontainer;
                 obj.tanggal = det.tanggal?moment (new Date(det.tanggal)).format(formatdate):'';
+                obj.tanggalkembali = det.tanggalkembali?moment (new Date(det.tanggalkembali)).format(formatdate):null;
 
+                if(delivDate == null && det.tanggalkembali){
+                    delivDate = new Date(det.tanggalkembali);
+                    idSj = det.id;
+                }else if(det.tanggalkembali && delivDate > new Date(det.tanggalkembali)){
+                    delivDate = new Date(det.tanggalkembali);
+                    idSj = det.id;
+                }
                 if(data.data.partaiwo){
                     let listpartai = data.data.partaiwo.filter(output => output.nocontainer == det.nocontainer);
                     if(listpartai.length > 0){
@@ -188,7 +206,19 @@ export default function AddForm(props) {
             }
             
         }
+        
+        if(delivDate != null){
+            setInputDeliveredDate(moment(new Date(delivDate), formatdate).toDate());
+        }else{
+            setInputDeliveredDate(null);
+        }
+        
+
         setListSuratJalanWO(list);
+
+        let idwo = localStorage.getItem('idwo');
+        setSelSJ(idSj);
+        dispatch(actions.getInvoiceData('/searchsj/'+idwo,successHandlerSj, errorHandler));
     }
 
     const successHandlerSj = (data) =>{
@@ -197,7 +227,8 @@ export default function AddForm(props) {
                 [...obj, {
                     value: el.id,
                     label: el.nodocument,
-                    idwarehouse: el.idwarehouse
+                    idwarehouse: el.idwarehouse,
+                    nodoc: el.nodocument,
                 }]
             ), []));
         }
@@ -206,19 +237,42 @@ export default function AddForm(props) {
 
     const handleChangeSj = (data) =>{
         let id = data?.value ? data.value : '';
+        let nodoc = data?.nodoc ? data.nodoc : '';
         setSelSJ(id);
         setSelPriceList('');
         setListPriceList([]);
         setInputListItem([]);
+
+        let list = ListSuratJalanWO.filter(output => output.nosj == nodoc);
+        if(list.length > 0){
+            if(list[0].tanggalkembali){
+                setInputDeliveredDate(moment(new Date(list[0].tanggalkembali), formatdate).toDate());
+            }
+        }else{
+            setInputDeliveredDate(null);
+        }
     }
 
     const handleChangeInvType = (data) =>{
         let id = data?.value ? data.value : '';
         setSelInvoiceType(id);
-        setSelSJ('');
+
         setSelPriceList('');
         setListPriceList([]);
         setInputListItem([]);
+        setListSuratJalanWO([]);
+        setInputDeliveredDate(null);
+        
+        if(id == 'REIMBURSEMENT'){
+            setSelSJ('');
+        }else{
+            if(SelWO !== '' && SelSJ == ''){
+                setLoading(true);
+                localStorage.setItem('idwo',SelWO);
+                dispatch(actions.getInvoiceData('/suratjalan/'+SelWO,successHandlerSJJ, errorHandler));
+            }
+            
+        }
     }
 
     const handleChangePriceList = (data) =>{
@@ -289,6 +343,17 @@ export default function AddForm(props) {
         
     }
 
+    const handleChangePPN = (data) =>{
+        let val = data.target.value;
+        // val = new String(val).replaceAll('.','').replaceAll(',','.');
+        let flagReg = inputJustNumberAndCommaDot(val);
+        if(flagReg){
+            val = formatMoney(val);
+            setInputPPN(val);
+        }
+        
+    }
+
     const checkColumnMandatory = () => {
         let flag = true;
         setErrInputTanggal('');
@@ -331,20 +396,20 @@ export default function AddForm(props) {
             flag = false;
         }
 
-        if(InputRefNo == ''){
-            setErrInputRefNo(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(InputRefNo == ''){
+        //     setErrInputRefNo(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
-        if(InputDeliveredTo == ''){
-            setErrInputDeliveredTo(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(InputDeliveredTo == ''){
+        //     setErrInputDeliveredTo(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
-        if(InputDeliveredDate == null){
-            setErrInputDeliveredDate(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(InputDeliveredDate == null){
+        //     setErrInputDeliveredDate(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         if(SelInvoiceType == ''){
             setErrSelInvoiceType(i18n.t('label_REQUIRED'));
@@ -387,6 +452,7 @@ export default function AddForm(props) {
             obj.idinvoicetype = SelInvoiceType;
             obj.totalinvoice = InputTotalInvoice !== ''?new String(InputTotalInvoice).replaceAll('.','').replaceAll(',','.'):0;
             obj.diskonnota = InputDiskonNota !== ''?new String(InputDiskonNota).replaceAll('.','').replaceAll(',','.'):0;
+            obj.ppn = InputPPN !== ''?new String(InputPPN).replaceAll('.','').replaceAll(',','.'):null;
             obj.isactive = true;
 
             let listDetailsPrice = [];
@@ -443,7 +509,7 @@ export default function AddForm(props) {
         setInputWarehouseID('');
         setInputDeliveredTo('');
         setLoading(true);
-        dispatch(actions.getInvoiceData('/getdistrict/'+data.kodepos,successHandlerDistrict, errorHandler));
+        // dispatch(actions.getInvoiceData('/getdistrict/'+data.kodepos,successHandlerDistrict, errorHandler));
         dispatch(actions.getInvoiceData('/searchwo/'+data.id,successHandlerWO, errorHandler));
     }
     const successHandlerDistrict = (data) => {
@@ -461,6 +527,7 @@ export default function AddForm(props) {
                     label: el.nodocument,
                     jalur: el.jalur,
                     jalurname: el.jalurname,
+                    noblawb: el.nobl,
                 }]
             ), []));
         }
@@ -626,6 +693,7 @@ export default function AddForm(props) {
                 sj:SelSJ,
                 invtype:SelInvoiceType,
                 discnota:InputDiskonNota,
+                ppn:InputPPN,
                 total:InputTotalInvoice,
                 pricelist:SelPriceList,
                 items:InputListItem,
@@ -660,27 +728,8 @@ export default function AddForm(props) {
                             <ContentWrapper>
                             <ContentHeading history={history} link={pathmenu.addInvoice} label={'Add Invoice'} labeldefault={'Add Invoice'} />
                             <div className="row mt-2">
-                            <div className="mt-2 col-lg-6 ft-detail mb-5">
-                            <label className="mt-3 form-label required" htmlFor="tanggal">
-                                {i18n.t('label_DATE')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <DatePicker
-                                    name="tanggal"
-                                    // onChange={(val) => {
-                                    //         setFieldValue("startdate", val);
-                                    //     }
-                                    // }
-                                    onChange={val => handleChangeTanggal(val)}
-                                    onBlur={handleBlur}
-                                    // defaultValue={Date(moment([]))}
-                                    format={formatdate}
-                                    value={values.tanggal}
-                                    // style={{width: '25%'}}
-                                    disabled={false}                       
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputTanggal}</div>
-
+                            
+                            <div className="mt-1 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="customer">
                                 {i18n.t('label_CUSTOMER')}
                                 <span style={{color:'red'}}>*</span>
@@ -718,30 +767,32 @@ export default function AddForm(props) {
                             </table>
                             <div className="invalid-feedback-custom">{ErrInputCustomer}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="deliveredto">
-                                {i18n.t('Delivered To')}
-                                <span style={{color:'red'}}>*</span>
+                            <label className="mt-3 form-label required" htmlFor="wo">
+                                {i18n.t('Work Order')}
                             </label>
-                            <Input
-                                name="deliveredto"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="deliveredto"
-                                // maxLength={30}
-                                // onChange={val => handleInputDeliveredTo(val)}
-                                onBlur={handleBlur}
-                                disabled={true}
-                                value={values.deliveredto}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputDeliveredTo}</div>
+
+                                <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="wo"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeWo(val)}
+                                    onBlur={val => setFieldTouched("wo", val?.value ? val.value : '')}
+                                    data={ListWO}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.wo}
+                                />
 
                             <label className="mt-3 form-label required" htmlFor="refno">
                                 {i18n.t('Ref. No')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
                             <Input
                                 name="refno"
@@ -756,10 +807,9 @@ export default function AddForm(props) {
                                 onChange={val => handleInputRefNo(val)}
                                 onBlur={handleBlur}
                                 value={values.refno}
+                                disabled={true}
                             />
                             <div className="invalid-feedback-custom">{ErrInputRefNo}</div>
-
-                            
 
                             <label className="mt-3 form-label required" htmlFor="delivereddate">
                                 {i18n.t('Delivery Date')}
@@ -777,11 +827,32 @@ export default function AddForm(props) {
                                     format={formatdate}
                                     value={values.delivereddate}
                                     // style={{width: '25%'}}
-                                    disabled={false}                       
+                                    disabled={true}                       
                             />
                             <div className="invalid-feedback-custom">{ErrInputDeliveredDate}</div>
                             </div>
+
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
+                            <label className="mt-3 form-label required" htmlFor="tanggal">
+                                {i18n.t('label_DATE')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <DatePicker
+                                    name="tanggal"
+                                    // onChange={(val) => {
+                                    //         setFieldValue("startdate", val);
+                                    //     }
+                                    // }
+                                    onChange={val => handleChangeTanggal(val)}
+                                    onBlur={handleBlur}
+                                    // defaultValue={Date(moment([]))}
+                                    format={formatdate}
+                                    value={values.tanggal}
+                                    // style={{width: '25%'}}
+                                    disabled={false}                       
+                            />
+                            <div className="invalid-feedback-custom">{ErrInputTanggal}</div>
+
                             <label className="mt-3 form-label required" htmlFor="invtype">
                                 {i18n.t('Invoice Type')}
                                 <span style={{color:'red'}}>*</span>
@@ -807,30 +878,7 @@ export default function AddForm(props) {
                                 />
                                 <div className="invalid-feedback-custom">{ErrSelInvoiceType}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="wo">
-                                {i18n.t('Work Order')}
-                            </label>
-
-                                <DropdownList
-                                    // className={
-                                    //     touched.branch && errors.branch
-                                    //         ? "input-error" : ""
-                                    // }
-                                    name="wo"
-                                    filter='contains'
-                                    placeholder={i18n.t('select.SELECT_OPTION')}
-                                    
-                                    onChange={val => handleChangeWo(val)}
-                                    onBlur={val => setFieldTouched("wo", val?.value ? val.value : '')}
-                                    data={ListWO}
-                                    textField={'label'}
-                                    valueField={'value'}
-                                    // style={{width: '25%'}}
-                                    // disabled={values.isdisabledcountry}
-                                    value={values.wo}
-                                />
-
-                            <label className="mt-3 form-label required" htmlFor="jalurname">
+                                <label className="mt-3 form-label required" htmlFor="jalurname">
                                 {i18n.t('Penjaluran')}
                             </label>
                             <Input
@@ -873,6 +921,24 @@ export default function AddForm(props) {
                                     disabled={SelInvoiceType == 'REIMBURSEMENT'}
                                 />
 
+                            <label className="mt-3 form-label required" htmlFor="ppn">
+                                {i18n.t('PPN')}
+                            </label>
+                            <Input
+                                name="ppn"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="ppn"
+                                maxLength={30}
+                                onChange={val => handleChangePPN(val)}
+                                onBlur={handleBlur}
+                                value={values.ppn}
+                            />
+
                             <label className="mt-3 form-label required" htmlFor="discnota">
                                 {i18n.t('Diskon Nota')}
                             </label>
@@ -909,10 +975,35 @@ export default function AddForm(props) {
                                 value={values.total}
                                 disabled={true}
                             />
+
                             
 
+                            {/* <label className="mt-3 form-label required" htmlFor="deliveredto">
+                                {i18n.t('Delivered To')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <Input
+                                name="deliveredto"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="deliveredto"
+                                // maxLength={30}
+                                // onChange={val => handleInputDeliveredTo(val)}
+                                onBlur={handleBlur}
+                                disabled={true}
+                                value={values.deliveredto}
+                            />
+                            <div className="invalid-feedback-custom">{ErrInputDeliveredTo}</div> */}
+
+                            
                             </div>
+                            
                             </div>
+
 
                             <div className="invalid-feedback-custom">{ErrItems}</div>
                             <div className="invalid-feedback-custom">{ErrQty}</div>
@@ -1136,7 +1227,7 @@ export default function AddForm(props) {
                                             <th>{i18n.t('Gudang')}</th>
                                             <th>{i18n.t('No Container')}</th>
                                             <th>{i18n.t('Tanggal Loading/Unloading')}</th>
-                                            <th>{i18n.t('Partai')}</th>
+                                            {/* <th>{i18n.t('Partai')}</th> */}
                                         </tr>
                                         <tbody>
                                             {
@@ -1146,8 +1237,8 @@ export default function AddForm(props) {
                                                             <td>{x.nosj}</td>
                                                             <td>{x.warehouse}</td>
                                                             <td>{x.nocontainer}</td>
-                                                            <td>{x.tanggal}</td>
-                                                            <td>{x.partai}</td>
+                                                            <td>{x.tanggalkembali !== null?x.tanggalkembali:''}</td>
+                                                            {/* <td>{x.partai}</td> */}
                                                         </tr>
                                                     )
                                                 })

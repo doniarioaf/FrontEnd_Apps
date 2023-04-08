@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     subtotaljasa: {
         width: '19%',
         borderRightColor: borderColor,
-        borderRightWidth: 1,
+        borderRightWidth: 0,
     },
     reimbursement: {
         width: '30%',
@@ -63,34 +63,47 @@ const styles = StyleSheet.create({
     subtotalreimbursement: {
         width: '19%',
         borderRightColor: borderColor,
-        borderRightWidth: 1,
+        borderRightWidth: 0,
     },
 });
 
-const setHeader = (type) =>{
+const setHeader = (param) =>{
     let list = [];
-    if(type.type == 'JASA'){
+    let showDiskon = false;
+    if(param.items.detailsprice){
+        for(let i=0; i < param.items.detailsprice.length; i++){
+            let det = param.items.detailsprice;
+            if(det.diskon){
+                showDiskon = true;
+            }
+        }
+    }
+    if(param.type == 'JASA'){
         list.push(<Text style={styles.no}>No</Text>);
         list.push(<Text style={styles.jasa}>Jasa PPJK</Text>);
         list.push(<Text style={styles.qty}>Qty</Text>);
-        list.push(<Text style={styles.discjasa}>Disc</Text>);
         list.push(<Text style={styles.hargajasa}>Harga</Text>);
+        if(showDiskon){
+            list.push(<Text style={styles.discjasa}>Disc</Text>);
+        }
         list.push(<Text style={styles.subtotaljasa}>Subtotal</Text>);
     }else{
         list.push(<Text style={styles.no}>No</Text>);
         list.push(<Text style={styles.reimbursement}>Reimbursement / Dana Talangan</Text>);
         list.push(<Text style={styles.qty}>Qty</Text>);
-        list.push(<Text style={styles.discreimbursement}>Disc</Text>);
         list.push(<Text style={styles.hargareimbursement}>Harga</Text>);
+        if(showDiskon){
+            list.push(<Text style={styles.discreimbursement}>Disc</Text>);
+        }
         list.push(<Text style={styles.subtotalreimbursement}>Subtotal</Text>);
     }
 
     return list;
 }
 
-const ContainerTableHeader = (type) => (
+const ContainerTableHeader = (param) => (
     <View style={styles.container}>
-        {setHeader(type)}
+        {setHeader(param)}
     </View>
 );
 

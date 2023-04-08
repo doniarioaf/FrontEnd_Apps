@@ -18,28 +18,28 @@ const styles = StyleSheet.create({
         flexGrow: 1,
     },
     nosuratjalan: {
-        width: '15%',
+        width: '20%',
         textAlign: 'left',
         paddingLeft:'4px',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     gudang: {
-        width: '30%',
+        width: '35%',
         textAlign: 'left',
         paddingLeft:'4px',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
-    partai: {
-        width: '15%',
-        textAlign: 'left',
-        paddingLeft:'4px',
-        borderRightColor: borderColor,
-        borderRightWidth: 1,
-    },
+    // partai: {
+    //     width: '15%',
+    //     textAlign: 'left',
+    //     paddingLeft:'4px',
+    //     borderRightColor: borderColor,
+    //     borderRightWidth: 1,
+    // },
     nocontainer: {
-        width: '20%',
+        width: '25%',
         textAlign: 'left',
         paddingLeft:'4px',
         borderRightColor: borderColor,
@@ -95,7 +95,7 @@ const setItems = (items) =>{
 
                 rowItem.push(<Text style={styles.nosuratjalan}>{checkValuePDf(det.nosj,' ')}</Text>);
                 rowItem.push(<Text style={styles.gudang}>{checkValuePDf(det.warehouse,' ')}</Text>);
-                rowItem.push(<Text style={styles.partai}>{checkValuePDf(det.partai,' ')}</Text>);
+                // rowItem.push(<Text style={styles.partai}>{checkValuePDf(det.partai,' ')}</Text>);
                 rowItem.push(<Text style={styles.nocontainer}>{checkValuePDf(det.nocontainer,' ')}</Text>);
                 rowItem.push(<Text style={styles.tanggal}>{checkValuePDf(det.tanggal,' ')}</Text>);
                 rows.push(<View style={styles.row} key={no}>{rowItem}</View>);

@@ -303,12 +303,12 @@ import React, {useState,
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Delivered To')}</span>
                             <strong className="col-md-7">
                             {value.deliveredto?value.deliveredto:''}
                             </strong>
-                            </div>
+                            </div> */}
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Delivery Date')}</span>
@@ -335,6 +335,13 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('Surat Jalan')}</span>
                             <strong className="col-md-7">
                             {value.noocumentsuratjalan?value.noocumentsuratjalan:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('PPN')}</span>
+                            <strong className="col-md-7">
+                            {value.ppn?numToMoney(parseFloat(value.ppn)):''}
                             </strong>
                             </div>
 
@@ -418,7 +425,7 @@ import React, {useState,
                         <th>{i18n.t('Gudang')}</th>
                         <th>{i18n.t('No Container')}</th>
                         <th>{i18n.t('Tanggal Loading/Unloading')}</th>
-                        <th>{i18n.t('Partai')}</th>
+                        {/* <th>{i18n.t('Partai')}</th> */}
                     </tr>
                     <tbody>
                         {
@@ -429,7 +436,7 @@ import React, {useState,
                                         <td>{x.warehouse}</td>
                                         <td>{x.nocontainer}</td>
                                         <td>{x.tanggal}</td>
-                                        <td>{x.partai}</td>
+                                        {/* <td>{x.partai}</td> */}
                                     </tr>
                                 )
                             })
