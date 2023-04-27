@@ -428,7 +428,7 @@ export function* getBankAccountDataSaga(action) {
     }catch (error) {
         // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(handleMessageError(error));
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -440,7 +440,7 @@ export function* submitAddBankAccountDataSaga(action) {
     }catch (error) {
         // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(handleMessageError(error));
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -452,7 +452,7 @@ export function* submitEditBankAccountDataSaga(action) {
     }catch (error) {
         // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(handleMessageError(error));
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -464,7 +464,7 @@ export function* submitDeleteBankAccountDataSaga(action) {
     }catch (error) {
         // console.log('error ',error);
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
-        action.errorHandler(handleMessageError(error));
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -473,7 +473,7 @@ export function* getCustomerManggalaDataSaga(action) {
         const response = yield axios.get(baseCustomerManggalaURL(action.param)).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
-        action.errorHandler(handleMessageError(error));
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -482,7 +482,7 @@ export function* submitAddCustomerManggalaSaga(action) {
         const response = yield axios.post(baseCustomerManggalaURL(action.param),action.payload).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
-        action.errorHandler(handleMessageError(error));
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 
@@ -491,7 +491,7 @@ export function* submitEditCustomerManggalaSaga(action) {
         const response = yield axios.put(baseCustomerManggalaURL(action.param),action.payload).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
-        action.errorHandler(handleMessageError(error));
+        action.errorHandler(handleMessageError(error).msg);
     }
 }
 

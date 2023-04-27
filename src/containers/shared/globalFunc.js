@@ -30,7 +30,7 @@ export const handleMessageError = (error) =>{
     let msgObj = new Object();
     
     let val = [];
-    if(error.data){
+    if(error.data && error.data !== null){
         val = error.data;
     }else if(sessionStorage.getItem(key.messageError) !== null){
         if(sessionStorage.getItem(key.messageError) == 'timeout'){
@@ -44,7 +44,7 @@ export const handleMessageError = (error) =>{
         sessionStorage.removeItem(key.messageError);
     }
     if(msg == ''){
-    //     let val = error.data;
+        
         if(val.messagecode == 'data.validation'){
             for(let i=0; i < val.validations.length; i++){
                 let valid = val.validations[i];
