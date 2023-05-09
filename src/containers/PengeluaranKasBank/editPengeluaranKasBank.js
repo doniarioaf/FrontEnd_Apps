@@ -3,7 +3,7 @@ import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../components/Layout/ContentHeading';
-import {Input,Button,Label,FormGroup,Container} from 'reactstrap';
+import {Input,Button} from 'reactstrap';
 import * as actions                 from '../../store/actions';
 import {useDispatch}   from 'react-redux';
 import { Loading } from '../../components/Common/Loading';
@@ -202,12 +202,21 @@ export default function EditForm(props) {
                 }
             }
 
-            setListCOA(template.coaOptions.reduce((obj, el) => (
+            let listCOA = template.coaOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama+' ('+el.code+')'
                 }]
-            ), []));
+            ), []);
+            
+            listCOA.push(
+                {
+                    value: 'nodata',
+                    label: 'No Data'
+                }
+            );
+
+            setListCOA(listCOA);
 
             setListBank(template.bankOptions.reduce((obj, el) => (
                 [...obj, {
@@ -465,10 +474,10 @@ export default function EditForm(props) {
                 for(let i=0; i < InputListItem.length; i++){
                     let det = InputListItem[i];
                     if( (det.idcoa !== '' || det.idcoa !== 'nodata') || det.catatan !== '' || det.amount !== '' || (det.idinvoiceitem !== '' || det.idinvoiceitem !== 'nodata') || (det.idpaymentitem !== '' || det.idpaymentitem !== 'nodata') || (det.idasset !== '' || det.idasset !== 'nodata') ){
-                        if(det.catatan == ''){
-                            setErrInputCatatan(i18n.t('Catatan')+' '+i18n.t('label_REQUIRED'));
-                            flag = false;
-                        }
+                        // if(det.catatan == ''){
+                        //     setErrInputCatatan(i18n.t('Catatan')+' '+i18n.t('label_REQUIRED'));
+                        //     flag = false;
+                        // }
 
                         if(det.amount == ''){
                             setErrInputAmount(i18n.t('Amount')+' '+i18n.t('label_REQUIRED'));
@@ -530,10 +539,10 @@ export default function EditForm(props) {
             flag = false;
         }
 
-        if(SelCOA == ''){
-            setErrSelCOA(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(SelCOA == ''){
+        //     setErrSelCOA(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         if(SelBank == ''){
             setErrSelBank(i18n.t('label_REQUIRED'));
@@ -582,7 +591,15 @@ export default function EditForm(props) {
                 obj.idcustomer = null;
                 obj.idvendor = InputPaymentTo;
             }
-            obj.idcoa = SelCOA;
+            
+            let idcoa = '';
+            if(SelCOA == '' || SelCOA == 'nodata'){
+                idcoa = null;
+            }else{
+                idcoa = SelCOA;
+            }
+            obj.idcoa = idcoa;
+
             obj.idbank = SelBank;
             obj.keterangan = InputKeterangan;
 
@@ -601,7 +618,7 @@ export default function EditForm(props) {
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
                     let det = InputListItem[i];
-                    if(det.catatan !== '' && det.amount !== '' && det.idcoa !== ''){
+                    if( det.amount !== '' && det.idcoa !== ''){
                         let objDet = new Object();
                         objDet.idcoa = det.idcoa !== '' && det.idcoa !== 'nodata' ? det.idcoa:null;
                         objDet.catatan = det.catatan;
@@ -915,7 +932,7 @@ export default function EditForm(props) {
 
                             <label className="mt-3 form-label required" htmlFor="coa">
                                 {i18n.t('COA')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
 
                                 <DropdownList
@@ -1221,7 +1238,7 @@ export default function EditForm(props) {
                                     seacrhtype1 = {SelPaymentTo}
                                     errorHandler = {errorHandler}
                                     handlesearch = {handleQuickSeacrh}
-                                    placeholder = {'Pencarian Berdasarkan Nama'}
+                                    placeholder = {SelPaymentTo == 'CUSTOMER' || SelPaymentTo == 'VENDOR' ?'Pencarian Berdasarkan Nama Atau Alias':'Pencarian Berdasarkan Nama'}
 
                                 ></FormSearch>
                                 {LoadingSend && <Loading/>}

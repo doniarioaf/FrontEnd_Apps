@@ -10,7 +10,7 @@ import MuiDialogTitle               from '@material-ui/core/DialogTitle';
 import Typography                   from '@material-ui/core/Typography';
 import IconButton                   from '@material-ui/core/IconButton';
 import CloseIcon                    from '@material-ui/icons/Close';
-import {Button}                                   from 'reactstrap';
+import {Button,Input}                                   from 'reactstrap';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
 import { formatdate} from '../shared/constantValue';
@@ -42,6 +42,11 @@ const DialogStatus = props => {
 
     const [ListAsset, SetListAsset] = useState([]);
     const [SelAsset, SetSelAsset] = useState('');
+
+    const [InputNoSuratJalan, SetInputNoSuratJalan] = useState('');
+    const [InputNoBL, SetInputNoBL] = useState('');
+    const [InputNoContainer, SetInputNoContainer] = useState('');
+
 
     const i18n = useTranslation('translations');
     const dispatch = useDispatch();
@@ -128,6 +133,10 @@ const DialogStatus = props => {
 
         SetSelAsset(props.detail.idasset != 0?props.detail.idasset:'');
         SetSelStatus(props.status);
+        SetInputNoSuratJalan(props.detail?.nodocument?props.detail.nodocument:'');
+        SetInputNoBL(props.detail?.noblWO?props.detail.noblWO:'');
+        SetInputNoContainer(props.detail?.nocantainer?props.detail.nocantainer:'');
+
         SetSelKepemilikanMobil(props.detail?.kepemilikanmobil?props.detail.kepemilikanmobil:'');
         SetSelSupir(props.detail?.idemployee_supir?(props.detail.idemployee_supir == 0?'':props.detail.idemployee_supir):'');
         SetSelIsLembur(props.detail?.lembur?props.detail.lembur:'');
@@ -222,28 +231,44 @@ const DialogStatus = props => {
             {/* <DialogContent dividers > */}
             <div className="row mt-2">
             <div className="mt-2 col-lg-6 ft-detail mb-5">
-            <label className="mt-3 form-label required" htmlFor="Status">
-                {i18n.t('Status')}
-                <span style={{color:'red'}}>*</span>
-            </label>
 
-            <DropdownList
-                // className={
-                //     touched.branch && errors.branch
-                //         ? "input-error" : ""
-                // }
-                name="workorder"
-                filter='contains'
-                placeholder={i18n.t('select.SELECT_OPTION')}
-                
-                onChange={val => handleChangeStatus(val)}
-                data={ListStatus}
-                textField={'label'}
-                valueField={'value'}
-                // style={{width: '25%'}}
-                // disabled={values.isdisabledcountry}
-                value={SelStatus}
+            <label className="mt-3 form-label required" htmlFor="InputNoSuratJalan">
+                {i18n.t('No. Surat Jalan')}
+            </label>
+            <Input
+                name="InputNoSuratJalan"
+                type="text"
+                id="InputNoSuratJalan"
+                maxLength={200}
+                disabled={true}
+                value={InputNoSuratJalan}
             />
+
+            <label className="mt-3 form-label required" htmlFor="InputNoBL">
+                {i18n.t('No. BL')}
+            </label>
+            <Input
+                name="InputNoBL"
+                type="text"
+                id="InputNoBL"
+                maxLength={200}
+                disabled={true}
+                value={InputNoBL}
+            />
+
+            <label className="mt-3 form-label required" htmlFor="InputNoContainer">
+                {i18n.t('No. Container')}
+            </label>
+            <Input
+                name="InputNoContainer"
+                type="text"
+                id="InputNoContainer"
+                maxLength={200}
+                disabled={true}
+                value={InputNoContainer}
+            />
+
+            
 
             <label className="mt-3 form-label required" htmlFor="SelKepemilikanMobil">
                 {i18n.t('Kepemilikan Mobil')}
@@ -270,6 +295,28 @@ const DialogStatus = props => {
             </div>
 
             <div className="mt-2 col-lg-6 ft-detail mb-5">
+            <label className="mt-3 form-label required" htmlFor="Status">
+                {i18n.t('Status')}
+                <span style={{color:'red'}}>*</span>
+            </label>
+
+            <DropdownList
+                // className={
+                //     touched.branch && errors.branch
+                //         ? "input-error" : ""
+                // }
+                name="workorder"
+                filter='contains'
+                placeholder={i18n.t('select.SELECT_OPTION')}
+                
+                onChange={val => handleChangeStatus(val)}
+                data={ListStatus}
+                textField={'label'}
+                valueField={'value'}
+                // style={{width: '25%'}}
+                // disabled={values.isdisabledcountry}
+                value={SelStatus}
+            />
             <div hidden={SelKepemilikanMobil == 'MOBILLUAR' || SelKepemilikanMobil == ''}>
             
             <label className="mt-3 form-label required" htmlFor="SelAsset">

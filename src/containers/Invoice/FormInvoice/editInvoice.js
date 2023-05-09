@@ -95,6 +95,7 @@ export default function EditForm(props) {
     const [ListSuratJalanWO, setListSuratJalanWO] = useState([]);
 
     const [InputPPN, setInputPPN] = useState('');
+    const [DataTemplate, setDataTemplate] = useState([]);
 
     const id = props.match.params.id;
 
@@ -107,6 +108,7 @@ export default function EditForm(props) {
         if(data.data){
             let det = data.data;
             let template = det.template;
+            setDataTemplate(data.data);
 
             setInputJalurName(det.jalurname);
             setInputNoDocument(det.nodocument);
@@ -398,10 +400,14 @@ export default function EditForm(props) {
         setInputListItem([]);
         setListSuratJalanWO([]);
         setInputDeliveredDate(null);
-        
+        setInputDiskonNota('');
+        setInputTotalInvoice('');
+
         if(id == 'REIMBURSEMENT'){
             setSelSJ('');
+            setInputPPN('');
         }else{
+            setInputPPN(DataTemplate.ppn?numToMoney(parseFloat(DataTemplate.ppn)):'');
             if(SelWO !== '' && SelSJ == ''){
                 setLoading(true);
                 localStorage.setItem('idwo',SelWO);
@@ -1117,6 +1123,7 @@ export default function EditForm(props) {
                                 onChange={val => handleChangePPN(val)}
                                 onBlur={handleBlur}
                                 value={values.ppn}
+                                disabled={SelInvoiceType == 'REIMBURSEMENT'}
                             />
                             <label className="mt-3 form-label required" htmlFor="discnota">
                                 {i18n.t('Diskon Nota')}
@@ -1134,6 +1141,7 @@ export default function EditForm(props) {
                                 onChange={val => handleChangeDiskonNota(val)}
                                 onBlur={handleBlur}
                                 value={values.discnota}
+                                disabled={SelInvoiceType == 'REIMBURSEMENT'}
                             />
 
                             <label className="mt-3 form-label required" htmlFor="total">
@@ -1435,7 +1443,7 @@ export default function EditForm(props) {
                                             seacrhtype = {'CUSTOMERINVOICE'}
                                             errorHandler = {errorHandler}
                                             handlesearch = {handleQuickSeacrh}
-                                            placeholder = {'Pencarian Berdasarkan Nama Customer'}
+                                            placeholder = {'Pencarian Berdasarkan Nama Atau Alias'}
                                         ></FormSearch>
                                         {LoadingSend && <Loading/>}
                                 </StyledDialog>

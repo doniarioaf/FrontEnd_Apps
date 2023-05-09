@@ -92,6 +92,7 @@ export default function AddForm(props) {
     const [ErrInputCustomer, setErrInputCustomer] = useState('');
     const [ListSuratJalanWO, setListSuratJalanWO] = useState([]);
     const [IsHideColumnWarehouse, setIsHideColumnWarehouse] = useState(false);
+    const [DataTemplate, setDataTemplate] = useState([]);
 
     useEffect(() => {
         setLoading(true);
@@ -99,6 +100,7 @@ export default function AddForm(props) {
     }, []);
 
     const successHandlerTemplate = (data) =>{
+        setDataTemplate(data.data);
         if(data.data){
             setListInvoiceType(data.data.invoiceTypeOptions.reduce((obj, el) => (
                 [...obj, {
@@ -262,10 +264,14 @@ export default function AddForm(props) {
         setInputListItem([]);
         setListSuratJalanWO([]);
         setInputDeliveredDate(null);
-        
+        setInputDiskonNota('');
+        setInputTotalInvoice('');
+
         if(id == 'REIMBURSEMENT'){
             setSelSJ('');
+            setInputPPN('');
         }else{
+            setInputPPN(DataTemplate.defaultPPN?numToMoney(parseFloat(DataTemplate.defaultPPN)):'');
             if(SelWO !== '' && SelSJ == ''){
                 setLoading(true);
                 localStorage.setItem('idwo',SelWO);
@@ -937,6 +943,7 @@ export default function AddForm(props) {
                                 onChange={val => handleChangePPN(val)}
                                 onBlur={handleBlur}
                                 value={values.ppn}
+                                disabled={SelInvoiceType == 'REIMBURSEMENT'}
                             />
 
                             <label className="mt-3 form-label required" htmlFor="discnota">
@@ -955,6 +962,7 @@ export default function AddForm(props) {
                                 onChange={val => handleChangeDiskonNota(val)}
                                 onBlur={handleBlur}
                                 value={values.discnota}
+                                disabled={SelInvoiceType == 'REIMBURSEMENT'}
                             />
 
                             <label className="mt-3 form-label required" htmlFor="total">
@@ -1281,7 +1289,7 @@ export default function AddForm(props) {
                                             seacrhtype = {'CUSTOMERINVOICE'}
                                             errorHandler = {errorHandler}
                                             handlesearch = {handleQuickSeacrh}
-                                            placeholder = {'Pencarian Berdasarkan Nama Customer'}
+                                            placeholder = {'Pencarian Berdasarkan Nama Atau Alias'}
                                         ></FormSearch>
                                         {LoadingSend && <Loading/>}
                                 </StyledDialog>

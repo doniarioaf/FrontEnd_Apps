@@ -94,16 +94,31 @@ const DialogQuickSearch = props => {
                     data = [
                         {name: 'id', title: 'id'},
                         {name: 'name', title: i18n.t('label_NAME')},
+                        {name: 'alias', title: i18n.t('Alias')},
                     ]
                 }else if(props.seacrhtype1 == 'VENDOR'){
                     data = [
                         {name: 'id', title: 'id'},
                         {name: 'name', title: i18n.t('label_NAME')},
+                        {name: 'alias', title: i18n.t('Alias')},
                         {name: 'category', title: i18n.t('Category')},
                     ]
                 }
             }
+        }else if(props.seacrhtype == 'CUSTOMERWO'){
+            data = [
+                {name: 'id', title: 'id'},
+                {name: 'name', title: i18n.t('label_NAME')},
+                {name: 'alias', title: i18n.t('Alias')},
+            ]
+        }else if(props.seacrhtype == 'CUSTOMERINVOICE'){
+            data = [
+                {name: 'id', title: 'id'},
+                {name: 'name', title: i18n.t('label_NAME')},
+                {name: 'alias', title: i18n.t('Alias')},
+            ]
         }
+        
         setColumns(data);
     }, []);
 
@@ -189,6 +204,7 @@ const DialogQuickSearch = props => {
                     {
                         'id': el.id,
                         'name': el.customername,
+                        'alias': el.alias,
                         'data':el
                     }
                 ], []);
@@ -198,6 +214,7 @@ const DialogQuickSearch = props => {
                     {
                         'id': el.id,
                         'name': el.customername,
+                        'alias': el.alias,
                         'data':el
                     }
                 ], []);
@@ -251,6 +268,7 @@ const DialogQuickSearch = props => {
                             {
                                 'id': el.id,
                                 'name': el.customername,
+                                'alias': el.alias,
                                 'data':el
                             }
                         ], []);
@@ -262,6 +280,7 @@ const DialogQuickSearch = props => {
                                 'id': el.id,
                                 'name': el.nama,
                                 'category': el.vendorcategoryname,
+                                'alias': el.alias,
                                 'data':el
                             }
                         ], []);

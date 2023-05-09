@@ -576,7 +576,9 @@ const StyledDialog = styled(Dialog)`
                 // style={{height: '100%'}}
                 open={ShowStatus}
             >
-                <DialogStatus
+                {
+                    value.status?
+                    <DialogStatus
                     showflag = {setShowStatus}
                     flagloadingsend = {setLoadingSend}
                     errorhandler = {errorHandler}
@@ -585,7 +587,9 @@ const StyledDialog = styled(Dialog)`
                     status = {value.status}
                     detail = {value}
                     // getAutoDebitid= {getAutoDebitid}
-                />
+                />:''
+                }
+                
                 {LoadingSend && <Loading/>}
             </StyledDialog>
         </ContentWrapper>

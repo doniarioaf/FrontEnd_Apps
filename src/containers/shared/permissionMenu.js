@@ -107,6 +107,7 @@ export const editSuratJalan_Permission = ['READ_SURATJALAN','EDIT_SURATJALAN','R
 export const deleteSuratJalan_Permission = ['DELETE_SURATJALAN'];
 export const editStatusSuratJalan_Permission = ['EDIT_STATUS_SURATJALAN'];
 export const printSuratJalan_Permission = ['READ_PRINT_SURATJALAN'];
+export const editDateSuratJalan_Permission = ['EDIT_SURATJALAN_DATE'];
 
 export const addPenerimaanKasBank_Permission = ['READ_PENERIMAAN_KASBANK','CREATE_PENERIMAAN_KASBANK'];
 export const editPenerimaanKasBank_Permission = ['READ_PENERIMAAN_KASBANK','EDIT_PENERIMAAN_KASBANK'];
