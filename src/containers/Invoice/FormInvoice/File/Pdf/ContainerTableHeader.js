@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         borderRightWidth: 0,
     },
     reimbursement: {
-        width: '30%',
+        width: '40%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
@@ -90,7 +90,7 @@ const setHeader = (param) =>{
     }else{
         list.push(<Text style={styles.no}>No</Text>);
         list.push(<Text style={styles.reimbursement}>Reimbursement / Dana Talangan</Text>);
-        list.push(<Text style={styles.qty}>Qty</Text>);
+        // list.push(<Text style={styles.qty}>Qty</Text>);
         list.push(<Text style={styles.hargareimbursement}>Harga</Text>);
         if(showDiskon){
             list.push(<Text style={styles.discreimbursement}>Disc</Text>);

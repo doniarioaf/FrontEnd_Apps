@@ -72,17 +72,17 @@ const GenerateInvoice = ({ valuedata }) => (
         <Text >{'Ref. No. : '}</Text>
         <Text >{valuedata != null?valuedata.nobl:''}</Text>        
         </View>
-
+            
         <View style={styles.deliveredToContainer}>
-        <Text >{'Delivered To : '}</Text>
-        <Text >{valuedata != null?valuedata.deliveredto:''}</Text>        
+        <Text >{valuedata != null?(valuedata.idinvoicetype == 'JASA'?'Delivered To : ':''):''}</Text>
+        <Text >{valuedata != null?(valuedata.idinvoicetype == 'JASA'?valuedata.deliveredto:''):''}</Text>        
         </View>
 
         <View style={styles.deliveredDateContainer}>
-        <Text >{'Delivered Date : '}</Text>
-        <Text >{valuedata != null?valuedata.deliverydate:''}</Text>        
+        <Text >{valuedata != null?(valuedata.idinvoicetype == 'JASA'?'Delivered Date : ':''):''}</Text>
+        <Text >{valuedata != null?(valuedata.idinvoicetype == 'JASA'?valuedata.deliverydate:''):''}</Text>        
         </View>
-
+        
         <View style={styles.deliveredDateContainer}>
         
         </View>

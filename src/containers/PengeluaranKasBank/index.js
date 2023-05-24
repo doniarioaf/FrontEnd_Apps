@@ -24,9 +24,13 @@ const MenuIndex = () => {
         // {name: 'code', title: i18n.t('Code')},
         {name: 'nodocument', title: i18n.t('label_NO_DOCUMENT')},
         {name: 'paymentto', title: i18n.t('Payment To')},
+        {name: 'nodocumentwo', title: i18n.t('label_NO_DOCUMENT')+' WO'},
+        {name: 'noaju', title: i18n.t('No AJU')},
         {name: 'paymentdate', title: i18n.t('Payment Date')},
     ]);
-    const [tableColumnExtensions] = useState([]);
+    const [tableColumnExtensions] = useState([
+        {columnName: 'paymentto', width:'300'},
+    ]);
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
@@ -58,6 +62,8 @@ const MenuIndex = () => {
                     'id': el.id,
                     // 'code':el.code?el.code:'',
                     'nodocument': el.nodocument ?el.nodocument:'',
+                    'nodocumentwo': el.nodocumentWO ?el.nodocumentWO:'',
+                    'noaju': el.noAjuWO ?el.noAjuWO:'',
                     'paymentto':getPaymentToName(el),
                     'paymentdate':el.paymentdate?moment (new Date(el.paymentdate)).format(formatdate):''
                 }

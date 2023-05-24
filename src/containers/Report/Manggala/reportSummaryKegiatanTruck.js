@@ -16,7 +16,7 @@ import { DatePicker}      from 'react-widgets';
 // import { listTypeReport } from '../../shared/globalFunc';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { MenuReportSummaryKegiatanTruck } from '../../shared/permissionMenu';
-import { formatdate } from '../../shared/constantValue';
+import { formatdate,months } from '../../shared/constantValue';
 import * as pathmenu           from '../../shared/pathMenu';
 import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
@@ -39,6 +39,9 @@ export default function ReportSummaryKegiatanTruck(props) {
 
     const [ListSupir, setListSupir] = useState([]);
     const [SelSupir, setSelSupir] = useState('');
+
+    const [ListMonth] = useState(months);
+    const [SelMonth, SetSelMonth] = useState(-1);//useState(isNaN(moment(new Date()).format('M'))?'':parseInt(moment(new Date()).format('M')));
 
     useEffect(() => {
         setLoading(true);
@@ -81,8 +84,15 @@ export default function ReportSummaryKegiatanTruck(props) {
             let idasset = SelAssetKepala == 'ALL'?0:SelAssetKepala;
             let idemp = SelSupir == 'ALL'?0:SelSupir;
             setLoading(true);
-            let startDate = moment(start).toDate().getTime();//moment(start).format('YYYY-MM-DD');
-            let thruDate = moment(end).toDate().getTime();//moment(end).format('YYYY-MM-DD');
+
+            // let year = moment(new Date()).format('yy');
+            // let month = SelMonth - 1;
+            let startDate = moment(start).toDate().getTime();//moment(new Date(year, month, 1)).toDate().getTime();//moment(start).format('YYYY-MM-DD');
+            let thruDate = moment(end).toDate().getTime();//moment(new Date(year, month + 1, 0)).toDate().getTime();//moment(end).format('YYYY-MM-DD');
+            // console.log('year ',year);
+            // console.log('Start ',moment(new Date(year, month, 1)).format('YYYY-MM-DD'));
+            // console.log('End ',moment(new Date(year, month + 1, 0)).format('YYYY-MM-DD'));
+            
             let typereport = output; 
             let pathURL = '/manggala/summarykegiatantruk?from='+startDate+'&thru='+thruDate+'&type='+typereport+'&idasset='+idasset+'&idsupir='+idemp;
             if(output == 'XLSX'){
@@ -140,6 +150,25 @@ export default function ReportSummaryKegiatanTruck(props) {
         // setEnd(moment(data, "DD MMMM YYYY").toDate())
     }
 
+    const handleChangeMonth = (data) =>{
+        let id = data?.value ? data.value : '';
+        SetSelMonth(id);
+
+        if(id > 0){
+            let year = moment(new Date()).format('yy');
+            let month = id - 1;
+
+            let startDate = moment(new Date(year, month, 1)).toDate();
+            let thruDate = moment(new Date(year, month + 1, 0)).toDate();
+
+            setStart(startDate);
+            setEnd(thruDate);
+        }else{
+            setStart(new Date());
+            setEnd(new Date());
+        }
+    }
+
     const errorHandler = (data) => {
         setLoading(false);
           Swal.fire({
@@ -156,7 +185,8 @@ export default function ReportSummaryKegiatanTruck(props) {
                 startdate:start !== null ? moment(start, formatdate).toDate() : new Date(),
                 enddate:end !== null ? moment(end, formatdate).toDate(): new Date(),
                 idasset:SelAssetKepala,
-                idemp:SelSupir
+                idemp:SelSupir,
+                month:SelMonth !== -1?SelMonth:-1//isNaN(moment(new Date()).format('M'))?'':parseInt(moment(new Date()).format('M')),
             }
         }
         validate={values => {
@@ -186,6 +216,28 @@ export default function ReportSummaryKegiatanTruck(props) {
                             <ContentHeading history={history} removehistorylink={true} link={pathmenu.reportLabaRugi} label={'Report Summary Kegiatan Truck'} labeldefault={'Report Summary Kegiatan Truck'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
+                            <label className="mt-3 form-label required" htmlFor="month">
+                                    {i18n.t('Bulan')}
+                            </label>
+                            <DropdownList
+                                className={
+                                    touched.month && errors.month
+                                        ? "input-error" : ""
+                                }
+                                name="month"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeMonth(val)}
+                                // onChange={val => setFieldValue("month", val?.value ? val.value : '')}
+                                // onBlur={val => setFieldTouched("identityCountryCodeValue", val?.value ? val.value : '')}
+                                data={ListMonth}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.month}
+                            />
                             <label className="mt-3 form-label required" htmlFor="startdate">
                                 {i18n.t('label_FROM_DATE')}
                             </label>

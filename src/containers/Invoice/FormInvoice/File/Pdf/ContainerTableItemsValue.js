@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
         borderRightWidth: 0,
     },
     reimbursement: {
-        width: '30%',
+        width: '40%',
         textAlign: 'left',
         paddingLeft:'4px',
         borderRightColor: borderColor,
@@ -274,7 +274,7 @@ const setItems = (items) =>{
                 let det = items.detailsprice[i];
                 rowItem.push(<Text style={styles.no}>{no}</Text>);
                 rowItem.push(<Text style={styles.reimbursement}>{det.invoicetypename}</Text>);
-                rowItem.push(<Text style={styles.qty}>{det.qty}</Text>);
+                // rowItem.push(<Text style={styles.qty}>{det.qty}</Text>);
                 rowItem.push(<Text style={styles.hargareimbursement}>{det.price?numToMoney(parseFloat(det.price)):0}</Text>);
                 if(showDiskon){
                     rowItem.push(<Text style={styleValueDiskon(styles.discreimbursement,(det.diskon?checkDiskon(det.diskon):'0'))}>{det.diskon?checkDiskon(det.diskon):'0'}</Text>);
@@ -286,43 +286,43 @@ const setItems = (items) =>{
                 no++;
             }
 
-            let rowItem = [];
-            no++;
-            rowItem.push(<Text style={styles.no}>{''}</Text>);
-            rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
-            rowItem.push(<Text style={styles.qty}>{''}</Text>);
-            if(showDiskon){
-                rowItem.push(<Text style={styles.discreimbursement}>{''}</Text>);
-            }
-            rowItem.push(<Text style={styles.hargareimbursement}>{'Sub Total'}</Text>);
-            rowItem.push(<Text style={styles.subtotalreimbursement}>{numToMoney(gross)}</Text>);
-            rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+            // let rowItem = [];
+            // no++;
+            // rowItem.push(<Text style={styles.no}>{''}</Text>);
+            // rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
+            // rowItem.push(<Text style={styles.qty}>{''}</Text>);
+            // if(showDiskon){
+            //     rowItem.push(<Text style={styles.discreimbursement}>{''}</Text>);
+            // }
+            // rowItem.push(<Text style={styles.hargareimbursement}>{'Sub Total'}</Text>);
+            // rowItem.push(<Text style={styles.subtotalreimbursement}>{numToMoney(gross)}</Text>);
+            // rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
 
-            if(items.diskonnota){
-            rowItem = [];
-            no++;
-            rowItem.push(<Text style={styles.no}>{''}</Text>);
-            rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
-            rowItem.push(<Text style={styles.qty}>{''}</Text>);
-            if(showDiskon){
-                rowItem.push(<Text style={styles.discreimbursement}>{''}</Text>);
-            }
-            rowItem.push(<Text style={styles.hargareimbursement}>{'Diskon Nota'}</Text>);
-            rowItem.push(<Text style={styleValueDiskon(styles.subtotalreimbursement,(items.diskonnota?checkDiskon(items.diskonnota):'0')) }>{items.diskonnota?checkDiskon(items.diskonnota):''}</Text>);
-            rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
-            }
+            // if(items.diskonnota){
+            // rowItem = [];
+            // no++;
+            // rowItem.push(<Text style={styles.no}>{''}</Text>);
+            // rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
+            // rowItem.push(<Text style={styles.qty}>{''}</Text>);
+            // if(showDiskon){
+            //     rowItem.push(<Text style={styles.discreimbursement}>{''}</Text>);
+            // }
+            // rowItem.push(<Text style={styles.hargareimbursement}>{'Diskon Nota'}</Text>);
+            // rowItem.push(<Text style={styleValueDiskon(styles.subtotalreimbursement,(items.diskonnota?checkDiskon(items.diskonnota):'0')) }>{items.diskonnota?checkDiskon(items.diskonnota):''}</Text>);
+            // rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+            // }
 
-            rowItem = [];
-            no++;
-            rowItem.push(<Text style={styles.no}>{''}</Text>);
-            rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
-            rowItem.push(<Text style={styles.qty}>{''}</Text>);
-            if(showDiskon){
-                rowItem.push(<Text style={styles.discreimbursement}>{''}</Text>);
-            }
-            rowItem.push(<Text style={styles.hargareimbursement}>{'Total'}</Text>);
-            rowItem.push(<Text style={styles.subtotalreimbursement}>{items.totalinvoice?numToMoney(parseFloat(items.totalinvoice)):0}</Text>);
-            rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+            // rowItem = [];
+            // no++;
+            // rowItem.push(<Text style={styles.no}>{''}</Text>);
+            // rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
+            // rowItem.push(<Text style={styles.qty}>{''}</Text>);
+            // if(showDiskon){
+            //     rowItem.push(<Text style={styles.discreimbursement}>{''}</Text>);
+            // }
+            // rowItem.push(<Text style={styles.hargareimbursement}>{'Total'}</Text>);
+            // rowItem.push(<Text style={styles.subtotalreimbursement}>{items.totalinvoice?numToMoney(parseFloat(items.totalinvoice)):0}</Text>);
+            // rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
 
             tagihan = items.totalinvoice?parseFloat(items.totalinvoice):0;
             if(tanggalDp !== '' && jumlahDp !== ''){
@@ -332,7 +332,7 @@ const setItems = (items) =>{
                 rowItem.push(<Text style={styles.no}>{''}</Text>);
                 rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
                 if(showDiskon){
-                    rowItem.push(<Text style={styles.qty}>{''}</Text>);
+                    // rowItem.push(<Text style={styles.qty}>{''}</Text>);
                     rowItem.push(<Text style={styles.discreimbursement}>{'DP'}</Text>);
                 }else{
                     rowItem.push(<Text style={styles.qty}>{'DP'}</Text>);
@@ -343,11 +343,11 @@ const setItems = (items) =>{
                 rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
             }
 
-            rowItem = [];
+            let rowItem = [];
             no++;
             rowItem.push(<Text style={styles.no}>{''}</Text>);
             rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
-            rowItem.push(<Text style={styles.qty}>{''}</Text>);
+            // rowItem.push(<Text style={styles.qty}>{''}</Text>);
             if(showDiskon){
                 rowItem.push(<Text style={styles.discreimbursement}>{''}</Text>);
             }
