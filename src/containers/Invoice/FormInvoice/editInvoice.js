@@ -109,7 +109,7 @@ export default function EditForm(props) {
             let det = data.data;
             let template = det.template;
             setDataTemplate(data.data);
-
+            setInputJalur(det.jalurwo);
             setInputJalurName(det.jalurname);
             setInputNoDocument(det.nodocument);
             setInputTanggal(det.tanggal?moment(new Date(det.tanggal), formatdate).toDate():null);
@@ -423,7 +423,7 @@ export default function EditForm(props) {
         let dataval = data?.dataval ? data.dataval : '';
         
         setSelPriceList(id);
-        setInputListItem([]);
+        // setInputListItem([]);
         let listitem = [];
         setIsHideColumnWarehouse(false);
         if(SelInvoiceType == 'REIMBURSEMENT'){
@@ -443,10 +443,11 @@ export default function EditForm(props) {
                 obj.diskon = '0';
                 obj.subtotal = det.amount;
                 obj.idpengeluarankasbank = det.idpengeluarankasbank;
-                listitem.push(obj);
+                // listitem.push(obj);
             }
-            calculateTotalInvoice(listitem,InputDiskonNota);
+            // calculateTotalInvoice(listitem,InputDiskonNota);
         }else{
+            setInputListItem([]);
             if(dataval.details){
                 for(let i=0; i < dataval.details.length; i++){
                     let det = dataval.details[i];
@@ -590,13 +591,14 @@ export default function EditForm(props) {
             obj.deliveredto = InputDeliveredTo;
             obj.deliverydate = moment(InputDeliveredDate).toDate().getTime();
             obj.idwo = SelWO !== ''?SelWO:null;
-            obj.idsuratjalan = SelSJ !== ''?SelSJ:null;
             obj.idinvoicetype = SelInvoiceType;
             obj.totalinvoice = InputTotalInvoice !== ''?new String(InputTotalInvoice).replaceAll('.','').replaceAll(',','.'):0;
-            obj.diskonnota = InputDiskonNota !== ''?new String(InputDiskonNota).replaceAll('.','').replaceAll(',','.'):0;
-            obj.ppn = InputPPN !== ''?new String(InputPPN).replaceAll('.','').replaceAll(',','.'):null;
             obj.isactive = true;
 
+            obj.idsuratjalan = SelSJ !== '' && SelInvoiceType !== 'DP'?SelSJ:null;
+            obj.diskonnota = InputDiskonNota !== '' && SelInvoiceType !== 'DP'?new String(InputDiskonNota).replaceAll('.','').replaceAll(',','.'):0;
+            obj.ppn = InputPPN !== '' && SelInvoiceType !== 'DP'?new String(InputPPN).replaceAll('.','').replaceAll(',','.'):null;
+            
             let listDetailsPrice = [];
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
@@ -606,7 +608,7 @@ export default function EditForm(props) {
                     objDetail.idwarehouse = det.idwarehouse;
                     objDetail.idinvoicetype = det.idinvoicetype;
                     objDetail.jalur = det.jalur;
-                    objDetail.price = det.amount;
+                    objDetail.price = new String(det.amount).replaceAll('.','').replaceAll(',','.');
                     objDetail.ismandatory = det.ismandatory;
                     objDetail.idpricelist = det.idpricelist;
                     objDetail.qty = det.qty;
@@ -617,7 +619,7 @@ export default function EditForm(props) {
                 }
             }
 
-            obj.detailsprice = listDetailsPrice;
+            obj.detailsprice = SelInvoiceType == 'DP'?[]:listDetailsPrice;
             dispatch(actions.submitEditInvoice('/'+id,obj,succesHandlerSubmit, errorHandler));
         }
 
@@ -704,13 +706,15 @@ export default function EditForm(props) {
         if(flag){
             setLoading(true);
             if(SelInvoiceType == 'REIMBURSEMENT'){
+                setInputListItem([]);
+                setIsHideColumnWarehouse(false);
                 dispatch(actions.getInvoiceData('/searchpengeluaran/'+SelWO,successHandlerPengeluaran, errorHandler));
             }else{
                 let obj = new Object();
                 obj.idcustomer = InputCustomerID;
                 obj.idwarehouse = InputWarehouseID == ''?0:InputWarehouseID;
                 obj.idinvoicetype = SelInvoiceType;
-                obj.jalur = InputJalur;
+                obj.jalur = new String(InputJalur).toUpperCase();
                 dispatch(actions.submitAddInvoice('/searchpricelist',obj,successHandlerProses, errorHandler));
             }
         }
@@ -718,6 +722,7 @@ export default function EditForm(props) {
 
     const successHandlerPengeluaran = (data) =>{
         //let filterid = RowsBranch.filter(output => output.id == SelBranch);
+        setIsHideColumnWarehouse(true);
         if(data.data){
             setListPriceList(data.data.headers.reduce((obj, el) => (
                 [...obj, {
@@ -726,6 +731,30 @@ export default function EditForm(props) {
                     dataval:data.data?.details?data.data.details.filter(output => output.idpengeluarankasbank == el.id):[]
                 }]
             ), []));
+
+            if(data.data.details){
+                let listitem = [];
+                let dataval = data.data.details;
+                for(let i=0; i < dataval.length; i++){
+                    let det = dataval[i];
+                    let obj = new Object();
+                    obj.idpricelist = 0;
+                    obj.idwarehouse = 0;
+                    obj.warehousename = '';
+                    obj.idinvoicetype = det.idinvoiceitem;
+                    obj.invoicetype = det.invoiceitemName;
+                    obj.amount = det.amount;
+                    obj.ismandatory = 'N';// == 'Y'?'Yes':'No';
+                    obj.jalur = '';// == 'MERAH'?'Merah':'Hijau';
+                    obj.qty = '1';
+                    obj.diskon = '0';
+                    obj.subtotal = det.amount;
+                    obj.idpengeluarankasbank = det.idpengeluarankasbank;
+                    listitem.push(obj);
+                }
+                calculateTotalInvoice(listitem,InputDiskonNota);
+                setInputListItem(listitem);
+            }
         }
         setLoading(false);
     }
@@ -740,6 +769,78 @@ export default function EditForm(props) {
                     dataval:el
                 }]
             ), []));
+            
+            if(SelPriceList !== ''){
+                let arrItems = [];//[...InputListItem];
+                let list = data.data.filter(output => output.id == SelPriceList);
+                // console.log('data.data ',data.data);
+                // console.log('SelPriceList ',SelPriceList);
+                // console.log('SelPriceList ',list);
+                if(list.length > 0){
+                for(let i=0; i < list[0].details.length; i++){
+                    let det = list[0].details[i];
+                    // console.log('listitems det ',det);
+                    // let listitems = InputListItem.filter(output => 
+                    //     output.idpricelist == SelPriceList &&
+                    //     output.idwarehouse == det.idwarehouse &&
+                    //     output.idinvoicetype == det.idinvoicetype &&
+                    //     output.ismandatory == det.ismandatory &&
+                    //     output.jalur == det.jalur
+                    //     );
+                    let flag = true;
+                    // if(listitems.length > 0){
+                    //     let qtyItems = listitems[0].qty;
+                    //     if(qtyItems !== ''){
+                    //         qtyItems = new String(qtyItems).replaceAll('.','');
+                    //         if(!isNaN(qtyItems)){
+                    //             if(parseInt(qtyItems) == 0){
+                    //                 flag = true;
+                    //             }
+                    //         }
+                    //     }else{
+                    //         flag = true;
+                    //     }
+                    // }else{
+                    //     flag = true;
+                    // }
+                    
+                    if(flag){
+                            let obj = new Object();
+                            obj.idpricelist = det.idpricelist
+                            obj.idwarehouse = det.idwarehouse;
+                            obj.warehousename = det.warehouseName;
+                            obj.idinvoicetype = det.idinvoicetype;
+                            obj.invoicetype = det.invoicetypename;
+                            obj.amount = det.price;
+                            obj.ismandatory = det.ismandatory;// == 'Y'?'Yes':'No';
+                            obj.jalur = det.jalur;// == 'MERAH'?'Merah':'Hijau';
+                            obj.qty = '0';
+                            obj.diskon = '0';
+                            obj.subtotal = '0';
+                            obj.idpengeluarankasbank = 0;
+                            arrItems.push(obj);
+                    }
+                }
+            }
+                setInputListItem(arrItems);
+            }
+            // for(let i=0; i < dataval.details.length; i++){
+            //     let det = dataval.details[i];
+            //     let obj = new Object();
+            //     obj.idpricelist = det.idpricelist
+            //     obj.idwarehouse = det.idwarehouse;
+            //     obj.warehousename = det.warehouseName;
+            //     obj.idinvoicetype = det.idinvoicetype;
+            //     obj.invoicetype = det.invoicetypename;
+            //     obj.amount = det.price;
+            //     obj.ismandatory = det.ismandatory;// == 'Y'?'Yes':'No';
+            //     obj.jalur = det.jalur;// == 'MERAH'?'Merah':'Hijau';
+            //     obj.qty = '0';
+            //     obj.diskon = '0';
+            //     obj.subtotal = '0';
+            //     obj.idpengeluarankasbank = 0;
+            //     listitem.push(obj);
+            // }
         }
         setLoading(false);
     }
@@ -775,6 +876,14 @@ export default function EditForm(props) {
                 }
                 list[index]['subtotal'] = calculateSubTotal(list[index]['amount'],list[index]['diskon'],value);
             }
+        }else if(name == 'amount'){
+            let flagReg = inputJustNumberAndCommaDot(value);
+            if(flagReg){
+                valTemp = new String(valTemp).replaceAll('.','').replaceAll(',','.');
+                valTemp = formatMoney(value);
+                list[index][name] = valTemp;
+            }
+            list[index]['subtotal'] = calculateSubTotal(valTemp,list[index]['diskon'],list[index]['qty']);
         }else{
             // const list = [...InputListItem];
             list[index][name] = valTemp;
@@ -954,6 +1063,30 @@ export default function EditForm(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputDeliveredTo}</div> */}
 
+                            <label className="mt-3 form-label required" htmlFor="wo">
+                                {i18n.t('Work Order')}
+                            </label>
+
+                                <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="wo"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeWo(val)}
+                                    onBlur={val => setFieldTouched("wo", val?.value ? val.value : '')}
+                                    data={ListWO}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.wo}
+                                />
+
+
                             <label className="mt-3 form-label required" htmlFor="refno">
                                 {i18n.t('Ref. No')}
                                 {/* <span style={{color:'red'}}>*</span> */}
@@ -1038,34 +1171,12 @@ export default function EditForm(props) {
                                     textField={'label'}
                                     valueField={'value'}
                                     // style={{width: '25%'}}
-                                    // disabled={values.isdisabledcountry}
+                                    disabled={true}
                                     value={values.invtype}
                                 />
                                 <div className="invalid-feedback-custom">{ErrSelInvoiceType}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="wo">
-                                {i18n.t('Work Order')}
-                            </label>
-
-                                <DropdownList
-                                    // className={
-                                    //     touched.branch && errors.branch
-                                    //         ? "input-error" : ""
-                                    // }
-                                    name="wo"
-                                    filter='contains'
-                                    placeholder={i18n.t('select.SELECT_OPTION')}
-                                    
-                                    onChange={val => handleChangeWo(val)}
-                                    onBlur={val => setFieldTouched("wo", val?.value ? val.value : '')}
-                                    data={ListWO}
-                                    textField={'label'}
-                                    valueField={'value'}
-                                    // style={{width: '25%'}}
-                                    // disabled={values.isdisabledcountry}
-                                    value={values.wo}
-                                />
-
+                                <div hidden={values.invtype == 'DP'}>
                             <label className="mt-3 form-label required" htmlFor="jalurname">
                                 {i18n.t('Penjaluran')}
                             </label>
@@ -1143,9 +1254,10 @@ export default function EditForm(props) {
                                 value={values.discnota}
                                 disabled={SelInvoiceType == 'REIMBURSEMENT'}
                             />
+                            </div>
 
                             <label className="mt-3 form-label required" htmlFor="total">
-                                {i18n.t('Total Invoice')}
+                                {i18n.t(values.invtype == 'DP'?'DP':'Total Invoice')}
                             </label>
                             <Input
                                 name="total"
@@ -1167,6 +1279,7 @@ export default function EditForm(props) {
                             </div>
                             </div>
 
+                            <div hidden={values.invtype == 'DP'}>
                             <div className="invalid-feedback-custom">{ErrItems}</div>
                             <div className="invalid-feedback-custom">{ErrQty}</div>
                             <table>
@@ -1269,13 +1382,13 @@ export default function EditForm(props) {
                                                         // }
                                                         type="text"
                                                         id="amount"
-                                                        // onChange={val => handleInputChange(val,i)}
+                                                        onChange={val => handleInputChange(val,i)}
                                                         onBlur={handleBlur}
                                                         // placeholder={i18n.t('label_AMOUNT')}
                                                         // style={{width: '25%'}}
                                                         // value={values.amount}
-                                                        value={x.amount !== ''?numToMoney(parseFloat(x.amount)):'0'}
-                                                        disabled={true}
+                                                        value={x.amount !== ''?numToMoney(parseFloat(new String(x.amount).replaceAll('.',''))):'0'}
+                                                        disabled={false}
                                                     />
                                                     </td>
                                                     {/* <td>
@@ -1380,10 +1493,12 @@ export default function EditForm(props) {
                                         }
                                     </tbody>
                                 </table>
+                                
                             }
+                            
 
                         {
-                                        <table id="tablegrid">
+                                        <table id="tablegrid" hidden={SelInvoiceType == 'REIMBURSEMENT'} >
                                             <tr>
                                                 <th>{i18n.t('No Surat Jalan')}</th>
                                                 <th>{i18n.t('Gudang')}</th>
@@ -1408,7 +1523,7 @@ export default function EditForm(props) {
                                             </tbody>
                                         </table>
                                     }
-
+                                </div>
                             </ContentWrapper>
                             {loading && <Loading/>}
                             <div className="row justify-content-center" style={{marginTop:'-30px',marginBottom:'20px'}}>

@@ -19,6 +19,7 @@ import "react-widgets/dist/css/react-widgets.css";
 const DialogStatus = props => {
     const [ListStatus, SetListStatus] = useState([]);
     const [SelStatus, SetSelStatus] = useState('');
+    const [InDBStatus, SetInDBStatus] = useState('');
 
     const [ListChooseYesNo, SetListChooseYesNo] = useState([]);
 
@@ -132,7 +133,9 @@ const DialogStatus = props => {
         ), []));
 
         SetSelAsset(props.detail.idasset != 0?props.detail.idasset:'');
-        SetSelStatus(props.status);
+        let status = props.status?props.status:'';
+        SetSelStatus(status);
+        SetInDBStatus(status);
         SetInputNoSuratJalan(props.detail?.nodocument?props.detail.nodocument:'');
         SetInputNoBL(props.detail?.noblWO?props.detail.noblWO:'');
         SetInputNoContainer(props.detail?.nocantainer?props.detail.nocantainer:'');
@@ -189,24 +192,38 @@ const DialogStatus = props => {
         if(SelStatus !== '' && SelKepemilikanMobil !== '' && flag){
             props.flagloadingsend(true);
             var obj = new Object();
-            obj.status = SelStatus;
             obj.kepemilikanmobil = SelKepemilikanMobil;
+            let flagIsClose = false;
             if(SelKepemilikanMobil == 'MOBILSENDIRI' ){
                 obj.idvendormobil = 0;
                 obj.idemployee_supir = SelSupir;
                 obj.idasset = SelAsset;
+                if(SelSupir !== '' && SelAsset !== ''){
+                    flagIsClose = true;
+                }
             }else if(SelKepemilikanMobil == 'MOBILLUAR' ){
                 obj.idvendormobil = SelVendor;
                 obj.idemployee_supir = 0;
                 obj.idasset = 0;
+
+                if(SelVendor !== ''){
+                    flagIsClose = true;
+                }
             }
             
             obj.lembur = SelIsLembur;
+            if(flagIsClose && SelIsLembur !== ''){ 
+            }else{
+                flagIsClose = false;
+            }
             if(InputTanggalKembali != null && InputTanggalKembali != undefined && InputTanggalKembali != ''){
                 obj.tanggalkembali = moment(InputTanggalKembali).toDate().getTime();
+                
             }else{
                 obj.tanggalkembali = null;
+                flagIsClose = false;
             }
+            obj.status = flagIsClose && InDBStatus == '' ?'CLOSE_SJ':SelStatus;
             dispatch(actions.submitAddSuratJalan('/status/'+props.idsuratjalan,obj,props.handlesubmit, props.errorhandler));
         }
     }

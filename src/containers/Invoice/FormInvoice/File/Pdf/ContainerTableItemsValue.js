@@ -110,6 +110,14 @@ const checkDiskon = (diskon) =>{
 const setItems = (items) =>{
     let tanggalDp = '';
     let jumlahDp = '';
+    // if(items.summarypenerimaanDP){
+    //     if(!isNaN(items.summarypenerimaanDP)){
+    //         let summarypenerimaanDP = parseFloat(items.summarypenerimaanDP)
+    //         if(summarypenerimaanDP > 0){
+    //             jumlahDp = items.summarypenerimaanDP;
+    //         }   
+    //     }
+    // }
     if(items.detailspenerimaan){
         let filterArrDet = items.detailspenerimaan.filter(output => output.isdownpayment == 'Y');
         if(filterArrDet.length > 0){
@@ -223,7 +231,7 @@ const setItems = (items) =>{
             
 
             tagihan = items.totalinvoice?parseFloat(items.totalinvoice):0;
-            if(tanggalDp !== '' && jumlahDp !== ''){
+            if(jumlahDp !== ''){
                 tagihan = tagihan - parseFloat(jumlahDp);
                 rowItem = [];
                 no++;
@@ -234,6 +242,7 @@ const setItems = (items) =>{
                     rowItem.push(<Text style={styles.qty}>{''}</Text>);
                     rowItem.push(<Text style={styles.discjasa}>{'DP'}</Text>);
                 }else{
+                    // rowItem.push(<Text style={styles.qty}>{''}</Text>);
                     rowItem.push(<Text style={styles.qty}>{'DP'}</Text>);
                 }
                 rowItem.push(<Text style={styles.hargajasa}>{tanggalDp}</Text>);
@@ -255,7 +264,7 @@ const setItems = (items) =>{
         }
         
         return rows;
-    }else{
+    }else if(items.idinvoicetype == 'REIMBURSEMENT'){
         let rows = [];
         let tagihan = 0;
         if(items.detailsprice){
@@ -354,8 +363,27 @@ const setItems = (items) =>{
             rowItem.push(<Text style={styles.hargareimbursement}>{'Tagihan'}</Text>);
             rowItem.push(<Text style={styles.subtotalreimbursement}>{numToMoney(parseFloat(tagihan))}</Text>);
             rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+            return rows;
         }
         
+        
+    }else if(items.idinvoicetype == 'DP'){
+        let rows = [];
+        let rowItem = [];
+        rowItem.push(<Text style={styles.no}>{'1'}</Text>);
+        rowItem.push(<Text style={styles.reimbursement}>{'DP (Down Payment)'}</Text>);
+        rowItem.push(<Text style={styles.hargareimbursement}>{items.totalinvoice?numToMoney(parseFloat(items.totalinvoice)):0}</Text>);
+        rowItem.push(<Text style={styles.subtotalreimbursement}>{items.totalinvoice?numToMoney(parseFloat(items.totalinvoice)):0}</Text>);
+
+        rows.push(<View style={styles.row} key={'1'}>{rowItem}</View>);
+
+        rowItem = [];
+        rowItem.push(<Text style={styles.no}>{''}</Text>);
+        rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
+        rowItem.push(<Text style={styles.hargareimbursement}>{'Tagihan'}</Text>);
+        rowItem.push(<Text style={styles.subtotalreimbursement}>{items.totalinvoice?numToMoney(parseFloat(items.totalinvoice)):0}</Text>);
+        rows.push(<View style={styles.row} key={'1'}>{rowItem}</View>);
+
         return rows;
     }
 }

@@ -92,6 +92,8 @@ export default function AddForm(props) {
     const [ListAssetSparePart, setListAssetSparePart] = useState([]);
     const [ListDataAssetSparePart, setListDataAssetSparePart] = useState([]);
 
+    const [InputListBank, setInputListBank] = useState([{ norek:"",atasnama: "",bank:""}]);
+
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getPengeluaranKasBankData('/template',successHandlerTemplate, errorHandler));
@@ -218,6 +220,7 @@ export default function AddForm(props) {
         setSelPaymentTo(id);
         setInputPaymentTo('');
         setInputPaymentToName('');
+        setInputListBank([{ norek:"",atasnama: "",bank:""}]);
     }
 
     const handleShowQuickSearch = () =>{
@@ -637,15 +640,27 @@ export default function AddForm(props) {
     const handleQuickSeacrh = (data) =>{
         setShowQuickSearch(false);
         setInputPaymentTo(data.id);
+        setInputListBank([{ norek:"",atasnama: "",bank:""}]);
         if(SelPaymentTo == 'EMPLOYEE'){
             setInputPaymentToName(data.nama);
+            setLoading(true);
+            dispatch(actions.getPengeluaranKasBankData('/listbankemployee/'+data.id,successHandlerListBankVendor, errorHandler));
         }else if(SelPaymentTo == 'CUSTOMER'){
             setInputPaymentToName(data.customername);
         }else if(SelPaymentTo == 'VENDOR'){
             setInputPaymentToName(data.nama);
+            setLoading(true);
+            dispatch(actions.getPengeluaranKasBankData('/listbankvendor/'+data.id,successHandlerListBankVendor, errorHandler));
         }
         // setInputCustomer(data.customername);
         // setInputCustomerID(data.id);
+    }
+
+    const successHandlerListBankVendor = (data) =>{
+        if(data.data.length > 0){
+            setInputListBank(data.data);
+        }
+        setLoading(false);
     }
     
     const handleRemoveClick = index => {
@@ -893,6 +908,90 @@ export default function AddForm(props) {
                                 </div>
 
                             </div>
+
+                            <div className="mt-2 col-lg-6 ft-detail mb-5" hidden={!(SelPaymentTo == 'EMPLOYEE' || SelPaymentTo == 'VENDOR')}>
+                            <div style={{marginTop:'0px'}}><h3>{i18n.t('Bank')}</h3></div>
+                                    {
+                                        InputListBank.length == 0?'':
+                                        <table id="tablegrid">
+                                            <tr>
+                                                <th>{i18n.t('Bank')}</th>
+                                                <th>{i18n.t('label_ACCOUNT_NAME')}</th>
+                                                <th>{i18n.t('label_NUMBER_ACCOUNT')}</th>
+                                            </tr>
+                                            <tbody>
+                                                {
+                                                    InputListBank.map((x, i) => {
+                                                        return (
+                                                            <tr>
+                                                                <td>
+                                                        <Input
+                                                            name="bank"
+                                                            // className={
+                                                            //     touched.amount && errors.amount
+                                                            //         ? "w-50 input-error"
+                                                            //         : "w-50"
+                                                            // }
+                                                            type="text"
+                                                            id="bank"
+                                                            // onChange={val => handleInputChangeBank(val,i)}
+                                                            onBlur={handleBlur}
+                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                            // style={{width: '25%'}}
+                                                            // value={values.amount}
+                                                            value={x.bank}
+                                                            disabled={true}
+                                                        />
+                                                        </td>
+                                                        
+                                                        <td>
+                                                        <Input
+                                                            name="atasnama"
+                                                            // className={
+                                                            //     touched.amount && errors.amount
+                                                            //         ? "w-50 input-error"
+                                                            //         : "w-50"
+                                                            // }
+                                                            type="text"
+                                                            id="atasnama"
+                                                            // onChange={val => handleInputChangeBank(val,i)}
+                                                            onBlur={handleBlur}
+                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                            // style={{width: '25%'}}
+                                                            // value={values.amount}
+                                                            value={x.atasnama}
+                                                            disabled={true}
+                                                        />
+                                                        </td>
+
+                                                        <td>
+                                                        <Input
+                                                            name="norek"
+                                                            // className={
+                                                            //     touched.amount && errors.amount
+                                                            //         ? "w-50 input-error"
+                                                            //         : "w-50"
+                                                            // }
+                                                            type="text"
+                                                            id="norek"
+                                                            // onChange={val => handleInputChangeBank(val,i)}
+                                                            onBlur={handleBlur}
+                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                            // style={{width: '25%'}}
+                                                            // value={values.amount}
+                                                            value={x.norek}
+                                                            disabled={true}
+                                                        />
+                                                        </td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                            </div>
+
                             </div>
 
                             <div className="invalid-feedback-custom">{ErrItems}</div>

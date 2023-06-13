@@ -258,3 +258,15 @@ export const checkValuePDf = (data,valreturn) =>{
 
     return data;
 }
+
+export const invoiceTypeName = (data) =>{
+    if(data == 'JASA'){
+        return 'Jasa';
+    }else if(data == 'REIMBURSEMENT'){
+        return 'Reimbursement';
+    }else if(data == 'DP'){
+        return 'DP';
+    }
+
+    return data;
+}

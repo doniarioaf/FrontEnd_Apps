@@ -34,12 +34,19 @@ import React, {useState,
   import DialogUploadFile from './dialogUploadFile';
   import styled                       from "styled-components";
   import Dialog                       from '@material-ui/core/Dialog';
+  import DialogStatus from './statusDialog';
 
   const StyledDialog = styled(Dialog)`
     & > .MuiDialog-container > .MuiPaper-root {
         height: 500px;
     }
     `;
+
+const StyledDialogStatus = styled(Dialog)`
+& > .MuiDialog-container > .MuiPaper-root {
+    height: 350px;
+}
+`;
   const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
@@ -78,6 +85,8 @@ import React, {useState,
     const [tableColumnExtensions] = useState([]);
 
     const [ListSuratJalanWO, setListSuratJalanWO] = useState([]);
+
+    const [ShowStatus, setShowStatus] = useState(false);
 
     const id = props.match.params.id;
 
@@ -303,6 +312,21 @@ import React, {useState,
         setLoading(false);
     }
 
+    const succesHandlerSubmitChangeStatus = (data) => {
+        setLoading(false);
+        setShowStatus(false);
+        setLoadingSend(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(0);
+            }
+        })
+    }
+
     return (
         <ContentWrapper>
             <ContentHeading history={history} link={pathmenu.detailWorkOrder+'/'+id} label={'Detail Work Order'} labeldefault={'Detail Work Order'} />
@@ -353,6 +377,13 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('label_WO_NUMBER')}</span>
                             <strong className="col-md-7">
                                 {value.nodocument?value.nodocument:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_AJU_NUMBER')}</span>
+                            <strong className="col-md-7">
+                                {value.noaju?value.noaju:''}
                             </strong>
                             </div>
 
@@ -436,12 +467,7 @@ import React, {useState,
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_AJU_NUMBER')}</span>
-                            <strong className="col-md-7">
-                                {value.noaju?value.noaju:''}
-                            </strong>
-                            </div>
+                            
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('NOPEN')}</span>
@@ -628,6 +654,7 @@ import React, {useState,
                         :(<div>
                             <MenuItem hidden={value.status == 'CLOSE' || !isGetPermissions(editWorkOrder_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editWorkOrder+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={value.status == 'CLOSE' || !isGetPermissions(deleteWorkOrder_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editWorkOrder_Permission,'TRANSACTION')}  onClick={() => setShowStatus(true)}>{i18n.t('Update Status')}</MenuItem>
                             
                         </div>)
                         
@@ -662,6 +689,30 @@ import React, {useState,
                 />
                 {LoadingSend && <Loading/>}
             </StyledDialog>
+
+            <StyledDialogStatus
+                disableBackdropClick
+                disableEscapeKeyDown
+                maxWidth="sm"
+                fullWidth={true}
+                // style={{height: '100%'}}
+                open={ShowStatus}
+            >
+                {
+                    value.status?
+                    <DialogStatus
+                    showflag = {setShowStatus}
+                    flagloadingsend = {setLoadingSend}
+                    errorhandler = {errorHandler}
+                    idwo = {id}
+                    handlesubmit = {succesHandlerSubmitChangeStatus}
+                    status = {value.status}
+                    // getAutoDebitid= {getAutoDebitid}
+                />:''
+                }
+                
+                {LoadingSend && <Loading/>}
+            </StyledDialogStatus>
         </ContentWrapper>
     )
   }

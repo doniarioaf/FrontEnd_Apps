@@ -153,6 +153,8 @@ const DialogQuickSearch = props => {
                 obj.nodocument = InputSearchName;
                 obj.namacustomer = InputSearchName;
                 obj.idwo = props.idwo == ''?0:props.idwo;
+                obj.idpenerimaan = props.idpenerimaan ?props.idpenerimaan:0;
+                //idpenerimaan
                 obj.type = 'PENERIMAAN';
                 dispatch(actions.submitAddPenerimaanKasBank('/searchinvoice',obj,successHandleSearch, props.errorHandler));
             }else if(props.seacrhtype == 'PENERIMAANWO'){

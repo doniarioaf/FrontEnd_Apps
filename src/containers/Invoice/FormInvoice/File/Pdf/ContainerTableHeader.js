@@ -87,7 +87,7 @@ const setHeader = (param) =>{
             list.push(<Text style={styles.discjasa}>Disc</Text>);
         }
         list.push(<Text style={styles.subtotaljasa}>Subtotal</Text>);
-    }else{
+    }else if(param.type == 'REIMBURSEMENT'){
         list.push(<Text style={styles.no}>No</Text>);
         list.push(<Text style={styles.reimbursement}>Reimbursement / Dana Talangan</Text>);
         // list.push(<Text style={styles.qty}>Qty</Text>);
@@ -95,6 +95,11 @@ const setHeader = (param) =>{
         if(showDiskon){
             list.push(<Text style={styles.discreimbursement}>Disc</Text>);
         }
+        list.push(<Text style={styles.subtotalreimbursement}>Subtotal</Text>);
+    }else if(param.type == 'DP'){
+        list.push(<Text style={styles.no}>No</Text>);
+        list.push(<Text style={styles.reimbursement}>Jasa PPJK</Text>);
+        list.push(<Text style={styles.hargareimbursement}>Harga</Text>);
         list.push(<Text style={styles.subtotalreimbursement}>Subtotal</Text>);
     }
 

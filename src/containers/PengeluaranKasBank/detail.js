@@ -56,6 +56,7 @@ import React, {useState,
     const [isprint, setIsPrint] = useState(false);
 
     const [IsDisableBtn, setIsDisableBtn] = useState(false);
+    const [InputListBank, setInputListBank] = useState([{ norek:"",atasnama: "",bank:""}]);
 
     const id = props.match.params.id;
 
@@ -96,6 +97,12 @@ import React, {useState,
 
     function successHandler(data) {
         setValue(data.data);
+        let listBank = data.data.listBank;
+        if(listBank != null && listBank != undefined){
+            if(listBank.length > 0){
+                setInputListBank(listBank);
+            }
+        }
         setIsDisableBtn(data.data.disablededitordelete?true:false);
         let listitems = [];
         if(data.data.details){
@@ -367,7 +374,31 @@ import React, {useState,
             </div>
             </div>
             </CardBody>
-
+            {
+                <div hidden={value.paymentto?!(value.paymentto == 'VENDOR' || value.paymentto == 'EMPLOYEE'):true}>
+                    <div style={{marginTop:'0px'}}><h3>{i18n.t('Bank')+' ('+getPaymentToName(value)+')'}</h3></div>
+                    <table id="tablegrid">
+                    <tr>
+                        <th>{i18n.t('Bank')}</th>
+                        <th>{i18n.t('label_ACCOUNT_NAME')}</th>
+                        <th>{i18n.t('label_NUMBER_ACCOUNT')}</th>
+                    </tr>
+                    <tbody>
+                        {
+                            InputListBank.map((x, i) => {
+                                return (
+                                    <tr>
+                                        <td>{x.bank}</td>
+                                        <td>{x.atasnama}</td>
+                                        <td>{x.norek}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                    </table>
+                </div>
+            }
             {
                 <table id="tablegrid">
                     <tr>

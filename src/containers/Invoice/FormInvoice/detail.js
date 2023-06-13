@@ -310,7 +310,7 @@ import React, {useState,
                             </strong>
                             </div> */}
 
-                            <div className="row mt-3">
+                            <div className="row mt-3" hidden={value.idinvoicetype?value.idinvoicetype == 'REIMBURSEMENT':false}>
                             <span className="col-md-5">{i18n.t('Delivery Date')}</span>
                             <strong className="col-md-7">
                             {value.deliverydate?moment (new Date(value.deliverydate)).format(formatdate):''}
@@ -331,21 +331,21 @@ import React, {useState,
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            <div className="row mt-3" hidden={value.namainvoicetype?(value.namainvoicetype=='DP' || value.idinvoicetype == 'REIMBURSEMENT'):false}>
                             <span className="col-md-5">{i18n.t('Surat Jalan')}</span>
                             <strong className="col-md-7">
                             {value.noocumentsuratjalan?value.noocumentsuratjalan:''}
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            <div className="row mt-3" hidden={value.namainvoicetype?value.namainvoicetype=='DP':false}>
                             <span className="col-md-5">{i18n.t('PPN')}</span>
                             <strong className="col-md-7">
                             {value.ppn?numToMoney(parseFloat(value.ppn)):''}
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            <div className="row mt-3" hidden={value.namainvoicetype?value.namainvoicetype=='DP':false}>
                             <span className="col-md-5">{i18n.t('Diskon Nota')}</span>
                             <strong className="col-md-7">
                             {value.diskonnota?numToMoney(parseFloat(value.diskonnota)):''}
@@ -353,13 +353,13 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Total')}</span>
+                            <span className="col-md-5">{value.namainvoicetype?(value.namainvoicetype == 'DP'?'DP':'Total'):i18n.t('Total')}</span>
                             <strong className="col-md-7">
                             {value.totalinvoice?numToMoney(parseFloat(value.totalinvoice)):''}
                             </strong>
                             </div>
 
-                            <div className="row mt-3" hidden={value.idinvoicetype?(value.idinvoicetype == 'REIMBURSEMENT'?true:false):true}>
+                            <div className="row mt-3" hidden={value.idinvoicetype?(value.idinvoicetype == 'REIMBURSEMENT' || value.idinvoicetype == 'DP'?true:false):true}>
                             <span className="col-md-5">{i18n.t('Price List')}</span>
                             <strong className="col-md-7">
                             {value.detailsprice?(value.detailsprice.length > 0?value.detailsprice[0].nodocumentpricelist:''):''}
@@ -383,7 +383,7 @@ import React, {useState,
             </CardBody>
 
             {
-                <table id="tablegrid">
+                <table id="tablegrid" hidden={value.namainvoicetype?value.namainvoicetype=='DP':false}>
                     <tr>
                         <th hidden={IsHideColumnWarehouse}>{i18n.t('Warehouse')}</th>
                         <th>{i18n.t('Invoice Type')}</th>
@@ -419,7 +419,7 @@ import React, {useState,
             {/* //nosj , warehouse, nocontainer, tanggal, partai */}
 
             {
-                <table id="tablegrid">
+                <table id="tablegrid" hidden={value.namainvoicetype?(value.namainvoicetype=='DP' || value.idinvoicetype == 'REIMBURSEMENT'):false}>
                     <tr>
                         <th>{i18n.t('No Surat Jalan')}</th>
                         <th>{i18n.t('Gudang')}</th>
@@ -446,7 +446,7 @@ import React, {useState,
             }
 
             {
-                <table id="tablegrid">
+                <table id="tablegrid" hidden={value.namainvoicetype?value.namainvoicetype=='DP':false}>
                     <tr>
                         <th>{i18n.t('No Document')}</th>
                         <th>{i18n.t('Receive Date')}</th>

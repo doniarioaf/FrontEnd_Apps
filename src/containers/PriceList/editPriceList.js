@@ -91,7 +91,8 @@ export default function AddFormIndex(props) {
                 }]
             ), []));
 
-            setListInvoiceType(template.biayaJasaOptions.reduce((obj, el) => (
+            let listfilteroutput = template.biayaJasaOptions.filter(output => output.invoicetype == 'JASA');
+            setListInvoiceType(listfilteroutput.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama

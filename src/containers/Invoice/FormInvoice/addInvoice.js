@@ -70,7 +70,7 @@ export default function AddForm(props) {
     const [SelPriceList, setSelPriceList] = useState('');
 
     const [ListInvoiceType, setListInvoiceType] = useState([]);
-    const [SelInvoiceType, setSelInvoiceType] = useState('');
+    const [SelInvoiceType, setSelInvoiceType] = useState('JASA');
     const [ErrSelInvoiceType, setErrSelInvoiceType] = useState('');
 
     const [InputDiskonNota, setInputDiskonNota] = useState('');
@@ -159,9 +159,15 @@ export default function AddForm(props) {
         setInputListItem([]);
         setListSuratJalanWO([]);
         setInputRefNo(noblawb);
-        setLoading(true);
+        
         localStorage.setItem('idwo',id);
-        dispatch(actions.getInvoiceData('/suratjalan/'+id,successHandlerSJJ, errorHandler));
+        
+        if(SelInvoiceType == 'REIMBURSEMENT'){
+            // dispatch(actions.getInvoiceData('/searchpengeluaran/'+id,successHandlerPengeluaran, errorHandler));
+        }else{
+            setLoading(true);
+            dispatch(actions.getInvoiceData('/suratjalan/'+id,successHandlerSJJ, errorHandler));
+        }
         // dispatch(actions.getInvoiceData('/searchsj/'+id,successHandlerSj, errorHandler));
     }
 
@@ -286,7 +292,7 @@ export default function AddForm(props) {
         let dataval = data?.dataval ? data.dataval : '';
         
         setSelPriceList(id);
-        setInputListItem([]);
+        // setInputListItem([]);
         let listitem = [];
         setIsHideColumnWarehouse(false);
         if(SelInvoiceType == 'REIMBURSEMENT'){
@@ -306,10 +312,11 @@ export default function AddForm(props) {
                 obj.diskon = '0';
                 obj.subtotal = det.amount;
                 obj.idpengeluarankasbank = det.idpengeluarankasbank;
-                listitem.push(obj);
+                // listitem.push(obj);
             }
-            calculateTotalInvoice(listitem,InputDiskonNota);
+            // calculateTotalInvoice(listitem,InputDiskonNota);
         }else{
+            setInputListItem([]);
             if(dataval.details){
                 for(let i=0; i < dataval.details.length; i++){
                     let det = dataval.details[i];
@@ -331,9 +338,9 @@ export default function AddForm(props) {
                 
             }
         }
-        if(listitem.length > 0){
-            setInputListItem(listitem);     
-        }
+            if(listitem.length > 0){
+                setInputListItem(listitem);     
+            }
     }
 
     const handleChangeDiskonNota = (data) =>{
@@ -345,6 +352,17 @@ export default function AddForm(props) {
             let valtemp = val;
             calculateTotalInvoice(InputListItem,valtemp);
             setInputDiskonNota(val);
+        }
+        
+    }
+
+    const handleChangeTotalInvoice = (data) =>{
+        let val = data.target.value;
+        // val = new String(val).replaceAll('.','').replaceAll(',','.');
+        let flagReg = inputJustNumberAndCommaDot(val);
+        if(flagReg){
+            val = formatMoney(val);
+            setInputTotalInvoice(val);
         }
         
     }
@@ -371,25 +389,26 @@ export default function AddForm(props) {
         setErrItems('');
         setErrQty('');
 
-        
-        if(InputListItem.length > 0){
-            for(let i=0; i < InputListItem.length; i++){
-                let det = InputListItem[i];
-                if(det.ismandatory == 'Y'){
-                    if(det.qty !== ''){
-                        if(parseFloat(det.qty) <= 0){
+        if(SelInvoiceType !== 'DP'){
+            if(InputListItem.length > 0){
+                for(let i=0; i < InputListItem.length; i++){
+                    let det = InputListItem[i];
+                    if(det.ismandatory == 'Y'){
+                        if(det.qty !== ''){
+                            if(parseFloat(det.qty) <= 0){
+                                setErrQty(i18n.t('Qty')+' '+i18n.t('label_REQUIRED'));
+                                flag = false;
+                            }
+                        }else{
                             setErrQty(i18n.t('Qty')+' '+i18n.t('label_REQUIRED'));
                             flag = false;
                         }
-                    }else{
-                        setErrQty(i18n.t('Qty')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
                     }
                 }
+            }else{
+                setErrItems('Items '+i18n.t('label_REQUIRED'));
+                flag = false;
             }
-        }else{
-            setErrItems('Items '+i18n.t('label_REQUIRED'));
-            flag = false;
         }
 
         if(InputTanggal == null){
@@ -454,13 +473,14 @@ export default function AddForm(props) {
             obj.deliveredto = InputDeliveredTo;
             obj.deliverydate = moment(InputDeliveredDate).toDate().getTime();
             obj.idwo = SelWO !== ''?SelWO:null;
-            obj.idsuratjalan = SelSJ !== ''?SelSJ:null;
             obj.idinvoicetype = SelInvoiceType;
             obj.totalinvoice = InputTotalInvoice !== ''?new String(InputTotalInvoice).replaceAll('.','').replaceAll(',','.'):0;
-            obj.diskonnota = InputDiskonNota !== ''?new String(InputDiskonNota).replaceAll('.','').replaceAll(',','.'):0;
-            obj.ppn = InputPPN !== ''?new String(InputPPN).replaceAll('.','').replaceAll(',','.'):null;
             obj.isactive = true;
 
+            obj.idsuratjalan = SelSJ !== '' && SelInvoiceType !== 'DP'?SelSJ:null;
+            obj.diskonnota = InputDiskonNota !== '' && SelInvoiceType !== 'DP'?new String(InputDiskonNota).replaceAll('.','').replaceAll(',','.'):0;
+            obj.ppn = InputPPN !== '' && SelInvoiceType !== 'DP'?new String(InputPPN).replaceAll('.','').replaceAll(',','.'):null;
+            
             let listDetailsPrice = [];
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
@@ -469,7 +489,7 @@ export default function AddForm(props) {
                     objDetail.idwarehouse = det.idwarehouse;
                     objDetail.idinvoicetype = det.idinvoicetype;
                     objDetail.jalur = det.jalur;
-                    objDetail.price = det.amount;
+                    objDetail.price = new String(det.amount).replaceAll('.','').replaceAll(',','.');
                     objDetail.ismandatory = det.ismandatory;
                     objDetail.idpricelist = det.idpricelist;
                     objDetail.qty = det.qty;
@@ -480,7 +500,7 @@ export default function AddForm(props) {
                 }
             }
 
-            obj.detailsprice = listDetailsPrice;
+            obj.detailsprice = SelInvoiceType == 'DP'?[]:listDetailsPrice;
             dispatch(actions.submitAddInvoice('',obj,succesHandlerSubmit, errorHandler));
         }
 
@@ -565,6 +585,8 @@ export default function AddForm(props) {
         if(flag){
             setLoading(true);
             if(SelInvoiceType == 'REIMBURSEMENT'){
+                setInputListItem([]);
+                setIsHideColumnWarehouse(false);
                 dispatch(actions.getInvoiceData('/searchpengeluaran/'+SelWO,successHandlerPengeluaran, errorHandler));
             }else{
                 let obj = new Object();
@@ -578,8 +600,11 @@ export default function AddForm(props) {
         }
         
     }
+
+    
     const successHandlerPengeluaran = (data) =>{
         //let filterid = RowsBranch.filter(output => output.id == SelBranch);
+        setIsHideColumnWarehouse(true);
         if(data.data){
             setListPriceList(data.data.headers.reduce((obj, el) => (
                 [...obj, {
@@ -588,6 +613,31 @@ export default function AddForm(props) {
                     dataval:data.data?.details?data.data.details.filter(output => output.idpengeluarankasbank == el.id):[]
                 }]
             ), []));
+            
+            if(data.data.details){
+                let listitem = [];
+                let dataval = data.data.details;
+                for(let i=0; i < dataval.length; i++){
+                    let det = dataval[i];
+                    let obj = new Object();
+                    obj.idpricelist = 0;
+                    obj.idwarehouse = 0;
+                    obj.warehousename = '';
+                    obj.idinvoicetype = det.idinvoiceitem;
+                    obj.invoicetype = det.invoiceitemName;
+                    obj.amount = det.amount;
+                    obj.ismandatory = 'N';// == 'Y'?'Yes':'No';
+                    obj.jalur = '';// == 'MERAH'?'Merah':'Hijau';
+                    obj.qty = '1';
+                    obj.diskon = '0';
+                    obj.subtotal = det.amount;
+                    obj.idpengeluarankasbank = det.idpengeluarankasbank;
+                    listitem.push(obj);
+                }
+                calculateTotalInvoice(listitem,InputDiskonNota);
+                setInputListItem(listitem);
+            }
+            
         }
         setLoading(false);
     }
@@ -636,6 +686,14 @@ export default function AddForm(props) {
                 }
                 list[index]['subtotal'] = calculateSubTotal(list[index]['amount'],list[index]['diskon'],value);
             }
+        }else if(name == 'amount'){
+            let flagReg = inputJustNumberAndCommaDot(value);
+            if(flagReg){
+                valTemp = new String(valTemp).replaceAll('.','').replaceAll(',','.');
+                valTemp = formatMoney(value);
+                list[index][name] = valTemp;
+            }
+            list[index]['subtotal'] = calculateSubTotal(valTemp,list[index]['diskon'],list[index]['qty']);
         }else{
             // const list = [...InputListItem];
             list[index][name] = valTemp;
@@ -883,8 +941,8 @@ export default function AddForm(props) {
                                     value={values.invtype}
                                 />
                                 <div className="invalid-feedback-custom">{ErrSelInvoiceType}</div>
-
-                                <label className="mt-3 form-label required" htmlFor="jalurname">
+                            <div hidden={values.invtype == 'DP'}>
+                            <label className="mt-3 form-label required" htmlFor="jalurname">
                                 {i18n.t('Penjaluran')}
                             </label>
                             <Input
@@ -903,6 +961,7 @@ export default function AddForm(props) {
                                 value={values.jalurname}
                             />
 
+                            <div hidden={SelInvoiceType == 'REIMBURSEMENT'}>
                             <label className="mt-3 form-label required" htmlFor="sj">
                                 {i18n.t('Surat Jalan')}
                             </label>
@@ -926,6 +985,7 @@ export default function AddForm(props) {
                                     value={values.sj}
                                     disabled={SelInvoiceType == 'REIMBURSEMENT'}
                                 />
+                            </div>
 
                             <label className="mt-3 form-label required" htmlFor="ppn">
                                 {i18n.t('PPN')}
@@ -964,9 +1024,10 @@ export default function AddForm(props) {
                                 value={values.discnota}
                                 disabled={SelInvoiceType == 'REIMBURSEMENT'}
                             />
+                            </div>
 
                             <label className="mt-3 form-label required" htmlFor="total">
-                                {i18n.t('Total Invoice')}
+                                {i18n.t(values.invtype == 'DP'?'DP':'Total Invoice')}
                             </label>
                             <Input
                                 name="total"
@@ -978,10 +1039,10 @@ export default function AddForm(props) {
                                 type="text"
                                 id="total"
                                 // maxLength={30}
-                                // onChange={val => handleChangeDiskonNota(val)}
+                                onChange={val => handleChangeTotalInvoice(val)}
                                 onBlur={handleBlur}
                                 value={values.total}
-                                disabled={true}
+                                disabled={values.invtype == 'DP'?false:true}
                             />
 
                             
@@ -1012,7 +1073,7 @@ export default function AddForm(props) {
                             
                             </div>
 
-
+                            <div hidden={values.invtype == 'DP'}>
                             <div className="invalid-feedback-custom">{ErrItems}</div>
                             <div className="invalid-feedback-custom">{ErrQty}</div>
                             <table>
@@ -1115,13 +1176,13 @@ export default function AddForm(props) {
                                                         // }
                                                         type="text"
                                                         id="amount"
-                                                        // onChange={val => handleInputChange(val,i)}
+                                                        onChange={val => handleInputChange(val,i)}
                                                         onBlur={handleBlur}
                                                         // placeholder={i18n.t('label_AMOUNT')}
                                                         // style={{width: '25%'}}
                                                         // value={values.amount}
-                                                        value={x.amount !== ''?numToMoney(parseFloat(x.amount)):'0'}
-                                                        disabled={true}
+                                                        value={x.amount !== ''?numToMoney(parseFloat(new String(x.amount).replaceAll('.',''))):'0'}
+                                                        disabled={false}
                                                     />
                                                     </td>
                                                     {/* <td>
@@ -1229,7 +1290,7 @@ export default function AddForm(props) {
                             }
 
                             {
-                                    <table id="tablegrid">
+                                    <table id="tablegrid" hidden={SelInvoiceType == 'REIMBURSEMENT'}>
                                         <tr>
                                             <th>{i18n.t('No Surat Jalan')}</th>
                                             <th>{i18n.t('Gudang')}</th>
@@ -1253,7 +1314,9 @@ export default function AddForm(props) {
                                             }
                                         </tbody>
                                     </table>
+                                    
                                 }
+                                </div>
 
                             </ContentWrapper>
                             {loading && <Loading/>}
