@@ -261,7 +261,7 @@ export default function EditForm(props) {
             let listWO = template.woOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument
+                    label: el.nodocument+' - '+el.noaju
                 }]
             ), []);
             listWO.push(

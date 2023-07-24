@@ -309,10 +309,24 @@ import React, {useState,
                     loading ?<Skeleton count={7} height={21} style={{marginTop: '1rem'}}/> :
                     (
                         <section>
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_NO_DOCUMENT')}</span>
                             <strong className="col-md-7">
                                 {value.nodocument?value.nodocument:''}
+                            </strong>
+                            </div> */}
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('No AJU')}</span>
+                            <strong className="col-md-7">
+                                {value.noAjuWO?value.noAjuWO:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('WO Number')}</span>
+                            <strong className="col-md-7">
+                                {value.nodocumentWO?value.nodocumentWO:''}
                             </strong>
                             </div>
 
@@ -357,14 +371,6 @@ import React, {useState,
                                 {value.keterangan?value.keterangan:''}
                             </strong>
                             </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('WO Number')}</span>
-                            <strong className="col-md-7">
-                                {value.nodocumentWO?value.nodocumentWO:''}
-                            </strong>
-                            </div>
-
 
                         </section>
                     )

@@ -146,7 +146,7 @@ export default function AddForm(props) {
             let listWO = data.data.woOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument
+                    label: el.nodocument+' - '+el.noaju
                 }]
             ), []);
             listWO.push(
