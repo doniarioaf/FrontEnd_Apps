@@ -17,6 +17,16 @@ const styles = StyleSheet.create({
         fontStyle: 'bold',
         flexGrow: 1,
     },
+    rowtes: {
+        flexDirection: 'row',
+        // borderBottomColor: '#3778C2',
+        // borderBottomColor: 'black',
+        // borderBottomWidth: 1,
+        alignItems: 'center',
+        height: 20,
+        fontStyle: 'bold',
+        flexGrow: 1,
+    },
     no: {
         width: '10%',
         textAlign: 'center',
@@ -35,6 +45,13 @@ const styles = StyleSheet.create({
         paddingLeft:'4px',
         borderRightColor: borderColor,
         borderRightWidth: 1,
+    },
+    jasates: {
+        width: '30%',
+        textAlign: 'left',
+        paddingLeft:'4px',
+        // borderRightColor: borderColor,
+        // borderRightWidth: 1,
     },
     discjasa: {
         width: '12%',
@@ -59,6 +76,13 @@ const styles = StyleSheet.create({
         width: '40%',
         textAlign: 'left',
         paddingLeft:'4px',
+        borderRightColor: borderColor,
+        borderRightWidth: 1,
+    },
+    reimbursementdp: {
+        width: '40%',
+        textAlign: 'right',
+        paddingRight:'10px',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
@@ -136,6 +160,9 @@ const setItems = (items) =>{
         if(items.detailsprice){
             let no = 1;
             let gross = 0
+            let totalinvoice = items.totalinvoice?parseFloat(items.totalinvoice):0;
+            let ppnPersen = items.nilaippn?parseFloat(items.nilaippn):0;
+            let ppn = 0;
             for(let i=0; i < items.detailsprice.length; i++){
                 let det = items.detailsprice[i];
                 gross += det.subtotal?parseFloat(det.subtotal):0;
@@ -143,11 +170,20 @@ const setItems = (items) =>{
                     showDiskon = true;
                 }
             }
+            if(ppnPersen != 0){
+                if(!isNaN(ppnPersen)){
+                    ppn = ppnPersen
+                }
+            }
+            
+            let rowItem = [];
+            // let tesNamaPanjgna = '123456789,123456789,1234567';
             for(let i=0; i < items.detailsprice.length; i++){
-                let rowItem = [];
+                rowItem = [];
                 let det = items.detailsprice[i];
                 rowItem.push(<Text style={styles.no}>{no}</Text>);
                 rowItem.push(<Text style={styles.jasa}>{det.invoicetypename}</Text>);
+                // rowItem.push(<Text style={styles.jasa}>{tesNamaPanjgna}</Text>);
                 rowItem.push(<Text style={styles.qty}>{det.qty}</Text>);
                 rowItem.push(<Text style={styles.hargajasa}>{det.price?numToMoney(parseFloat(det.price)):0}</Text>);
                 if(showDiskon){
@@ -158,7 +194,16 @@ const setItems = (items) =>{
                 rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
                 no++;
             }
-            let rowItem = [];
+            
+            // rowItem = [];
+            // rowItem.push(<Text style={styles.no}>{''}</Text>);
+            // rowItem.push(<Text style={styles.jasates}>{'asdakml lkamsd'}</Text>);
+            // rowItem.push(<Text style={styles.qty}>{''}</Text>);
+            // rowItem.push(<Text style={styles.hargajasa}>{''}</Text>);
+            // rowItem.push(<Text style={styles.subtotaljasa}>{''}</Text>);
+            // rows.push(<View style={styles.rowtes} key={999}>{rowItem}</View>);
+
+            rowItem = [];
             no++;
             rowItem.push(<Text style={styles.no}>{''}</Text>);
             rowItem.push(<Text style={styles.jasa}>{''}</Text>);
@@ -168,6 +213,18 @@ const setItems = (items) =>{
             }
             rowItem.push(<Text style={styles.hargajasa}>{'Sub Total'}</Text>);
             rowItem.push(<Text style={styles.subtotaljasa}>{numToMoney(gross)}</Text>);
+            rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+
+            rowItem = [];
+            no++;
+            rowItem.push(<Text style={styles.no}>{''}</Text>);
+            rowItem.push(<Text style={styles.jasa}>{''}</Text>);
+            rowItem.push(<Text style={styles.qty}>{''}</Text>);
+            if(showDiskon){
+                rowItem.push(<Text style={styles.discjasa}>{''}</Text>);
+            }
+            rowItem.push(<Text style={styles.hargajasa}>{'PPN'}</Text>);
+            rowItem.push(<Text style={styles.subtotaljasa}>{numToMoney(ppn)}</Text>);
             rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
 
             if(items.diskonnota){
@@ -184,71 +241,71 @@ const setItems = (items) =>{
                 rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
             }
 
-            if(items.ppn !== null && items.ppn !== undefined && !isNaN(items.ppn)){
-                let valPPN = parseFloat(items.ppn);
-                if(valPPN > 0){
-                    let pembagiDpp = (100 + valPPN) / 100;
-                    let hasilDPP = parseFloat(gross) / pembagiDpp;
-                    let hasilPPN = parseFloat(gross) - parseFloat(hasilDPP);
-                    rowItem = [];
-                    no++;
-                    rowItem.push(<Text style={styles.no}>{''}</Text>);
-                    rowItem.push(<Text style={styles.jasa}>{''}</Text>);
-                    rowItem.push(<Text style={styles.qty}>{''}</Text>);
-                    if(showDiskon){
-                        rowItem.push(<Text style={styles.discjasa}>{''}</Text>);
-                    }
-                    rowItem.push(<Text style={styles.hargajasa}>{'DPP'}</Text>);
-                    rowItem.push(<Text style={styles.subtotaljasa}>{numToMoney(parseFloat(hasilDPP))}</Text>);
-                    rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+            // if(items.ppn !== null && items.ppn !== undefined && !isNaN(items.ppn)){
+            //     let valPPN = parseFloat(items.ppn);
+            //     if(valPPN > 0){
+            //         let pembagiDpp = (100 + valPPN) / 100;
+            //         let hasilDPP = parseFloat(gross) / pembagiDpp;
+            //         let hasilPPN = parseFloat(gross) - parseFloat(hasilDPP);
+            //         rowItem = [];
+            //         no++;
+            //         rowItem.push(<Text style={styles.no}>{''}</Text>);
+            //         rowItem.push(<Text style={styles.jasa}>{''}</Text>);
+            //         rowItem.push(<Text style={styles.qty}>{''}</Text>);
+            //         if(showDiskon){
+            //             rowItem.push(<Text style={styles.discjasa}>{''}</Text>);
+            //         }
+            //         rowItem.push(<Text style={styles.hargajasa}>{'DPP'}</Text>);
+            //         rowItem.push(<Text style={styles.subtotaljasa}>{numToMoney(parseFloat(hasilDPP))}</Text>);
+            //         rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
 
-                    rowItem = [];
-                    no++;
-                    rowItem.push(<Text style={styles.no}>{''}</Text>);
-                    rowItem.push(<Text style={styles.jasa}>{''}</Text>);
-                    rowItem.push(<Text style={styles.qty}>{''}</Text>);
-                    if(showDiskon){
-                        rowItem.push(<Text style={styles.discjasa}>{''}</Text>);
-                    }
-                    rowItem.push(<Text style={styles.hargajasa}>{'PPN'}</Text>);
-                    rowItem.push(<Text style={styles.subtotaljasa}>{numToMoney(parseFloat(hasilPPN))}</Text>);
-                    rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
-                }
-            }
+            //         rowItem = [];
+            //         no++;
+            //         rowItem.push(<Text style={styles.no}>{''}</Text>);
+            //         rowItem.push(<Text style={styles.jasa}>{''}</Text>);
+            //         rowItem.push(<Text style={styles.qty}>{''}</Text>);
+            //         if(showDiskon){
+            //             rowItem.push(<Text style={styles.discjasa}>{''}</Text>);
+            //         }
+            //         rowItem.push(<Text style={styles.hargajasa}>{'PPN'}</Text>);
+            //         rowItem.push(<Text style={styles.subtotaljasa}>{numToMoney(parseFloat(hasilPPN))}</Text>);
+            //         rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+            //     }
+            // }
 
-            rowItem = [];
-            no++;
-            rowItem.push(<Text style={styles.no}>{''}</Text>);
-            rowItem.push(<Text style={styles.jasa}>{''}</Text>);
-            rowItem.push(<Text style={styles.qty}>{''}</Text>);
-            if(showDiskon){
-                rowItem.push(<Text style={styles.discjasa}>{''}</Text>);
-            }
-            rowItem.push(<Text style={styles.hargajasa}>{'Total'}</Text>);
-            rowItem.push(<Text style={styles.subtotaljasa}>{items.totalinvoice?numToMoney(parseFloat(items.totalinvoice)):0}</Text>);
-            rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
 
-            
+            // rowItem = [];
+            // no++;
+            // rowItem.push(<Text style={styles.no}>{''}</Text>);
+            // rowItem.push(<Text style={styles.jasa}>{''}</Text>);
+            // rowItem.push(<Text style={styles.qty}>{''}</Text>);
+            // if(showDiskon){
+            //     rowItem.push(<Text style={styles.discjasa}>{''}</Text>);
+            // }
+            // rowItem.push(<Text style={styles.hargajasa}>{'Total'}</Text>);
+            // rowItem.push(<Text style={styles.subtotaljasa}>{items.totalinvoice?numToMoney(parseFloat(items.totalinvoice)):0}</Text>);
+            // rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+
 
             tagihan = items.totalinvoice?parseFloat(items.totalinvoice):0;
-            if(jumlahDp !== ''){
-                tagihan = tagihan - parseFloat(jumlahDp);
-                rowItem = [];
-                no++;
-                rowItem.push(<Text style={styles.no}>{''}</Text>);
-                rowItem.push(<Text style={styles.jasa}>{''}</Text>);
+            // if(jumlahDp !== ''){
+            //     tagihan = tagihan - parseFloat(jumlahDp);
+            //     rowItem = [];
+            //     no++;
+            //     rowItem.push(<Text style={styles.no}>{''}</Text>);
+            //     rowItem.push(<Text style={styles.jasa}>{''}</Text>);
                 
-                if(showDiskon){
-                    rowItem.push(<Text style={styles.qty}>{''}</Text>);
-                    rowItem.push(<Text style={styles.discjasa}>{'DP'}</Text>);
-                }else{
-                    // rowItem.push(<Text style={styles.qty}>{''}</Text>);
-                    rowItem.push(<Text style={styles.qty}>{'DP'}</Text>);
-                }
-                rowItem.push(<Text style={styles.hargajasa}>{tanggalDp}</Text>);
-                rowItem.push(<Text style={styles.subtotaljasa}>{numToMoney(parseFloat(jumlahDp))}</Text>);
-                rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
-            }
+            //     if(showDiskon){
+            //         rowItem.push(<Text style={styles.qty}>{''}</Text>);
+            //         rowItem.push(<Text style={styles.discjasa}>{'DP'}</Text>);
+            //     }else{
+            //         // rowItem.push(<Text style={styles.qty}>{''}</Text>);
+            //         rowItem.push(<Text style={styles.qty}>{'DP'}</Text>);
+            //     }
+            //     rowItem.push(<Text style={styles.hargajasa}>{tanggalDp}</Text>);
+            //     rowItem.push(<Text style={styles.subtotaljasa}>{numToMoney(parseFloat(jumlahDp))}</Text>);
+            //     rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+            // }
 
                 rowItem = [];
                 no++;
@@ -258,7 +315,7 @@ const setItems = (items) =>{
                 if(showDiskon){
                 rowItem.push(<Text style={styles.discjasa}>{''}</Text>);
                 }
-                rowItem.push(<Text style={styles.hargajasa}>{'Tagihan'}</Text>);
+                rowItem.push(<Text style={styles.hargajasa}>{'Total'}</Text>);
                 rowItem.push(<Text style={styles.subtotaljasa}>{numToMoney(parseFloat(tagihan))}</Text>);
                 rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
         }
@@ -295,17 +352,17 @@ const setItems = (items) =>{
                 no++;
             }
 
-            // let rowItem = [];
-            // no++;
-            // rowItem.push(<Text style={styles.no}>{''}</Text>);
-            // rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
+            rowItem = [];
+            no++;
+            rowItem.push(<Text style={styles.no}>{''}</Text>);
+            rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
             // rowItem.push(<Text style={styles.qty}>{''}</Text>);
             // if(showDiskon){
             //     rowItem.push(<Text style={styles.discreimbursement}>{''}</Text>);
             // }
-            // rowItem.push(<Text style={styles.hargareimbursement}>{'Sub Total'}</Text>);
-            // rowItem.push(<Text style={styles.subtotalreimbursement}>{numToMoney(gross)}</Text>);
-            // rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+            rowItem.push(<Text style={styles.hargareimbursement}>{'Sub Total'}</Text>);
+            rowItem.push(<Text style={styles.subtotalreimbursement}>{numToMoney(gross)}</Text>);
+            rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
 
             // if(items.diskonnota){
             // rowItem = [];
@@ -334,18 +391,45 @@ const setItems = (items) =>{
             // rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
 
             tagihan = items.totalinvoice?parseFloat(items.totalinvoice):0;
+            let totalinvoice = items.totalinvoice?parseFloat(items.totalinvoice):0;
+            let ppn = 0;
+            if(totalinvoice !== gross){
+                ppn = totalinvoice - gross;
+            }
+
+            // rowItem = [];
+            // no++;
+            // rowItem.push(<Text style={styles.no}>{''}</Text>);
+            // rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
+            // rowItem.push(<Text style={styles.hargareimbursement}>{'PPN'}</Text>);
+            // rowItem.push(<Text style={styles.subtotalreimbursement}>{numToMoney(ppn)}</Text>);
+            // rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
+
+            // rowItem = [];
+            // no++;
+            // rowItem.push(<Text style={styles.no}>{''}</Text>);
+            // rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
+            // // rowItem.push(<Text style={styles.qty}>{''}</Text>);
+            // // if(showDiskon){
+            // //     rowItem.push(<Text style={styles.discreimbursement}>{''}</Text>);
+            // // }
+            // rowItem.push(<Text style={styles.hargareimbursement}>{'Total'}</Text>);
+            // rowItem.push(<Text style={styles.subtotalreimbursement}>{numToMoney(totalinvoice)}</Text>);
+            // rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
             if(tanggalDp !== '' && jumlahDp !== ''){
                 tagihan = tagihan - parseFloat(jumlahDp);
                 rowItem = [];
                 no++;
                 rowItem.push(<Text style={styles.no}>{''}</Text>);
-                rowItem.push(<Text style={styles.reimbursement}>{''}</Text>);
-                if(showDiskon){
-                    // rowItem.push(<Text style={styles.qty}>{''}</Text>);
-                    rowItem.push(<Text style={styles.discreimbursement}>{'DP'}</Text>);
-                }else{
-                    rowItem.push(<Text style={styles.qty}>{'DP'}</Text>);
-                }
+                // if(showDiskon){
+                //     // rowItem.push(<Text style={styles.qty}>{''}</Text>);
+                //     // rowItem.push(<Text style={styles.discreimbursement}>{'DP'}</Text>);
+                //     rowItem.push(<Text style={styles.reimbursement}>{'DP'}</Text>);
+                // }else{
+                //     rowItem.push(<Text style={styles.qty}>{'DP'}</Text>);
+                // }
+
+                rowItem.push(<Text style={styles.reimbursementdp }>{'DP'}</Text>);
                 
                 rowItem.push(<Text style={styles.hargareimbursement}>{tanggalDp}</Text>);
                 rowItem.push(<Text style={styles.subtotalreimbursement}>{numToMoney(parseFloat(jumlahDp))}</Text>);
@@ -360,7 +444,7 @@ const setItems = (items) =>{
             if(showDiskon){
                 rowItem.push(<Text style={styles.discreimbursement}>{''}</Text>);
             }
-            rowItem.push(<Text style={styles.hargareimbursement}>{'Tagihan'}</Text>);
+            rowItem.push(<Text style={styles.hargareimbursement}>{'Total'}</Text>);
             rowItem.push(<Text style={styles.subtotalreimbursement}>{numToMoney(parseFloat(tagihan))}</Text>);
             rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
             return rows;

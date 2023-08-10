@@ -64,6 +64,7 @@ export default function EditForm(props) {
 
     const [ListWO, setListWO] = useState([]);
     const [SelWO, setSelWO] = useState('');
+    const [ErrSelWO, setErrSelWO] = useState('');
 
     const [ListSJ, setListSJ] = useState([]);
     const [SelSJ, setSelSJ] = useState('');
@@ -95,6 +96,7 @@ export default function EditForm(props) {
     const [ListSuratJalanWO, setListSuratJalanWO] = useState([]);
 
     const [InputPPN, setInputPPN] = useState('');
+    const [InputNilaiPPN, setInputNilaiPPN] = useState(null);
     const [DataTemplate, setDataTemplate] = useState([]);
 
     const id = props.match.params.id;
@@ -122,6 +124,7 @@ export default function EditForm(props) {
             setInputDiskonNota(det.diskonnota?numToMoney(parseFloat(det.diskonnota)):'');
             setInputTotalInvoice(det.totalinvoice?numToMoney(parseFloat(det.totalinvoice)):'');
             setInputPPN(det.ppn?numToMoney(parseFloat(det.ppn)):'');
+            setInputNilaiPPN(det.nilaippn?det.nilaippn:null);
             if(det.idinvoicetype == 'REIMBURSEMENT'){
                 setIsHideColumnWarehouse(true);
             }
@@ -147,6 +150,13 @@ export default function EditForm(props) {
                 }
                 if(listitem.length > 0){
                     setInputListItem(listitem);     
+                    let flag = det.nilaippn?false:true;
+                    if(flag){
+                        let discNota = det.diskonnota?parseFloat(det.diskonnota):'';
+                        let ppn = det.ppn?parseFloat(det.ppn):'';
+                        calculateTotalInvoice(listitem,discNota,ppn);
+                    }
+                    
                 }
             }
             setSelPriceList(idpricelist);
@@ -406,8 +416,13 @@ export default function EditForm(props) {
         if(id == 'REIMBURSEMENT'){
             setSelSJ('');
             setInputPPN('');
+            setInputNilaiPPN(null);
         }else{
-            setInputPPN(DataTemplate.ppn?numToMoney(parseFloat(DataTemplate.ppn)):'');
+            let ppn = DataTemplate.ppn?numToMoney(parseFloat(DataTemplate.ppn)):'';
+            setInputPPN(ppn);
+            if(ppn !== ''){
+                calculateTotalInvoice(InputListItem,InputDiskonNota,ppn);
+            }
             if(SelWO !== '' && SelSJ == ''){
                 setLoading(true);
                 localStorage.setItem('idwo',SelWO);
@@ -480,7 +495,7 @@ export default function EditForm(props) {
         if(flagReg){
             val = formatMoney(val);
             let valtemp = val;
-            calculateTotalInvoice(InputListItem,valtemp);
+            calculateTotalInvoice(InputListItem,valtemp,InputPPN);
             setInputDiskonNota(val);
         }
         
@@ -492,6 +507,8 @@ export default function EditForm(props) {
         let flagReg = inputJustNumberAndCommaDot(val);
         if(flagReg){
             val = formatMoney(val);
+            let valtemp = val;
+            calculateTotalInvoice(InputListItem,InputDiskonNota,valtemp);
             setInputPPN(val);
         }
         
@@ -499,6 +516,7 @@ export default function EditForm(props) {
 
     const checkColumnMandatory = () => {
         let flag = true;
+        setErrSelWO('');
         setErrInputTanggal('');
         setErrInputCustomer('');
         setErrInputRefNo('');
@@ -554,6 +572,15 @@ export default function EditForm(props) {
         //     flag = false;
         // }
 
+        if(SelWO !== ''){
+            let list = ListWO.filter(output => output.value == parseInt(SelWO));
+            if(list.length <= 0){
+                //Kemungkinan karena Status WO masih open
+                setErrSelWO(i18n.t('No Wo tidak dikenal'));
+                flag = false;
+            }
+
+        }
         if(SelInvoiceType == ''){
             setErrSelInvoiceType(i18n.t('label_REQUIRED'));
             flag = false;
@@ -598,7 +625,8 @@ export default function EditForm(props) {
             obj.idsuratjalan = SelSJ !== '' && SelInvoiceType !== 'DP'?SelSJ:null;
             obj.diskonnota = InputDiskonNota !== '' && SelInvoiceType !== 'DP'?new String(InputDiskonNota).replaceAll('.','').replaceAll(',','.'):0;
             obj.ppn = InputPPN !== '' && SelInvoiceType !== 'DP'?new String(InputPPN).replaceAll('.','').replaceAll(',','.'):null;
-            
+            obj.nilaippn = InputNilaiPPN !== '' ? new String(InputNilaiPPN).replaceAll('.','').replaceAll(',','.'):null;
+
             let listDetailsPrice = [];
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
@@ -671,7 +699,7 @@ export default function EditForm(props) {
             setListWO(data.data.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument,
+                    label: el.nodocument+' - '+el.noaju,
                     jalur: el.jalur,
                     jalurname: el.jalurname,
                     noblawb: el.nobl,
@@ -752,7 +780,7 @@ export default function EditForm(props) {
                     obj.idpengeluarankasbank = det.idpengeluarankasbank;
                     listitem.push(obj);
                 }
-                calculateTotalInvoice(listitem,InputDiskonNota);
+                calculateTotalInvoice(listitem,InputDiskonNota,InputPPN);
                 setInputListItem(listitem);
             }
         }
@@ -888,10 +916,10 @@ export default function EditForm(props) {
             // const list = [...InputListItem];
             list[index][name] = valTemp;
         }
-        calculateTotalInvoice(list,InputDiskonNota);
+        calculateTotalInvoice(list,InputDiskonNota,InputPPN);
         setInputListItem(list);
     };
-    const calculateTotalInvoice = (list,diskonnota) => {
+    const calculateTotalInvoice = (list,diskonnota,ppn) => {
         let total = 0;
         for(let i=0; i < list.length; i++){
             let det = list[i];
@@ -907,6 +935,19 @@ export default function EditForm(props) {
                 total = total - parseFloat(diskonVal);
             }else{
                 total = total - ( (parseFloat(diskonVal) / 100) * total );
+            }
+        }
+
+        //20230801
+        setInputNilaiPPN(null);
+        if(ppn != undefined){
+            if(!isNaN(ppn)){
+                ppn = new String(ppn).replaceAll('.','').replaceAll(',','.');
+                ppn = parseFloat(ppn);
+                let valPPN = parseFloat(ppn / 100);
+                let totalPPN = total * valPPN;
+                setInputNilaiPPN(totalPPN);
+                total = total + totalPPN;
             }
         }
         setInputTotalInvoice(numToMoney(total));
@@ -1085,7 +1126,7 @@ export default function EditForm(props) {
                                     // disabled={values.isdisabledcountry}
                                     value={values.wo}
                                 />
-
+                            <div className="invalid-feedback-custom">{ErrSelWO}</div>
 
                             <label className="mt-3 form-label required" htmlFor="refno">
                                 {i18n.t('Ref. No')}

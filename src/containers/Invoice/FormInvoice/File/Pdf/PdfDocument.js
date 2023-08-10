@@ -48,12 +48,12 @@ const PdfDocument = ({ data }) => {
                 <GenerateInvoice valuedata={data}/>
                 </Page>
 
-                {
+                {/* {
                     checkSJ(data) ?
                     <Page size="A4" style={styles.page} >
                     <GenerateSuratJalan valuedata={data}/>
                     </Page>:[]
-                }
+                } */}
                 
             </Document>
         )

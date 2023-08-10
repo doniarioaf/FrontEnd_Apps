@@ -38,12 +38,12 @@ const CetakInvoiceIndex = (props) => {
             det.deliverydate = dettemp.deliverydate ?moment (new Date(dettemp.deliverydate)).format(formatdate):'';
 
             let flag = true;
-            if(det.idwo != undefined && det.idwo != null && det.idinvoicetype !== 'DP'){
-                if(det.idwo > 0){
-                    flag = false;
-                    dispatch(actions.getInvoiceDataParam('/suratjalan/'+det.idwo,det,successHandlerSJ, errorHandlerSJ));
-                }
-            }
+            // if(det.idwo != undefined && det.idwo != null && det.idinvoicetype !== 'DP'){
+            //     if(det.idwo > 0){
+            //         flag = false;
+            //         dispatch(actions.getInvoiceDataParam('/suratjalan/'+det.idwo,det,successHandlerSJ, errorHandlerSJ));
+            //     }
+            // }
 
             if(flag){
                 setValue(det);

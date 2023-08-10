@@ -77,6 +77,7 @@ export default function AddForm(props) {
     const [InputTotalInvoice, setInputTotalInvoice] = useState('');
 
     const [InputPPN, setInputPPN] = useState('');
+    const [InputNilaiPPN, setInputNilaiPPN] = useState(null);
 
     // const [InputListItem, setInputListItem] = useState([{ idinvoicetype:"",invoicetype:"",amount: "",ismandatory:"",jalur:"",qty:"",diskon:"",subtotal:""}]);
     const [InputListItem, setInputListItem] = useState([])
@@ -276,8 +277,13 @@ export default function AddForm(props) {
         if(id == 'REIMBURSEMENT'){
             setSelSJ('');
             setInputPPN('');
+            setInputNilaiPPN(null);
         }else{
-            setInputPPN(DataTemplate.defaultPPN?numToMoney(parseFloat(DataTemplate.defaultPPN)):'');
+            let ppn = DataTemplate.defaultPPN?numToMoney(parseFloat(DataTemplate.defaultPPN)):'';
+            setInputPPN(ppn);
+            if(ppn !== ''){
+                calculateTotalInvoice(InputListItem,InputDiskonNota,ppn);
+            }
             if(SelWO !== '' && SelSJ == ''){
                 setLoading(true);
                 localStorage.setItem('idwo',SelWO);
@@ -350,7 +356,7 @@ export default function AddForm(props) {
         if(flagReg){
             val = formatMoney(val);
             let valtemp = val;
-            calculateTotalInvoice(InputListItem,valtemp);
+            calculateTotalInvoice(InputListItem,valtemp,InputPPN);
             setInputDiskonNota(val);
         }
         
@@ -373,6 +379,8 @@ export default function AddForm(props) {
         let flagReg = inputJustNumberAndCommaDot(val);
         if(flagReg){
             val = formatMoney(val);
+            let valtemp = val;
+            calculateTotalInvoice(InputListItem,InputDiskonNota,valtemp);
             setInputPPN(val);
         }
         
@@ -480,6 +488,7 @@ export default function AddForm(props) {
             obj.idsuratjalan = SelSJ !== '' && SelInvoiceType !== 'DP'?SelSJ:null;
             obj.diskonnota = InputDiskonNota !== '' && SelInvoiceType !== 'DP'?new String(InputDiskonNota).replaceAll('.','').replaceAll(',','.'):0;
             obj.ppn = InputPPN !== '' && SelInvoiceType !== 'DP'?new String(InputPPN).replaceAll('.','').replaceAll(',','.'):null;
+            obj.nilaippn = InputNilaiPPN !== '' ? new String(InputNilaiPPN).replaceAll('.','').replaceAll(',','.'):null;
             
             let listDetailsPrice = [];
             if(InputListItem.length > 0){
@@ -550,7 +559,7 @@ export default function AddForm(props) {
             setListWO(data.data.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument,
+                    label: el.nodocument+' - '+el.noaju,
                     jalur: el.jalur,
                     jalurname: el.jalurname,
                     noblawb: el.nobl,
@@ -634,7 +643,7 @@ export default function AddForm(props) {
                     obj.idpengeluarankasbank = det.idpengeluarankasbank;
                     listitem.push(obj);
                 }
-                calculateTotalInvoice(listitem,InputDiskonNota);
+                calculateTotalInvoice(listitem,InputDiskonNota,InputPPN);
                 setInputListItem(listitem);
             }
             
@@ -698,10 +707,10 @@ export default function AddForm(props) {
             // const list = [...InputListItem];
             list[index][name] = valTemp;
         }
-        calculateTotalInvoice(list,InputDiskonNota);
+        calculateTotalInvoice(list,InputDiskonNota,InputPPN);
         setInputListItem(list);
     };
-    const calculateTotalInvoice = (list,diskonnota) => {
+    const calculateTotalInvoice = (list,diskonnota,ppn) => {
         let total = 0;
         for(let i=0; i < list.length; i++){
             let det = list[i];
@@ -711,6 +720,7 @@ export default function AddForm(props) {
                 }
             }
         }
+        if(total !== 0){
         let diskonVal = new String(diskonnota).replaceAll('.','').replaceAll(',','.');
         if(!isNaN(diskonVal) && diskonVal !== ''){
             if(parseFloat(diskonVal) >= 50){
@@ -718,6 +728,20 @@ export default function AddForm(props) {
             }else{
                 total = total - ( (parseFloat(diskonVal) / 100) * total );
             }
+        }
+
+        //20230801
+        setInputNilaiPPN(null);
+        if(ppn != undefined){
+            if(!isNaN(ppn)){
+                ppn = new String(ppn).replaceAll('.','').replaceAll(',','.');
+                ppn = parseFloat(ppn);
+                let valPPN = parseFloat(ppn / 100);
+                let totalPPN = total * valPPN;
+                setInputNilaiPPN(totalPPN);
+                total = total + totalPPN;
+            }
+        }
         }
         setInputTotalInvoice(numToMoney(total));
     }

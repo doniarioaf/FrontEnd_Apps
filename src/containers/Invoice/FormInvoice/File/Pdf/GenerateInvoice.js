@@ -89,12 +89,12 @@ const GenerateInvoice = ({ valuedata }) => (
 
         {/* <View style={styles.customerinfo}> */}
         <Text style={{marginTop:'20px'}}>{'To : '}</Text>
-        <Text style={{fontWeight:'bold',fontSize:'11'}}>{valuedata != null?(valuedata.customer?valuedata.customer.customername:''):''}</Text>  
+        <Text style={{fontWeight:'bold',fontSize:'11'}}>{valuedata != null?(valuedata.customer?valuedata.customer.customertype+' '+valuedata.customer.customername:''):''}</Text>  
         <Text >{valuedata != null?(valuedata.customer?valuedata.customer.alamat:''):''}</Text>  
         <Text >{valuedata != null?(valuedata.customer?(valuedata.customer.kotaname+','+valuedata.customer.provinsiname+' - '+valuedata.customer.kodepos):''):''}</Text>  
         {/* </View> */}
 
-        <Text style={{marginTop:'10px'}}>{'Att. : '+getNameContact(valuedata != null?(valuedata.customer?valuedata.customer.detailsInfoContact:[]):[])}</Text>
+        {/* <Text style={{marginTop:'10px'}}>{'Att. : '+getNameContact(valuedata != null?(valuedata.customer?valuedata.customer.detailsInfoContact:[]):[])}</Text> */}
         </View>
 
         <ContainerItemsTable data = {valuedata != null?valuedata:[]} />

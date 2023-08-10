@@ -176,21 +176,30 @@ import React, {useState,
     }
 
     const submitHandlerDelete = () => {
-        Swal.fire({
-            title: i18n.t('label_DIALOG_ALERT_SURE'),
-            showDenyButton: false,
-            showCancelButton: true,
-            confirmButtonText: `Confirm`,
-            denyButtonText: `Don't save`,
-          }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                dispatch(actions.submitDeleteInvoice('/'+id,succesHandlerSubmit, errorHandler));
-            //   Swal.fire('Saved!', '', 'success')
-            } else if (result.isDenied) {
-            //   Swal.fire('Changes are not saved', '', 'info')
-            }
-          })
+        if(IsHide){
+            Swal.fire({
+                icon: 'info',
+                title: 'Oops...',
+                text: 'Data Invoice sudah ada di penerimaan, Mohon cek penerimaan.'
+            })
+        }else{
+            Swal.fire({
+                title: i18n.t('label_DIALOG_ALERT_SURE'),
+                showDenyButton: false,
+                showCancelButton: true,
+                confirmButtonText: `Confirm`,
+                denyButtonText: `Don't save`,
+              }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    dispatch(actions.submitDeleteInvoice('/'+id,succesHandlerSubmit, errorHandler));
+                //   Swal.fire('Saved!', '', 'success')
+                } else if (result.isDenied) {
+                //   Swal.fire('Changes are not saved', '', 'info')
+                }
+              })
+        }
+        
     }
 
     const succesHandlerSubmit = (data) => {
@@ -212,6 +221,30 @@ import React, {useState,
             return numToMoney(parseFloat(listfilter[0].amount));
         }
         return 0;
+    }
+
+    function onClickPrint() {
+        if(IsPrintInvoiceHide){
+            Swal.fire({
+                icon: 'info',
+                title: 'Oops...',
+                text: 'Invoice Sudah Lunas, Mohon cek penerimaan.'
+            })
+        }else{
+            history.push(pathmenu.printInvoice+'/'+id)
+        }
+    }
+
+    function onClickEdit() {
+        if(IsHide){
+            Swal.fire({
+                icon: 'info',
+                title: 'Oops...',
+                text: 'Data Invoice sudah ada di penerimaan, Mohon cek penerimaan.'
+            })
+        }else{
+            history.push(pathmenu.editInvoice+'/'+id)
+        }
     }
     function errorHandler(error) {
         setLoading(false);
@@ -490,9 +523,9 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={IsPrintInvoiceHide || !isGetPermissions(MenuInvoice,'READ')} onClick={() => history.push(pathmenu.printInvoice+'/'+id)} >{i18n.t('Cetak')}</MenuItem>
-                            <MenuItem hidden={IsHide || !isGetPermissions(editInvoice_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editInvoice+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={IsHide || !isGetPermissions(deleteInvoice_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(MenuInvoice,'READ')} onClick={() => onClickPrint() } >{i18n.t('Cetak')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editInvoice_Permission,'TRANSACTION')}  onClick={() => onClickEdit()}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteInvoice_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
                             
                         </div>)
                         
