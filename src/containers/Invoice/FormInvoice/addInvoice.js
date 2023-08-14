@@ -733,8 +733,8 @@ export default function AddForm(props) {
         //20230801
         setInputNilaiPPN(null);
         if(ppn != undefined){
+            ppn = new String(ppn).replaceAll('.','').replaceAll(',','.');
             if(!isNaN(ppn)){
-                ppn = new String(ppn).replaceAll('.','').replaceAll(',','.');
                 ppn = parseFloat(ppn);
                 let valPPN = parseFloat(ppn / 100);
                 let totalPPN = total * valPPN;
