@@ -81,7 +81,44 @@ const DialogQuickSearch = props => {
                 {name: 'namacargo', title: 'Nama Cargo'},
                 {name: 'name', title: i18n.t('label_NAME')},
             ]
+        }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK'){
+            if(props.seacrhtype1){
+                if(props.seacrhtype1 == 'EMPLOYEE'){
+                    data = [
+                        {name: 'id', title: 'id'},
+                        {name: 'nama', title: 'Nama'},
+                        {name: 'noidentitas', title: 'No Identitas'},
+                        {name: 'jabatan', title: i18n.t('Jabatan')},
+                    ]
+                }else if(props.seacrhtype1 == 'CUSTOMER'){
+                    data = [
+                        {name: 'id', title: 'id'},
+                        {name: 'name', title: i18n.t('label_NAME')},
+                        {name: 'alias', title: i18n.t('Alias')},
+                    ]
+                }else if(props.seacrhtype1 == 'VENDOR'){
+                    data = [
+                        {name: 'id', title: 'id'},
+                        {name: 'name', title: i18n.t('label_NAME')},
+                        {name: 'alias', title: i18n.t('Alias')},
+                        {name: 'category', title: i18n.t('Category')},
+                    ]
+                }
+            }
+        }else if(props.seacrhtype == 'CUSTOMERWO'){
+            data = [
+                {name: 'id', title: 'id'},
+                {name: 'name', title: i18n.t('label_NAME')},
+                {name: 'alias', title: i18n.t('Alias')},
+            ]
+        }else if(props.seacrhtype == 'CUSTOMERINVOICE'){
+            data = [
+                {name: 'id', title: 'id'},
+                {name: 'name', title: i18n.t('label_NAME')},
+                {name: 'alias', title: i18n.t('Alias')},
+            ]
         }
+        
         setColumns(data);
     }, []);
 
@@ -116,6 +153,8 @@ const DialogQuickSearch = props => {
                 obj.nodocument = InputSearchName;
                 obj.namacustomer = InputSearchName;
                 obj.idwo = props.idwo == ''?0:props.idwo;
+                obj.idpenerimaan = props.idpenerimaan ?props.idpenerimaan:0;
+                //idpenerimaan
                 obj.type = 'PENERIMAAN';
                 dispatch(actions.submitAddPenerimaanKasBank('/searchinvoice',obj,successHandleSearch, props.errorHandler));
             }else if(props.seacrhtype == 'PENERIMAANWO'){
@@ -125,6 +164,22 @@ const DialogQuickSearch = props => {
                 obj.namacargo = InputSearchName;
                 obj.idwo = 0;
                 dispatch(actions.submitAddPenerimaanKasBank('/searchwo',obj,successHandleSearch, props.errorHandler));
+            }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK'){
+                if(props.seacrhtype1){
+                    if(props.seacrhtype1 == 'EMPLOYEE'){
+                        let obj = new Object();
+                        obj.nama = InputSearchName;
+                        dispatch(actions.submitAddPengeluaranKasBank('/searchemployee',obj,successHandleSearch, props.errorHandler));
+                    }else if(props.seacrhtype1 == 'CUSTOMER'){
+                        let obj = new Object();
+                        obj.nama = InputSearchName;
+                        dispatch(actions.submitAddPengeluaranKasBank('/searchcustomer',obj,successHandleSearch, props.errorHandler));
+                    }else if(props.seacrhtype1 == 'VENDOR'){
+                        let obj = new Object();
+                        obj.name = InputSearchName;
+                        dispatch(actions.submitAddPengeluaranKasBank('/searchvendor',obj,successHandleSearch, props.errorHandler));
+                    }
+                }
             }
         }else{
             setErrInputSearch(i18n.t('label_REQUIRED'));
@@ -151,6 +206,7 @@ const DialogQuickSearch = props => {
                     {
                         'id': el.id,
                         'name': el.customername,
+                        'alias': el.alias,
                         'data':el
                     }
                 ], []);
@@ -160,6 +216,7 @@ const DialogQuickSearch = props => {
                     {
                         'id': el.id,
                         'name': el.customername,
+                        'alias': el.alias,
                         'data':el
                     }
                 ], []);
@@ -193,6 +250,44 @@ const DialogQuickSearch = props => {
                         'data':el
                     }
                 ], []);
+            }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK'){
+                if(props.seacrhtype1){
+                    if(props.seacrhtype1 == 'EMPLOYEE'){
+                        theData = data.data.reduce((obj, el) => [
+                            ...obj,
+                            {
+                                'id': el.id,
+                                'nama': el.nama,
+                                'noidentitas': el.noidentitas,
+                                'jabatan': el.jabatan,
+                                'data':el
+                            }
+                        ], []);
+
+                    }else if(props.seacrhtype1 == 'CUSTOMER'){
+                        theData = data.data.reduce((obj, el) => [
+                            ...obj,
+                            {
+                                'id': el.id,
+                                'name': el.customername,
+                                'alias': el.alias,
+                                'data':el
+                            }
+                        ], []);
+
+                    }else if(props.seacrhtype1 == 'VENDOR'){
+                        theData = data.data.reduce((obj, el) => [
+                            ...obj,
+                            {
+                                'id': el.id,
+                                'name': el.nama,
+                                'category': el.vendorcategoryname,
+                                'alias': el.alias,
+                                'data':el
+                            }
+                        ], []);
+                    }
+                }
             }
         }
         

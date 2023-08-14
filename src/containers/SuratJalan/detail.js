@@ -298,7 +298,7 @@ const StyledDialog = styled(Dialog)`
                 <h2>
                     {
                         !loading  ?
-                            value.nodocument+' ('+value.statusname+')' :
+                            value.nodocument+(value.statusname?' ('+value.statusname+')':'') :
                             <Skeleton style={{maxWidth: 300}}/>
                     }
                 </h2>
@@ -344,7 +344,7 @@ const StyledDialog = styled(Dialog)`
                                 </div>
 
                                 <div className="row mt-3">
-                                <span className="col-md-5">{i18n.t('label_NO_DOCUMENT')}</span>
+                                <span className="col-md-5">{i18n.t('No Surat Jalan')}</span>
                                 <strong className="col-md-7">
                                     {value.nodocument?value.nodocument:''}
                                 </strong>
@@ -358,16 +358,16 @@ const StyledDialog = styled(Dialog)`
                                 </div>
 
                                 <div className="row mt-3">
-                                <span className="col-md-5">{i18n.t('label_BL_NUMBER')}</span>
+                                <span className="col-md-5">{i18n.t('label_AJU_NUMBER')}</span>
                                 <strong className="col-md-7">
-                                    {value.noblWO?value.noblWO:''}
+                                    {value.noajuWO?value.noajuWO:''}
                                 </strong>
                                 </div>
 
                                 <div className="row mt-3">
-                                <span className="col-md-5">{i18n.t('label_AJU_NUMBER')}</span>
+                                <span className="col-md-5">{i18n.t('label_BL_NUMBER')}</span>
                                 <strong className="col-md-7">
-                                    {value.noajuWO?value.noajuWO:''}
+                                    {value.noblWO?value.noblWO:''}
                                 </strong>
                                 </div>
 
@@ -576,7 +576,9 @@ const StyledDialog = styled(Dialog)`
                 // style={{height: '100%'}}
                 open={ShowStatus}
             >
-                <DialogStatus
+                {
+                    value.nodocument?
+                    <DialogStatus
                     showflag = {setShowStatus}
                     flagloadingsend = {setLoadingSend}
                     errorhandler = {errorHandler}
@@ -585,7 +587,9 @@ const StyledDialog = styled(Dialog)`
                     status = {value.status}
                     detail = {value}
                     // getAutoDebitid= {getAutoDebitid}
-                />
+                />:''
+                }
+                
                 {LoadingSend && <Loading/>}
             </StyledDialog>
         </ContentWrapper>

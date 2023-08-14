@@ -40,6 +40,8 @@ export default function EditCustomerManggala(props) {
     const [ErrInputAlis, setErrInputAlias] = useState('');
     const [InputAlamat, setInputAlamat] = useState('');
     const [ErrInputAlamat, setErrInputAlamat] = useState('');
+    const [InputAlamat2, setInputAlamat2] = useState('');
+    const [InputAlamat3, setInputAlamat3] = useState('');
 
     const [ListProvinsi, setListProvinsi] = useState([]);
     const [SelProvinsi, setSelProvinsi] = useState('');
@@ -49,6 +51,11 @@ export default function EditCustomerManggala(props) {
     const [SelCity, setSelCity] = useState('');
     const [ErrSelCity, setErrSelCity] = useState('');
 
+    const [ListDistrict, setListDistrict] = useState([]);
+    const [SelDistrict, setSelDistrict] = useState('');
+    const [ErrSelDistrict, setErrSelDistrict] = useState('');
+
+    const [DataKodePos, setDataKodePos] = useState([]);
     const [ListKodePos, setListKodePos] = useState([]);
     const [SelKodePos, setSelKodePos] = useState('');
     const [ErrSelKodePos, setErrSelKodePos] = useState('');
@@ -106,8 +113,11 @@ export default function EditCustomerManggala(props) {
             setInputCustomerName(data.data.customername);
             setInputAlias(data.data.alias);
             setInputAlamat(data.data.alamat);
+            setInputAlamat2(data.data.alamat2);
+            setInputAlamat3(data.data.alamat3);
             setSelProvinsi(parseInt(data.data.provinsi));
             setSelCity(parseInt(data.data.kota));
+            setSelDistrict(data.data.district?parseInt(data.data.district):'');
             setSelKodePos(parseInt(data.data.kodepos));
             setInputNpwp(data.data.npwp);
             setInputNib(data.data.nib);
@@ -230,6 +240,23 @@ export default function EditCustomerManggala(props) {
                 }]
             ), []));
 
+            let listfilteroutputDistrict = template.districtOptions.filter(output => output.city_id == data.data.kota);
+            if(listfilteroutputDistrict.length > 0){
+                setListDistrict(listfilteroutputDistrict.reduce((obj, el) => (
+                    [...obj, {
+                        value: el.dis_id,
+                        label: el.dis_name
+                    }]
+                ), []));
+            }
+
+            // setListDistrict(template.districtOptions.reduce((obj, el) => (
+            //     [...obj, {
+            //         value: el.dis_id,
+            //         label: el.dis_name
+            //     }]
+            // ), []));
+
             setListGudang(template.warehouseOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
@@ -249,8 +276,12 @@ export default function EditCustomerManggala(props) {
                 }else{
                     setListCity([]);
                 }
+            if(data.data.district){
+                dispatch(actions.getAddressData('/postalcodebydistrict?districtid='+data.data.district,successHandlerPostalCode, errorHandler));
+            }else{
+                setLoading(false);
+            }
             
-            dispatch(actions.getAddressData('/postalcodebycityandprovince?cityid='+data.data.kota+'&provid='+data.data.provinsi,successHandlerPostalCode, errorHandler));
         }
 
         // setLoading(false);
@@ -333,12 +364,24 @@ export default function EditCustomerManggala(props) {
         setInputAlamat(val)
     }
 
+    const handleInputAlamat2 = (data) =>{
+        let val = data.target.value;
+        setInputAlamat2(val)
+    }
+
+    const handleInputAlamat3 = (data) =>{
+        let val = data.target.value;
+        setInputAlamat3(val)
+    }
+
     const handleChangeProvinsi = (data) =>{
         let id = data?.value ? data.value : '';
         setSelProvinsi(id);
         setSelKodePos('');
         setListKodePos([]);
         setSelCity('');
+        setSelDistrict('');
+        setListDistrict([]);
         setKosongAreaKirim();
         let listfilteroutput = DataTemplate.cityOptions.filter(output => output.prov_id == id);
         if(listfilteroutput.length > 0){
@@ -358,12 +401,40 @@ export default function EditCustomerManggala(props) {
         let id = data?.value ? data.value : '';
         setSelCity(id);
         setSelKodePos('');
+        setSelDistrict('');
         setListKodePos([]);
         setKosongAreaKirim();
-        setLoading(true);
-        dispatch(actions.getAddressData('/postalcodebycityandprovince?cityid='+id+'&provid='+SelProvinsi,successHandlerPostalCode, errorHandler));
+        let listfilteroutput = DataTemplate.districtOptions.filter(output => output.city_id == id);
+        if(listfilteroutput.length > 0){
+            setListDistrict(listfilteroutput.reduce((obj, el) => (
+                [...obj, {
+                    value: el.dis_id,
+                    label: el.dis_name
+                }]
+            ), []));
+        }else{
+            setListDistrict([]);
+        }
+        // setLoading(true);
+        // dispatch(actions.getAddressData('/postalcodebycityandprovince?cityid='+id+'&provid='+SelProvinsi,successHandlerPostalCode, errorHandler));
     }
+
+    const handleChangeDistrict = (data) =>{
+        let id = data?.value ? data.value : '';
+
+        setKosongAreaKirim();
+        setSelKodePos('');
+        setListKodePos([]);
+        setSelDistrict(id);
+
+        setLoading(true);
+        dispatch(actions.getAddressData('/postalcodebydistrict?districtid='+id,successHandlerPostalCode, errorHandler));
+
+        
+    }
+
     const successHandlerPostalCode = (data) =>{
+        setDataKodePos(data.data);
         const result = Object.values(
             data.data.reduce((acc, obj) => ({ ...acc, [obj.postal_code]: obj }), {})
         );
@@ -415,6 +486,7 @@ export default function EditCustomerManggala(props) {
         setErrInputNpwp('');
         setErrSelProvinsi('');
         setErrSelCity('');
+        setErrSelDistrict('');
         setErrSelKodePos('');
         setErrSelCustomerType('');
         setErrInputKementtrian('');
@@ -489,32 +561,34 @@ export default function EditCustomerManggala(props) {
                         flag = false;
                     }
 
-                    if(det.namakontak == ''){
-                        setErrInputNamaKontak(i18n.t('label_CONTACT_NAME')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.namakontak == ''){
+                    //     setErrInputNamaKontak(i18n.t('label_CONTACT_NAME')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
-                    if(det.email == ''){
-                        setErrInputEmail('Email '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.email == ''){
+                    //     setErrInputEmail('Email '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
-                    if(det.noext == ''){
-                        setErrInputNoExt('No Ext '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.noext == ''){
+                    //     setErrInputNoExt('No Ext '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
-                    if(det.listnotelepon.length > 0){
-                        for(let j=0; j < det.listnotelepon.length; j++){
-                            let detnotlp = det.listnotelepon[j];
-                            if(detnotlp.notelepon == ''){
-                                setErrInputNotelepon(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
+                    if(det.namakontak !== ''){
+                        if(det.listnotelepon.length > 0){
+                            for(let j=0; j < det.listnotelepon.length; j++){
+                                let detnotlp = det.listnotelepon[j];
+                                if(detnotlp.notelepon == ''){
+                                    setErrInputNotelepon(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
+                                    flag = false;
+                                }
                             }
+                        }else{
+                            setErrInputNotelepon(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
+                            flag = false;
                         }
-                    }else{
-                        setErrInputNotelepon(i18n.t('label_CONTACT_NUMBER')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
                     }
                 }
 
@@ -568,6 +642,11 @@ export default function EditCustomerManggala(props) {
             flag = false;
         }
 
+        if(SelDistrict == ''){
+            setErrSelDistrict(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+
         if(SelKodePos == ''){
             setErrSelKodePos(i18n.t('label_REQUIRED'));
             flag = false;
@@ -609,8 +688,11 @@ export default function EditCustomerManggala(props) {
             obj.customername = InputCustomerName;
             obj.alias = InputAlis;
             obj.alamat = InputAlamat;
+            obj.alamat2 = InputAlamat2;
+            obj.alamat3 = InputAlamat3;
             obj.provinsi = SelProvinsi;
             obj.kota = SelCity;
+            obj.district = SelDistrict;
             obj.kodepos = SelKodePos;
             obj.npwp = new String(InputNpwp).replaceAll('_','');
             obj.nib = InputNib;
@@ -642,7 +724,7 @@ export default function EditCustomerManggala(props) {
                 for(let i=0; i < InputListInfoContact.length; i++){
                     let det = InputListInfoContact[i];
                     let listnotelpinfocontact = '';
-                    if(det.panggilan !== '' && det.namakontak !== '' && det.email !== '' && det.noext !== ''){
+                    if(det.panggilan !== '' && det.namakontak !== ''){
                         let count =0;
                         for(let j=0; j < det.listnotelepon.length; j++){
                             let no = det.listnotelepon[j].notelepon;
@@ -674,7 +756,9 @@ export default function EditCustomerManggala(props) {
                     let det = InputListInfoGudang[i];
                     let objinfogudang = new Object();
                     objinfogudang.idwarehouse = det.id;
-                    listinfogudang.push(objinfogudang);
+                    if(det.namagudang !== ''){
+                        listinfogudang.push(objinfogudang);
+                    }
                     // let listkontakgudang = '';
                     // let listhpkontakgudang = '';
                     // if(det.namagudang !== '' && det.areakirim !== '' && det.alamatgudang !== ''){
@@ -747,11 +831,11 @@ export default function EditCustomerManggala(props) {
     const handleInputChange = (e, index) => {
         const { name, value } = e.target;
         let flag = true;
-        let repVal = new String(value).replaceAll('(','');
-        repVal = new String(repVal).replaceAll(')','')
-        if(name == 'nokantor' && isNaN(repVal)){
-            flag = false;
-        }
+        // let repVal = new String(value).replaceAll('(','');
+        // repVal = new String(repVal).replaceAll(')','')
+        // if(name == 'nokantor' && isNaN(repVal)){
+        //     flag = false;
+        // }
         if(flag){
             const list = [...InputListNoKantor];
             list[index][name] = value;
@@ -883,9 +967,9 @@ export default function EditCustomerManggala(props) {
         // let paramlist = 'listnotelepon';
         const { name, value } = e.target;
         let flag = true;
-        if(name == 'notelepon' && isNaN(value)){
-            flag = false;
-        }
+        // if(name == 'notelepon' && isNaN(value)){
+        //     flag = false;
+        // }
         if(flag){
             const list = [...InputListInfoContact];
             const listnotelp = list[indexparent][paramparent];
@@ -913,7 +997,10 @@ export default function EditCustomerManggala(props) {
                 customername:InputCustomerName,
                 alias:InputAlis,
                 alamat:InputAlamat,
+                alamat2:InputAlamat2,
+                alamat3:InputAlamat3,
                 provinsi:SelProvinsi,
+                district:SelDistrict,
                 city:SelCity,
                 npwp:InputNpwp,
                 nib:InputNib,
@@ -1030,8 +1117,8 @@ export default function EditCustomerManggala(props) {
                                 // }
                                 type="text"
                                 id="npwp"
-                                mask="99.999.999.9-999.999"
-                                tag={InputMask}
+                                // mask="99.999.999.9-999.999"
+                                // tag={InputMask}
                                 onChange={val => handleInputNpwp(val)}
                                 onBlur={handleBlur}
                                 value={values.npwp}
@@ -1086,6 +1173,7 @@ export default function EditCustomerManggala(props) {
                                                 // value={values.amount}
                                                 value={x.nokantor}
                                                 disabled={false}
+                                                maxLength={20}
                                                 />
                                                 </td>
                                                 
@@ -1165,6 +1253,31 @@ export default function EditCustomerManggala(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrSelCity}</div>
 
+                            <label className="mt-3 form-label required" htmlFor="district">
+                                {i18n.t('Kecamatan')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="district"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeDistrict(val)}
+                                onBlur={val => setFieldTouched("district", val?.value ? val.value : '')}
+                                data={ListDistrict}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.district}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelDistrict}</div>
+
                             <label className="mt-3 form-label required" htmlFor="kodepos">
                             {i18n.t('label_POSTAL_CODE')}
                                 <span style={{color:'red'}}>*</span>
@@ -1191,12 +1304,12 @@ export default function EditCustomerManggala(props) {
                             <div className="invalid-feedback-custom">{ErrSelKodePos}</div>
 
                             <label className="mt-3 form-label required" htmlFor="alamat">
-                            {i18n.t('label_ADDRESS')}
+                            {i18n.t('label_ADDRESS')+' 1'}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <Input
                                     name="alamat"
-                                    type="textarea"
+                                    type="text"
                                     id="alamat"
                                     onChange={val => handleInputAlamat(val)}
                                     onBlur={handleBlur}
@@ -1204,6 +1317,34 @@ export default function EditCustomerManggala(props) {
                                     disabled={false}
                             />
                             <div className="invalid-feedback-custom">{ErrInputAlamat}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="alamat2">
+                            {i18n.t('label_ADDRESS')+' 2'}
+                            </label>
+                            <Input
+                                    name="alamat2"
+                                    type="text"
+                                    id="alamat2"
+                                    onChange={val => handleInputAlamat2(val)}
+                                    onBlur={handleBlur}
+                                    value={values.alamat2}
+                                    disabled={false}
+                            />
+
+
+                            <label className="mt-3 form-label required" htmlFor="alamat3">
+                            {i18n.t('label_ADDRESS')+' 3'}
+                            </label>
+                            <Input
+                                    name="alamat3"
+                                    type="text"
+                                    id="alamat3"
+                                    onChange={val => handleInputAlamat3(val)}
+                                    onBlur={handleBlur}
+                                    value={values.alamat3}
+                                    disabled={false}
+                            />
+
 
                             {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 
@@ -1228,7 +1369,7 @@ export default function EditCustomerManggala(props) {
                             {
                                 InputListInfoKementerian.length == 0?'':
                                 
-                                <table id="tablegrid">
+                                <table id="tablegrid" style={{width:'950px'}}>
                                     
                                 <tr>
                                     <th>{i18n.t('label_MINISTRY')}</th>
@@ -1240,7 +1381,7 @@ export default function EditCustomerManggala(props) {
                                     InputListInfoKementerian.map((x, i) => {
                                         return (
                                             <tr>
-                                                <td>
+                                                <td style={{width:'300px'}}>
                                                 <Input
                                                 name="kementerian"
                                                 // className={
@@ -1260,7 +1401,7 @@ export default function EditCustomerManggala(props) {
                                                 />
                                                 </td>
 
-                                                <td>
+                                                <td style={{width:'300px'}}>
                                                 <Input
                                                 name="alamat_email"
                                                 // className={
@@ -1280,7 +1421,7 @@ export default function EditCustomerManggala(props) {
                                                 />
                                                 </td>
 
-                                                <td>
+                                                <td style={{width:'300px'}}>
                                                 <Input
                                                 name="password_email"
                                                 // className={
@@ -1300,7 +1441,7 @@ export default function EditCustomerManggala(props) {
                                                 />
                                                 </td>
 
-                                                <td>
+                                                <td style={{width:'50px'}}>
                                                 <IconButton color={'primary'} hidden={i > 0}
                                                     onClick={() => handleAddClickInfoKementerian()}
                                                 // hidden={showplusdebit}
@@ -1402,7 +1543,7 @@ export default function EditCustomerManggala(props) {
                                                                             // value={values.amount}
                                                                             value={y.notelepon}
                                                                             disabled={false}
-                                                                            maxLength={16}
+                                                                            maxLength={20}
                                                                             />
                                                                             </td>
                                                                             

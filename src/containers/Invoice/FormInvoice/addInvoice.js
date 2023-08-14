@@ -3,7 +3,7 @@ import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../../components/Layout/ContentHeading';
-import {Input,Button,Label,FormGroup,Container} from 'reactstrap';
+import {Input,Button} from 'reactstrap';
 import * as actions                 from '../../../store/actions';
 import {useDispatch}   from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
@@ -21,7 +21,7 @@ import "react-widgets/dist/css/react-widgets.css";
 // import AddIcon from '@material-ui/icons/Add';
 // import RemoveIcon from '@material-ui/icons/Remove';
 // import DeleteIcon from '@material-ui/icons/Delete';
-import { IconButton } from '@material-ui/core';
+import { IconButton, setRef } from '@material-ui/core';
 import '../../CSS/table.css';
 
 import SearchIcon from '@material-ui/icons/Search';
@@ -47,9 +47,9 @@ export default function AddForm(props) {
     const [InputTanggal, setInputTanggal] = useState(new Date());
     const [ErrInputTanggal, setErrInputTanggal] = useState('');
 
-    const [ListCustomer, setListCustomer] = useState([]);
-    const [SelCust, setSelCust] = useState('');
-    const [ErrSelCust, setErrSelCust] = useState('');
+    // const [ListCustomer, setListCustomer] = useState([]);
+    // const [SelCust, setSelCust] = useState('');
+    // const [ErrSelCust, setErrSelCust] = useState('');
 
     const [InputRefNo, setInputRefNo] = useState('');
     const [ErrInputRefNo, setErrInputRefNo] = useState('');
@@ -57,7 +57,7 @@ export default function AddForm(props) {
     const [InputDeliveredTo, setInputDeliveredTo] = useState('');
     const [ErrInputDeliveredTo, setErrInputDeliveredTo] = useState('');
 
-    const [InputDeliveredDate, setInputDeliveredDate] = useState(new Date());
+    const [InputDeliveredDate, setInputDeliveredDate] = useState(null);
     const [ErrInputDeliveredDate, setErrInputDeliveredDate] = useState('');
 
     const [ListWO, setListWO] = useState([]);
@@ -70,11 +70,14 @@ export default function AddForm(props) {
     const [SelPriceList, setSelPriceList] = useState('');
 
     const [ListInvoiceType, setListInvoiceType] = useState([]);
-    const [SelInvoiceType, setSelInvoiceType] = useState('');
+    const [SelInvoiceType, setSelInvoiceType] = useState('JASA');
     const [ErrSelInvoiceType, setErrSelInvoiceType] = useState('');
 
     const [InputDiskonNota, setInputDiskonNota] = useState('');
     const [InputTotalInvoice, setInputTotalInvoice] = useState('');
+
+    const [InputPPN, setInputPPN] = useState('');
+    const [InputNilaiPPN, setInputNilaiPPN] = useState(null);
 
     // const [InputListItem, setInputListItem] = useState([{ idinvoicetype:"",invoicetype:"",amount: "",ismandatory:"",jalur:"",qty:"",diskon:"",subtotal:""}]);
     const [InputListItem, setInputListItem] = useState([])
@@ -84,9 +87,13 @@ export default function AddForm(props) {
     
     const [InputWarehouseID, setInputWarehouseID] = useState('');
     const [InputJalur, setInputJalur] = useState('');
+    const [InputJalurName, setInputJalurName] = useState('');
     const [InputCustomerID, setInputCustomerID] = useState('');
     const [InputCustomer, setInputCustomer] = useState('');
     const [ErrInputCustomer, setErrInputCustomer] = useState('');
+    const [ListSuratJalanWO, setListSuratJalanWO] = useState([]);
+    const [IsHideColumnWarehouse, setIsHideColumnWarehouse] = useState(false);
+    const [DataTemplate, setDataTemplate] = useState([]);
 
     useEffect(() => {
         setLoading(true);
@@ -94,6 +101,7 @@ export default function AddForm(props) {
     }, []);
 
     const successHandlerTemplate = (data) =>{
+        setDataTemplate(data.data);
         if(data.data){
             setListInvoiceType(data.data.invoiceTypeOptions.reduce((obj, el) => (
                 [...obj, {
@@ -101,7 +109,10 @@ export default function AddForm(props) {
                     label: el.codename
                 }]
             ), []));
+
+            setInputPPN(data.data.defaultPPN?numToMoney(parseFloat(data.data.defaultPPN)):'');
         }
+        
         setLoading(false);
     }
 
@@ -136,17 +147,87 @@ export default function AddForm(props) {
     const handleChangeWo = (data) =>{
         let id = data?.value ? data.value : '';
         let jalur = data?.jalur ? data.jalur : '';
+        let jalurname = data?.jalurname ? data.jalurname : '';
+        let noblawb = data?.noblawb ? data.noblawb : '';
         setSelWO(id);
         setInputJalur(jalur);
+        setInputJalurName(jalurname);
         setSelSJ('');
         setListSJ([]);
         setInputWarehouseID('');
         setSelPriceList('');
         setListPriceList([]);
         setInputListItem([]);
+        setListSuratJalanWO([]);
+        setInputRefNo(noblawb);
+        
+        localStorage.setItem('idwo',id);
+        
+        if(SelInvoiceType == 'REIMBURSEMENT'){
+            // dispatch(actions.getInvoiceData('/searchpengeluaran/'+id,successHandlerPengeluaran, errorHandler));
+        }else{
+            setLoading(true);
+            dispatch(actions.getInvoiceData('/suratjalan/'+id,successHandlerSJJ, errorHandler));
+        }
+        // dispatch(actions.getInvoiceData('/searchsj/'+id,successHandlerSj, errorHandler));
+    }
 
-        setLoading(true);
-        dispatch(actions.getInvoiceData('/searchsj/'+id,successHandlerSj, errorHandler));
+    function successHandlerSJJ(data) {
+        let list = [];
+        let delivDate = null;
+        let idSj = '';
+        if(data.data.suratjalan){
+            for(let i=0; i < data.data.suratjalan.length ; i++){
+                let det = data.data.suratjalan[i];
+
+                let obj = new Object();
+                obj.nosj = det.nodocument;
+                obj.warehouse = det.warehousename;
+                obj.nocontainer = det.nocontainer;
+                obj.tanggal = det.tanggal?moment (new Date(det.tanggal)).format(formatdate):'';
+                obj.tanggalkembali = det.tanggalkembali?moment (new Date(det.tanggalkembali)).format(formatdate):null;
+
+                if(delivDate == null && det.tanggalkembali){
+                    delivDate = new Date(det.tanggalkembali);
+                    idSj = det.id;
+                }else if(det.tanggalkembali && delivDate > new Date(det.tanggalkembali)){
+                    delivDate = new Date(det.tanggalkembali);
+                    idSj = det.id;
+                }
+                if(data.data.partaiwo){
+                    let listpartai = data.data.partaiwo.filter(output => output.nocontainer == det.nocontainer);
+                    if(listpartai.length > 0){
+                        for(let j=0; j < listpartai.length ; j++){
+                            let obj1 = new Object();
+                            obj1 = obj;
+                            obj1.partai = listpartai[j].partainame;
+                            list.push(obj1);
+                        }
+                    }else{
+                        obj.partai = '';
+                        list.push(obj);
+                    }
+                }else{
+                    obj.partai = '';
+                    list.push(obj);
+                }
+                
+            }
+            
+        }
+        
+        if(delivDate != null){
+            setInputDeliveredDate(moment(new Date(delivDate), formatdate).toDate());
+        }else{
+            setInputDeliveredDate(null);
+        }
+        
+
+        setListSuratJalanWO(list);
+
+        let idwo = localStorage.getItem('idwo');
+        setSelSJ(idSj);
+        dispatch(actions.getInvoiceData('/searchsj/'+idwo,successHandlerSj, errorHandler));
     }
 
     const successHandlerSj = (data) =>{
@@ -155,7 +236,8 @@ export default function AddForm(props) {
                 [...obj, {
                     value: el.id,
                     label: el.nodocument,
-                    idwarehouse: el.idwarehouse
+                    idwarehouse: el.idwarehouse,
+                    nodoc: el.nodocument,
                 }]
             ), []));
         }
@@ -164,19 +246,51 @@ export default function AddForm(props) {
 
     const handleChangeSj = (data) =>{
         let id = data?.value ? data.value : '';
+        let nodoc = data?.nodoc ? data.nodoc : '';
         setSelSJ(id);
         setSelPriceList('');
         setListPriceList([]);
         setInputListItem([]);
+
+        let list = ListSuratJalanWO.filter(output => output.nosj == nodoc);
+        if(list.length > 0){
+            if(list[0].tanggalkembali){
+                setInputDeliveredDate(moment(new Date(list[0].tanggalkembali), formatdate).toDate());
+            }
+        }else{
+            setInputDeliveredDate(null);
+        }
     }
 
     const handleChangeInvType = (data) =>{
         let id = data?.value ? data.value : '';
         setSelInvoiceType(id);
-        setSelSJ('');
+
         setSelPriceList('');
         setListPriceList([]);
         setInputListItem([]);
+        setListSuratJalanWO([]);
+        setInputDeliveredDate(null);
+        setInputDiskonNota('');
+        setInputTotalInvoice('');
+
+        if(id == 'REIMBURSEMENT'){
+            setSelSJ('');
+            setInputPPN('');
+            setInputNilaiPPN(null);
+        }else{
+            let ppn = DataTemplate.defaultPPN?numToMoney(parseFloat(DataTemplate.defaultPPN)):'';
+            setInputPPN(ppn);
+            if(ppn !== ''){
+                calculateTotalInvoice(InputListItem,InputDiskonNota,ppn);
+            }
+            if(SelWO !== '' && SelSJ == ''){
+                setLoading(true);
+                localStorage.setItem('idwo',SelWO);
+                dispatch(actions.getInvoiceData('/suratjalan/'+SelWO,successHandlerSJJ, errorHandler));
+            }
+            
+        }
     }
 
     const handleChangePriceList = (data) =>{
@@ -184,14 +298,17 @@ export default function AddForm(props) {
         let dataval = data?.dataval ? data.dataval : '';
         
         setSelPriceList(id);
-        setInputListItem([]);
+        // setInputListItem([]);
         let listitem = [];
+        setIsHideColumnWarehouse(false);
         if(SelInvoiceType == 'REIMBURSEMENT'){
+            setIsHideColumnWarehouse(true);
             for(let i=0; i < dataval.length; i++){
                 let det = dataval[i];
                 let obj = new Object();
                 obj.idpricelist = 0;
                 obj.idwarehouse = 0;
+                obj.warehousename = '';
                 obj.idinvoicetype = det.idinvoiceitem;
                 obj.invoicetype = det.invoiceitemName;
                 obj.amount = det.amount;
@@ -201,16 +318,18 @@ export default function AddForm(props) {
                 obj.diskon = '0';
                 obj.subtotal = det.amount;
                 obj.idpengeluarankasbank = det.idpengeluarankasbank;
-                listitem.push(obj);
+                // listitem.push(obj);
             }
-            calculateTotalInvoice(listitem,InputDiskonNota);
+            // calculateTotalInvoice(listitem,InputDiskonNota);
         }else{
+            setInputListItem([]);
             if(dataval.details){
                 for(let i=0; i < dataval.details.length; i++){
                     let det = dataval.details[i];
                     let obj = new Object();
                     obj.idpricelist = det.idpricelist;
                     obj.idwarehouse = det.idwarehouse;
+                    obj.warehousename = det.warehouseName;
                     obj.idinvoicetype = det.idinvoicetype;
                     obj.invoicetype = det.invoicetypename;
                     obj.amount = det.price;
@@ -225,9 +344,9 @@ export default function AddForm(props) {
                 
             }
         }
-        if(listitem.length > 0){
-            setInputListItem(listitem);     
-        }
+            if(listitem.length > 0){
+                setInputListItem(listitem);     
+            }
     }
 
     const handleChangeDiskonNota = (data) =>{
@@ -237,8 +356,32 @@ export default function AddForm(props) {
         if(flagReg){
             val = formatMoney(val);
             let valtemp = val;
-            calculateTotalInvoice(InputListItem,valtemp);
+            calculateTotalInvoice(InputListItem,valtemp,InputPPN);
             setInputDiskonNota(val);
+        }
+        
+    }
+
+    const handleChangeTotalInvoice = (data) =>{
+        let val = data.target.value;
+        // val = new String(val).replaceAll('.','').replaceAll(',','.');
+        let flagReg = inputJustNumberAndCommaDot(val);
+        if(flagReg){
+            val = formatMoney(val);
+            setInputTotalInvoice(val);
+        }
+        
+    }
+
+    const handleChangePPN = (data) =>{
+        let val = data.target.value;
+        // val = new String(val).replaceAll('.','').replaceAll(',','.');
+        let flagReg = inputJustNumberAndCommaDot(val);
+        if(flagReg){
+            val = formatMoney(val);
+            let valtemp = val;
+            calculateTotalInvoice(InputListItem,InputDiskonNota,valtemp);
+            setInputPPN(val);
         }
         
     }
@@ -254,25 +397,26 @@ export default function AddForm(props) {
         setErrItems('');
         setErrQty('');
 
-        
-        if(InputListItem.length > 0){
-            for(let i=0; i < InputListItem.length; i++){
-                let det = InputListItem[i];
-                if(det.ismandatory == 'Y'){
-                    if(det.qty !== ''){
-                        if(parseFloat(det.qty) <= 0){
+        if(SelInvoiceType !== 'DP'){
+            if(InputListItem.length > 0){
+                for(let i=0; i < InputListItem.length; i++){
+                    let det = InputListItem[i];
+                    if(det.ismandatory == 'Y'){
+                        if(det.qty !== ''){
+                            if(parseFloat(det.qty) <= 0){
+                                setErrQty(i18n.t('Qty')+' '+i18n.t('label_REQUIRED'));
+                                flag = false;
+                            }
+                        }else{
                             setErrQty(i18n.t('Qty')+' '+i18n.t('label_REQUIRED'));
                             flag = false;
                         }
-                    }else{
-                        setErrQty(i18n.t('Qty')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
                     }
                 }
+            }else{
+                setErrItems('Items '+i18n.t('label_REQUIRED'));
+                flag = false;
             }
-        }else{
-            setErrItems('Items '+i18n.t('label_REQUIRED'));
-            flag = false;
         }
 
         if(InputTanggal == null){
@@ -285,20 +429,20 @@ export default function AddForm(props) {
             flag = false;
         }
 
-        if(InputRefNo == ''){
-            setErrInputRefNo(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(InputRefNo == ''){
+        //     setErrInputRefNo(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
-        if(InputDeliveredTo == ''){
-            setErrInputDeliveredTo(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(InputDeliveredTo == ''){
+        //     setErrInputDeliveredTo(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
-        if(InputDeliveredDate == null){
-            setErrInputDeliveredDate(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(InputDeliveredDate == null){
+        //     setErrInputDeliveredDate(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         if(SelInvoiceType == ''){
             setErrSelInvoiceType(i18n.t('label_REQUIRED'));
@@ -337,12 +481,15 @@ export default function AddForm(props) {
             obj.deliveredto = InputDeliveredTo;
             obj.deliverydate = moment(InputDeliveredDate).toDate().getTime();
             obj.idwo = SelWO !== ''?SelWO:null;
-            obj.idsuratjalan = SelSJ !== ''?SelSJ:null;
             obj.idinvoicetype = SelInvoiceType;
             obj.totalinvoice = InputTotalInvoice !== ''?new String(InputTotalInvoice).replaceAll('.','').replaceAll(',','.'):0;
-            obj.diskonnota = InputDiskonNota !== ''?new String(InputDiskonNota).replaceAll('.','').replaceAll(',','.'):0;
             obj.isactive = true;
 
+            obj.idsuratjalan = SelSJ !== '' && SelInvoiceType !== 'DP'?SelSJ:null;
+            obj.diskonnota = InputDiskonNota !== '' && SelInvoiceType !== 'DP'?new String(InputDiskonNota).replaceAll('.','').replaceAll(',','.'):0;
+            obj.ppn = InputPPN !== '' && SelInvoiceType !== 'DP'?new String(InputPPN).replaceAll('.','').replaceAll(',','.'):null;
+            obj.nilaippn = InputNilaiPPN !== '' ? new String(InputNilaiPPN).replaceAll('.','').replaceAll(',','.'):null;
+            
             let listDetailsPrice = [];
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
@@ -351,7 +498,7 @@ export default function AddForm(props) {
                     objDetail.idwarehouse = det.idwarehouse;
                     objDetail.idinvoicetype = det.idinvoicetype;
                     objDetail.jalur = det.jalur;
-                    objDetail.price = det.amount;
+                    objDetail.price = new String(det.amount).replaceAll('.','').replaceAll(',','.');
                     objDetail.ismandatory = det.ismandatory;
                     objDetail.idpricelist = det.idpricelist;
                     objDetail.qty = det.qty;
@@ -362,7 +509,7 @@ export default function AddForm(props) {
                 }
             }
 
-            obj.detailsprice = listDetailsPrice;
+            obj.detailsprice = SelInvoiceType == 'DP'?[]:listDetailsPrice;
             dispatch(actions.submitAddInvoice('',obj,succesHandlerSubmit, errorHandler));
         }
 
@@ -388,23 +535,34 @@ export default function AddForm(props) {
         setInputCustomerID(data.id);
         setSelWO('');
         setInputJalur('');
+        setInputJalurName('');
         setListWO([]);
         setSelSJ('');
         setListSJ([]);
         setSelPriceList('');
         setListPriceList([]);
         setInputWarehouseID('');
+        setInputDeliveredTo('');
         setLoading(true);
+        // dispatch(actions.getInvoiceData('/getdistrict/'+data.kodepos,successHandlerDistrict, errorHandler));
         dispatch(actions.getInvoiceData('/searchwo/'+data.id,successHandlerWO, errorHandler));
     }
-
+    const successHandlerDistrict = (data) => {
+        if(data.data){
+            if(data.data.length > 0){
+                setInputDeliveredTo(data.data[0].dis_name);
+            }
+        }
+    }
     const successHandlerWO = (data) => {
         if(data.data){
             setListWO(data.data.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument,
-                    jalur: el.jalur
+                    label: el.nodocument+' - '+el.noaju,
+                    jalur: el.jalur,
+                    jalurname: el.jalurname,
+                    noblawb: el.nobl,
                 }]
             ), []));
         }
@@ -436,6 +594,8 @@ export default function AddForm(props) {
         if(flag){
             setLoading(true);
             if(SelInvoiceType == 'REIMBURSEMENT'){
+                setInputListItem([]);
+                setIsHideColumnWarehouse(false);
                 dispatch(actions.getInvoiceData('/searchpengeluaran/'+SelWO,successHandlerPengeluaran, errorHandler));
             }else{
                 let obj = new Object();
@@ -449,8 +609,11 @@ export default function AddForm(props) {
         }
         
     }
+
+    
     const successHandlerPengeluaran = (data) =>{
         //let filterid = RowsBranch.filter(output => output.id == SelBranch);
+        setIsHideColumnWarehouse(true);
         if(data.data){
             setListPriceList(data.data.headers.reduce((obj, el) => (
                 [...obj, {
@@ -459,6 +622,31 @@ export default function AddForm(props) {
                     dataval:data.data?.details?data.data.details.filter(output => output.idpengeluarankasbank == el.id):[]
                 }]
             ), []));
+            
+            if(data.data.details){
+                let listitem = [];
+                let dataval = data.data.details;
+                for(let i=0; i < dataval.length; i++){
+                    let det = dataval[i];
+                    let obj = new Object();
+                    obj.idpricelist = 0;
+                    obj.idwarehouse = 0;
+                    obj.warehousename = '';
+                    obj.idinvoicetype = det.idinvoiceitem;
+                    obj.invoicetype = det.invoiceitemName;
+                    obj.amount = det.amount;
+                    obj.ismandatory = 'N';// == 'Y'?'Yes':'No';
+                    obj.jalur = '';// == 'MERAH'?'Merah':'Hijau';
+                    obj.qty = '1';
+                    obj.diskon = '0';
+                    obj.subtotal = det.amount;
+                    obj.idpengeluarankasbank = det.idpengeluarankasbank;
+                    listitem.push(obj);
+                }
+                calculateTotalInvoice(listitem,InputDiskonNota,InputPPN);
+                setInputListItem(listitem);
+            }
+            
         }
         setLoading(false);
     }
@@ -507,14 +695,22 @@ export default function AddForm(props) {
                 }
                 list[index]['subtotal'] = calculateSubTotal(list[index]['amount'],list[index]['diskon'],value);
             }
+        }else if(name == 'amount'){
+            let flagReg = inputJustNumberAndCommaDot(value);
+            if(flagReg){
+                valTemp = new String(valTemp).replaceAll('.','').replaceAll(',','.');
+                valTemp = formatMoney(value);
+                list[index][name] = valTemp;
+            }
+            list[index]['subtotal'] = calculateSubTotal(valTemp,list[index]['diskon'],list[index]['qty']);
         }else{
             // const list = [...InputListItem];
             list[index][name] = valTemp;
         }
-        calculateTotalInvoice(list,InputDiskonNota);
+        calculateTotalInvoice(list,InputDiskonNota,InputPPN);
         setInputListItem(list);
     };
-    const calculateTotalInvoice = (list,diskonnota) => {
+    const calculateTotalInvoice = (list,diskonnota,ppn) => {
         let total = 0;
         for(let i=0; i < list.length; i++){
             let det = list[i];
@@ -524,6 +720,7 @@ export default function AddForm(props) {
                 }
             }
         }
+        if(total !== 0){
         let diskonVal = new String(diskonnota).replaceAll('.','').replaceAll(',','.');
         if(!isNaN(diskonVal) && diskonVal !== ''){
             if(parseFloat(diskonVal) >= 50){
@@ -531,6 +728,20 @@ export default function AddForm(props) {
             }else{
                 total = total - ( (parseFloat(diskonVal) / 100) * total );
             }
+        }
+
+        //20230801
+        setInputNilaiPPN(null);
+        if(ppn != undefined){
+            ppn = new String(ppn).replaceAll('.','').replaceAll(',','.');
+            if(!isNaN(ppn)){
+                ppn = parseFloat(ppn);
+                let valPPN = parseFloat(ppn / 100);
+                let totalPPN = total * valPPN;
+                setInputNilaiPPN(totalPPN);
+                total = total + totalPPN;
+            }
+        }
         }
         setInputTotalInvoice(numToMoney(total));
     }
@@ -570,9 +781,11 @@ export default function AddForm(props) {
                 sj:SelSJ,
                 invtype:SelInvoiceType,
                 discnota:InputDiskonNota,
+                ppn:InputPPN,
                 total:InputTotalInvoice,
                 pricelist:SelPriceList,
-                items:InputListItem
+                items:InputListItem,
+                jalurname:InputJalurName
             }
         }
 
@@ -603,27 +816,8 @@ export default function AddForm(props) {
                             <ContentWrapper>
                             <ContentHeading history={history} link={pathmenu.addInvoice} label={'Add Invoice'} labeldefault={'Add Invoice'} />
                             <div className="row mt-2">
-                            <div className="mt-2 col-lg-6 ft-detail mb-5">
-                            <label className="mt-3 form-label required" htmlFor="tanggal">
-                                {i18n.t('label_DATE')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <DatePicker
-                                    name="tanggal"
-                                    // onChange={(val) => {
-                                    //         setFieldValue("startdate", val);
-                                    //     }
-                                    // }
-                                    onChange={val => handleChangeTanggal(val)}
-                                    onBlur={handleBlur}
-                                    // defaultValue={Date(moment([]))}
-                                    format={formatdate}
-                                    value={values.tanggal}
-                                    // style={{width: '25%'}}
-                                    disabled={false}                       
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputTanggal}</div>
-
+                            
+                            <div className="mt-1 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="customer">
                                 {i18n.t('label_CUSTOMER')}
                                 <span style={{color:'red'}}>*</span>
@@ -661,9 +855,32 @@ export default function AddForm(props) {
                             </table>
                             <div className="invalid-feedback-custom">{ErrInputCustomer}</div>
 
+                            <label className="mt-3 form-label required" htmlFor="wo">
+                                {i18n.t('Work Order')}
+                            </label>
+
+                                <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="wo"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeWo(val)}
+                                    onBlur={val => setFieldTouched("wo", val?.value ? val.value : '')}
+                                    data={ListWO}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.wo}
+                                />
+
                             <label className="mt-3 form-label required" htmlFor="refno">
                                 {i18n.t('Ref. No')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
                             <Input
                                 name="refno"
@@ -678,28 +895,9 @@ export default function AddForm(props) {
                                 onChange={val => handleInputRefNo(val)}
                                 onBlur={handleBlur}
                                 value={values.refno}
+                                disabled={true}
                             />
                             <div className="invalid-feedback-custom">{ErrInputRefNo}</div>
-
-                            <label className="mt-3 form-label required" htmlFor="deliveredto">
-                                {i18n.t('Delivered To')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <Input
-                                name="deliveredto"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="deliveredto"
-                                maxLength={30}
-                                onChange={val => handleInputDeliveredTo(val)}
-                                onBlur={handleBlur}
-                                value={values.deliveredto}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputDeliveredTo}</div>
 
                             <label className="mt-3 form-label required" htmlFor="delivereddate">
                                 {i18n.t('Delivery Date')}
@@ -717,11 +915,32 @@ export default function AddForm(props) {
                                     format={formatdate}
                                     value={values.delivereddate}
                                     // style={{width: '25%'}}
-                                    disabled={false}                       
+                                    disabled={true}                       
                             />
                             <div className="invalid-feedback-custom">{ErrInputDeliveredDate}</div>
                             </div>
+
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
+                            <label className="mt-3 form-label required" htmlFor="tanggal">
+                                {i18n.t('label_DATE')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <DatePicker
+                                    name="tanggal"
+                                    // onChange={(val) => {
+                                    //         setFieldValue("startdate", val);
+                                    //     }
+                                    // }
+                                    onChange={val => handleChangeTanggal(val)}
+                                    onBlur={handleBlur}
+                                    // defaultValue={Date(moment([]))}
+                                    format={formatdate}
+                                    value={values.tanggal}
+                                    // style={{width: '25%'}}
+                                    disabled={false}                       
+                            />
+                            <div className="invalid-feedback-custom">{ErrInputTanggal}</div>
+
                             <label className="mt-3 form-label required" htmlFor="invtype">
                                 {i18n.t('Invoice Type')}
                                 <span style={{color:'red'}}>*</span>
@@ -746,30 +965,27 @@ export default function AddForm(props) {
                                     value={values.invtype}
                                 />
                                 <div className="invalid-feedback-custom">{ErrSelInvoiceType}</div>
-
-                            <label className="mt-3 form-label required" htmlFor="wo">
-                                {i18n.t('Work Order')}
+                            <div hidden={values.invtype == 'DP'}>
+                            <label className="mt-3 form-label required" htmlFor="jalurname">
+                                {i18n.t('Penjaluran')}
                             </label>
+                            <Input
+                                name="jalurname"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="jalurname"
+                                // maxLength={30}
+                                // onChange={val => handleInputDeliveredTo(val)}
+                                onBlur={handleBlur}
+                                disabled={true}
+                                value={values.jalurname}
+                            />
 
-                                <DropdownList
-                                    // className={
-                                    //     touched.branch && errors.branch
-                                    //         ? "input-error" : ""
-                                    // }
-                                    name="wo"
-                                    filter='contains'
-                                    placeholder={i18n.t('select.SELECT_OPTION')}
-                                    
-                                    onChange={val => handleChangeWo(val)}
-                                    onBlur={val => setFieldTouched("wo", val?.value ? val.value : '')}
-                                    data={ListWO}
-                                    textField={'label'}
-                                    valueField={'value'}
-                                    // style={{width: '25%'}}
-                                    // disabled={values.isdisabledcountry}
-                                    value={values.wo}
-                                />
-
+                            <div hidden={SelInvoiceType == 'REIMBURSEMENT'}>
                             <label className="mt-3 form-label required" htmlFor="sj">
                                 {i18n.t('Surat Jalan')}
                             </label>
@@ -793,6 +1009,26 @@ export default function AddForm(props) {
                                     value={values.sj}
                                     disabled={SelInvoiceType == 'REIMBURSEMENT'}
                                 />
+                            </div>
+
+                            <label className="mt-3 form-label required" htmlFor="ppn">
+                                {i18n.t('PPN')}
+                            </label>
+                            <Input
+                                name="ppn"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="ppn"
+                                maxLength={30}
+                                onChange={val => handleChangePPN(val)}
+                                onBlur={handleBlur}
+                                value={values.ppn}
+                                disabled={SelInvoiceType == 'REIMBURSEMENT'}
+                            />
 
                             <label className="mt-3 form-label required" htmlFor="discnota">
                                 {i18n.t('Diskon Nota')}
@@ -810,10 +1046,12 @@ export default function AddForm(props) {
                                 onChange={val => handleChangeDiskonNota(val)}
                                 onBlur={handleBlur}
                                 value={values.discnota}
+                                disabled={SelInvoiceType == 'REIMBURSEMENT'}
                             />
+                            </div>
 
                             <label className="mt-3 form-label required" htmlFor="total">
-                                {i18n.t('Total Invoice')}
+                                {i18n.t(values.invtype == 'DP'?'DP':'Total Invoice')}
                             </label>
                             <Input
                                 name="total"
@@ -825,16 +1063,41 @@ export default function AddForm(props) {
                                 type="text"
                                 id="total"
                                 // maxLength={30}
-                                // onChange={val => handleChangeDiskonNota(val)}
+                                onChange={val => handleChangeTotalInvoice(val)}
                                 onBlur={handleBlur}
                                 value={values.total}
-                                disabled={true}
+                                disabled={values.invtype == 'DP'?false:true}
                             />
+
                             
 
+                            {/* <label className="mt-3 form-label required" htmlFor="deliveredto">
+                                {i18n.t('Delivered To')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <Input
+                                name="deliveredto"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="deliveredto"
+                                // maxLength={30}
+                                // onChange={val => handleInputDeliveredTo(val)}
+                                onBlur={handleBlur}
+                                disabled={true}
+                                value={values.deliveredto}
+                            />
+                            <div className="invalid-feedback-custom">{ErrInputDeliveredTo}</div> */}
+
+                            
                             </div>
+                            
                             </div>
 
+                            <div hidden={values.invtype == 'DP'}>
                             <div className="invalid-feedback-custom">{ErrItems}</div>
                             <div className="invalid-feedback-custom">{ErrQty}</div>
                             <table>
@@ -871,13 +1134,14 @@ export default function AddForm(props) {
                             </tbody>
                             </table>
                             {
-                                // values.items.length == 0?'':
+                                // values.items.length == 0?'': 
                                 <table id="tablegrid">
                                     <tr>
+                                        <th hidden={IsHideColumnWarehouse}>{i18n.t('Warehouse')}</th>
                                         <th>{i18n.t('Invoice Type')}</th>
                                         <th>{i18n.t('Harga')}</th>
                                         {/* <th>{i18n.t('Is Mandatory')}</th> */}
-                                        <th>{i18n.t('Jalur')}</th>
+                                        {/* <th>{i18n.t('Jalur')}</th> */}
                                         <th>{i18n.t('Qty')}</th>
                                         <th>{i18n.t('Diskon')}</th>
                                         <th>{i18n.t('Sub Total')}</th>
@@ -888,6 +1152,25 @@ export default function AddForm(props) {
                                             values.items.map((x, i) => {
                                                 return (
                                                 <tr>
+                                                    <td width={'350px'} hidden={IsHideColumnWarehouse}>
+                                                    <Input
+                                                        name="warehousename"
+                                                        // className={
+                                                        //     touched.amount && errors.amount
+                                                        //         ? "w-50 input-error"
+                                                        //         : "w-50"
+                                                        // }
+                                                        type="text"
+                                                        id="warehousename"
+                                                        // onChange={val => handleInputChange(val,i)}
+                                                        onBlur={handleBlur}
+                                                        // placeholder={i18n.t('label_AMOUNT')}
+                                                        // style={{width: '25%'}}
+                                                        // value={values.amount}
+                                                        value={x.warehousename}
+                                                        disabled={true}
+                                                    />
+                                                    </td>
                                                     <td>
                                                     <Input
                                                         name="invoicetype"
@@ -917,13 +1200,13 @@ export default function AddForm(props) {
                                                         // }
                                                         type="text"
                                                         id="amount"
-                                                        // onChange={val => handleInputChange(val,i)}
+                                                        onChange={val => handleInputChange(val,i)}
                                                         onBlur={handleBlur}
                                                         // placeholder={i18n.t('label_AMOUNT')}
                                                         // style={{width: '25%'}}
                                                         // value={values.amount}
-                                                        value={x.amount !== ''?numToMoney(parseFloat(x.amount)):'0'}
-                                                        disabled={true}
+                                                        value={x.amount !== ''?numToMoney(parseFloat(new String(x.amount).replaceAll('.',''))):'0'}
+                                                        disabled={false}
                                                     />
                                                     </td>
                                                     {/* <td>
@@ -945,7 +1228,7 @@ export default function AddForm(props) {
                                                         disabled={true}
                                                     />
                                                     </td> */}
-                                                    <td>
+                                                    {/* <td>
                                                     <Input
                                                         name="jalur"
                                                         // className={
@@ -964,7 +1247,7 @@ export default function AddForm(props) {
                                                         style={{backgroundColor:x.jalur !== ''? (x.jalur == 'HIJAU'?'greenyellow':'red'):''}}
                                                         disabled={true}
                                                     />
-                                                    </td>
+                                                    </td> */}
                                                     <td>
                                                     <Input
                                                         name="qty"
@@ -1030,6 +1313,35 @@ export default function AddForm(props) {
                                 </table>
                             }
 
+                            {
+                                    <table id="tablegrid" hidden={SelInvoiceType == 'REIMBURSEMENT'}>
+                                        <tr>
+                                            <th>{i18n.t('No Surat Jalan')}</th>
+                                            <th>{i18n.t('Gudang')}</th>
+                                            <th>{i18n.t('No Container')}</th>
+                                            <th>{i18n.t('Tanggal Loading/Unloading')}</th>
+                                            {/* <th>{i18n.t('Partai')}</th> */}
+                                        </tr>
+                                        <tbody>
+                                            {
+                                                ListSuratJalanWO.map((x, i) => {
+                                                    return(
+                                                        <tr>
+                                                            <td>{x.nosj}</td>
+                                                            <td>{x.warehouse}</td>
+                                                            <td>{x.nocontainer}</td>
+                                                            <td>{x.tanggalkembali !== null?x.tanggalkembali:''}</td>
+                                                            {/* <td>{x.partai}</td> */}
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                        </tbody>
+                                    </table>
+                                    
+                                }
+                                </div>
+
                             </ContentWrapper>
                             {loading && <Loading/>}
                             <div className="row justify-content-center" style={{marginTop:'-30px',marginBottom:'20px'}}>
@@ -1064,7 +1376,7 @@ export default function AddForm(props) {
                                             seacrhtype = {'CUSTOMERINVOICE'}
                                             errorHandler = {errorHandler}
                                             handlesearch = {handleQuickSeacrh}
-                                            placeholder = {'Pencarian Berdasarkan Nama Customer'}
+                                            placeholder = {'Pencarian Berdasarkan Nama Atau Alias'}
                                         ></FormSearch>
                                         {LoadingSend && <Loading/>}
                                 </StyledDialog>

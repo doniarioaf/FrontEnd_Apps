@@ -30,6 +30,9 @@ export default function EditPaymentType(props) {
     const [ErrInputNama, setErrInputNama] = useState('');
     const [InputIsActive, setInputIsActive] = useState(true);
 
+    const [ListCOA, setListCOA] = useState([]);
+    const [SelCOA, setSelCOA] = useState('');
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -47,12 +50,43 @@ export default function EditPaymentType(props) {
                     label: el.codename
                 }]
             ), []));
+
+            let listcoa = template.coaOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama+' ('+el.code+')'
+                }]
+            ), []);
+            listcoa.push(
+                {
+                    value: 'nodata',
+                    label: 'No Data'
+                }
+                )
+            setListCOA(listcoa);
+
             setSelPaymentType(det.paymenttype);
             setInputNama(det.nama);
             setInputIsActive(det.isactive?true:false);
+            if(det.idcoa !== null && det.idcoa !== undefined){
+                if(parseInt(det.idcoa) > 0){
+                    setSelCOA(parseInt(det.idcoa));
+                }else{
+                    setSelCOA('nodata');    
+                }
+                
+            }else{
+                setSelCOA('nodata');
+            }
+            
         }
 
         setLoading(false);
+    }
+
+    const handleChangeCoa = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelCOA(id);
     }
 
     const handleChangePaymentType = (data) =>{
@@ -110,6 +144,11 @@ export default function EditPaymentType(props) {
             obj.paymenttype = SelPaymentType;
             obj.nama = InputNama;
             obj.isactive = InputIsActive;
+            if(SelCOA == '' || SelCOA == 'nodata'){
+                obj.idcoa = null;
+            }else{
+                obj.idcoa = SelCOA;
+            }
             dispatch(actions.submitEditPaymentType('/'+id,obj,succesHandlerSubmit, errorHandler));
         }
     }
@@ -147,7 +186,8 @@ export default function EditPaymentType(props) {
             {
                 paymenttype:SelPaymentType,
                 nama:InputNama,
-                isactive:InputIsActive
+                isactive:InputIsActive,
+                coa:SelCOA
             }
         }
         validate={values => {
@@ -225,6 +265,29 @@ export default function EditPaymentType(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputNama}</div>
 
+
+                            <label className="mt-3 form-label" htmlFor="coa">
+                                {i18n.t('COA')}
+                                </label>
+
+                                <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="coa"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeCoa(val)}
+                                    onBlur={val => setFieldTouched("coa", val?.value ? val.value : '')}
+                                    data={ListCOA}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.coa}
+                                />
                             
 
                             {/* <FormGroup check style={{marginTop:'20px'}}>

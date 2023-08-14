@@ -241,16 +241,31 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_DISTRICT')}</span>
+                            <span className="col-md-5">{i18n.t('Kecamatan')}</span>
                                 <strong className="col-md-7">
                                 {value.kecamatanname?value.kecamatanname:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_ADDRESS')}</span>
+                            <span className="col-md-5">{i18n.t('label_ADDRESS')+' 1'}</span>
                                 <strong className="col-md-7">
                                 {value.alamat?value.alamat:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_ADDRESS')+' 2'}</span>
+                                <strong className="col-md-7">
+                                {value.alamat2?value.alamat2:''}
+                                </strong>
+                            </div>
+
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_ADDRESS')+' 3'}</span>
+                                <strong className="col-md-7">
+                                {value.alamat3?value.alamat3:''}
                                 </strong>
                             </div>
 

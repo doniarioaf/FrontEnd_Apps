@@ -36,17 +36,54 @@ const CetakInvoiceIndex = (props) => {
             let det = data.data;
             det.tanggal = dettemp.tanggal ?moment (new Date(dettemp.tanggal)).format(formatdate):'';
             det.deliverydate = dettemp.deliverydate ?moment (new Date(dettemp.deliverydate)).format(formatdate):'';
-            setValue(det);
+
+            let flag = true;
+            // if(det.idwo != undefined && det.idwo != null && det.idinvoicetype !== 'DP'){
+            //     if(det.idwo > 0){
+            //         flag = false;
+            //         dispatch(actions.getInvoiceDataParam('/suratjalan/'+det.idwo,det,successHandlerSJ, errorHandlerSJ));
+            //     }
+            // }
+
+            if(flag){
+                setValue(det);
 
             // setIsReady(true);
-            setTimeout(() => {
-                setIsReady(true);
-                
-            }, 1000);
+                setTimeout(() => {
+                    setIsReady(true);
+                    
+                }, 1000);
 
-            setLoading(false);
+                setLoading(false);
+            }
+            
 
         }
+    }
+
+    function successHandlerSJ(data,param) {
+        let det = param;
+        det.lampiransuratjalan = data.data;
+        setValue(det);
+
+    // setIsReady(true);
+        setTimeout(() => {
+            setIsReady(true);
+            
+        }, 1000);
+
+        setLoading(false);
+    }
+    const errorHandlerSJ = (data,param) => {
+        setValue(param);
+
+    // setIsReady(true);
+        setTimeout(() => {
+            setIsReady(true);
+            
+        }, 1000);
+
+        setLoading(false);
     }
     const errorHandler = (data) => {
         setLoading(false);

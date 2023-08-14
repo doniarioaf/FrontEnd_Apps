@@ -63,38 +63,38 @@ const GenerateInvoice = ({ valuedata }) => (
         <Text >{valuedata != null?valuedata.tanggal:''}</Text>        
         </View>
 
-        <View style={styles.customerIdContainer}>
+        {/* <View style={styles.customerIdContainer}>
         <Text >{'Customer ID : '}</Text>
         <Text >{valuedata != null?valuedata.idcustomer:''}</Text>        
-        </View>
+        </View> */}
 
         <View style={styles.refNoContainer}>
         <Text >{'Ref. No. : '}</Text>
-        <Text >{valuedata != null?valuedata.refno:''}</Text>        
+        <Text >{valuedata != null?valuedata.nobl:''}</Text>        
         </View>
-
+            
         <View style={styles.deliveredToContainer}>
-        <Text >{'Delivered To : '}</Text>
-        <Text >{valuedata != null?valuedata.deliveredto:''}</Text>        
+        <Text >{valuedata != null?(valuedata.idinvoicetype == 'JASA'?'Delivered To : ':''):''}</Text>
+        <Text >{valuedata != null?(valuedata.idinvoicetype == 'JASA'?valuedata.deliveredto:''):''}</Text>        
         </View>
 
         <View style={styles.deliveredDateContainer}>
-        <Text >{'Delivered Date : '}</Text>
-        <Text >{valuedata != null?valuedata.deliverydate:''}</Text>        
+        <Text >{valuedata != null?(valuedata.idinvoicetype == 'JASA'?'Delivered Date : ':''):''}</Text>
+        <Text >{valuedata != null?(valuedata.idinvoicetype == 'JASA'?valuedata.deliverydate:''):''}</Text>        
         </View>
-
+        
         <View style={styles.deliveredDateContainer}>
         
         </View>
 
         {/* <View style={styles.customerinfo}> */}
         <Text style={{marginTop:'20px'}}>{'To : '}</Text>
-        <Text style={{fontWeight:'bold',fontSize:'11'}}>{valuedata != null?(valuedata.customer?valuedata.customer.customername:''):''}</Text>  
+        <Text style={{fontWeight:'bold',fontSize:'11'}}>{valuedata != null?(valuedata.customer?valuedata.customer.customertype+' '+valuedata.customer.customername:''):''}</Text>  
         <Text >{valuedata != null?(valuedata.customer?valuedata.customer.alamat:''):''}</Text>  
         <Text >{valuedata != null?(valuedata.customer?(valuedata.customer.kotaname+','+valuedata.customer.provinsiname+' - '+valuedata.customer.kodepos):''):''}</Text>  
         {/* </View> */}
 
-        <Text style={{marginTop:'10px'}}>{'Att. : '+getNameContact(valuedata != null?(valuedata.customer?valuedata.customer.detailsInfoContact:[]):[])}</Text>
+        {/* <Text style={{marginTop:'10px'}}>{'Att. : '+getNameContact(valuedata != null?(valuedata.customer?valuedata.customer.detailsInfoContact:[]):[])}</Text> */}
         </View>
 
         <ContainerItemsTable data = {valuedata != null?valuedata:[]} />

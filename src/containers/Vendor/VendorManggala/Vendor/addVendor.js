@@ -46,6 +46,8 @@ export default function AddVendor(props) {
 
     const [InputAddress, setInputAddress] = useState('');
     const [ErrInputAddress, setErrInputAddress] = useState('');
+    const [InputAlamat2, setInputAlamat2] = useState('');
+    const [InputAlamat3, setInputAlamat3] = useState('');
 
     const [SelProvince, setSelProvince] = useState('');
     const [ErrSelProvince, setErrSelProvince] = useState('');
@@ -55,6 +57,11 @@ export default function AddVendor(props) {
     const [ErrSelCity, setErrSelCity] = useState('');
     const [ListCity, setListCity] = useState([]);
 
+    const [ListDistrict, setListDistrict] = useState([]);
+    const [SelDistrict, setSelDistrict] = useState('');
+    const [ErrSelDistrict, setErrSelDistrict] = useState('');
+
+    const [DataKodePos, setDataKodePos] = useState([]);
     const [SelKodePos, setSelKodePos] = useState('');
     const [ErrSelKodePos, setErrSelKodePos] = useState('');
     const [ListKodePos, setListKodePos] = useState([]);
@@ -85,19 +92,24 @@ export default function AddVendor(props) {
     const successHandlertemplate = (data) =>{
         if(data.data){
             setDataTemplate(data.data);
-            setListBadanUsaha(data.data.badanUsahaOptions.reduce((obj, el) => (
+            let badanUsahaOptions = data.data.badanUsahaOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.code,
                     label: el.codename
                 }]
-            ), []));
-
-            setListProvince(data.data.provinceOptions.reduce((obj, el) => (
+            ), []);
+            badanUsahaOptions.push({value: 'kosong',label: 'No Data'});
+            setListBadanUsaha(badanUsahaOptions);
+            
+            let listProvinceData = data.data.provinceOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.prov_id,
                     label: el.prov_name
                 }]
-            ), []));
+            ), []);
+            listProvinceData.push({value:'nodata',label:"No Data"});
+
+            setListProvince(listProvinceData);
 
             setListVendorCategory(data.data.vendorCategoryOptions.reduce((obj, el) => (
                 [...obj, {
@@ -137,24 +149,25 @@ export default function AddVendor(props) {
 
     const handleInputNpwp = (data) =>{
         let val = data.target.value;
-        let value = new String(val).replaceAll('.','').replaceAll('-','');
-        let flag = false;
-        if(new String(val).includes('.')){
-            flag = true;
-        }
-        if(new String(val).includes('-')){
-            flag = true;
-        }
-        if(!isNaN(value)){
-            flag = true;
-        }else{
-            flag = false;
-        }
-        if(flag){
-            setInputNpwp(val);
-        }else if(val == ''){
-            setInputNpwp('');
-        }
+        setInputNpwp(val);
+        // let value = new String(val).replaceAll('.','').replaceAll('-','');
+        // let flag = false;
+        // if(new String(val).includes('.')){
+        //     flag = true;
+        // }
+        // if(new String(val).includes('-')){
+        //     flag = true;
+        // }
+        // if(!isNaN(value)){
+        //     flag = true;
+        // }else{
+        //     flag = false;
+        // }
+        // if(flag){
+        //     setInputNpwp(val);
+        // }else if(val == ''){
+        //     setInputNpwp('');
+        // }
         
     }
 
@@ -163,20 +176,34 @@ export default function AddVendor(props) {
         setInputAddress(val);
     }
 
+    const handleInputAlamat2 = (data) =>{
+        let val = data.target.value;
+        setInputAlamat2(val)
+    }
+
+    const handleInputAlamat3 = (data) =>{
+        let val = data.target.value;
+        setInputAlamat3(val)
+    }
+
     const handleChangeProvinsi = (data) =>{
         let id = data?.value ? data.value : '';
         setSelProvince(id);
         setSelKodePos('');
         setListKodePos([]);
         setSelCity('');
+        setSelDistrict('');
+        setListDistrict([]);
         let listfilteroutput = DataTemplate.cityOptions.filter(output => output.prov_id == id);
         if(listfilteroutput.length > 0){
-            setListCity(listfilteroutput.reduce((obj, el) => (
+            let cityOptions = listfilteroutput.reduce((obj, el) => (
                 [...obj, {
                     value: el.city_id,
                     label: el.city_name
                 }]
-            ), []));
+            ), []);
+            cityOptions.push({value:"nodata",label:"No Data"});
+            setListCity(cityOptions);
         }else{
             setListCity([]);
         }
@@ -188,22 +215,57 @@ export default function AddVendor(props) {
         setSelKodePos('');
         setListKodePos([]);
         // setKosongAreaKirim();
+        setSelDistrict('');
+        setListDistrict([]);
+
+        let listfilteroutput = DataTemplate.districtOptions.filter(output => output.city_id == id);
+        if(listfilteroutput.length > 0){
+            let districtOptions = listfilteroutput.reduce((obj, el) => (
+                [...obj, {
+                    value: el.dis_id,
+                    label: el.dis_name
+                }]
+            ), []);
+            districtOptions.push({value:"nodata",label:"No Data"});
+
+            setListDistrict(districtOptions);
+        }else{
+            setListDistrict([]);
+        }
+
+        // setLoading(true);
+        // dispatch(actions.getAddressData('/postalcodebycityandprovince?cityid='+id+'&provid='+SelProvince,successHandlerPostalCode, errorHandler));
+    }
+
+    const handleChangeDistrict = (data) =>{
+        let id = data?.value ? data.value : '';
+
+        // setKosongAreaKirim();
+        setSelKodePos('');
+        setListKodePos([]);
+        setSelDistrict(id);
+
         setLoading(true);
-        dispatch(actions.getAddressData('/postalcodebycityandprovince?cityid='+id+'&provid='+SelProvince,successHandlerPostalCode, errorHandler));
+        dispatch(actions.getAddressData('/postalcodebydistrict?districtid='+id,successHandlerPostalCode, errorHandler));
+
+        
     }
 
     const successHandlerPostalCode = (data) =>{
-
+        setDataKodePos(data.data);
         //Distinct
         const result = Object.values(
             data.data.reduce((acc, obj) => ({ ...acc, [obj.postal_code]: obj }), {})
         );
-        setListKodePos(result.reduce((obj, el) => (
+
+        let kodeposOptions = result.reduce((obj, el) => (
             [...obj, {
                 value: el.postal_code,
                 label: el.postal_code
             }]
-        ), []));
+        ), []);
+        kodeposOptions.push({value:'nodata',label:"No Data"});
+        setListKodePos(kodeposOptions);
         setLoading(false);
     }
 
@@ -232,6 +294,7 @@ export default function AddVendor(props) {
         setErrInputNpwp('');
         setErrInputAddress('');
         setErrSelProvince('');
+        setErrSelDistrict('');
         setErrSelCity('');
         setErrSelKodePos('');
 
@@ -260,20 +323,20 @@ export default function AddVendor(props) {
                         flag = false;
                     }
 
-                    if(det.email == ''){
-                        setErrEmail('Email '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.email == ''){
+                    //     setErrEmail('Email '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
-                    if(det.contactofficenumber == ''){
-                        setErrContactOfficeNumber(i18n.t('label_PHONE_OFFICE')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.contactofficenumber == ''){
+                    //     setErrContactOfficeNumber(i18n.t('label_PHONE_OFFICE')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
-                    if(det.extention == ''){
-                        setErrExtention('Extention '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.extention == ''){
+                    //     setErrExtention('Extention '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
                     if(det.nocontacthp.length > 0){
                         for(let j=0; j < det.nocontacthp.length; j++){
@@ -318,10 +381,10 @@ export default function AddVendor(props) {
             flag = false;
         }
 
-        if(SelBadanUsaha == ''){
-            setErrSelBadanUsaha(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(SelBadanUsaha == ''){
+        //     setErrSelBadanUsaha(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         if(InputNama == ''){
             setErrInputNama(i18n.t('label_REQUIRED'));
@@ -338,26 +401,34 @@ export default function AddVendor(props) {
             flag = false;
         }
 
-        if(InputAddress == ''){
-            setErrInputAddress(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(InputAddress == ''){
+        //     setErrInputAddress(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
-        if(SelProvince == ''){
-            setErrSelProvince(i18n.t('label_REQUIRED'));
-            flag = false;
+        if(SelBadanUsaha !== '' && SelBadanUsaha !== 'kosong'){
+            // if(SelProvince == ''){
+            //     setErrSelProvince(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
+    
+            // if(SelCity == ''){
+            //     setErrSelCity(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
+    
+            // if(SelDistrict == ''){
+            //     setErrSelDistrict(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
+    
+            // if(SelKodePos == ''){
+            //     setErrSelKodePos(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
+    
         }
-
-        if(SelCity == ''){
-            setErrSelCity(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
-
-        if(SelKodePos == ''){
-            setErrSelKodePos(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
-
+        
         return flag;
     }
 
@@ -386,9 +457,12 @@ export default function AddVendor(props) {
             obj.alias = InputAlias;
             obj.npwp = InputNpwp;
             obj.address = InputAddress;
-            obj.provinsi = SelProvince;
-            obj.kota = SelCity;
-            obj.kodepos = SelKodePos;
+            obj.alamat2 = InputAlamat2;
+            obj.alamat3 = InputAlamat3;
+            obj.provinsi = SelProvince !== 'nodata'?SelProvince:"";
+            obj.kota = SelCity !== 'nodata'?SelCity:"";
+            obj.district = SelDistrict !== '' && SelDistrict !== 'nodata'?SelDistrict:null;
+            obj.kodepos = SelKodePos !== 'nodata'?SelKodePos:"";
             obj.isactive = InputIsActive;
             obj.detailsbank = InputListBank;
 
@@ -455,11 +529,11 @@ export default function AddVendor(props) {
     const handleInputChangeBank = (e, index) => {
         const { name, value } = e.target;
         let flag = true;
-        if(name == 'norek'){
-            if(isNaN(value) && value !== ''){
-                flag = false;
-            }
-        }
+        // if(name == 'norek'){
+        //     if(isNaN(value) && value !== ''){
+        //         flag = false;
+        //     }
+        // }
         if(flag){
             const list = [...InputListBank];
             list[index][name] = value;
@@ -533,7 +607,10 @@ export default function AddVendor(props) {
                 alias:InputAlias,
                 npwp:InputNpwp,
                 address:InputAddress,
+                alamat2:InputAlamat2,
+                alamat3:InputAlamat3,
                 provinsi:SelProvince,
+                district:SelDistrict,
                 city:SelCity,
                 kodepos:SelKodePos,
                 isactive:InputIsActive
@@ -687,7 +764,7 @@ export default function AddVendor(props) {
                             
                             <label className="mt-3 form-label required" htmlFor="provinsi">
                                 {i18n.t('label_PROVINCE')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
 
                             <DropdownList
@@ -712,7 +789,7 @@ export default function AddVendor(props) {
 
                             <label className="mt-3 form-label required" htmlFor="city">
                                 {i18n.t('label_CITY')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
 
                             <DropdownList
@@ -735,9 +812,34 @@ export default function AddVendor(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrSelCity}</div>
 
+                            <label className="mt-3 form-label required" htmlFor="district">
+                                {i18n.t('Kecamatan')}
+                                {/* <span style={{color:'red'}}>*</span> */}
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="district"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeDistrict(val)}
+                                onBlur={val => setFieldTouched("district", val?.value ? val.value : '')}
+                                data={ListDistrict}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.district}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelDistrict}</div>
+
                             <label className="mt-3 form-label required" htmlFor="kodepos">
                                 {i18n.t('label_POSTAL_CODE')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
 
                             <DropdownList
@@ -761,8 +863,8 @@ export default function AddVendor(props) {
                             <div className="invalid-feedback-custom">{ErrSelKodePos}</div>
 
                             <label className="mt-3 form-label required" htmlFor="address">
-                                {i18n.t('label_ADDRESS')}
-                                <span style={{color:'red'}}>*</span>
+                                {i18n.t('label_ADDRESS')+' 1'}
+                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
                             <Input
                                 name="address"
@@ -778,6 +880,34 @@ export default function AddVendor(props) {
                                 value={values.address}
                             />
                             <div className="invalid-feedback-custom">{ErrInputAddress}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="alamat2">
+                            {i18n.t('label_ADDRESS')+' 2'}
+                            </label>
+                            <Input
+                                    name="alamat2"
+                                    type="text"
+                                    id="alamat2"
+                                    onChange={val => handleInputAlamat2(val)}
+                                    onBlur={handleBlur}
+                                    value={values.alamat2}
+                                    disabled={false}
+                            />
+
+
+                            <label className="mt-3 form-label required" htmlFor="alamat3">
+                            {i18n.t('label_ADDRESS')+' 3'}
+                            </label>
+                            <Input
+                                    name="alamat3"
+                                    type="text"
+                                    id="alamat3"
+                                    onChange={val => handleInputAlamat3(val)}
+                                    onBlur={handleBlur}
+                                    value={values.alamat3}
+                                    disabled={false}
+                            />
+
 
                             {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 

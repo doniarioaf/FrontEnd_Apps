@@ -34,12 +34,19 @@ import React, {useState,
   import DialogUploadFile from './dialogUploadFile';
   import styled                       from "styled-components";
   import Dialog                       from '@material-ui/core/Dialog';
+  import DialogStatus from './statusDialog';
 
   const StyledDialog = styled(Dialog)`
     & > .MuiDialog-container > .MuiPaper-root {
         height: 500px;
     }
     `;
+
+const StyledDialogStatus = styled(Dialog)`
+& > .MuiDialog-container > .MuiPaper-root {
+    height: 350px;
+}
+`;
   const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
@@ -76,6 +83,10 @@ import React, {useState,
         // {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);
     const [tableColumnExtensions] = useState([]);
+
+    const [ListSuratJalanWO, setListSuratJalanWO] = useState([]);
+
+    const [ShowStatus, setShowStatus] = useState(false);
 
     const id = props.match.params.id;
 
@@ -114,6 +125,43 @@ import React, {useState,
         dispatch(actions.getWorkOrderData('/'+id,successHandler, errorHandler));
     }, []);
 
+    function successHandlerSJ(data) {
+        let list = [];
+        if(data.data.suratjalan){
+            for(let i=0; i < data.data.suratjalan.length ; i++){
+                let det = data.data.suratjalan[i];
+
+                let obj = new Object();
+                obj.nosj = det.nodocument;
+                obj.warehouse = det.warehousename;
+                obj.nocontainer = det.nocontainer;
+                obj.tanggal = det.tanggal?moment (new Date(det.tanggal)).format(formatdate):'';
+
+                if(data.data.partaiwo){
+                    let listpartai = data.data.partaiwo.filter(output => output.nocontainer == det.nocontainer);
+                    if(listpartai.length > 0){
+                        for(let j=0; j < listpartai.length ; j++){
+                            let obj1 = new Object();
+                            obj1 = obj;
+                            obj1.partai = listpartai[j].partainame;
+                            list.push(obj1);
+                        }
+                    }else{
+                        obj.partai = '';
+                        list.push(obj);
+                    }
+                }else{
+                    obj.partai = '';
+                    list.push(obj);
+                }
+                
+            }
+            
+        }
+        setListSuratJalanWO(list);
+        setLoading(false);
+    }
+
     function successHandler(data) {
         setValue(data.data);
 
@@ -138,7 +186,9 @@ import React, {useState,
             setRows(theData);
         }
 
-        setLoading(false);
+        dispatch(actions.getWorkOrderData('/suratjalan/'+id,successHandlerSJ, errorHandler));
+
+        
     }
 
     const submitHandlerDelete = () => {
@@ -262,6 +312,21 @@ import React, {useState,
         setLoading(false);
     }
 
+    const succesHandlerSubmitChangeStatus = (data) => {
+        setLoading(false);
+        setShowStatus(false);
+        setLoadingSend(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(0);
+            }
+        })
+    }
+
     return (
         <ContentWrapper>
             <ContentHeading history={history} link={pathmenu.detailWorkOrder+'/'+id} label={'Detail Work Order'} labeldefault={'Detail Work Order'} />
@@ -316,6 +381,13 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_AJU_NUMBER')}</span>
+                            <strong className="col-md-7">
+                                {value.noaju?value.noaju:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_DATE')}</span>
                             <strong className="col-md-7">
                             {value.tanggal?moment (new Date(value.tanggal)).format(formatdate):''}
@@ -337,18 +409,21 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_WO_TYPE')}</span>
+                            <strong className="col-md-7">
+                                {value.jeniswoCodeName?value.jeniswoCodeName:''}
+                            </strong>
+                            </div>
+
+                            <div hidden={value.jeniswo?(value.jeniswo == 'TR'?true:false):false}>
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_CARGO_NAME')}</span>
                             <strong className="col-md-7">
                                 {value.namacargo?value.namacargo:''}
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_WO_TYPE')}</span>
-                            <strong className="col-md-7">
-                                {value.jeniswoCodeName?value.jeniswoCodeName:''}
-                            </strong>
-                            </div>
+                            
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_MODA_TRANSPORTAION')}</span>
@@ -392,12 +467,7 @@ import React, {useState,
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_AJU_NUMBER')}</span>
-                            <strong className="col-md-7">
-                                {value.noaju?value.noaju:''}
-                            </strong>
-                            </div>
+                            
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('NOPEN')}</span>
@@ -414,7 +484,7 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_BL_NUMBER')}</span>
+                            <span className="col-md-5">{i18n.t('BL / AWB No.')}</span>
                             <strong className="col-md-7">
                                 {value.nobl?value.nobl:''}
                             </strong>
@@ -428,7 +498,7 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Pelayaran')}</span>
+                            <span className="col-md-5">{i18n.t('Pelayaran / Airline ')}</span>
                             <strong className="col-md-7">
                                 {value.pelayaranname?value.pelayaranname:''}
                             </strong>
@@ -468,7 +538,8 @@ import React, {useState,
                             {value.tanggalsppb_npe?moment (new Date(value.tanggalsppb_npe)).format(formatdate):''}
                             </strong>
                             </div>
-
+                            </div>
+                            
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Depo')}</span>
                             <strong className="col-md-7">
@@ -499,11 +570,38 @@ import React, {useState,
                                 return (
                                     <tr>
                                         <td>{x.idpartai}</td>
-                                        <td>{numToMoney(parseFloat(x.jumlahkoli))}</td>
-                                        <td>{numToMoney(parseFloat(x.jumlahkg)) }</td>
-                                        <td>{x.nocontainer}</td>
-                                        <td>{x.noseal}</td>
+                                        <td>{x.jumlahkoli !== ''?numToMoney(parseFloat(x.jumlahkoli)):""}</td>
+                                        <td>{x.jumlahkg !== ''? numToMoney(parseFloat(x.jumlahkg)):"" }</td>
+                                        <td>{new String(x.nocontainer).includes("NC-NODATA")?"":x.nocontainer}</td>
+                                        <td>{new String(x.noseal).includes("NS-NODATA")?"":x.noseal}</td>
                                         <td>{x.barang}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
+            }
+
+            {
+                <table id="tablegrid">
+                    <tr>
+                        <th>{i18n.t('No Surat Jalan')}</th>
+                        <th>{i18n.t('Gudang')}</th>
+                        <th>{i18n.t('No Container')}</th>
+                        <th>{i18n.t('Tanggal Loading/Unloading')}</th>
+                        <th>{i18n.t('Partai')}</th>
+                    </tr>
+                    <tbody>
+                        {
+                            ListSuratJalanWO.map((x, i) => {
+                                return(
+                                    <tr>
+                                        <td>{x.nosj}</td>
+                                        <td>{x.warehouse}</td>
+                                        <td>{x.nocontainer}</td>
+                                        <td>{x.tanggal}</td>
+                                        <td>{x.partai}</td>
                                     </tr>
                                 )
                             })
@@ -556,6 +654,7 @@ import React, {useState,
                         :(<div>
                             <MenuItem hidden={value.status == 'CLOSE' || !isGetPermissions(editWorkOrder_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editWorkOrder+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={value.status == 'CLOSE' || !isGetPermissions(deleteWorkOrder_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editWorkOrder_Permission,'TRANSACTION')}  onClick={() => setShowStatus(true)}>{i18n.t('Update Status')}</MenuItem>
                             
                         </div>)
                         
@@ -590,6 +689,30 @@ import React, {useState,
                 />
                 {LoadingSend && <Loading/>}
             </StyledDialog>
+
+            <StyledDialogStatus
+                disableBackdropClick
+                disableEscapeKeyDown
+                maxWidth="sm"
+                fullWidth={true}
+                // style={{height: '100%'}}
+                open={ShowStatus}
+            >
+                {
+                    value.status?
+                    <DialogStatus
+                    showflag = {setShowStatus}
+                    flagloadingsend = {setLoadingSend}
+                    errorhandler = {errorHandler}
+                    idwo = {id}
+                    handlesubmit = {succesHandlerSubmitChangeStatus}
+                    status = {value.status}
+                    // getAutoDebitid= {getAutoDebitid}
+                />:''
+                }
+                
+                {LoadingSend && <Loading/>}
+            </StyledDialogStatus>
         </ContentWrapper>
     )
   }

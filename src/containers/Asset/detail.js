@@ -73,6 +73,7 @@ import React, {useState,
         {name: 'nama', title: i18n.t('Nama')},
         {name: 'kodeasset', title: i18n.t('Kode Asset')},
         {name: 'tipeasset', title: i18n.t('Tipe Asset')},
+        {name: 'nodocpengeluaran', title: i18n.t('No Document')},
         {name: 'tanggal', title: i18n.t('Tanggal')},
         // {name: 'isactive', title: i18n.t('label_IS_ACTIVE')}
     ]);
@@ -157,6 +158,7 @@ import React, {useState,
                     'nama':getNama(el),
                     'kodeasset':el.kodeasset?el.kodeasset:'Kosong',
                     'tipeasset':getTipeAsset(el),
+                    'nodocpengeluaran':el.noDocPengeluaranKasBank?el.noDocPengeluaranKasBank:'',
                     'tanggal':el.tanggal?moment(new Date(el.tanggal)).format(formatdatetime):''
                 }
             ], []);
@@ -229,13 +231,41 @@ import React, {useState,
         })
     }
 
+    const handleGantiSparePartBuntut = () => {
+        let listmapping = value.assetmapping;
+        let listfilteroutput = listmapping.filter(output => output.type == 'ARMADA');    
+        let msg = 'Tidak Ada Buntut';
+        if(listfilteroutput.length > 0){
+            let idbuntut = listfilteroutput[0].idasset_mapping?listfilteroutput[0].idasset_mapping:0;
+            if(idbuntut !== 0){
+                msg = '';
+                history.push(pathmenu.detailAsset+'/'+idbuntut);
+            }
+        }
+
+        if(msg !== ''){
+            Swal.fire({
+                icon: 'info',
+                title: '',
+                text: msg
+            })
+        }
+        
+    }
+
+    
     function onClickAdd() {
         setShowDialog(true);
     }
     function onClickView(id) {
         // history.push(pathmenu.detailWorkOrder+'/'+id);
     }
-    
+    function handleDisbaledDelete(row) {
+        if(row.nodocpengeluaran !== ''){
+            return true;
+        }
+        return false;
+    }
     function onClickDelete(id) {
         let Nama = '';
         let filterid = rows.filter(output => output.id == id);
@@ -538,6 +568,40 @@ import React, {useState,
                                     </div> */}
                                 </div>
 
+                                <div hidden={!(value.sparepartbuntut_jenis?(value.sparepartbuntut_jenis == 'FILTER'):false)}>
+                                    <div className="row mt-3">
+                                        <span className="col-md-5">{i18n.t('Tipe')}</span>
+                                        <strong className="col-md-7">
+                                            {value.sparepartbuntut_filter_type_name?value.sparepartbuntut_filter_type_name:''}
+                                        </strong>
+                                    </div>
+
+                                    <div className="row mt-3">
+                                        <span className="col-md-5">{i18n.t('Posisi')}</span>
+                                        <strong className="col-md-7">
+                                            {value.sparepartbuntut_filter_posisi_name?value.sparepartbuntut_filter_posisi_name:''}
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <div hidden={!(value.sparepartbuntut_jenis?(value.sparepartbuntut_jenis == 'BOHLAM'):false)}>
+                                    <div className="row mt-3">
+                                            <span className="col-md-5">{i18n.t('Tipe')}</span>
+                                            <strong className="col-md-7">
+                                                {value.sparepartbuntut_bohlam_type_name?value.sparepartbuntut_bohlam_type_name:''}
+                                            </strong>
+                                        </div>
+                                </div>
+
+                                <div hidden={!(value.sparepartbuntut_jenis?(value.sparepartbuntut_jenis == 'SELANG'):false)}>
+                                    <div className="row mt-3">
+                                            <span className="col-md-5">{i18n.t('Tipe')}</span>
+                                            <strong className="col-md-7">
+                                                {value.sparepartbuntut_selang_type_name?value.sparepartbuntut_selang_type_name:''}
+                                            </strong>
+                                        </div>
+                                </div>
+
 
                             </div>
 
@@ -661,6 +725,40 @@ import React, {useState,
                                         </strong>
                                     </div> */}
                                 </div>
+
+                                <div hidden={!(value.sparepartkepala_jenis?(value.sparepartkepala_jenis == 'FILTER'):false)}>
+                                    <div className="row mt-3">
+                                        <span className="col-md-5">{i18n.t('Tipe')}</span>
+                                        <strong className="col-md-7">
+                                            {value.sparepartkepala_filter_type_name?value.sparepartkepala_filter_type_name:''}
+                                        </strong>
+                                    </div>
+
+                                    <div className="row mt-3">
+                                        <span className="col-md-5">{i18n.t('Posisi')}</span>
+                                        <strong className="col-md-7">
+                                            {value.sparepartkepala_filter_posisi_name?value.sparepartkepala_filter_posisi_name:''}
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <div hidden={!(value.sparepartkepala_jenis?(value.sparepartkepala_jenis == 'BOHLAM'):false)}>
+                                <div className="row mt-3">
+                                        <span className="col-md-5">{i18n.t('Tipe')}</span>
+                                        <strong className="col-md-7">
+                                            {value.sparepartkepala_bohlam_type_name?value.sparepartkepala_bohlam_type_name:''}
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <div hidden={!(value.sparepartkepala_jenis?(value.sparepartkepala_jenis == 'SELANG'):false)}>
+                                <div className="row mt-3">
+                                        <span className="col-md-5">{i18n.t('Tipe')}</span>
+                                        <strong className="col-md-7">
+                                            {value.sparepartbuntut_selang_type_name?value.sparepartbuntut_selang_type_name:''}
+                                        </strong>
+                                    </div>
+                                </div>
                                 
 
                             </div>
@@ -774,6 +872,7 @@ import React, {useState,
                 permissiondelete={!isGetPermissions(deleteHistoryAssetMapping_Permission,'TRANSACTION')}
                 onclickdelete={onClickDelete}
                 listfilterdisabled={['tanggal']}
+                deletedisabled = {handleDisbaledDelete}
                 width={80}
             />
             </div>
@@ -803,6 +902,7 @@ import React, {useState,
                         :(<div>
                             <MenuItem hidden={loading || !isGetPermissions(editAsset_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editAsset+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={loading || !isGetPermissions(deleteAsset_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!(value.assettype == 'KEPALA')}  onClick={() => handleGantiSparePartBuntut()}>{i18n.t('Ganti Sparepart Buntut')}</MenuItem>
                             
                         </div>)
                         

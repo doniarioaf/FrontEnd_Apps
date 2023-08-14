@@ -29,6 +29,9 @@ export default function AddPartai(props) {
     const [ErrInputNama, setErrInputNama] = useState('');
     const [InputIsActive, setInputIsActive] = useState(true);
 
+    const [ListCOA, setListCOA] = useState([]);
+    const [SelCOA, setSelCOA] = useState('');
+
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getInvoiceTypeData('/template',successHandlerTemplate, errorHandler));
@@ -42,9 +45,29 @@ export default function AddPartai(props) {
                     label: el.codename
                 }]
             ), []));
+
+            let listcoa = data.data.coaOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama+' ('+el.code+')'
+                }]
+            ), []);
+            listcoa.push(
+                {
+                    value: 'nodata',
+                    label: 'No Data'
+                }
+                )
+            setListCOA(listcoa);
         }
 
+        setSelCOA('nodata');
         setLoading(false);
+    }
+
+    const handleChangeCoa = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelCOA(id);
     }
 
     const handleChangeInvoiceType = (data) =>{
@@ -102,6 +125,11 @@ export default function AddPartai(props) {
             obj.invoicetype = SelInvoiceType;
             obj.nama = InputNama;
             obj.isactive = InputIsActive;
+            if(SelCOA == '' || SelCOA == 'nodata'){
+                obj.idcoa = null;
+            }else{
+                obj.idcoa = SelCOA;
+            }
             dispatch(actions.submitAddInvoiceType('',obj,succesHandlerSubmit, errorHandler));
         }
     }
@@ -139,7 +167,8 @@ export default function AddPartai(props) {
             {
                 invoicetype:SelInvoiceType,
                 nama:InputNama,
-                isactive:InputIsActive
+                isactive:InputIsActive,
+                coa:SelCOA
             }
         }
         validate={values => {
@@ -217,7 +246,28 @@ export default function AddPartai(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputNama}</div>
 
-                            
+                            <label className="mt-3 form-label" htmlFor="coa">
+                                {i18n.t('COA')}
+                                </label>
+
+                                <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="coa"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeCoa(val)}
+                                    onBlur={val => setFieldTouched("coa", val?.value ? val.value : '')}
+                                    data={ListCOA}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.coa}
+                                />                            
 
                             {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 

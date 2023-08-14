@@ -20,13 +20,17 @@ const MenuIndex = () => {
     const [columns] = useState([
         {name: 'id', title: 'id'},
         // {name: 'code', title: i18n.t('Code')},
+        {name: 'noaju', title: i18n.t('No AJU')},
+        {name: 'nodocumentwo', title: 'No. WO'},
         {name: 'nodocument', title: i18n.t('label_NO_DOCUMENT')},
         {name: 'customer', title: i18n.t('label_CUSTOMER')},
         {name: 'nocontainer', title: i18n.t('No Container')},
-        {name: 'namacargo', title: i18n.t('Nama Cargo')},
+        // {name: 'namacargo', title: i18n.t('Nama Cargo')},
         {name: 'status', title: i18n.t('Status')},
     ]);
-    const [tableColumnExtensions] = useState([]);
+    const [tableColumnExtensions] = useState([
+        {columnName: 'nodocumentwo', width:'160'},
+    ]);
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
@@ -42,6 +46,8 @@ const MenuIndex = () => {
                 {
                     'id': el.id,
                     // 'code':el.code?el.code:'',
+                    'noaju': el.noajuWO ?el.noajuWO:'',
+                    'nodocumentwo': el.nodocumentWO ?el.nodocumentWO:'',
                     'nodocument': el.nodocument ?el.nodocument:'',
                     'customer':el.namacustomer?el.namacustomer:'',
                     'nocontainer':el.nocantainer?el.nocantainer:'',

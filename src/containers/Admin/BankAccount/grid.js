@@ -31,6 +31,7 @@ import * as pathmenu           from '../../shared/pathMenu';
 import {Loading}                    from '../../../components/Common/Loading';
 import { isGetPermissions } from '../../shared/globalFunc';
 import { addBankAccount_Permission,MenuBankAccount } from '../../shared/permissionMenu';
+import { valPageSize, valPageSizes } from '../../shared/constantValue';
 
 const FilterIcon = ({type, ...restProps}) => {
     return <TableFilterRow.Icon type={type} {...restProps} />;
@@ -100,10 +101,10 @@ const Command = ({id, onExecute}) => {
 const BankAccountGrid = props => {
     const {i18n} = useTranslation();
     const [hiddenColumnNames] = useState(['id']);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(valPageSize);
     const [currentPage, setCurrentPage] = useState(0);
     const [sorting, setSorting] = useState([]);
-    const [pageSizes] = useState([10, 25, 50]);
+    const [pageSizes] = useState(valPageSizes);
     const [loading, setLoading] = useState(props.loading);
     const [integratedSortingColumnExtensions] = useState([]);
     const [tableColumnExtensions] = useState(props.columnextension);

@@ -161,6 +161,35 @@ export default function AddForm(props) {
     const [ErrInputSparePartBuntut_LainnyaNama, setErrInputSparePartBuntut_LainnyaNama] = useState('');
     const [InputSparePartBuntut_LainnyaKeterangan, setInputSparePartBuntut_LainnyaKeterangan] = useState('');
 
+    const [ListFilterPosisi, setListFilterPosisi] = useState([]);
+    const [ListFilterType, setListFilterType] = useState([]);
+    const [ListBohlamType, setListBohlamType] = useState([]);
+    const [ListSelangType, setListSelangType] = useState([]);
+
+    const [SelSparePartKepala_Filter_Posisi, setSelSparePartKepala_Filter_Posisi] = useState('');
+    const [ErrSelSparePartKepala_Filter_Posisi, setErrSelSparePartKepala_Filter_Posisi] = useState('');
+
+    const [SelSparePartKepala_Filter_Type, setSelSparePartKepala_Filter_Type] = useState('');
+    const [ErrSelSparePartKepala_Filter_Type, setErrSelSparePartKepala_Filter_Type] = useState('');
+
+    const [SelSparePartKepala_Bohlam_Type, setSelSparePartKepala_Bohlam_Type] = useState('');
+    const [ErrSelSparePartKepala_Bohlam_Type, setErrSelSparePartKepala_Bohlam_Type] = useState('');
+
+    const [SelSparePartKepala_Selang_Type, setSelSparePartKepala_Selang_Type] = useState('');
+    const [ErrSelSparePartKepala_Selang_Type, setErrSelSparePartKepala_Selang_Type] = useState('');
+
+    const [SelSparePartBuntut_Filter_Posisi, setSelSparePartBuntut_Filter_Posisi] = useState('');
+    const [ErrSelSparePartBuntut_Filter_Posisi, setErrSelSparePartBuntut_Filter_Posisi] = useState('');
+
+    const [SelSparePartBuntut_Filter_Type, setSelSparePartBuntut_Filter_Type] = useState('');
+    const [ErrSelSparePartBuntut_Filter_Type, setErrSelSparePartBuntut_Filter_Type] = useState('');
+
+    const [SelSparePartBuntut_Bohlam_Type, setSelSparePartBuntut_Bohlam_Type] = useState('');
+    const [ErrSelSparePartBuntut_Bohlam_Type, setErrSelSparePartBuntut_Bohlam_Type] = useState('');
+    
+    const [SelSparePartBuntut_Selang_Type, setSelSparePartBuntut_Selang_Type] = useState('');
+    const [ErrSelSparePartBuntut_Selang_Type, setErrSelSparePartBuntut_Selang_Type] = useState('');
+
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getAssetData('/template',successHandlerTemplate, errorHandler));
@@ -251,11 +280,79 @@ export default function AddForm(props) {
                     label: el.codename
                 }]
             ), []));
+
+            setListFilterPosisi(data.data.sparepartPosisiFilterOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.code,
+                    label: el.codename
+                }]
+            ), []));
+
+            setListFilterType(data.data.sparepartFilterTypeOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.code,
+                    label: el.codename
+                }]
+            ), []));
+
+            setListBohlamType(data.data.sparepartBohlamTypeOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.code,
+                    label: el.codename
+                }]
+            ), []));
+
+            setListSelangType(data.data.sparepartSelangTypeOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.code,
+                    label: el.codename
+                }]
+            ), []));
+
         }
 
         setLoading(false);
     }
 
+    const handleChangeSparePartKepalaFilterType = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelSparePartKepala_Filter_Type(id);
+    }
+
+    const handleChangeSparePartKepalaFilterPosisi = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelSparePartKepala_Filter_Posisi(id);
+    }
+
+    const handleChangeSparePartKepalaBohlamType = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelSparePartKepala_Bohlam_Type(id);
+    }
+
+    const handleChangeSparePartKepalaSelangType = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelSparePartKepala_Selang_Type(id);
+    }
+
+    const handleChangeSparePartBuntutFilterType = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelSparePartBuntut_Filter_Type(id);
+    }
+
+    const handleChangeSparePartBuntutFilterPosisi = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelSparePartBuntut_Filter_Posisi(id);
+    }
+
+    const handleChangeSparePartBuntutBohlamType = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelSparePartBuntut_Bohlam_Type(id);
+    }
+
+    const handleChangeSparePartBuntutSelangType = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelSparePartBuntut_Selang_Type(id);
+    }
 
     const handleInputSparePartBuntutNama = (data) =>{
         let val = data.target.value;
@@ -611,6 +708,15 @@ export default function AddForm(props) {
         setErrSelSparePartBuntut_BanStatus('');
         setErrInputSparePartBuntut_LainnyaNama('');
 
+        setErrSelSparePartKepala_Filter_Type('');
+        setErrSelSparePartKepala_Filter_Posisi('');
+        setErrSelSparePartKepala_Bohlam_Type('');
+        setErrSelSparePartKepala_Selang_Type('');
+
+        setErrSelSparePartBuntut_Filter_Type('');
+        setErrSelSparePartBuntut_Filter_Posisi('');
+        setErrSelSparePartBuntut_Bohlam_Type('');
+        setErrSelSparePartBuntut_Selang_Type('');
 
         if(InputKodeAsset == ''){
             setErrInputKodeAsset(i18n.t('label_REQUIRED'));
@@ -776,6 +882,26 @@ export default function AddForm(props) {
                             setErrInputSparePartKepala_LainnyaNama(i18n.t('label_REQUIRED'));
                             flag = false;
                         }
+                    }else if(SelSparePartKepalaJenisSparePart == 'FILTER'){
+                        if(SelSparePartKepala_Filter_Type == ''){
+                            setErrSelSparePartKepala_Filter_Type(i18n.t('label_REQUIRED'));
+                            flag = false;
+                        }
+
+                        if(SelSparePartKepala_Filter_Posisi == ''){
+                            setErrSelSparePartKepala_Filter_Posisi(i18n.t('label_REQUIRED'));
+                            flag = false;
+                        }
+                    }else if(SelSparePartKepalaJenisSparePart == 'BOHLAM'){
+                        if(SelSparePartKepala_Bohlam_Type == ''){
+                            setErrSelSparePartKepala_Bohlam_Type(i18n.t('label_REQUIRED'));
+                            flag = false;
+                        }
+                    }else if(SelSparePartKepalaJenisSparePart == 'SELANG'){
+                        if(SelSparePartKepala_Selang_Type == ''){
+                            setErrSelSparePartKepala_Selang_Type(i18n.t('label_REQUIRED'));
+                            flag = false;
+                        }
                     }
                 }
             }else if(SelJenisAsset == 'SP_BUNTUT'){
@@ -842,7 +968,28 @@ export default function AddForm(props) {
                             setErrInputSparePartBuntut_LainnyaNama(i18n.t('label_REQUIRED'));
                             flag = false;
                         }
+                    }else if(SelSparePartBuntutJenisSparePart == 'FILTER'){
+                        if(SelSparePartBuntut_Filter_Type == ''){
+                            setErrSelSparePartBuntut_Filter_Type(i18n.t('label_REQUIRED'));
+                            flag = false;
+                        }
+
+                        if(SelSparePartBuntut_Filter_Posisi == ''){
+                            setErrSelSparePartBuntut_Filter_Posisi(i18n.t('label_REQUIRED'));
+                            flag = false;
+                        }
+                    }else if(SelSparePartBuntutJenisSparePart == 'BOHLAM'){
+                        if(SelSparePartBuntut_Bohlam_Type == ''){
+                            setErrSelSparePartBuntut_Bohlam_Type(i18n.t('label_REQUIRED'));
+                            flag = false;
+                        }
+                    }else if(SelSparePartBuntutJenisSparePart == 'SELANG'){
+                        if(SelSparePartBuntut_Selang_Type == ''){
+                            setErrSelSparePartBuntut_Selang_Type(i18n.t('label_REQUIRED'));
+                            flag = false;
+                        }
                     }
+
                 }
             }
 
@@ -922,6 +1069,13 @@ export default function AddForm(props) {
                 }else if(SelSparePartKepalaJenisSparePart == 'LAINNYA'){
                     obj.sparepartkepala_lainnya_nama = InputSparePartKepala_LainnyaNama;
                     obj.sparepartkepala_lainnya_keterangan = InputSparePartKepala_LainnyaKeterangan;
+                }else if(SelSparePartKepalaJenisSparePart == 'FILTER'){
+                    obj.sparepartkepala_filter_type = SelSparePartKepala_Filter_Type;
+                    obj.sparepartkepala_filter_posisi = SelSparePartKepala_Filter_Posisi;
+                }else if(SelSparePartKepalaJenisSparePart == 'BOHLAM'){
+                    obj.sparepartkepala_bohlam_type = SelSparePartKepala_Bohlam_Type;
+                }else if(SelSparePartKepalaJenisSparePart == 'SELANG'){
+                    obj.sparepartkepala_selang_type = SelSparePartKepala_Selang_Type;
                 }
             }else if(SelJenisAsset == 'SP_BUNTUT'){
                 obj.sparepartbuntut_nama = InputSparePartBuntutNama;
@@ -943,6 +1097,13 @@ export default function AddForm(props) {
                 }else if(SelSparePartBuntutJenisSparePart == 'LAINNYA'){
                     obj.sparepartbuntut_lainnya_nama = InputSparePartBuntut_LainnyaNama;
                     obj.sparepartbuntut_lainnya_keterangan = InputSparePartBuntut_LainnyaKeterangan;
+                }else if(SelSparePartBuntutJenisSparePart == 'FILTER'){
+                    obj.sparepartbuntut_filter_type = SelSparePartBuntut_Filter_Type;
+                    obj.sparepartbuntut_filter_posisi = SelSparePartBuntut_Filter_Posisi;
+                }else if(SelSparePartBuntutJenisSparePart == 'BOHLAM'){
+                    obj.sparepartbuntut_bohlam_type = SelSparePartBuntut_Bohlam_Type;
+                }else if(SelSparePartBuntutJenisSparePart == 'SELANG'){
+                    obj.sparepartbuntut_selang_type = SelSparePartBuntut_Selang_Type;
                 }
             }
             dispatch(actions.submitAddAsset('',obj,succesHandlerSubmit, errorHandler));
@@ -1032,6 +1193,16 @@ export default function AddForm(props) {
                 SparePartBuntut_BanStatus:SelSparePartBuntut_BanStatus,
                 SparePartBuntut_LainnyaNama:InputSparePartBuntut_LainnyaNama,
                 SparePartBuntut_LainnyaKeterangan:InputSparePartBuntut_LainnyaKeterangan,
+
+                SparePartKepala_FilterType:SelSparePartKepala_Filter_Type,
+                SparePartKepala_FilterPosisi:SelSparePartKepala_Filter_Posisi,
+                SparePartKepala_BohlamType:SelSparePartKepala_Bohlam_Type,
+                SparePartKepala_SelangType:SelSparePartKepala_Selang_Type,
+
+                SparePartBuntut_FilterType:SelSparePartBuntut_Filter_Type,
+                SparePartBuntut_FilterPosisi:SelSparePartBuntut_Filter_Posisi,
+                SparePartBuntut_BohlamType:SelSparePartBuntut_Bohlam_Type,
+                SparePartBuntut_SelangType:SelSparePartBuntut_Selang_Type,
             }
         }
 
@@ -1435,6 +1606,218 @@ export default function AddForm(props) {
                             </div>
 
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
+
+                            <div hidden={!(values.SparePartBuntutJenisSparePart == 'FILTER' && values.jenisasset == 'SP_BUNTUT')}>
+                            <label className="mt-3 form-label required" htmlFor="SparePartBuntut_FilterType">
+                            {i18n.t('Tipe')}
+                            <span style={{color:'red'}}>*</span>
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="SparePartBuntut_FilterType"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeSparePartBuntutFilterType(val)}
+                                onBlur={val => setFieldTouched("SparePartBuntut_FilterType", val?.value ? val.value : '')}
+                                data={ListFilterType}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.SparePartBuntut_FilterType}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelSparePartBuntut_Filter_Type}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="SparePartBuntu_FilterPosisi">
+                            {i18n.t('Posisi')}
+                            <span style={{color:'red'}}>*</span>
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="SparePartBuntu_FilterPosisi"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeSparePartBuntutFilterPosisi(val)}
+                                onBlur={val => setFieldTouched("SparePartBuntu_FilterPosisi", val?.value ? val.value : '')}
+                                data={ListFilterPosisi}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.SparePartBuntut_FilterPosisi}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelSparePartBuntut_Filter_Posisi}</div>
+                            </div>
+
+                            <div hidden={!(values.SparePartBuntutJenisSparePart == 'BOHLAM' && values.jenisasset == 'SP_BUNTUT')}>
+                            <label className="mt-3 form-label required" htmlFor="SparePartBuntut_BohlamType">
+                            {i18n.t('Tipe')}
+                            <span style={{color:'red'}}>*</span>
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="SparePartBuntut_BohlamType"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeSparePartBuntutBohlamType(val)}
+                                onBlur={val => setFieldTouched("SparePartBuntut_BohlamType", val?.value ? val.value : '')}
+                                data={ListBohlamType}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.SparePartBuntut_BohlamType}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelSparePartBuntut_Bohlam_Type}</div>
+                            </div>
+
+                            <div hidden={!(values.SparePartBuntutJenisSparePart == 'SELANG' && values.jenisasset == 'SP_BUNTUT')}>
+                            <label className="mt-3 form-label required" htmlFor="SparePartBuntut_SelangType">
+                            {i18n.t('Tipe')}
+                            <span style={{color:'red'}}>*</span>
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="SparePartBuntut_SelangType"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeSparePartBuntutSelangType(val)}
+                                onBlur={val => setFieldTouched("SparePartBuntut_SelangType", val?.value ? val.value : '')}
+                                data={ListSelangType}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.SparePartBuntut_SelangType}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelSparePartBuntut_Selang_Type}</div>
+                            </div>
+
+                            <div hidden={!(values.SparePartKepalaJenisSparePart == 'SELANG' && values.jenisasset == 'SP_KEPALA')}>
+                            <label className="mt-3 form-label required" htmlFor="SparePartKepala_SelangType">
+                            {i18n.t('Tipe')}
+                            <span style={{color:'red'}}>*</span>
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="SparePartKepala_SelangType"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeSparePartKepalaSelangType(val)}
+                                onBlur={val => setFieldTouched("SparePartKepala_SelangType", val?.value ? val.value : '')}
+                                data={ListSelangType}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.SparePartKepala_SelangType}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelSparePartKepala_Selang_Type}</div>
+                            </div>
+
+                            <div hidden={!(values.SparePartKepalaJenisSparePart == 'BOHLAM' && values.jenisasset == 'SP_KEPALA')}>
+                            <label className="mt-3 form-label required" htmlFor="SparePartKepala_BohlamType">
+                            {i18n.t('Tipe')}
+                            <span style={{color:'red'}}>*</span>
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="SparePartKepala_BohlamType"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeSparePartKepalaBohlamType(val)}
+                                onBlur={val => setFieldTouched("SparePartKepala_BohlamType", val?.value ? val.value : '')}
+                                data={ListBohlamType}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.SparePartKepala_BohlamType}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelSparePartKepala_Bohlam_Type}</div>
+                            </div>
+
+                            <div hidden={!(values.SparePartKepalaJenisSparePart == 'FILTER' && values.jenisasset == 'SP_KEPALA')}>
+                            <label className="mt-3 form-label required" htmlFor="SparePartKepala_FilterType">
+                            {i18n.t('Tipe')}
+                            <span style={{color:'red'}}>*</span>
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="SparePartKepala_FilterType"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeSparePartKepalaFilterType(val)}
+                                onBlur={val => setFieldTouched("SparePartKepala_FilterType", val?.value ? val.value : '')}
+                                data={ListFilterType}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.SparePartKepala_FilterType}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelSparePartKepala_Filter_Type}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="SparePartKepala_FilterPosisi">
+                            {i18n.t('Posisi')}
+                            <span style={{color:'red'}}>*</span>
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="SparePartKepala_FilterPosisi"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeSparePartKepalaFilterPosisi(val)}
+                                onBlur={val => setFieldTouched("SparePartKepala_FilterPosisi", val?.value ? val.value : '')}
+                                data={ListFilterPosisi}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.SparePartKepala_FilterPosisi}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelSparePartKepala_Filter_Posisi}</div>
+                            </div>
 
                             <div hidden={!(values.SparePartBuntutJenisSparePart == 'BEARING' && values.jenisasset == 'SP_BUNTUT')}>
                                     <label className="mt-3 form-label required" htmlFor="SparePartBuntut_BearingNoBearing">

@@ -3,7 +3,7 @@ import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../components/Layout/ContentHeading';
-import {Input,Button,Label,FormGroup,Container} from 'reactstrap';
+import {Input,Button} from 'reactstrap';
 import * as actions                 from '../../store/actions';
 import {useDispatch}   from 'react-redux';
 import { Loading } from '../../components/Common/Loading';
@@ -24,6 +24,15 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import { IconButton } from '@material-ui/core';
 import '../CSS/table.css';
 
+import SearchIcon from '@material-ui/icons/Search';
+import FormSearch from '../../components/FormSearch';
+import styled                       from "styled-components";
+import Dialog                       from '@material-ui/core/Dialog';
+const StyledDialog = styled(Dialog)`
+  & > .MuiDialog-container > .MuiPaper-root {
+    height: 500px;
+  }
+`;
 
 export default function AddForm(props) {
     reloadToHomeNotAuthorize(addPengeluaranKasBank_Permission,'TRANSACTION');
@@ -32,11 +41,16 @@ export default function AddForm(props) {
     momentLocalizer();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
+    const [ShowQuickSearch, setShowQuickSearch] = useState(false);
+    const [LoadingSend, setLoadingSend] = useState(false);
+    const [SelPaymentTo, setSelPaymentTo] = useState('');
+    const [ListPaymentTo, setListPaymentTo] = useState([]);
 
     const [InputPaymentDate, setInputPaymentDate] = useState(new Date());
     const [ErrInputPaymentDate, setErrInputPaymentDate] = useState('');
 
     const [InputPaymentTo, setInputPaymentTo] = useState('');
+    const [InputPaymentToName, setInputPaymentToName] = useState('');
     const [ErrInputPaymentTo, setErrInputPaymentTo] = useState('');
 
     const [ListCOA, setListCOA] = useState([]);
@@ -56,12 +70,29 @@ export default function AddForm(props) {
 
     const [ListChooseYN, setListChooseYN] = useState([]);
     const [ListAsset, setListAsset] = useState([]);
+    const [ListDataAssetOptions, setListDataAssetOptions] = useState([]);
 
-    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",idasset:"",idinvoiceitem:""}]);
+    const [ListCategory, setListCategory] = useState([]);
+    const [SelCategory, setSelCategory] = useState([]);
+    const [ErrSelCategory, setErrSelCategory] = useState([]);
+
+    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",idasset:"",idinvoiceitem:"",idpaymentitem:"",idassetsparepart:"",sparepartassettype:""}]);
+    const [ErrSelDetailCOA, setErrSelDetailCOA] = useState('');
     const [ErrInputCatatan, setErrInputCatatan] = useState('');
     const [ErrInputAmount, setErrInputAmount] = useState('');
     const [ErrSelInvoiceItem, setErrSelInvoiceItem] = useState('');
+    const [ErrSelPaymentitemItem, setErrSelPaymentitemItem] = useState('');
+    const [ErrSelAsset, setErrSelAsset] = useState('');
+    const [ErrSelSparepartType, setErrSelSparepartType] = useState('');
     const [ErrItems, setErrItems] = useState('');
+
+    const [ListPaymentItems, setListPaymentItems] = useState([]);
+    const [ListDataPaymentItems, setListDataPaymentItems] = useState([]);
+    const [ListSparePartType, setListSparePartType] = useState([]);
+    const [ListAssetSparePart, setListAssetSparePart] = useState([]);
+    const [ListDataAssetSparePart, setListDataAssetSparePart] = useState([]);
+
+    const [InputListBank, setInputListBank] = useState([{ norek:"",atasnama: "",bank:""}]);
 
     useEffect(() => {
         setLoading(true);
@@ -70,12 +101,23 @@ export default function AddForm(props) {
 
     const successHandlerTemplate = (data) =>{
         if(data.data){
-            setListCOA(data.data.coaOptions.reduce((obj, el) => (
+            let listPaymentTo = [{value:'EMPLOYEE',label:'Employee'},{value:'CUSTOMER',label:'Customer'},{value:'VENDOR',label:'Vendor'}];
+            setListPaymentTo(listPaymentTo);
+            setListDataAssetSparePart(data.data.assetSparePartOptions);
+            setListDataPaymentItems(data.data.paymentItemOptions);
+            let listCOA = data.data.coaOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama+' ('+el.code+')'
                 }]
-            ), []));
+            ), []);
+            listCOA.push(
+                {
+                    value: 'nodata',
+                    label: 'No Data'
+                }
+            );
+            setListCOA(listCOA);
             
 
             setListBank(data.data.bankOptions.reduce((obj, el) => (
@@ -85,19 +127,36 @@ export default function AddForm(props) {
                 }]
             ), []));
             
-            setListInvoiceItem(data.data.invoiceItemOptions.reduce((obj, el) => (
+            let listInvItem = data.data.invoiceItemOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nama
+                    label: el.nama,
+                    idcoa: el.idcoa
                 }]
-            ), []));
+            ), []);
+            listInvItem.push(
+                {
+                    value: 'nodata',
+                    label: 'No Data',
+                    idcoa: ''
+                }
+            );
+            setListInvoiceItem(listInvItem);
 
-            setListWO(data.data.woOptions.reduce((obj, el) => (
+            let listWO = data.data.woOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument
+                    label: el.nodocument+' - '+el.noaju
                 }]
-            ), []));
+            ), []);
+            listWO.push(
+                {
+                    value: 'nodata',
+                    label: 'No Data',
+                    idcoa: ''
+                }
+            );
+            setListWO(listWO);
 
             setListAsset(data.data.assetOptions.reduce((obj, el) => (
                 [...obj, {
@@ -105,6 +164,30 @@ export default function AddForm(props) {
                     label: getAssetName(el)
                 }]
             ), []));
+            setListDataAssetOptions(data.data.assetOptions);
+
+            setListCategory(data.data.paymenttypeOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.code,
+                    label: el.codename
+                }]
+            ), []));
+
+            // setListSparePartType(data.data.spareparttypeOptions.reduce((obj, el) => (
+            //     [...obj, {
+            //         value: el.code,
+            //         label: el.codename
+            //     }]
+            // ), []));
+
+            let listSparePartType = data.data.spareparttypeOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.code,
+                    label: el.codename
+                }]
+            ), []);
+            listSparePartType.push({value: 'nodata',label: 'No Data'});
+            setListSparePartType(listSparePartType);
 
             setListChooseYN([{value:'Y',label:'Yes'},{value:'N',label:'No'}])
         }
@@ -113,12 +196,12 @@ export default function AddForm(props) {
     const getAssetName = (data) =>{
         if(data.kepala_nama){
             if(data.kepala_nama !== ''){
-                return data.kepala_nama;
+                return data.kepala_nama +' (Kepala)';
             }
         }
         if(data.buntut_nama){
             if(data.buntut_nama !== ''){
-                return data.buntut_nama;
+                return data.buntut_nama+' (Buntut)';
             }
         }
     }
@@ -130,6 +213,20 @@ export default function AddForm(props) {
     const handleInputKeterangan = (data) =>{
         let val = data.target.value;
         setInputKeterangan(val)
+    }
+
+    const handleChangeListPaymentTo = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelPaymentTo(id);
+        setInputPaymentTo('');
+        setInputPaymentToName('');
+        setInputListBank([{ norek:"",atasnama: "",bank:""}]);
+    }
+
+    const handleShowQuickSearch = () =>{
+        if(SelPaymentTo !== ''){
+            setShowQuickSearch(true);
+        }
     }
 
     const handleChangeCoa = (data) =>{
@@ -147,6 +244,30 @@ export default function AddForm(props) {
         setSelWO(id);
     }
 
+    const handleChangeCategory = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelCategory(id);
+
+        let list = ListDataPaymentItems.filter(output => output.paymenttype == id);
+        setInputListItem([{ idcoa:"",catatan: "",amount:"",idasset:"",idinvoiceitem:"",idpaymentitem:"",idassetsparepart:"",sparepartassettype:""}]);
+        setListPaymentItems([]);
+        if(list.length > 0){
+            let listData = list.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama,
+                    idcoa:el.idcoa
+                }]
+            ), []);
+            listData.push({
+                value: 'nodata',
+                label: 'No Data',
+                idcoa:''
+            });
+            setListPaymentItems(listData);
+        }
+    }
+
     const handleChangePaymentDate = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
@@ -154,6 +275,72 @@ export default function AddForm(props) {
         }else{
             setInputPaymentDate(null);
         }
+    }
+
+    const checkCategory = (data,type) =>{
+        if(type == 'invoiceitem' || type == 'wo'){
+            if(data == 'OPTIONS_PAYMENTITEM_TYPE_1'){
+                return false;
+            }
+            if(type == 'wo' && data == 'OPTIONS_PAYMENTITEM_TYPE_2'){
+                return false;
+            }
+
+            if(type == 'wo' && data == 'OPTIONS_PAYMENTITEM_TYPE_4'){
+                return false;
+            }
+        }else if(type == 'asset'){
+            if(data == 'OPTIONS_PAYMENTITEM_TYPE_3'){
+                return false;
+            }
+        }else if(type == 'all'){
+            return false;
+        }else if(type == 'invoiceitemtable'){
+            for(let i=0; i < InputListItem.length; i++){
+                let det = InputListItem[0];
+                let flag = true;
+                if(det.idpaymentitem !== ''){
+                    flag = true;
+                    // return true;
+
+                    // break;
+                    if(det.idpaymentitem == 'nodata'){
+                        if(data == 'OPTIONS_PAYMENTITEM_TYPE_1'){
+                            flag = false;
+                            // return false;
+                        }
+                    }
+                }else{
+                    if(data == 'OPTIONS_PAYMENTITEM_TYPE_1'){
+                        flag = false;
+                    }
+                }
+
+                return flag;
+            }
+            if(data == 'OPTIONS_PAYMENTITEM_TYPE_1'){
+                return false;
+            }
+            return true;
+        }else if(type == 'paymentitemtable'){
+            for(let i=0; i < InputListItem.length; i++){
+                let det = InputListItem[0];
+                let flag = false;
+                if(det.idinvoiceitem !== ''){
+                    flag = true;
+                    // return true;
+                    // break;
+                    if(det.idinvoiceitem == 'nodata'){
+                        // return false;
+                        flag = false;
+                    }
+                }
+                return flag;
+            }
+            return false;
+        }
+
+        return true;
     }
 
     const checkColumnMandatory = () => {
@@ -166,43 +353,73 @@ export default function AddForm(props) {
         setErrInputAmount('');
         setErrItems('');
         setErrSelInvoiceItem('');
+        setErrSelCategory('');
+        // setErrSelPaymentitemItem('');
+        setErrSelAsset('');
+        setErrSelDetailCOA('')
+        // setErrSelSparepartType('');
+        
+        if(SelCategory == ''){
+            setErrSelCategory(i18n.t('label_REQUIRED'));
+            flag = false;
+        }else{
+            let listitems = [];
+            if(InputListItem.length > 0){
+                for(let i=0; i < InputListItem.length; i++){
+                    let det = InputListItem[i];
+                    if( (det.idcoa !== '' || det.idcoa !== 'nodata') || det.catatan !== '' || det.amount !== '' || (det.idinvoiceitem !== '' || det.idinvoiceitem !== 'nodata') || (det.idpaymentitem !== '' || det.idpaymentitem !== 'nodata') || (det.idasset !== '' || det.idasset !== 'nodata') ){
+                        // if(det.catatan == ''){
+                        //     setErrInputCatatan(i18n.t('Catatan')+' '+i18n.t('label_REQUIRED'));
+                        //     flag = false;
+                        // }
 
-        let listitems = [];
-        if(InputListItem.length > 0){
-            for(let i=0; i < InputListItem.length; i++){
-                let det = InputListItem[i];
-                if(det.idcoa !== '' || det.catatan !== '' || det.amount !== '' || det.idinvoiceitem !== '' ){
-                    if(det.catatan == ''){
-                        setErrInputCatatan(i18n.t('Catatan')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
-
-                    if(det.amount == ''){
-                        setErrInputAmount(i18n.t('Amount')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
-
-                    if(det.idcoa == ''){
-                        setErrSelCOA(i18n.t('DP')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
-                    if(SelWO !== ''){
-                        if(det.idinvoiceitem == ''){
-                            setErrSelInvoiceItem(i18n.t('Invoice Item')+' '+i18n.t('label_REQUIRED'));
+                        if(det.amount == ''){
+                            setErrInputAmount(i18n.t('Amount')+' '+i18n.t('label_REQUIRED'));
                             flag = false;
                         }
-                    }
 
-                    listitems.push(det);
+                        if(det.idcoa == '' || det.idcoa == 'nodata'){
+                            setErrSelDetailCOA(i18n.t('COA')+' '+i18n.t('label_REQUIRED'));
+                            flag = false;
+                        }
+                        if(SelWO !== '' && !checkCategory(SelCategory,'invoiceitem')){
+                            if( (det.idinvoiceitem == '' || det.idinvoiceitem == 'nodata') && (det.idpaymentitem == '' || det.idpaymentitem == 'nodata')){
+                                setErrSelInvoiceItem(i18n.t('Non/Reimbursement Item')+' '+i18n.t('label_REQUIRED'));
+                                flag = false;
+                            }
+                            // else if((det.idinvoiceitem !== '' || det.idinvoiceitem !== 'nodata') && (det.idpaymentitem !== '' || det.idpaymentitem !== 'nodata')){
+                            //     setErrSelInvoiceItem(i18n.t('Non/Reimbursement Item')+' '+i18n.t('label_REQUIRED'));
+                            //     flag = false;
+                            // }
+                        }
+
+                        if(!checkCategory(SelCategory,'asset')){
+                            if(det.idasset == ''){
+                                setErrSelAsset(i18n.t('Asset')+' '+i18n.t('label_REQUIRED'));
+                                flag = false;
+                            }
+
+                            if(det.sparepartassettype !== '' && det.sparepartassettype !== 'nodata'){
+                                if(det.idassetsparepart == '' || det.idassetsparepart == 'nodata'){
+                                    setErrSelAsset(i18n.t('Asset')+' '+i18n.t('label_REQUIRED'));
+                                    flag = false;
+                                }
+                            }
+                            
+                        }
+
+                        listitems.push(det);
+                    }
                 }
+            }
+
+            if(listitems.length == 0){
+                setErrItems(i18n.t('Items')+' '+i18n.t('label_REQUIRED'));
+                flag = false;
             }
         }
 
-        if(listitems.length == 0){
-            setErrItems(i18n.t('Items')+' '+i18n.t('label_REQUIRED'));
-            flag = false;
-        }
-
+        
         if(InputPaymentDate == null){
             setErrInputPaymentDate(i18n.t('label_REQUIRED'));
             flag = false;
@@ -213,10 +430,10 @@ export default function AddForm(props) {
             flag = false;
         }
 
-        if(SelCOA == ''){
-            setErrSelCOA(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(SelCOA == ''){
+        //     setErrSelCOA(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         if(SelBank == ''){
             setErrSelBank(i18n.t('label_REQUIRED'));
@@ -250,23 +467,58 @@ export default function AddForm(props) {
             setLoading(true);
             let obj = new Object();
             obj.paymentdate = moment(InputPaymentDate).toDate().getTime();
-            obj.paymentto = InputPaymentTo;
-            obj.idcoa = SelCOA;
+            obj.paymentto = SelPaymentTo;
+            obj.idpaymenttype = SelCategory;
+            if(SelPaymentTo == 'EMPLOYEE'){
+                obj.idemployee = InputPaymentTo;
+                obj.idcustomer = null;
+                obj.idvendor = null;
+            }else if(SelPaymentTo == 'CUSTOMER'){
+                obj.idemployee = null;
+                obj.idcustomer = InputPaymentTo;
+                obj.idvendor = null;
+            }else if(SelPaymentTo == 'VENDOR'){
+                obj.idemployee = null;
+                obj.idcustomer = null;
+                obj.idvendor = InputPaymentTo;
+            }
+
+            let idcoa = '';
+            if(SelCOA == '' || SelCOA == 'nodata'){
+                idcoa = null;
+            }else{
+                idcoa = SelCOA;
+            }
+            obj.idcoa = idcoa;
+
             obj.idbank = SelBank;
             obj.keterangan = InputKeterangan;
-            obj.idwo = SelWO !== ''?SelWO:null;
+            let idwo = '';
+            if(SelWO == '' || SelWO == 'nodata'){
+                idwo = null;
+            }else{
+                idwo = SelWO;
+            }
+
+            if(checkCategory(SelCategory,'wo')){
+                idwo = null;
+            }
+            obj.idwo = idwo;//SelWO !== ''?SelWO:null;
             obj.isactive = true;
             let listdetails = [];
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
                     let det = InputListItem[i];
-                    if(det.catatan !== '' && det.amount !== '' && det.idcoa !== ''){
+                    if(det.amount !== '' && (det.idcoa !== '' && det.idcoa !== 'nodata')){
                         let objDet = new Object();
-                        objDet.idcoa = det.idcoa !== '' ? det.idcoa:null;
+                        objDet.idcoa = det.idcoa !== '' && det.idcoa !== 'nodata' ? det.idcoa:null;
                         objDet.catatan = det.catatan;
                         objDet.amount = new String(det.amount).replaceAll('.','').replaceAll(',','.');
-                        objDet.idasset = det.idasset !== '' ? det.idasset:null;
-                        objDet.idinvoiceitem = det.idinvoiceitem !== '' ? det.idinvoiceitem:null;
+                        objDet.idasset = det.idasset !== '' && det.idasset !== 'nodata' ? det.idasset:null;
+                        objDet.idinvoiceitem = det.idinvoiceitem !== '' && det.idinvoiceitem !== 'nodata' ? det.idinvoiceitem:null;
+                        objDet.idpaymentitem = det.idpaymentitem !== '' && det.idpaymentitem !== 'nodata' ? det.idpaymentitem:null;
+                        objDet.idassetsparepart = det.idassetsparepart !== '' && det.idassetsparepart !== 'nodata' ? det.idassetsparepart:null;
+                        objDet.sparepartassettype = det.sparepartassettype !== '' && det.sparepartassettype !== 'nodata' ? det.sparepartassettype:null;
                         listdetails.push(objDet);
                     }
                 }
@@ -291,6 +543,7 @@ export default function AddForm(props) {
 
     const errorHandler = (data) => {
         setLoading(false);
+        setShowQuickSearch(false);
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -318,12 +571,97 @@ export default function AddForm(props) {
     const handleInputDropDownChange = (e, index,name) => {
         const list = [...InputListItem];
         list[index][name] = e.value;
+        if(name == 'sparepartassettype' || name == 'idasset'){
+            let idasset = list[index]['idasset'];
+            let sparepartType = list[index]['sparepartassettype'];
+            if(idasset !== '' && (sparepartType !== '' || sparepartType !== 'nodata')){
+                let detasset = ListDataAssetOptions.filter(output => output.id == idasset);
+                if(detasset.length > 0){
+                    let val = detasset[0];
+                    let jenisAsset = val.assettype;
+                    if(jenisAsset == 'KEPALA'){
+                        let assetSpareparts = ListDataAssetSparePart.filter(output => output.assettype == 'SP_KEPALA' && output.sparepartkepala_jenis == sparepartType);
+                        //sparepartkepala_jenis
+                        setListAssetSparePart(assetSpareparts.reduce((obj, el) => (
+                            [...obj, {
+                                value: el.id,
+                                label: el.sparepartkepala_nama
+                            }]
+                        ), []));
+                    }else if(jenisAsset == 'BUNTUT'){
+                        let assetSpareparts = ListDataAssetSparePart.filter(output => output.assettype == 'SP_BUNTUT' && output.sparepartbuntut_jenis == sparepartType);
+                        setListAssetSparePart(assetSpareparts.reduce((obj, el) => (
+                            [...obj, {
+                                value: el.id,
+                                label: el.sparepartbuntut_nama
+                            }]
+                        ), []));
+                    }else{
+                        list[index]['idassetsparepart'] = '';
+                        setListAssetSparePart([]);
+                    }
+                }
+            }else{
+                list[index]['idassetsparepart'] = '';
+                setListAssetSparePart([]);
+            }
+
+        }
+
+        if(name == 'idinvoiceitem'){
+            let idinvoiceitem = list[index]['idinvoiceitem'];
+            if(idinvoiceitem !== undefined && idinvoiceitem !== null && idinvoiceitem !== 0 && idinvoiceitem !== ''){
+                let listtemp = ListInvoiceItem.filter(output => output.value == idinvoiceitem);
+                if(listtemp.length > 0){
+                    list[index]['idcoa'] = listtemp[0].idcoa == 0?'':listtemp[0].idcoa;
+                }
+            }
+            
+        }
+
+        if(name == 'idpaymentitem'){
+            let idpaymentitem = list[index]['idpaymentitem'];
+            if(idpaymentitem !== undefined && idpaymentitem !== null && idpaymentitem !== 0 && idpaymentitem !== ''){
+                let listtemp = ListPaymentItems.filter(output => output.value == idpaymentitem);
+                if(listtemp.length > 0){
+                    list[index]['idcoa'] = listtemp[0].idcoa == 0?'':listtemp[0].idcoa;
+                }
+            }
+        }
+
+        //idinvoiceitem, idpaymentitem, idcoa
         setInputListItem(list);
     };    
 
     const handleAddClick = () => {
-        setInputListItem([...InputListItem, { idcoa:"",catatan: "",amount:"",idasset:"",idinvoiceitem:""}]);
+        setInputListItem([...InputListItem, { idcoa:"",catatan: "",amount:"",idasset:"",idinvoiceitem:"",idpaymentitem:"",idassetsparepart:"",sparepartassettype:""}]);
     };
+
+    const handleQuickSeacrh = (data) =>{
+        setShowQuickSearch(false);
+        setInputPaymentTo(data.id);
+        setInputListBank([{ norek:"",atasnama: "",bank:""}]);
+        if(SelPaymentTo == 'EMPLOYEE'){
+            setInputPaymentToName(data.nama);
+            setLoading(true);
+            dispatch(actions.getPengeluaranKasBankData('/listbankemployee/'+data.id,successHandlerListBankVendor, errorHandler));
+        }else if(SelPaymentTo == 'CUSTOMER'){
+            setInputPaymentToName(data.customername);
+        }else if(SelPaymentTo == 'VENDOR'){
+            setInputPaymentToName(data.nama);
+            setLoading(true);
+            dispatch(actions.getPengeluaranKasBankData('/listbankvendor/'+data.id,successHandlerListBankVendor, errorHandler));
+        }
+        // setInputCustomer(data.customername);
+        // setInputCustomerID(data.id);
+    }
+
+    const successHandlerListBankVendor = (data) =>{
+        if(data.data.length > 0){
+            setInputListBank(data.data);
+        }
+        setLoading(false);
+    }
     
     const handleRemoveClick = index => {
         const list = [...InputListItem];
@@ -336,12 +674,14 @@ export default function AddForm(props) {
         initialValues={
             {
                 paymentdate:InputPaymentDate,
-                paymentto:InputPaymentTo,
+                paymentto:InputPaymentToName,
+                paymentotype:SelPaymentTo,
                 coa:SelCOA,
                 bank:SelBank,
                 keterangan:InputKeterangan,
                 items:InputListItem,
-                idwo:SelWO
+                idwo:SelWO,
+                category:SelCategory
             }
         }
         validate={values => {
@@ -393,29 +733,90 @@ export default function AddForm(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputPaymentDate}</div>
 
+                            <label className="mt-3 form-label required" htmlFor="category">
+                                {i18n.t('Category')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="category"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeCategory(val)}
+                                onBlur={val => setFieldTouched("category", val?.value ? val.value : '')}
+                                data={ListCategory}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.category}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelCategory}</div>
+
                             <label className="mt-3 form-label required" htmlFor="paymentto">
                                 {i18n.t('Payment To')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
-                            <Input
-                                name="receivefrom"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="paymentto"
-                                maxLength={200}
-                                onChange={val => handleInputPaymentTo(val)}
-                                onBlur={handleBlur}
-                                value={values.paymentto}
-                            />
+
+                            <table style={{width:'100%'}}>
+                            <tbody>
+                                <td style={{width:'70%'}}>
+                                <Input
+                                    name="paymentto"
+                                    // className={
+                                    //     touched.namebranch && errors.namebranch
+                                    //         ? "w-50 input-error"
+                                    //         : "w-50"
+                                    // }
+                                    type="text"
+                                    id="paymentto"
+                                    maxLength={200}
+                                    // onChange={val => handleInputPaymentTo(val)}
+                                    onBlur={handleBlur}
+                                    disabled={true}
+                                    value={values.paymentto}
+                                />
+                                </td>
+                                <td style={{width:'30%'}}>
+                                <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="paymentotype"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeListPaymentTo(val)}
+                                    onBlur={val => setFieldTouched("paymentotype", val?.value ? val.value : '')}
+                                    data={ListPaymentTo}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.paymentotype}
+                                />
+                                </td>
+                                <td>
+                                <IconButton color={'primary'}
+                                    onClick={() =>handleShowQuickSearch()}
+                                >
+                                    <SearchIcon/>
+                                </IconButton>
+                                </td>
+                            </tbody>
+                            </table>
                             <div className="invalid-feedback-custom">{ErrInputPaymentTo}</div>
+                            
 
                             <label className="mt-3 form-label required" htmlFor="coa">
                                 {i18n.t('COA')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
 
                                 <DropdownList
@@ -481,6 +882,7 @@ export default function AddForm(props) {
                                 value={values.keterangan}
                             />
 
+                            <div hidden={checkCategory(values.category,'wo')}>
                             <label className="mt-3 form-label required" htmlFor="idwo">
                                 {i18n.t('WO Number')}
                             </label>
@@ -503,63 +905,197 @@ export default function AddForm(props) {
                                     // disabled={values.isdisabledcountry}
                                     value={values.idwo}
                                 />
+                                </div>
 
                             </div>
+
+                            <div className="mt-2 col-lg-6 ft-detail mb-5" hidden={!(SelPaymentTo == 'EMPLOYEE' || SelPaymentTo == 'VENDOR')}>
+                            <div style={{marginTop:'0px'}}><h3>{i18n.t('Bank')}</h3></div>
+                                    {
+                                        InputListBank.length == 0?'':
+                                        <table id="tablegrid">
+                                            <tr>
+                                                <th>{i18n.t('Bank')}</th>
+                                                <th>{i18n.t('label_ACCOUNT_NAME')}</th>
+                                                <th>{i18n.t('label_NUMBER_ACCOUNT')}</th>
+                                            </tr>
+                                            <tbody>
+                                                {
+                                                    InputListBank.map((x, i) => {
+                                                        return (
+                                                            <tr>
+                                                                <td>
+                                                        <Input
+                                                            name="bank"
+                                                            // className={
+                                                            //     touched.amount && errors.amount
+                                                            //         ? "w-50 input-error"
+                                                            //         : "w-50"
+                                                            // }
+                                                            type="text"
+                                                            id="bank"
+                                                            // onChange={val => handleInputChangeBank(val,i)}
+                                                            onBlur={handleBlur}
+                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                            // style={{width: '25%'}}
+                                                            // value={values.amount}
+                                                            value={x.bank}
+                                                            disabled={true}
+                                                        />
+                                                        </td>
+                                                        
+                                                        <td>
+                                                        <Input
+                                                            name="atasnama"
+                                                            // className={
+                                                            //     touched.amount && errors.amount
+                                                            //         ? "w-50 input-error"
+                                                            //         : "w-50"
+                                                            // }
+                                                            type="text"
+                                                            id="atasnama"
+                                                            // onChange={val => handleInputChangeBank(val,i)}
+                                                            onBlur={handleBlur}
+                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                            // style={{width: '25%'}}
+                                                            // value={values.amount}
+                                                            value={x.atasnama}
+                                                            disabled={true}
+                                                        />
+                                                        </td>
+
+                                                        <td>
+                                                        <Input
+                                                            name="norek"
+                                                            // className={
+                                                            //     touched.amount && errors.amount
+                                                            //         ? "w-50 input-error"
+                                                            //         : "w-50"
+                                                            // }
+                                                            type="text"
+                                                            id="norek"
+                                                            // onChange={val => handleInputChangeBank(val,i)}
+                                                            onBlur={handleBlur}
+                                                            // placeholder={i18n.t('label_AMOUNT')}
+                                                            // style={{width: '25%'}}
+                                                            // value={values.amount}
+                                                            value={x.norek}
+                                                            disabled={true}
+                                                        />
+                                                        </td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                            </div>
+
                             </div>
 
                             <div className="invalid-feedback-custom">{ErrItems}</div>
                             <div className="invalid-feedback-custom">{ErrInputCatatan}</div>
                             <div className="invalid-feedback-custom">{ErrInputAmount}</div>
                             <div className="invalid-feedback-custom">{ErrSelInvoiceItem}</div>
+                            <div className="invalid-feedback-custom">{ErrSelAsset}</div>
+                            <div className="invalid-feedback-custom">{ErrSelDetailCOA}</div>
                             {
                                 InputListItem.length == 0?'':
                                 <table id="tablegrid">
                                     <tr>
-                                        <th>{i18n.t('COA')}</th>
-                                        <th>{i18n.t('label_NOTE')}</th>
+                                    {/* invoiceitemtable,paymentitemtable */}
+                                        <th  hidden={checkCategory(values.category,'invoiceitemtable')}>{i18n.t('Reimbursement')}</th>
+                                        <th  hidden={checkCategory(values.category,'paymentitemtable')}>{i18n.t('Non Reimbursement')}</th>
+                                        <th hidden={checkCategory(values.category,'asset')}>{i18n.t('Kepala/Buntut')}</th>
+                                        <th hidden={checkCategory(values.category,'asset')}>{i18n.t('Jenis Sparepart')}</th>
+                                        <th hidden={checkCategory(values.category,'asset')}>{i18n.t('Asset Sparepart')}</th>
                                         <th>{i18n.t('Amount')}</th>
-                                        <th>{i18n.t('Invoice Item')}</th>
-                                        <th>{i18n.t('Asset')}</th>
-                                        <th>{i18n.t('Action')}</th>
+                                        <th>{i18n.t('label_NOTE')}</th>
+                                        <th>{i18n.t('COA')}</th>
+
+                                        <th hidden={true}>{i18n.t('Action')}</th>
                                     </tr>
                                     <tbody>
                                         {
                                             InputListItem.map((x, i) => {
                                                 return(
                                                     <tr>
-                                                    <td>
+                                                        <td style={{width: '170px'}} hidden={checkCategory(values.category,'invoiceitemtable')}>
                                                     <DropdownList
-                                                        name="idcoa"
+                                                        name="idinvoiceitem"
                                                         filter='contains'
                                                         // placeholder={i18n.t('select.SELECT_OPTION')}
                                                         
-                                                        onChange={val => handleInputDropDownChange(val,i,'idcoa')}
-                                                        data={ListCOA}
+                                                        onChange={val => handleInputDropDownChange(val,i,'idinvoiceitem')}
+                                                        data={ListInvoiceItem}
+                                                        textField={'label'}
+                                                        valueField={'value'}
+                                                        style={{width: '170px'}}
+                                                        value={x.idinvoiceitem}
+                                                    />
+                                                    </td>
+
+                                                    <td style={{width: '170px'}} hidden={checkCategory(values.category,'paymentitemtable')}>
+                                                    <DropdownList
+                                                        name="idpaymentitem"
+                                                        filter='contains'
+                                                        // placeholder={i18n.t('select.SELECT_OPTION')}
+                                                        
+                                                        onChange={val => handleInputDropDownChange(val,i,'idpaymentitem')}
+                                                        data={ListPaymentItems}
+                                                        textField={'label'}
+                                                        valueField={'value'}
+                                                        style={{width: '170px'}}
+                                                        value={x.idpaymentitem}
+                                                    />
+                                                    </td>
+
+                                                    <td hidden={checkCategory(values.category,'asset')}>
+                                                    <DropdownList
+                                                        name="idasset"
+                                                        filter='contains'
+                                                        // placeholder={i18n.t('select.SELECT_OPTION')}
+                                                        
+                                                        onChange={val => handleInputDropDownChange(val,i,'idasset')}
+                                                        data={ListAsset}
                                                         textField={'label'}
                                                         valueField={'value'}
                                                         style={{width: '130px'}}
-                                                        value={x.idcoa}
+                                                        value={x.idasset}
                                                     />
                                                     </td>
-                                                    <td>
-                                                    <Input
-                                                        name="catatan"
-                                                        // className={
-                                                        //     touched.amount && errors.amount
-                                                        //         ? "w-50 input-error"
-                                                        //         : "w-50"
-                                                        // }
-                                                        type="textarea"
-                                                        id="catatan"
-                                                        onChange={val => handleInputChange(val,i)}
-                                                        onBlur={handleBlur}
-                                                        // placeholder={i18n.t('label_AMOUNT')}
-                                                        // style={{width: '25%'}}
-                                                        // value={values.amount}
-                                                        value={x.catatan}
-                                                        disabled={false}
+
+                                                    <td hidden={checkCategory(values.category,'asset')}>
+                                                    <DropdownList
+                                                        name="sparepartassettype"
+                                                        filter='contains'
+                                                        // placeholder={i18n.t('select.SELECT_OPTION')}
+                                                        
+                                                        onChange={val => handleInputDropDownChange(val,i,'sparepartassettype')}
+                                                        data={ListSparePartType}
+                                                        textField={'label'}
+                                                        valueField={'value'}
+                                                        style={{width: '130px'}}
+                                                        value={x.sparepartassettype}
                                                     />
                                                     </td>
+
+                                                    <td hidden={checkCategory(values.category,'asset')}>
+                                                    <DropdownList
+                                                        name="idassetsparepart"
+                                                        filter='contains'
+                                                        // placeholder={i18n.t('select.SELECT_OPTION')}
+                                                        
+                                                        onChange={val => handleInputDropDownChange(val,i,'idassetsparepart')}
+                                                        data={ListAssetSparePart}
+                                                        textField={'label'}
+                                                        valueField={'value'}
+                                                        style={{width: '130px'}}
+                                                        value={x.idassetsparepart}
+                                                    />
+                                                    </td>
+
                                                     <td>
                                                     <Input
                                                         name="amount"
@@ -579,35 +1115,44 @@ export default function AddForm(props) {
                                                         disabled={false}
                                                     />
                                                     </td>
+                                                    
                                                     <td>
+                                                    <Input
+                                                        name="catatan"
+                                                        // className={
+                                                        //     touched.amount && errors.amount
+                                                        //         ? "w-50 input-error"
+                                                        //         : "w-50"
+                                                        // }
+                                                        type="textarea"
+                                                        id="catatan"
+                                                        onChange={val => handleInputChange(val,i)}
+                                                        onBlur={handleBlur}
+                                                        // placeholder={i18n.t('label_AMOUNT')}
+                                                        // style={{width: '25%'}}
+                                                        // value={values.amount}
+                                                        value={x.catatan}
+                                                        disabled={false}
+                                                    />
+                                                    </td>
+                                                    
+                                                    <td style={{width: '200px'}}>
                                                     <DropdownList
-                                                        name="idinvoiceitem"
+                                                        name="idcoa"
                                                         filter='contains'
                                                         // placeholder={i18n.t('select.SELECT_OPTION')}
                                                         
-                                                        onChange={val => handleInputDropDownChange(val,i,'idinvoiceitem')}
-                                                        data={ListInvoiceItem}
+                                                        onChange={val => handleInputDropDownChange(val,i,'idcoa')}
+                                                        data={ListCOA}
                                                         textField={'label'}
                                                         valueField={'value'}
-                                                        style={{width: '130px'}}
-                                                        value={x.idinvoiceitem}
+                                                        style={{width: '200px'}}
+                                                        value={x.idcoa}
                                                     />
                                                     </td>
-                                                    <td>
-                                                    <DropdownList
-                                                        name="idasset"
-                                                        filter='contains'
-                                                        // placeholder={i18n.t('select.SELECT_OPTION')}
-                                                        
-                                                        onChange={val => handleInputDropDownChange(val,i,'idasset')}
-                                                        data={ListAsset}
-                                                        textField={'label'}
-                                                        valueField={'value'}
-                                                        style={{width: '130px'}}
-                                                        value={x.idasset}
-                                                    />
-                                                    </td>
-                                                    <td>
+                                                    
+                                                    
+                                                    <td hidden={true}>
                                                         <IconButton color={'primary'} hidden={i > 0}
                                                             onClick={() => handleAddClick()}
                                                         // hidden={showplusdebit}
@@ -647,6 +1192,28 @@ export default function AddForm(props) {
                                 {'Submit'}
                                 </Button>
                                 </div>
+
+
+                                <StyledDialog
+                            disableBackdropClick
+                            disableEscapeKeyDown
+                            maxWidth="md"
+                            fullWidth={true}
+                            // style={{height: '80%'}}
+                            open={ShowQuickSearch}
+                        >
+                                <FormSearch
+                                    showflag = {setShowQuickSearch}
+                                    flagloadingsend = {setLoadingSend}
+                                    seacrhtype = {'PENGELUAARAN-KAS-BANK'}
+                                    seacrhtype1 = {SelPaymentTo}
+                                    errorHandler = {errorHandler}
+                                    handlesearch = {handleQuickSeacrh}
+                                    placeholder = {SelPaymentTo == 'CUSTOMER' || SelPaymentTo == 'VENDOR' ?'Pencarian Berdasarkan Nama Atau Alias':'Pencarian Berdasarkan Nama'}
+
+                                ></FormSearch>
+                                {LoadingSend && <Loading/>}
+                        </StyledDialog>
                         </form>
 
                     )

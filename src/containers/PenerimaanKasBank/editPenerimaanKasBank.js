@@ -828,6 +828,7 @@ export default function AddForm(props) {
                                             handlesearch = {handleQuickSeacrhINV}
                                             placeholder = {'Pencarian Berdasarkan No Document atau Nama Customer'}
                                             idwo = {InputIndexIdWo}
+                                            idpenerimaan = {id}
                                         ></FormSearch>
                                         {LoadingSend && <Loading/>}
                                 </StyledDialog>

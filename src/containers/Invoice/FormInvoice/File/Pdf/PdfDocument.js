@@ -1,6 +1,7 @@
 import React from "react";
 import { Page, Document, StyleSheet, Image } from "@react-pdf/renderer";
 import GenerateInvoice from "./GenerateInvoice";
+import GenerateSuratJalan from "./GenerateSuratJalan";
 import logo from "./logoinvoice.png";
 
 const styles = StyleSheet.create({
@@ -22,6 +23,23 @@ const styles = StyleSheet.create({
     }
 });
 
+const checkSJ = (items) =>{
+    let flag = false;
+    if(items.lampiransuratjalan){
+        let lamp = items.lampiransuratjalan;
+        if(lamp.suratjalan){
+            if(Array.isArray(lamp.suratjalan)){
+                if(lamp.suratjalan.length > 0){
+                    flag = true
+                }
+            }
+            
+        }
+    }
+
+    return flag;
+}
+
 const PdfDocument = ({ data }) => {
         return (
             <Document>
@@ -29,6 +47,14 @@ const PdfDocument = ({ data }) => {
                 <Image style={styles.logo} src={logo} />
                 <GenerateInvoice valuedata={data}/>
                 </Page>
+
+                {/* {
+                    checkSJ(data) ?
+                    <Page size="A4" style={styles.page} >
+                    <GenerateSuratJalan valuedata={data}/>
+                    </Page>:[]
+                } */}
+                
             </Document>
         )
     

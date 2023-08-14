@@ -1,8 +1,9 @@
 import React,{ Fragment } from 'react';
-import { Text, View, StyleSheet,Image } from '@react-pdf/renderer';
-import logo from "./kseilogo.png";
-import ContaineritemsTable from "./ContaineritemsTable";
-import { formatdate } from '../../../shared/constantValue';
+import { Text, View, StyleSheet } from '@react-pdf/renderer';
+// import logo from "./kseilogo.png";
+// import ContaineritemsTable from "./ContaineritemsTable";
+// import { formatdate } from '../../../shared/constantValue';
+import { numToMoney } from '../../../shared/globalFunc';
 
 const styles = StyleSheet.create({
     container:{
@@ -95,13 +96,13 @@ const styles = StyleSheet.create({
         width: 40
     },
     labelAJUWO: {
-        width: 70
+        width: 45
     },
     labelcustomer: {
         width: 50
     },
     labelcontactperson: {
-        width: 75
+        width: 45
     },
     labeldikirimoleh: {
         width: 150,
@@ -145,13 +146,20 @@ const getKalimat1 = (data) => {
 }
 
 const getKalimat2 = (data) => {
-    let text = 'kosongan container dikirim Ke/diambil dari :';
-    if(data == 'EX'){
-        text = 'Kosongan diambil dari : ';
-    }else if(data == 'IM'){
-        text = 'Kosongan dikirim ke : ';
+    // let text = 'kosongan container dikirim Ke/diambil dari :';
+    // if(data == 'EX'){
+    //     text = 'Kosongan diambil dari : ';
+    // }else if(data == 'IM'){
+    //     text = 'Kosongan dikirim ke : ';
+    // }
+    return 'Kosongan diambil dari / buang ke : ';
+}
+
+const setFotmatCurrValueNumber = (data) => {
+    if(!isNaN(data)){
+        return numToMoney(parseFloat(data));
     }
-    return text;
+    return data;
 }
 
 const GenerateSuratJalan = ({ valuedata }) => (
@@ -163,13 +171,13 @@ const GenerateSuratJalan = ({ valuedata }) => (
 
     <View style={styles.noBLContainer}>
     <Text style={styles.labelleft}>{'No BL:'}</Text>
-    <Text >{valuedata != null?valuedata.noblWO:''}</Text>
+    <Text >{valuedata != null?valuedata.noblWO+' - '+valuedata.woTypeName:''}</Text>
     </View>
 
     <View style={styles.noAJUContainer}>
-    <Text style={styles.labelAJUWO}>{'No AJU / WO:'}</Text>
+    <Text style={styles.labelAJUWO}>{'No AJU :'}</Text>
     {/* <Text >{'128318 / DWO-0000001-220222'}</Text> */}
-    <Text >{valuedata != null?valuedata.noajuWO +' / '+valuedata.nodocumentWO:''}</Text>
+    <Text >{valuedata != null?valuedata.noajuWO +' - WO : '+valuedata.nodocumentWO:''}</Text>
     </View>
 
     <View style={styles.rightposition}>
@@ -186,7 +194,7 @@ const GenerateSuratJalan = ({ valuedata }) => (
         {/* {valuedata != null?moment (new Date(valuedata.tanggal)).format(formatdate):''} */}
     </View>
 
-    <Text >{valuedata != null?getKalimat1(valuedata.woType):''}</Text>
+    {/* <Text >{valuedata != null?getKalimat1(valuedata.woType):''}</Text> */}
 
     <View style={styles.customerContainer}>
         <Text style={styles.labelcustomer}>Customer: </Text>
@@ -201,13 +209,19 @@ const GenerateSuratJalan = ({ valuedata }) => (
     <Text >{valuedata != null?(valuedata.customerProvince+', '+valuedata.customerCity+', '+valuedata.customerDistrict+', '+valuedata.customerKodePos):''}</Text>
     </View>
 
-    <View style={styles.suratJalanCatatan}>
-    <Text >{valuedata != null?valuedata.catatan:''}</Text>    
+    {/* <View style={styles.suratJalanCatatan}>
+    <Text >{valuedata != null?valuedata.warehouseancerancer:''}</Text>    
+    </View> */}
+
+    <View style={{flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginTop: -27,}}>
+    <Text >{valuedata != null?valuedata.warehousecatatan:''}</Text>    
     </View>
     
     <View style={styles.contactPersonContainer}>
-        <Text style={styles.labelcontactperson}>Contact Person: </Text>
-        <Text >{(getContact(valuedata != null?valuedata.warehousecontactname:''))+'/'+(getContact(valuedata != null?valuedata.warehousecontactno:''))+'/'+(valuedata != null?valuedata.warehouseaddress:'')}</Text>
+        <Text style={styles.labelcontactperson}>Hubungi: </Text>
+        <Text >{(getContact(valuedata != null?valuedata.warehousecontactname:''))+'/'+(getContact(valuedata != null?valuedata.warehousecontactno:''))+'/ '+(valuedata != null?valuedata.warehouseancerancer:'')}</Text>
     </View>
 
     <View style={styles.horizontalline}/>
@@ -217,19 +231,28 @@ const GenerateSuratJalan = ({ valuedata }) => (
         <Text >{valuedata != null?valuedata.namacargoWO:''}</Text>
     </View>
 
-    <ContaineritemsTable data = {valuedata != null?valuedata:[]} />
+    <View style={styles.customerContainer}>
+        <Text style={{width:'70'}}>No. Container: </Text>
+        <Text >{valuedata != null?valuedata.containerpartai+' - '+valuedata.nocantainer+' - '+valuedata.containerjumlahkoli+' Koli - '+setFotmatCurrValueNumber(valuedata.containerjumlahkg)+' KG':''}</Text>
+    </View>
+
+    <View style={styles.customerContainer}>
+        <Text >{valuedata != null?valuedata.catatan:''}</Text>
+    </View>
+
+    {/* <ContaineritemsTable data = {valuedata != null?valuedata:[]} /> */}
 
     <Text >{(valuedata != null?getKalimat2(valuedata.woType):'')+(valuedata != null?valuedata.depoWO:'')}</Text>
 
     <View style={styles.containerttd}>
 
     <View style={{marginTop:20}}>
-    <Text style={styles.labeldikirimoleh} >{'Dikirim Oleh'}</Text>
+    <Text style={styles.labeldikirimoleh} >{'Diterima Oleh'}</Text>
     <Text style={styles.ttddikirimoleh} >{'(.......................................................)'}</Text>
     </View>
 
     <View style={{marginTop:20,marginLeft:140}}>
-    <Text >{'Diterima oleh (Diisi lengkap dan cap perusahaan)'}</Text>
+    {/* <Text >{'Diterima oleh (Diisi lengkap dan cap perusahaan)'}</Text> */}
     <View style={styles.namaditerimaoleh}>
         <Text style={{width:'60'}}>Nama: </Text>
         <Text >{'..................'}</Text>

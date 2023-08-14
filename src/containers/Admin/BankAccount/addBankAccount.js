@@ -60,11 +60,12 @@ export default function AddBankAccount(props) {
 
     const handleInputNoRek = (data) =>{
         let val = data.target.value;
-        if(val == ''){
-            setInputNoRek(val);
-        }else if(!isNaN(val)){
-            setInputNoRek(val);
-        }
+        setInputNoRek(val);
+        // if(val == ''){
+        //     setInputNoRek(val);
+        // }else if(!isNaN(val)){
+        //     setInputNoRek(val);
+        // }
     }
 
     const handleInputCatatan1 = (data) =>{

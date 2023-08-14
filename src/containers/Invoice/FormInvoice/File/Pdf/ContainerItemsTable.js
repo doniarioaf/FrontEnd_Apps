@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 
 const ContainerItemsTable = ({ data }) => (
     <View style={styles.tableContainer}>
-        <ContainerTableHeader type ={data.idinvoicetype} />
+        <ContainerTableHeader type ={data.idinvoicetype} items={data}/>
         <ContainerTableItemsValue items={data} />
         {/* <InvoiceTableFooter items={invoice.items} /> */}
     </View>

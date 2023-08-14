@@ -330,6 +330,13 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Kecamatan')}</span>
+                                <strong className="col-md-7">
+                                {value.districtName?value.districtName:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_POSTAL_CODE')}</span>
                                 <strong className="col-md-7">
                                 {value.kodepos?value.kodepos:''}
@@ -337,9 +344,23 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_ADDRESS')}</span>
+                            <span className="col-md-5">{i18n.t('label_ADDRESS')+' 1'}</span>
                                 <strong className="col-md-7">
                                 {value.alamat?value.alamat:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_ADDRESS')+' 2'}</span>
+                                <strong className="col-md-7">
+                                {value.alamat2?value.alamat2:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_ADDRESS')+' 3'}</span>
+                                <strong className="col-md-7">
+                                {value.alamat3?value.alamat3:''}
                                 </strong>
                             </div>
 
@@ -362,7 +383,7 @@ import React, {useState,
             <div><h3>{i18n.t('label_MINISTRY_INFO')}</h3></div>
             {
                 value.detailsInfoKementerian?
-                <table id="tablegrid">
+                <table id="tablegrid" style={{width:'900px'}}>
                     <tr>
                         <th>{i18n.t('label_MINISTRY')}</th>
                         <th>{i18n.t('Email / Login')}</th>
@@ -372,9 +393,9 @@ import React, {useState,
                         value.detailsInfoKementerian.map((x, i) => {
                             return (
                                 <tr>
-                                    <td>{x.kementerian}</td>
-                                    <td>{x.alamat_email}</td>
-                                    <td>{x.password_email}</td>
+                                    <td style={{width:'300px'}}>{x.kementerian}</td>
+                                    <td style={{width:'300px'}}>{x.alamat_email}</td>
+                                    <td style={{width:'300px'}}>{x.password_email}</td>
                                 </tr>
                             )
                         })

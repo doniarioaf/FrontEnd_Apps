@@ -20,60 +20,85 @@ const styles = StyleSheet.create({
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
+    qty: {
+        width: '10%',
+        borderRightColor: borderColor,
+        borderRightWidth: 1,
+    },
     jasa: {
-        width: '35%',
+        width: '30%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     discjasa: {
-        width: '15%',
+        width: '12%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     hargajasa: {
-        width: '20%',
+        width: '19%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     subtotaljasa: {
-        width: '20%',
+        width: '19%',
         borderRightColor: borderColor,
-        borderRightWidth: 1,
+        borderRightWidth: 0,
     },
     reimbursement: {
-        width: '35%',
+        width: '40%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     discreimbursement: {
-        width: '15%',
+        width: '12%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     hargareimbursement: {
-        width: '20%',
+        width: '19%',
         borderRightColor: borderColor,
         borderRightWidth: 1,
     },
     subtotalreimbursement: {
-        width: '20%',
+        width: '19%',
         borderRightColor: borderColor,
-        borderRightWidth: 1,
+        borderRightWidth: 0,
     },
 });
 
-const setHeader = (type) =>{
+const setHeader = (param) =>{
     let list = [];
-    if(type.type == 'JASA'){
+    let showDiskon = false;
+    if(param.items.detailsprice){
+        for(let i=0; i < param.items.detailsprice.length; i++){
+            let det = param.items.detailsprice;
+            if(det.diskon){
+                showDiskon = true;
+            }
+        }
+    }
+    if(param.type == 'JASA'){
         list.push(<Text style={styles.no}>No</Text>);
         list.push(<Text style={styles.jasa}>Jasa PPJK</Text>);
-        list.push(<Text style={styles.discjasa}>Disc</Text>);
+        list.push(<Text style={styles.qty}>Qty</Text>);
         list.push(<Text style={styles.hargajasa}>Harga</Text>);
+        if(showDiskon){
+            list.push(<Text style={styles.discjasa}>Disc</Text>);
+        }
         list.push(<Text style={styles.subtotaljasa}>Subtotal</Text>);
-    }else{
+    }else if(param.type == 'REIMBURSEMENT'){
         list.push(<Text style={styles.no}>No</Text>);
         list.push(<Text style={styles.reimbursement}>Reimbursement / Dana Talangan</Text>);
-        list.push(<Text style={styles.discreimbursement}>Disc</Text>);
+        // list.push(<Text style={styles.qty}>Qty</Text>);
+        list.push(<Text style={styles.hargareimbursement}>Harga</Text>);
+        if(showDiskon){
+            list.push(<Text style={styles.discreimbursement}>Disc</Text>);
+        }
+        list.push(<Text style={styles.subtotalreimbursement}>Subtotal</Text>);
+    }else if(param.type == 'DP'){
+        list.push(<Text style={styles.no}>No</Text>);
+        list.push(<Text style={styles.reimbursement}>Jasa PPJK</Text>);
         list.push(<Text style={styles.hargareimbursement}>Harga</Text>);
         list.push(<Text style={styles.subtotalreimbursement}>Subtotal</Text>);
     }
@@ -81,9 +106,9 @@ const setHeader = (type) =>{
     return list;
 }
 
-const ContainerTableHeader = (type) => (
+const ContainerTableHeader = (param) => (
     <View style={styles.container}>
-        {setHeader(type)}
+        {setHeader(param)}
     </View>
 );
 

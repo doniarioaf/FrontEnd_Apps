@@ -8,7 +8,7 @@ import {useDispatch}   from 'react-redux';
 import Swal                         from 'sweetalert2';
 import * as actions                 from '../../../store/actions';
 import * as pathmenu           from '../../shared/pathMenu';
-import { reloadToHomeNotAuthorize,isGetPermissions } from '../../shared/globalFunc';
+import { reloadToHomeNotAuthorize,isGetPermissions, invoiceTypeName } from '../../shared/globalFunc';
 import { MenuInvoice, addInvoice_Permission } from '../../shared/permissionMenu';
 import {useHistory}                 from 'react-router-dom';
 import moment                       from "moment/moment";
@@ -22,6 +22,9 @@ const MenuIndex = () => {
     const [columns] = useState([
         {name: 'id', title: 'id'},
         // {name: 'code', title: i18n.t('Code')},
+        {name: 'noaju', title: i18n.t('No AJU')},
+        {name: 'nodocumentwo', title: 'No. WO'},
+        {name: 'invoicetype', title: 'Invoice Type'},
         {name: 'nodocument', title: i18n.t('label_NO_DOCUMENT')},
         {name: 'customer', title: i18n.t('Customer')},
         {name: 'refno', title: i18n.t('Ref. No')},
@@ -43,6 +46,9 @@ const MenuIndex = () => {
                 {
                     'id': el.id,
                     // 'code':el.code?el.code:'',
+                    'noaju': el.noajuwo ?el.noajuwo:'',
+                    'nodocumentwo': el.noocumentwo ?el.noocumentwo:'',
+                    'invoicetype': el.idinvoicetype ?invoiceTypeName(el.idinvoicetype) :'',
                     'nodocument': el.nodocument ?el.nodocument:'',
                     'customer':el.namaCustomer?el.namaCustomer:'',
                     'refno':el.refno?el.refno:'',

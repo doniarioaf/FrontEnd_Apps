@@ -10,7 +10,7 @@ import MuiDialogTitle               from '@material-ui/core/DialogTitle';
 import Typography                   from '@material-ui/core/Typography';
 import IconButton                   from '@material-ui/core/IconButton';
 import CloseIcon                    from '@material-ui/icons/Close';
-import {Button}                                   from 'reactstrap';
+import {Button,Input}                                   from 'reactstrap';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
 import { formatdate} from '../shared/constantValue';
@@ -19,6 +19,7 @@ import "react-widgets/dist/css/react-widgets.css";
 const DialogStatus = props => {
     const [ListStatus, SetListStatus] = useState([]);
     const [SelStatus, SetSelStatus] = useState('');
+    const [InDBStatus, SetInDBStatus] = useState('');
 
     const [ListChooseYesNo, SetListChooseYesNo] = useState([]);
 
@@ -42,6 +43,11 @@ const DialogStatus = props => {
 
     const [ListAsset, SetListAsset] = useState([]);
     const [SelAsset, SetSelAsset] = useState('');
+
+    const [InputNoSuratJalan, SetInputNoSuratJalan] = useState('');
+    const [InputNoBL, SetInputNoBL] = useState('');
+    const [InputNoContainer, SetInputNoContainer] = useState('');
+
 
     const i18n = useTranslation('translations');
     const dispatch = useDispatch();
@@ -109,8 +115,10 @@ const DialogStatus = props => {
                 label: el.nama
             }]
         ), []));
-
-        SetListVendor(data.data.vendorOptions.reduce((obj, el) => (
+        
+        //vendorcategoryname
+        let listvendor = data.data.vendorOptions.filter(output => new String(output.vendorcategoryname).toLowerCase() == 'trucking' || new String(output.vendorcategoryname).toLowerCase() == 'ppjk');
+        SetListVendor(listvendor.reduce((obj, el) => (
             [...obj, {
                 value: el.id,
                 label: el.nama
@@ -125,7 +133,13 @@ const DialogStatus = props => {
         ), []));
 
         SetSelAsset(props.detail.idasset != 0?props.detail.idasset:'');
-        SetSelStatus(props.status);
+        let status = props.status?props.status:'';
+        SetSelStatus(status);
+        SetInDBStatus(status);
+        SetInputNoSuratJalan(props.detail?.nodocument?props.detail.nodocument:'');
+        SetInputNoBL(props.detail?.noblWO?props.detail.noblWO:'');
+        SetInputNoContainer(props.detail?.nocantainer?props.detail.nocantainer:'');
+
         SetSelKepemilikanMobil(props.detail?.kepemilikanmobil?props.detail.kepemilikanmobil:'');
         SetSelSupir(props.detail?.idemployee_supir?(props.detail.idemployee_supir == 0?'':props.detail.idemployee_supir):'');
         SetSelIsLembur(props.detail?.lembur?props.detail.lembur:'');
@@ -178,24 +192,38 @@ const DialogStatus = props => {
         if(SelStatus !== '' && SelKepemilikanMobil !== '' && flag){
             props.flagloadingsend(true);
             var obj = new Object();
-            obj.status = SelStatus;
             obj.kepemilikanmobil = SelKepemilikanMobil;
+            let flagIsClose = false;
             if(SelKepemilikanMobil == 'MOBILSENDIRI' ){
                 obj.idvendormobil = 0;
                 obj.idemployee_supir = SelSupir;
                 obj.idasset = SelAsset;
+                if(SelSupir !== '' && SelAsset !== ''){
+                    flagIsClose = true;
+                }
             }else if(SelKepemilikanMobil == 'MOBILLUAR' ){
                 obj.idvendormobil = SelVendor;
                 obj.idemployee_supir = 0;
                 obj.idasset = 0;
+
+                if(SelVendor !== ''){
+                    flagIsClose = true;
+                }
             }
             
             obj.lembur = SelIsLembur;
+            if(flagIsClose && SelIsLembur !== ''){ 
+            }else{
+                flagIsClose = false;
+            }
             if(InputTanggalKembali != null && InputTanggalKembali != undefined && InputTanggalKembali != ''){
                 obj.tanggalkembali = moment(InputTanggalKembali).toDate().getTime();
+                
             }else{
                 obj.tanggalkembali = null;
+                flagIsClose = false;
             }
+            obj.status = flagIsClose && InDBStatus == '' ?'CLOSE_SJ':SelStatus;
             dispatch(actions.submitAddSuratJalan('/status/'+props.idsuratjalan,obj,props.handlesubmit, props.errorhandler));
         }
     }
@@ -220,28 +248,44 @@ const DialogStatus = props => {
             {/* <DialogContent dividers > */}
             <div className="row mt-2">
             <div className="mt-2 col-lg-6 ft-detail mb-5">
-            <label className="mt-3 form-label required" htmlFor="Status">
-                {i18n.t('Status')}
-                <span style={{color:'red'}}>*</span>
-            </label>
 
-            <DropdownList
-                // className={
-                //     touched.branch && errors.branch
-                //         ? "input-error" : ""
-                // }
-                name="workorder"
-                filter='contains'
-                placeholder={i18n.t('select.SELECT_OPTION')}
-                
-                onChange={val => handleChangeStatus(val)}
-                data={ListStatus}
-                textField={'label'}
-                valueField={'value'}
-                // style={{width: '25%'}}
-                // disabled={values.isdisabledcountry}
-                value={SelStatus}
+            <label className="mt-3 form-label required" htmlFor="InputNoSuratJalan">
+                {i18n.t('No. Surat Jalan')}
+            </label>
+            <Input
+                name="InputNoSuratJalan"
+                type="text"
+                id="InputNoSuratJalan"
+                maxLength={200}
+                disabled={true}
+                value={InputNoSuratJalan}
             />
+
+            <label className="mt-3 form-label required" htmlFor="InputNoBL">
+                {i18n.t('No. BL')}
+            </label>
+            <Input
+                name="InputNoBL"
+                type="text"
+                id="InputNoBL"
+                maxLength={200}
+                disabled={true}
+                value={InputNoBL}
+            />
+
+            <label className="mt-3 form-label required" htmlFor="InputNoContainer">
+                {i18n.t('No. Container')}
+            </label>
+            <Input
+                name="InputNoContainer"
+                type="text"
+                id="InputNoContainer"
+                maxLength={200}
+                disabled={true}
+                value={InputNoContainer}
+            />
+
+            
 
             <label className="mt-3 form-label required" htmlFor="SelKepemilikanMobil">
                 {i18n.t('Kepemilikan Mobil')}
@@ -268,6 +312,28 @@ const DialogStatus = props => {
             </div>
 
             <div className="mt-2 col-lg-6 ft-detail mb-5">
+            <label className="mt-3 form-label required" htmlFor="Status">
+                {i18n.t('Status')}
+                <span style={{color:'red'}}>*</span>
+            </label>
+
+            <DropdownList
+                // className={
+                //     touched.branch && errors.branch
+                //         ? "input-error" : ""
+                // }
+                name="workorder"
+                filter='contains'
+                placeholder={i18n.t('select.SELECT_OPTION')}
+                
+                onChange={val => handleChangeStatus(val)}
+                data={ListStatus}
+                textField={'label'}
+                valueField={'value'}
+                // style={{width: '25%'}}
+                // disabled={values.isdisabledcountry}
+                value={SelStatus}
+            />
             <div hidden={SelKepemilikanMobil == 'MOBILLUAR' || SelKepemilikanMobil == ''}>
             
             <label className="mt-3 form-label required" htmlFor="SelAsset">

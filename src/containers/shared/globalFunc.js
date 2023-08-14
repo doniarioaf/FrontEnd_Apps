@@ -30,7 +30,7 @@ export const handleMessageError = (error) =>{
     let msgObj = new Object();
     
     let val = [];
-    if(error.data){
+    if(error.data && error.data !== null){
         val = error.data;
     }else if(sessionStorage.getItem(key.messageError) !== null){
         if(sessionStorage.getItem(key.messageError) == 'timeout'){
@@ -44,7 +44,7 @@ export const handleMessageError = (error) =>{
         sessionStorage.removeItem(key.messageError);
     }
     if(msg == ''){
-    //     let val = error.data;
+        
         if(val.messagecode == 'data.validation'){
             for(let i=0; i < val.validations.length; i++){
                 let valid = val.validations[i];
@@ -180,13 +180,13 @@ export const inputJustNumberAndCommaDot = (temp) =>{
 export const numToMoney = (amount) =>{
     
     if(amount !== null && !isNaN(amount)){
-            console.log('amount ',amount);
+            
             const amountInt = parseInt(amount);
-            console.log('amountInt ',amountInt);
+            
             const amountNum = amount.toFixed(2);
-            console.log('amountNum ',amountNum);
+            
             const amountStr = amountNum.toString();
-            console.log('amountStr ',amountStr);
+            
             let afterComma;
 
             if (amountStr.includes('.')) {
@@ -245,4 +245,28 @@ export const numToMoneyWithComma = (amount) =>{
     let aftercomma = string.split('.')[1];
     string = befcomma+','+aftercomma;
     return string;
+}
+
+export const checkValuePDf = (data,valreturn) =>{
+    if(data == undefined){
+        return valreturn;
+    }else if(data == null){
+        return valreturn;
+    }else if(data == ''){
+        return valreturn;
+    }
+
+    return data;
+}
+
+export const invoiceTypeName = (data) =>{
+    if(data == 'JASA'){
+        return 'Jasa';
+    }else if(data == 'REIMBURSEMENT'){
+        return 'Reimbursement';
+    }else if(data == 'DP'){
+        return 'DP';
+    }
+
+    return data;
 }

@@ -1,11 +1,10 @@
-import React, {useState}    from 'react';
+import React, {useState, useEffect}    from 'react';
 import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../../components/Layout/ContentHeading';
 import {Button} from 'reactstrap';
 import * as actions                 from '../../../store/actions';
-import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import {useDispatch}   from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
@@ -16,12 +15,14 @@ import momentLocalizer                 from 'react-widgets-moment';
 import { DatePicker}      from 'react-widgets';
 // import { listTypeReport } from '../../shared/globalFunc';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { MenuReportBongkarMuat } from '../../shared/permissionMenu';
+import { MenuReportSummaryKegiatanTruck } from '../../shared/permissionMenu';
 import { formatdate,months } from '../../shared/constantValue';
 import * as pathmenu           from '../../shared/pathMenu';
+import {DropdownList}      from 'react-widgets';
+import "react-widgets/dist/css/react-widgets.css";
 
-export default function ReportBongkarMuatDepo(props) {
-    reloadToHomeNotAuthorize(MenuReportBongkarMuat,'READ');
+export default function ReportSummaryKegiatanTruck(props) {
+    reloadToHomeNotAuthorize(MenuReportSummaryKegiatanTruck,'READ');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -33,22 +34,57 @@ export default function ReportBongkarMuatDepo(props) {
     const [listoutput, SetListOutPut] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const [ListMonth] = useState(months);
-    const [SelMonth, SetSelMonth] = useState(-1);//isNaN(moment(new Date()).format('M'))?'':parseInt(moment(new Date()).format('M')));
+    const [ListAssetKepala, setListAssetKepala] = useState([]);
+    const [SelAssetKepala, setSelAssetKepala] = useState('');
 
-    const handleStartDate = (data) =>{
-        // setStart(moment(data, "DD MMMM YYYY").toDate())
-        if(data !== null){
-            setStart(moment(data, formatdate).toDate())
-        }else{
-            setStart(new Date());
+    const [ListSupir, setListSupir] = useState([]);
+    const [SelSupir, setSelSupir] = useState('');
+
+    const [ListMonth] = useState(months);
+    const [SelMonth, SetSelMonth] = useState(-1);//useState(isNaN(moment(new Date()).format('M'))?'':parseInt(moment(new Date()).format('M')));
+
+    useEffect(() => {
+        setLoading(true);
+        dispatch(actions.getReportData('/manggala/summarykegiatantruk/template','',succesHandlerSubmitTemplate, errorHandler));
+    }, []);
+    const succesHandlerSubmitTemplate = (data) =>{
+        if(data.data){
+            let listAsset = [];
+            listAsset = data.data.assetOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.kepala_nama+' ('+el.kepala_nopolisi+')'
+                }]
+            ), []);
+            
+            listAsset.push({value:'ALL',label:'All'});
+                
+            setListAssetKepala(listAsset);
+            setSelAssetKepala('ALL');
+
+            let listSupir = [];
+            listSupir = data.data.driverOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama
+                }]
+            ), []);
+            
+            listSupir.push({value:'ALL',label:'All'});
+
+            setListSupir(listSupir);
+            setSelSupir('ALL');
         }
+        
+        setLoading(false);  
     }
 
     const submitHandler = () => {
-        if(start != null && end != null){
-            //console.log(moment(new Date()).format('yy'));
+        if(start != null && end != null && SelAssetKepala !== ''){
+            let idasset = SelAssetKepala == 'ALL'?0:SelAssetKepala;
+            let idemp = SelSupir == 'ALL'?0:SelSupir;
             setLoading(true);
+
             // let year = moment(new Date()).format('yy');
             // let month = SelMonth - 1;
             let startDate = moment(start).toDate().getTime();//moment(new Date(year, month, 1)).toDate().getTime();//moment(start).format('YYYY-MM-DD');
@@ -56,9 +92,9 @@ export default function ReportBongkarMuatDepo(props) {
             // console.log('year ',year);
             // console.log('Start ',moment(new Date(year, month, 1)).format('YYYY-MM-DD'));
             // console.log('End ',moment(new Date(year, month + 1, 0)).format('YYYY-MM-DD'));
-
+            
             let typereport = output; 
-            let pathURL = '/manggala/bongkarmuatdepo?from='+startDate+'&thru='+thruDate+'&type='+typereport;
+            let pathURL = '/manggala/summarykegiatantruk?from='+startDate+'&thru='+thruDate+'&type='+typereport+'&idasset='+idasset+'&idsupir='+idemp;
             if(output == 'XLSX'){
                 dispatch(actions.getReportData(pathURL,'application/vnd.ms-excel',succesHandlerSubmit, errorHandler));
             }
@@ -77,7 +113,7 @@ export default function ReportBongkarMuatDepo(props) {
         fileLink.href = dataUrl;
 
         // it forces the name of the downloaded file
-        fileLink.download = 'ReportBongkarMuatDepo.xlsx';
+        fileLink.download = 'ReportSummaryKegiatanTruck.xlsx';
         fileLink.click();
         fileLink.remove();
         setLoading(false);
@@ -86,12 +122,30 @@ export default function ReportBongkarMuatDepo(props) {
         // setFileDoc(data);
     }
 
+    const handleChangeAsset = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelAssetKepala(id);
+    }
+
+    const handleChangeEmp = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelSupir(id);
+    }
+
+    const handleStartDate = (data) =>{
+        // setStart(moment(data, "DD MMMM YYYY").toDate())
+        if(data !== null){
+            setStart(moment(data, formatdate).toDate())
+        }else{
+            setStart(new Date())
+        }
+    }
 
     const handleEndDate = (data) =>{
         if(data !== null){
             setEnd(moment(data, formatdate).toDate())
         }else{
-            setEnd(new Date());
+            setEnd(new Date())
         }
         // setEnd(moment(data, "DD MMMM YYYY").toDate())
     }
@@ -99,6 +153,7 @@ export default function ReportBongkarMuatDepo(props) {
     const handleChangeMonth = (data) =>{
         let id = data?.value ? data.value : '';
         SetSelMonth(id);
+
         if(id > 0){
             let year = moment(new Date()).format('yy');
             let month = id - 1;
@@ -129,7 +184,9 @@ export default function ReportBongkarMuatDepo(props) {
             {
                 startdate:start !== null ? moment(start, formatdate).toDate() : new Date(),
                 enddate:end !== null ? moment(end, formatdate).toDate(): new Date(),
-                month:SelMonth !== -1?SelMonth:-1// isNaN(moment(new Date()).format('M'))?'':parseInt(moment(new Date()).format('M')),
+                idasset:SelAssetKepala,
+                idemp:SelSupir,
+                month:SelMonth !== -1?SelMonth:-1//isNaN(moment(new Date()).format('M'))?'':parseInt(moment(new Date()).format('M')),
             }
         }
         validate={values => {
@@ -154,12 +211,11 @@ export default function ReportBongkarMuatDepo(props) {
                     } = formikProps;
 
                     return(
-                        <form className="mb-6" onSubmit={handleSubmit}  name="formReportBongkarMuatDepo">
+                        <form className="mb-6" onSubmit={handleSubmit}  name="formReportSummaryKegiatanTruck">
                             <ContentWrapper>
-                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.reportbongkarmuatdepo} label={'Report Bongkar Muat Dan Depo'} labeldefault={'Report Bongkar Muat Dan Depo'} />
+                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.reportLabaRugi} label={'Report Summary Kegiatan Truck'} labeldefault={'Report Summary Kegiatan Truck'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
-                            
                             <label className="mt-3 form-label required" htmlFor="month">
                                     {i18n.t('Bulan')}
                             </label>
@@ -182,8 +238,6 @@ export default function ReportBongkarMuatDepo(props) {
                                 // disabled={values.isdisabledcountry}
                                 value={values.month}
                             />
-
-
                             <label className="mt-3 form-label required" htmlFor="startdate">
                                 {i18n.t('label_FROM_DATE')}
                             </label>
@@ -222,6 +276,56 @@ export default function ReportBongkarMuatDepo(props) {
                                     
                             />
                             </div>
+
+                            <div className="mt-2 col-lg-6 ft-detail mb-5">
+                            <label className="mt-3 form-label required" htmlFor="idasset">
+                                {i18n.t('No Truck (Asset)')}
+                            </label>
+
+                            <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="idasset"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeAsset(val)}
+                                    onBlur={val => setFieldTouched("idasset", val?.value ? val.value : '')}
+                                    data={ListAssetKepala}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.idasset}
+                                />
+
+                            <label className="mt-3 form-label required" htmlFor="idemp">
+                                {i18n.t('Supir')}
+                            </label>
+
+                            <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="idemp"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeEmp(val)}
+                                    onBlur={val => setFieldTouched("idemp", val?.value ? val.value : '')}
+                                    data={ListSupir}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.idemp}
+                                />
+
+                            </div>
+                            
                             </div>
                             </ContentWrapper>
                             {loading && <Loading/>}
@@ -242,14 +346,10 @@ export default function ReportBongkarMuatDepo(props) {
                             {'Submit'}
                             </Button>
                             </div>
-
                         </form>
-
                     )
-
                 }
             }
-
         </Formik>
     )
 

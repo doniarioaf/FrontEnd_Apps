@@ -4,14 +4,14 @@ import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../components/Layout/ContentHeading';
 // import {Input,Button,FormGroup,Label} from 'reactstrap';
-import {Input,Button,Label,FormGroup,Container} from 'reactstrap';
+import {Input,Button} from 'reactstrap';
 import * as actions                 from '../../store/actions';
 import {useDispatch}   from 'react-redux';
 import { Loading } from '../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-import { reloadToHomeNotAuthorize } from '../shared/globalFunc';
-import { addSuratJalan_Permission} from '../shared/permissionMenu';
+import { reloadToHomeNotAuthorize,isGetPermissions } from '../shared/globalFunc';
+import { addSuratJalan_Permission,editDateSuratJalan_Permission} from '../shared/permissionMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
 import {DatePicker}      from 'react-widgets';
@@ -30,7 +30,7 @@ export default function MenuAdd(props) {
     const history = useHistory();
     const [loading, setLoading] = useState(false);
 
-    const [InputTanggal] = useState(new Date());
+    const [InputTanggal,setInputTanggal] = useState(new Date());
 
     const [ListWorkOrder, setListWorkOrder] = useState([]);
     const [SelWorkOrder, setSelWorkOrder] = useState('');
@@ -202,6 +202,15 @@ export default function MenuAdd(props) {
         setInputCatatan(val);
     }
 
+    const handleChangeDate = (data) =>{
+        //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
+        if(data !== null){
+            setInputTanggal(moment(data, formatdate).toDate())
+        }else{
+            setInputTanggal(null);
+        }
+    }
+
     const submitHandler = () => {
         Swal.fire({
             title: i18n.t('label_DIALOG_ALERT_SURE'),
@@ -340,13 +349,13 @@ export default function MenuAdd(props) {
                                     //         setFieldValue("startdate", val);
                                     //     }
                                     // }
-                                    // onChange={val => handleTanggalLahir(val)}
+                                    onChange={val => handleChangeDate(val)}
                                     onBlur={handleBlur}
                                     // defaultValue={Date(moment([]))}
                                     format={formatdate}
                                     value={values.tanggal}
                                     // style={{width: '25%'}}
-                                    disabled={true}                       
+                                    disabled={isGetPermissions(editDateSuratJalan_Permission,'TRANSACTION')?false: true}                       
                             />
 
                             <label className="mt-3 form-label required" htmlFor="workorder">
