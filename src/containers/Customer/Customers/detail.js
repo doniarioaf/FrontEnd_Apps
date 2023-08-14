@@ -23,6 +23,9 @@ import React, {useState,
   import {Loading}                    from '../../../components/Common/Loading';
   import { reloadToHomeNotAuthorize,isGetPermissions } from '../../shared/globalFunc';
   import { MenuCustomer, editCustomer_Permission,deleteCustomer_Permission } from '../../shared/permissionMenu';
+  import styled                       from "styled-components";
+  import Dialog                       from '@material-ui/core/Dialog';
+//   import DialogUploadFile from './dialogUploadFile';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,6 +36,12 @@ import React, {useState,
     },
   }));
 
+  const StyledDialog = styled(Dialog)`
+  & > .MuiDialog-container > .MuiPaper-root {
+    height: 500px;
+  }
+`;
+
   function Detail(props) {
     reloadToHomeNotAuthorize(MenuCustomer,'READ');
     const i18n = useTranslation('translations');
@@ -40,12 +49,13 @@ import React, {useState,
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
+    const [Projects, setProjects] = useState('');
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
-    // const [showchangepassword, setShowChangePassword] = useState(false);
-    // const [showunlock, setShowUnlock] = useState(false);
+    const [ShowUploadFile, setShowUploadFile] = useState(false);
+    const [loadingsend, setLoadingSend] = useState(false);
     const id = props.match.params.id;
 
     const handleToggle = (flag) => {
@@ -85,7 +95,20 @@ import React, {useState,
 
     function successHandler(data) {
         setLoading(false);
-        setValue(data.data);
+        if(data.data){
+            let val = data.data;
+            if(val.projects != null && val.projects){
+                let listproject = val.projects;
+                let arr = [];
+                for(let i=0; i < listproject.length; i++){
+                    arr.push(' '+listproject[i].nama);
+                }
+                setProjects(arr.join());
+            }
+            setValue(val);
+        }
+        
+
     }
 
     const submitHandlerDelete = () => {
@@ -119,8 +142,13 @@ import React, {useState,
         })
     }
 
+    const handleUploadFiles = () => {
+        setShowUploadFile(true);
+    }
+
     function errorHandler(error) {
         setLoading(false);
+        setShowUploadFile(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -184,6 +212,27 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Customer Code')}</span>
+                                <strong className="col-md-7">
+                                {value.customercode?value.customercode:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Project')}</span>
+                                <strong className="col-md-7">
+                                {Projects}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Contact Person')}</span>
+                                <strong className="col-md-7">
+                                {value.contactperson?value.contactperson:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_CONTACT_NUMBER')}</span>
                                 <strong className="col-md-7">
                                 {value.phone?value.phone:''}
@@ -239,12 +288,12 @@ import React, {useState,
                                 </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_CUSTOMER_TYPE')}</span>
                                 <strong className="col-md-7">
                                 {value.namecustomertype?value.namecustomertype:''}
                                 </strong>
-                            </div>
+                            </div> */}
 
                         </section>
                     )
@@ -277,6 +326,7 @@ import React, {useState,
                         :(<div>
                             <MenuItem hidden={!isGetPermissions(editCustomer_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editcustomers+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteCustomer_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            {/* <MenuItem hidden={!isGetPermissions(deleteCustomer_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem> */}
                             {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
                             <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}
@@ -292,8 +342,27 @@ import React, {useState,
         </Popper>
         </Paper>
         </div>
+
+        <StyledDialog
+        disableBackdropClick
+        disableEscapeKeyDown
+        maxWidth="md"
+        fullWidth={true}
+        style={{height: '100%'}}
+        open={ShowUploadFile}
+        >
+            {/* <DialogUploadFile
+            showflag = {setShowEditCharges}
+            flagloadingsend = {setLoadingSend}
+            errorhandler = {errorHandler}
+            /> */}
+            {loadingsend && <Loading/>}
+        </StyledDialog>
+
         {props.loading && <Loading/>}
         </ContentWrapper>
+
+        
     )
   }
   export default Detail;

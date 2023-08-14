@@ -67,3 +67,14 @@ export function* submitEditCustomerSaga(action) {
         action.errorHandler(handleMessageError(error).msg);
     }
 }
+
+export function* submitUploadFileCustomerCallPlanSaga(action) {
+    try {
+        const response = yield axios.post(baseCustomerURL('/uploadcustomercallplan'),action.payload).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(handleMessageError(error).msg);
+    }
+}

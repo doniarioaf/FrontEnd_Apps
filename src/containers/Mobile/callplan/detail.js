@@ -100,6 +100,7 @@ import { MenuCallPlan, editCallPlan_Permission,deleteCallPlan_Permission } from 
                 let obj = new Object();
                 obj.nama = data.data.nama;
                 obj.description = data.data.description;
+                obj.projectname = data.data.projectname;
                 setValue(obj);
                 if(data.data.customers){
                     let listcustomers = data.data.customers;
@@ -212,6 +213,13 @@ import { MenuCallPlan, editCallPlan_Permission,deleteCallPlan_Permission } from 
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Project')}</span>
+                                <strong className="col-md-7">
+                                {value.projectname?value.projectname:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_DESCRIPTION')}</span>
                                 <strong className="col-md-7">
                                 {value.description?value.description:''}
@@ -267,7 +275,7 @@ import { MenuCallPlan, editCallPlan_Permission,deleteCallPlan_Permission } from 
         <div><p className="lead text-center"><h2>{i18n.t('label_CUSTOMER')}</h2></p></div>
         <Card>
         <CardBody>
-        <div className="table-responsive" style={{height:defaultHeight}}>
+        <div className="table-responsive" >
             <Grid
                 rows={RowsCustomer}
                 columns={columns}

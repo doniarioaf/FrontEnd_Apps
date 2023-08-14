@@ -37,6 +37,10 @@ export default function AddFormInfo(props) {
     const [SelCustomerType, setSelCustomerType] = useState('');
     const [ErrCustomerType, setErrCustomerType] = useState('');
 
+    const [ListProject, SetListProject] = useState([]);
+    const [SelProject, SetSelProject] = useState('');
+    const [ErrSelProject, SetErrSelProject] = useState('');
+
     const [InputAnswer, setInputAnswer] = useState('');
     const [ErrInputAnswer, setErrInputAnswer] = useState('');
     const [ShowAnswer, setShowAnswer] = useState(false);
@@ -58,12 +62,12 @@ export default function AddFormInfo(props) {
 
     function successHandlerTemplate(data) {
         if(data.data){
-            setListCustomerType(data.data.customertypeoptions.reduce((obj, el) => (
-                [...obj, {
-                    value: el.id,
-                    label: el.nama
-                }]
-            ), []));
+            // setListCustomerType(data.data.customertypeoptions.reduce((obj, el) => (
+            //     [...obj, {
+            //         value: el.id,
+            //         label: el.nama
+            //     }]
+            // ), []));
 
             setListType(data.data.typeoptions.reduce((obj, el) => (
                 [...obj, {
@@ -71,8 +75,21 @@ export default function AddFormInfo(props) {
                     label: el.nama
                 }]
             ), []));
+
+            let listproject = data.data.projectoptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama
+                }]
+            ), []);
+            SetListProject(listproject);
         }
         setLoading(false);
+    }
+
+    const handleChangeProject = (data) =>{
+        let id = data?.value ? data.value : '';
+        SetSelProject(id);
     }
 
     const handleChangeCustomerType = (data) =>{
@@ -113,7 +130,8 @@ export default function AddFormInfo(props) {
         setErrInputSequence('');
         setErrSelType('');
         setErrCustomerType('');
-        setErrInputAnswer('')
+        setErrInputAnswer('');
+        SetErrSelProject('');
 
         if(InputQuestion == ''){
             setErrInputQuestion(i18n.t('label_REQUIRED'));
@@ -132,8 +150,13 @@ export default function AddFormInfo(props) {
                 flag = false;
             }
         }
-        if(SelCustomerType == ''){
-            setErrCustomerType(i18n.t('label_REQUIRED'));
+        // if(SelCustomerType == ''){
+        //     setErrCustomerType(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
+
+        if(SelProject == ''){
+            SetErrSelProject(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
@@ -148,7 +171,8 @@ export default function AddFormInfo(props) {
             obj.question = InputQuestion;
             obj.type = SelType;
             obj.sequence = InputSequence;
-            obj.idcustomertype = SelCustomerType;
+            obj.idcustomertype = 1;//SelCustomerType;
+            obj.idproject = SelProject;
             let listanswer = [];
             for(let i=0; i < RowsAnswer.length; i++){
                 listanswer.push(RowsAnswer[i].answer);
@@ -246,7 +270,8 @@ export default function AddFormInfo(props) {
                     sequence:InputSequence,
                     customertype:SelCustomerType,
                     infotype:SelType,
-                    answer:InputAnswer
+                    answer:InputAnswer,
+                    project:SelProject
                 }
             }
 
@@ -377,7 +402,31 @@ export default function AddFormInfo(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrSelType}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="customertype">
+                            <label className="mt-3 form-label required" htmlFor="project">
+                                {i18n.t('Project')}
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="project"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeProject(val)}
+                                onBlur={val => setFieldTouched("project", val?.value ? val.value : '')}
+                                data={ListProject}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.project}
+                            />
+                            <div className="invalid-feedback-custom">{ErrSelProject}</div>
+
+                            {/* <label className="mt-3 form-label required" htmlFor="customertype">
                                 {i18n.t('label_CUSTOMER_TYPE')}
                             </label>
 
@@ -400,7 +449,7 @@ export default function AddFormInfo(props) {
                                 // disabled={values.isdisabledcountry}
                                 value={values.customertype}
                             />
-                            <div className="invalid-feedback-custom">{ErrCustomerType}</div>
+                            <div className="invalid-feedback-custom">{ErrCustomerType}</div> */}
                             </div>
                             </div>
 

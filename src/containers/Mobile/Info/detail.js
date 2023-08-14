@@ -94,6 +94,7 @@ import {MenuInformation, editInfo_Permission,deleteInfo_Permission } from '../..
     }, []);
 
     function successHandler(data) {
+        console.log('successHandler ',data);
         setValue(data.data.infoheader);
         if(data.data.detail){
             setRowsAnswer(data.data.detail.reduce((obj, el) => (
@@ -230,9 +231,9 @@ import {MenuInformation, editInfo_Permission,deleteInfo_Permission } from '../..
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_CUSTOMER_TYPE')}</span>
+                            <span className="col-md-5">{i18n.t('Project')}</span>
                                 <strong className="col-md-7">
-                                {value.customertypename?value.customertypename:''}
+                                {value.projectname?value.projectname:''}
                                 </strong>
                             </div>
 

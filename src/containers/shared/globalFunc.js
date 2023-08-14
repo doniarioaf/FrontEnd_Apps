@@ -1,3 +1,4 @@
+import numeral from 'numeral';
 import * as key from '../../containers/shared/constantKey';
 import CryptoJS from 'crypto-js';
 import * as pathmenu           from './pathMenu';
@@ -29,7 +30,7 @@ export const handleMessageError = (error) =>{
     let msgObj = new Object();
     
     let val = [];
-    if(error.data){
+    if(error.data && error.data !== null){
         val = error.data;
     }else if(sessionStorage.getItem(key.messageError) !== null){
         if(sessionStorage.getItem(key.messageError) == 'timeout'){
@@ -43,7 +44,7 @@ export const handleMessageError = (error) =>{
         sessionStorage.removeItem(key.messageError);
     }
     if(msg == ''){
-    //     let val = error.data;
+        
         if(val.messagecode == 'data.validation'){
             for(let i=0; i < val.validations.length; i++){
                 let valid = val.validations[i];
@@ -74,7 +75,7 @@ export const listTypeReport = () => {
     tempOutPut.push({"value":"XLSX","label":"Excel Format","typeapi":"application/vnd.ms-excel"});
     // tempOutPut.push({"value":"XLS","label":"Excel 97-2003 Format","typeapi":"application/vnd.ms-excel"});
     tempOutPut.push({"value":"PDF","label":"PDF Format","typeapi":"application/pdf"});
-
+    tempOutPut.push({"value":"PPT","label":"PPT Format","typeapi":"application/vnd.ms-powerpoint"});
     return tempOutPut;
 }
 
@@ -164,4 +165,108 @@ const handleSubMenu = (submenu)  =>{
         }
     }
     return listsubmenu;
+}
+
+export const inputJustNumberAndCommaDot = (temp) =>{
+    let lengthVal = temp.length;
+    let endchar = temp.charAt(lengthVal-1);
+    if(endchar === ',' || !isNaN(endchar) || endchar === '.'){
+        return true
+    }else{
+        return false;
+    }
+}
+
+export const numToMoney = (amount) =>{
+    
+    if(amount !== null && !isNaN(amount)){
+            
+            const amountInt = parseInt(amount);
+            
+            const amountNum = amount.toFixed(2);
+            
+            const amountStr = amountNum.toString();
+            
+            let afterComma;
+
+            if (amountStr.includes('.')) {
+                afterComma = amountStr.slice(amountStr.length - 2, amountStr.length);
+            }
+
+            if (afterComma != null) {
+                if (afterComma === "00") {
+                    return amountInt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                } else {
+                    return amountInt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "," + afterComma;
+                }
+            } else {
+                return amountInt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+        }else{
+            return '0'
+        }
+};
+
+export const formatMoney = (amount) => {
+    const returnamount = amount;
+    amount = amount.replaceAll('.','');
+    let aftercomma = '';
+    if(amount.includes(',')){
+        aftercomma = ','+amount.split(',')[1];
+        amount = amount.split(',')[0];
+    }
+    if(amount.length > 3){
+        let sisabagi = amount.length % 3;
+        let isFirst = true;
+        let val = '';
+        let count = 0;
+        for(var i=0; i< amount.length; i++){
+            val += amount.charAt(i);
+            count++;
+            if((i == sisabagi - 1) && isFirst){
+                val += ".";
+                isFirst = false;
+                count = 0;
+            }else if(count == 3 && i !== amount.length - 1){
+                val += ".";
+                count = 0;
+            }
+            
+        }
+        return val+aftercomma;
+    }else{
+        return returnamount;
+    }
+};
+
+export const numToMoneyWithComma = (amount) =>{
+    let string = numeral(amount).format('0,0.00');
+    let befcomma = string.split('.')[0].replaceAll(',','.');
+    let aftercomma = string.split('.')[1];
+    string = befcomma+','+aftercomma;
+    return string;
+}
+
+export const checkValuePDf = (data,valreturn) =>{
+    if(data == undefined){
+        return valreturn;
+    }else if(data == null){
+        return valreturn;
+    }else if(data == ''){
+        return valreturn;
+    }
+
+    return data;
+}
+
+export const invoiceTypeName = (data) =>{
+    if(data == 'JASA'){
+        return 'Jasa';
+    }else if(data == 'REIMBURSEMENT'){
+        return 'Reimbursement';
+    }else if(data == 'DP'){
+        return 'DP';
+    }
+
+    return data;
 }

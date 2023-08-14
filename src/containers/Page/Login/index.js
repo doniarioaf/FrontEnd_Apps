@@ -104,9 +104,10 @@ export default function FormLogin(props) {
                     return(
                     <div className="block-center mt-4 wd-xl">
                         <div className="card card-flat">
-                        <div className="card-header text-center bg-dark">
+                        {/* <div className="card-header text-center bg-dark"> */}
+                        <div className="card-header text-center bg-primary">
                             <a href="">
-                                <img className="block-center rounded" src="img/rsz_b_1.png" alt="Logo"/>
+                                <img className="block-center rounded" src="img/logoexample100x35.png" alt="Logo"/>
                             </a>
                         </div>
                         <div className="card-body">

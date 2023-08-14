@@ -167,11 +167,119 @@ const addCallPlan = lazy(() => import('./containers/Mobile/callplan/addFormCallP
 const detailCallPlan = lazy(() => import('./containers/Mobile/callplan/detail'));
 const editCallPlan = lazy(() => import('./containers/Mobile/callplan/editFormCallPlan'));
 
+const menuProject = lazy(() => import('./containers/Admin/Project'));
+const menuAddProject = lazy(() => import('./containers/Admin/Project/addFormProject'));
+const menuEditProject = lazy(() => import('./containers/Admin/Project/editFormProject'));
+const detailProject = lazy(() => import('./containers/Admin/Project/detail'));
+
 const reportMonitoring = lazy(() => import('./containers/Report/Mobile/reportMobileMonitoring'));
 
 const monitoringMaps = lazy(() => import('./containers/Mobile/MonitoringMaps'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
+const importFileCustomerCallPlan = lazy(() => import('./containers/Import/importFileCustomerCallPlan'));
+
+const InvoiceMenu = lazy(() => import('./containers/Invoice'));
+const menuBankAccount = lazy(() => import('./containers/Admin/BankAccount'));
+const detailBankAccount = lazy(() => import('./containers/Admin/BankAccount/detail'));
+const addBankAccount = lazy(() => import('./containers/Admin/BankAccount/addBankAccount'));
+const editBankAccount = lazy(() => import('./containers/Admin/BankAccount/editBankAccount'));
+const menuCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala'));
+const detailCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala/detail'));
+const addCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala/addCustomer'));
+const editCustomerManggala = lazy(() => import('./containers/Admin/CustomerManggala/editCustomer'));
+const menuEmployeeManggala = lazy(() => import('./containers/Employee/EmployeeManggala'));
+const addEmployeeManggala = lazy(() => import('./containers/Employee/EmployeeManggala/addEmployeeManggala'));
+const detailEmployeeManggala = lazy(() => import('./containers/Employee/EmployeeManggala/detail'));
+const editEmployeeManggala = lazy(() => import('./containers/Employee/EmployeeManggala/editEmployeeManggala'));
+const menuVendorCategory = lazy(() => import('./containers/Vendor/VendorManggala/VendorCategory'));
+const addVendorCategory = lazy(() => import('./containers/Vendor/VendorManggala/VendorCategory/addFormVendorCategory'));
+const detailVendorCategory = lazy(() => import('./containers/Vendor/VendorManggala/VendorCategory/detail'));
+const editVendorCategory = lazy(() => import('./containers/Vendor/VendorManggala/VendorCategory/editFormVendorCategory'));
+
+const menuVendor = lazy(() => import('./containers/Vendor/VendorManggala/Vendor'));
+const addVendor = lazy(() => import('./containers/Vendor/VendorManggala/Vendor/addVendor'));
+const detailVendor = lazy(() => import('./containers/Vendor/VendorManggala/Vendor/detail'));
+const editVendor = lazy(() => import('./containers/Vendor/VendorManggala/Vendor/editVendor'));
+
+const menuWorkOrderType = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderType'));
+const addWorkOrderType = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderType/addWorkOrderType'));
+const detailWorkOrderType = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderType/detail'));
+const editWorkOrderType = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderType/editWorkOrderType'));
+
+const menuPartai = lazy(() => import('./containers/Partai'));
+const addPartai = lazy(() => import('./containers/Partai/addPartai'));
+const detailPartai = lazy(() => import('./containers/Partai/detail'));
+const editPartai = lazy(() => import('./containers/Partai/editPartai'));
+
+const menuPort = lazy(() => import('./containers/Port'));
+const detailPort = lazy(() => import('./containers/Port/detail'));
+const addPort = lazy(() => import('./containers/Port/addPort'));
+const editPort = lazy(() => import('./containers/Port/editPort'));
+
+const menuParameterManggala = lazy(() => import('./containers/Parameter/Manggala'));
+const addParameterManggala = lazy(() => import('./containers/Parameter/Manggala/add'));
+const editParameterManggala = lazy(() => import('./containers/Parameter/Manggala/edit'));
+const detailParameterManggala = lazy(() => import('./containers/Parameter/Manggala/detail'));
+
+const menuWarehouse = lazy(() => import('./containers/Warehouse/Manggala'));
+const addWarehouse = lazy(() => import('./containers/Warehouse/Manggala/add'));
+const detailWarehouse = lazy(() => import('./containers/Warehouse/Manggala/detail'));
+const editWarehouse = lazy(() => import('./containers/Warehouse/Manggala/edit'));
+
+const menuInvoiceType = lazy(() => import('./containers/InvoiceType'));
+const addInvoiceType = lazy(() => import('./containers/InvoiceType/addInvoiceType'));
+const editInvoiceType = lazy(() => import('./containers/InvoiceType/editInvoiceType'));
+
+const menuPriceList = lazy(() => import('./containers/PriceList'));
+const addPriceList = lazy(() => import('./containers/PriceList/addPriceList'));
+const detailPriceList = lazy(() => import('./containers/PriceList/detail'));
+const editPriceList = lazy(() => import('./containers/PriceList/editPriceList'));
+
+const menuPaymentType = lazy(() => import('./containers/PaymentType'));
+const addPaymentType = lazy(() => import('./containers/PaymentType/addPaymentType'));
+const editPaymentType = lazy(() => import('./containers/PaymentType/editPaymentType'));
+
+const menuWorkOrder = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderItem'));
+const addWorkOrder = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderItem/addWorkOrder'));
+const detailWorkOrder = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderItem/detail'));
+const editWorkOrder = lazy(() => import('./containers/WorkOrder/Manggala/WorkOrderItem/editWorkOrder'));
+
+const menuSuratJalan = lazy(() => import('./containers/SuratJalan'));
+const addSuratJalan = lazy(() => import('./containers/SuratJalan/addSuratJalan'));
+const detailSuratJalan = lazy(() => import('./containers/SuratJalan/detail'));
+const editSuratJalan = lazy(() => import('./containers/SuratJalan/editSuratJalan'));
+const printSuratJalan = lazy(() => import('./containers/SuratJalan/file/pdf'));
+
+const reportBongkarMuatDepo = lazy(() => import('./containers/Report/Manggala/reportBongkarMuatDepo'));
+
+const menuPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank'));
+const addPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank/addPenerimaanKasBank'));
+const detailPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank/detail'));
+const editPenerimaanKasBank = lazy(() => import('./containers/PenerimaanKasBank/editPenerimaanKasBank'));
+
+const menuPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank'));
+const addPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank/addPengeluaranKasBank'));
+const detailPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank/detail'));
+const editPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank/editPengeluaranKasBank'));
+
+const menuInvoice = lazy(() => import('./containers/Invoice/FormInvoice'));
+const addInvoice = lazy(() => import('./containers/Invoice/FormInvoice/addInvoice'));
+const detailInvoice = lazy(() => import('./containers/Invoice/FormInvoice/detail'));
+const editInvoice = lazy(() => import('./containers/Invoice/FormInvoice/editInvoice'));
+
+const printInvoice = lazy(() => import('./containers/Invoice/FormInvoice/File/Pdf'));
+
+const menuAsset = lazy(() => import('./containers/Asset'));
+const addAsset = lazy(() => import('./containers/Asset/addAsset'));
+const detailAsset = lazy(() => import('./containers/Asset/detail'));
+const editAsset = lazy(() => import('./containers/Asset/editAsset'));
+
+const ReportStatusInvoice = lazy(() => import('./containers/Report/Manggala/ReportStatusInvoice'));
+const ReportKasBank = lazy(() => import('./containers/Report/Manggala/ReportKasBank'));
+const reportLabaRugi = lazy(() => import('./containers/Report/Manggala/reportLabaRugi'));
+const reportSummaryKegiatanTruck = lazy(() => import('./containers/Report/Manggala/reportSummaryKegiatanTruck'));
+const ReportHistoryTruck = lazy(() => import('./containers/Report/Manggala/ReportHistoryTruck'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -318,10 +426,10 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addcustomertype} component={waitFor(addCustomerType)}/>
                             <Route path={pathmenu.editcustomertype+'/:id'} component={waitFor(editCustomerType)}/>
 
-                            <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
+                            {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>
                             <Route path={pathmenu.addcustomers} component={waitFor(addFormCustomer)}/>
-                            <Route path={pathmenu.editcustomers+'/:id'} component={waitFor(editFormCustomer)}/>
+                            <Route path={pathmenu.editcustomers+'/:id'} component={waitFor(editFormCustomer)}/> */}
 
                             <Route path={pathmenu.menuusermobile} component={waitFor(menuUserMobile)}/>
                             <Route path={pathmenu.addusermobile} component={waitFor(addUserMobile)}/>
@@ -348,6 +456,119 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.editcallplan+'/:id'} component={waitFor(editCallPlan)}/>
                             <Route path={pathmenu.reportmonitoring} component={waitFor(reportMonitoring)}/>
                             <Route path={pathmenu.monitoringmaps} component={waitFor(monitoringMaps)}/>
+                            <Route path={pathmenu.importcustomercallplan} component={waitFor(importFileCustomerCallPlan)}/>
+                            
+                            <Route path={pathmenu.menuproject} component={waitFor(menuProject)}/>
+                            <Route path={pathmenu.menuaddproject} component={waitFor(menuAddProject)}/>
+                            <Route path={pathmenu.detailproject+'/:id'} component={waitFor(detailProject)}/>
+                            <Route path={pathmenu.editproject+'/:id'} component={waitFor(menuEditProject)}/>
+                            <Route path={pathmenu.menubankaccount} component={waitFor(menuBankAccount)}/>
+                            <Route path={pathmenu.addbankaccount} component={waitFor(addBankAccount)}/>
+                            <Route path={pathmenu.detailbankaccount+'/:id'} component={waitFor(detailBankAccount)}/>
+                            <Route path={pathmenu.editbankaccount+'/:id'} component={waitFor(editBankAccount)}/>
+                            <Route path={pathmenu.menucustomers} component={waitFor(menuCustomerManggala)}/>
+                            <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomerManggala)}/>
+                            <Route path={pathmenu.addcustomers} component={waitFor(addCustomerManggala)}/>
+                            <Route path={pathmenu.editcustomers+'/:id'} component={waitFor(editCustomerManggala)}/>
+                            <Route path={pathmenu.menuemployeeManggala} component={waitFor(menuEmployeeManggala)}/>
+                            <Route path={pathmenu.addemployeeManggala} component={waitFor(addEmployeeManggala)}/>
+                            <Route path={pathmenu.detailemployeeManggala+'/:id'} component={waitFor(detailEmployeeManggala)}/>
+                            <Route path={pathmenu.editemployeeManggala+'/:id'} component={waitFor(editEmployeeManggala)}/>
+
+                            <Route path={pathmenu.menuvendorcategory} component={waitFor(menuVendorCategory)}/>
+                            <Route path={pathmenu.addvendorcategory} component={waitFor(addVendorCategory)}/>
+                            <Route path={pathmenu.detailvendorcategory+'/:id'} component={waitFor(detailVendorCategory)}/>
+                            <Route path={pathmenu.editvendorcategory+'/:id'} component={waitFor(editVendorCategory)}/>
+
+                            <Route path={pathmenu.menuvendor} component={waitFor(menuVendor)}/>
+                            <Route path={pathmenu.addvendor} component={waitFor(addVendor)}/>
+                            <Route path={pathmenu.detailvendor+'/:id'} component={waitFor(detailVendor)}/>
+                            <Route path={pathmenu.editvendor+'/:id'} component={waitFor(editVendor)}/>
+
+                            <Route path={pathmenu.menuworkordertype} component={waitFor(menuWorkOrderType)}/>
+                            <Route path={pathmenu.addworkordertype} component={waitFor(addWorkOrderType)}/>
+                            <Route path={pathmenu.detailworkordertype+'/:id'} component={waitFor(detailWorkOrderType)}/>
+                            <Route path={pathmenu.editworkordertype+'/:id'} component={waitFor(editWorkOrderType)}/>
+
+                            <Route path={pathmenu.menupartai} component={waitFor(menuPartai)}/>
+                            <Route path={pathmenu.addpartai} component={waitFor(addPartai)}/>
+                            <Route path={pathmenu.detailpartai+'/:id'} component={waitFor(detailPartai)}/>
+                            <Route path={pathmenu.editpartai+'/:id'} component={waitFor(editPartai)}/>
+
+                            <Route path={pathmenu.menuport} component={waitFor(menuPort)}/>
+                            <Route path={pathmenu.detailport+'/:id'} component={waitFor(detailPort)}/>
+                            <Route path={pathmenu.addport} component={waitFor(addPort)}/>
+                            <Route path={pathmenu.editport+'/:id'} component={waitFor(editPort)}/>
+                            
+                            
+                            <Route path={pathmenu.menuParameter} component={waitFor(menuParameterManggala)}/>
+                            <Route path={pathmenu.addparameter} component={waitFor(addParameterManggala)}/>
+                            <Route path={pathmenu.editparameter+'/:id'} component={waitFor(editParameterManggala)}/>
+                            <Route path={pathmenu.detailparameter+'/:id'} component={waitFor(detailParameterManggala)}/>
+                            
+                            <Route path={pathmenu.menuWarehouse} component={waitFor(menuWarehouse)}/>
+                            <Route path={pathmenu.addWarehouse} component={waitFor(addWarehouse)}/>
+                            <Route path={pathmenu.detailWarehouse+'/:id'} component={waitFor(detailWarehouse)}/>
+                            <Route path={pathmenu.editWarehouse+'/:id'} component={waitFor(editWarehouse)}/>
+                            
+                            <Route path={pathmenu.menuInvoiceType} component={waitFor(menuInvoiceType)}/>
+                            <Route path={pathmenu.addInvoiceType} component={waitFor(addInvoiceType)}/>
+                            <Route path={pathmenu.editInvoiceType+'/:id'} component={waitFor(editInvoiceType)}/>
+
+                            <Route path={pathmenu.menuPriceList} component={waitFor(menuPriceList)}/>
+                            <Route path={pathmenu.addpricelist} component={waitFor(addPriceList)}/>
+                            <Route path={pathmenu.detailpricelist+'/:id'} component={waitFor(detailPriceList)}/>
+                            <Route path={pathmenu.editpricelist+'/:id'} component={waitFor(editPriceList)}/>
+                            
+                            <Route path={pathmenu.menuPaymentType} component={waitFor(menuPaymentType)}/>
+                            <Route path={pathmenu.addPaymentType} component={waitFor(addPaymentType)}/>
+                            <Route path={pathmenu.editPaymentType+'/:id'} component={waitFor(editPaymentType)}/>
+
+                            <Route path={pathmenu.menuWorkOrder} component={waitFor(menuWorkOrder)}/>
+                            <Route path={pathmenu.addWorkOrder} component={waitFor(addWorkOrder)}/>
+                            <Route path={pathmenu.detailWorkOrder+'/:id'} component={waitFor(detailWorkOrder)}/>
+                            <Route path={pathmenu.editWorkOrder+'/:id'} component={waitFor(editWorkOrder)}/>
+
+                            <Route path={pathmenu.menuSuratJalan} component={waitFor(menuSuratJalan)}/>
+                            <Route path={pathmenu.addSuratJalan} component={waitFor(addSuratJalan)}/>
+                            <Route path={pathmenu.detailSuratJalan+'/:id'} component={waitFor(detailSuratJalan)}/>
+                            <Route path={pathmenu.editSuratJalan+'/:id'} component={waitFor(editSuratJalan)}/>
+                            <Route path={pathmenu.printSuratJalan+'/:id'} component={waitFor(printSuratJalan)}/>
+                            <Route path={pathmenu.reportbongkarmuatdepo} component={waitFor(reportBongkarMuatDepo)}/>
+                            <Route path={pathmenu.menuPenerimaanKasBank} component={waitFor(menuPenerimaanKasBank)}/>
+                            <Route path={pathmenu.addpenerimaankasbank} component={waitFor(addPenerimaanKasBank)}/>
+                            <Route path={pathmenu.detailpenerimaankasbank+'/:id'} component={waitFor(detailPenerimaanKasBank)}/>
+                            <Route path={pathmenu.editpenerimaankasbank+'/:id'} component={waitFor(editPenerimaanKasBank)}/>
+
+                            <Route path={pathmenu.menuPengeluaranKasBank} component={waitFor(menuPengeluaranKasBank)}/>
+                            <Route path={pathmenu.addpengeluarankasbank} component={waitFor(addPengeluaranKasBank)}/>
+                            <Route path={pathmenu.detailpengeluarankasbank+'/:id'} component={waitFor(detailPengeluaranKasBank)}/>
+                            <Route path={pathmenu.editpengeluarankasbank+'/:id'} component={waitFor(editPengeluaranKasBank)}/>
+
+                            <Route path={pathmenu.menuInvoice} component={waitFor(menuInvoice)}/>
+                            <Route path={pathmenu.addInvoice} component={waitFor(addInvoice)}/>
+                            <Route path={pathmenu.detailInvoice+'/:id'} component={waitFor(detailInvoice)}/>
+                            <Route path={pathmenu.editInvoice+'/:id'} component={waitFor(editInvoice)}/>
+                            <Route path={pathmenu.printInvoice+'/:id'} component={waitFor(printInvoice)}/>
+                            
+                            <Route path={pathmenu.menuAsset} component={waitFor(menuAsset)}/>
+                            <Route path={pathmenu.addAsset} component={waitFor(addAsset)}/>
+                            <Route path={pathmenu.detailAsset+'/:id'} component={waitFor(detailAsset)}/>
+                            <Route path={pathmenu.editAsset+'/:id'} component={waitFor(editAsset)}/>
+                            <Route path={pathmenu.reportstatusinvoice} component={waitFor(ReportStatusInvoice)}/>
+                            <Route path={pathmenu.reportKasBank} component={waitFor(ReportKasBank)}/>
+                            <Route path={pathmenu.reportLabaRugi} component={waitFor(reportLabaRugi)}/>
+                            <Route path={pathmenu.reportsummarykegiatantruck} component={waitFor(reportSummaryKegiatanTruck)}/>
+                            <Route path={pathmenu.reportHistoryTruck} component={waitFor(ReportHistoryTruck)}/>
+                            
+                            {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
+                            <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>
+                            <Route path={pathmenu.addcustomers} component={waitFor(addFormCustomer)}/>
+                            <Route path={pathmenu.editcustomers+'/:id'} component={waitFor(editFormCustomer)}/> */}
+                            
+                            <Route path={pathmenu.invoice} component={waitFor(InvoiceMenu)}/>
+                            
+                            
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             
                                 {/*Dashboard*/}
@@ -357,7 +578,6 @@ const Routes = ({ location, ...props }) => {
 
                                 {/*Widgets*/}
                                 {/* <Route path="/widgets" component={waitFor(Widgets)}/> */}
-
                                 {/*Elements*/}
                                 {/* <Route path="/buttons" component={waitFor(Buttons)}/>
                                 <Route path="/notifications" component={waitFor(Notifications)}/>
