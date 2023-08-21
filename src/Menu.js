@@ -29,122 +29,15 @@ const handleMenu = () => {
                     translate: 'Role',
                     permission:permissionmenu.MenuRole,
                 },
-                // {
-                //     name: 'Project',
-                //     path: pathmenu.menuproject,
-                //     translate: 'Project',
-                //     permission:permissionmenu.MenuProject,
-                // },
-                
-                {
-                    name: 'Invoice',
-                    path: pathmenu.invoice,
-                    translate: 'Invoice',
-                    permission:permissionmenu.MenuProject,
-                }
-                // ,{
-                //     name: 'Product',
-                //     path: pathmenu.menuproduct,
-                //     translate: 'label_PRODUCT',
-                //     permission:permissionmenu.MenuProduct,
-                // },{
-                //     name: 'ProductType',
-                //     path: pathmenu.menuproducttype,
-                //     translate: 'label_PRODUCT_TYPE',
-                //     permission:permissionmenu.MenuProductType,
-                // }
                 
             ]
         },
-        {
-            name: 'Master',
-            icon: 'icon-user',
-            translate: 'Master',
-            submenu:[
-                {
-                    name: 'Asset',
-                    path: pathmenu.menuAsset,
-                    translate: 'Asset',
-                    permission:permissionmenu.MenuAsset,
-                },
-                {
-                    name: 'Bank Account',
-                    path: pathmenu.menubankaccount,
-                    translate: 'Bank Account',
-                    permission:permissionmenu.MenuBankAccount,
-                },
-                {
-                    name: 'Customer',
-                    path: pathmenu.menucustomers,
-                    translate: 'label_CUSTOMER',
-                    permission:permissionmenu.MenuCustomerManggala,
-                },
-                {
-                    name: 'Employee',
-                    path: pathmenu.menuemployeeManggala,
-                    translate: 'Employee',
-                    permission:permissionmenu.MenuEmployeeManggala,
-                },
-                {
-                    name: 'Vendor',
-                    path: pathmenu.menuvendor,
-                    translate: 'Vendor',
-                    permission:permissionmenu.MenuVendorCategory,
-                },
-                {
-                    name: 'Vendor Category',
-                    path: pathmenu.menuvendorcategory,
-                    translate: 'Vendor Category',
-                    permission:permissionmenu.MenuVendorCategory,
-                },
-                {
-                    name: 'Work Order Type',
-                    path: pathmenu.menuworkordertype,
-                    translate: 'Work Order Type',
-                    permission:permissionmenu.MenuWorkOrderType,
-                },
-                {
-                    name: 'Partai',
-                    path: pathmenu.menupartai,
-                    translate: 'Partai',
-                    permission:permissionmenu.MenuPartai,
-                },{
-                    name: 'Port',
-                    path: pathmenu.menuport,
-                    translate: 'Port',
-                    permission:permissionmenu.MenuPort,
-                },{
-                    name: 'Parameter',
-                    path: pathmenu.menuParameter,
-                    translate: 'Parameter',
-                    permission:permissionmenu.MenuParameterManggala,
-                },
-                {
-                    name: 'Warehouse',
-                    path: pathmenu.menuWarehouse,
-                    translate: 'label_WAREHOUSE',
-                    permission:permissionmenu.MenuWarehouse,
-                },
-                {
-                    name: 'Invoice Item',
-                    path: pathmenu.menuInvoiceType,
-                    translate: 'label_INVOICE_TYPE',
-                    permission:permissionmenu.MenuInvoiceType,
-                },
-                {
-                    name: 'Payment Item',
-                    path: pathmenu.menuPaymentType,
-                    translate: 'label_PAYMENT_TYPE',
-                    permission:permissionmenu.MenuPaymentType,
-                },
-                {
-                    name: 'PriceList',
-                    path: pathmenu.menuPriceList,
-                    translate: 'label_PRICE_LIST',
-                    permission:permissionmenu.MenuPriceList,
-                }
-            ]
-        },
+        // {
+        //     name: 'Master',
+        //     icon: 'icon-user',
+        //     translate: 'Master',
+        //     submenu:[]
+        // },
         {
             name: 'User',
             icon: 'icon-user',
@@ -164,86 +57,17 @@ const handleMenu = () => {
                 // }
             ]
         },
-        {
-            name: 'Transaksi',
-            icon: 'icon-user',
-            translate: 'Transaksi',
-            submenu:[
-                {
-                    name: 'Work Order',
-                    path: pathmenu.menuWorkOrder,
-                    translate: 'Work Order',
-                    permission:permissionmenu.MenuWorkOrder,
-                },
-                {
-                    name: 'Surat Jalan',
-                    path: pathmenu.menuSuratJalan,
-                    translate: 'Surat Jalan',
-                    permission:permissionmenu.MenuSuratJalan,
-                },
-                {
-                    name: 'Penerimaan Kas Bank',
-                    path: pathmenu.menuPenerimaanKasBank,
-                    translate: 'Penerimaan Kas Bank',
-                    permission:permissionmenu.MenuPenerimaanKasBank,
-                },
-                {
-                    name: 'Pengeluaran Kas Bank',
-                    path: pathmenu.menuPengeluaranKasBank,
-                    translate: 'Pengeluaran Kas Bank',
-                    permission:permissionmenu.MenuPengeluaranKasBank,
-                },
-                {
-                    name: 'Invoice',
-                    path: pathmenu.menuInvoice,
-                    translate: 'Invoice',
-                    permission:permissionmenu.MenuPengeluaranKasBank,
-                }
-            ]
-        },
+        // {
+        //     name: 'Transaksi',
+        //     icon: 'icon-user',
+        //     translate: 'Transaksi',
+        //     submenu:[]
+        // },
         {
             name: 'Laporan',
             icon: 'icon-user',
             translate: 'Laporan',
-            submenu:[
-                {
-                    name: 'Bongkar Muat Dan Depo',
-                    path: pathmenu.reportbongkarmuatdepo,
-                    translate: 'Bongkar Muat Dan Depo',
-                    permission:permissionmenu.MenuReportBongkarMuat,
-                },
-                {
-                    name: 'Status Invoice',
-                    path: pathmenu.reportstatusinvoice,
-                    translate: 'Status Invoice',
-                    permission:permissionmenu.MenuReportStatusInvoice,
-                },
-                {
-                    name: 'Kas Bank',
-                    path: pathmenu.reportKasBank,
-                    translate: 'Kas Bank',
-                    permission:permissionmenu.MenuReportKasBank,
-                },
-                {
-                    name: 'Laba Rugi',
-                    path: pathmenu.reportLabaRugi,
-                    translate: 'Laba Rugi',
-                    permission:permissionmenu.MenuReportKasBank,
-                },
-                {
-                    name: 'Summary Kegiatan Truck',
-                    path: pathmenu.reportsummarykegiatantruck,
-                    translate: 'Laba Rugi',
-                    permission:permissionmenu.MenuReportSummaryKegiatanTruck,
-                },
-                {
-                    name: 'History Truck',
-                    path: pathmenu.reportHistoryTruck,
-                    translate: 'Laba Rugi',
-                    permission:permissionmenu.MenuReportHistoryTruck,
-                }
-                
-            ]
+            submenu:[]
         },
        
         // {

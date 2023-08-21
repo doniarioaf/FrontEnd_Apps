@@ -11,8 +11,6 @@ import createSagaMiddleware from 'redux-saga';
 import {
     watchLogin,
     watchAdmin,
-    watchCustomer,
-    watchMobile
 }                           from "./sagas";
 import {routerMiddleware} from 'connected-react-router';
 import {history} from './history';
@@ -46,8 +44,6 @@ export default function configureStore() {
 
     sagaMiddleware.run(watchLogin);
     sagaMiddleware.run(watchAdmin);
-    sagaMiddleware.run(watchCustomer);
-    sagaMiddleware.run(watchMobile);
     return store;
 
 }
