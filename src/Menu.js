@@ -57,6 +57,43 @@ const handleMenu = () => {
             ]
         },
         {
+            name: 'Transaksi',
+            icon: 'icon-user',
+            translate: 'Transaksi',
+            submenu:[
+                {
+                    name: 'Work Order',
+                    path: pathmenu.menuWorkOrder,
+                    translate: 'Work Order',
+                    permission:permissionmenu.MenuWorkOrder,
+                },
+                {
+                    name: 'Surat Jalan',
+                    path: pathmenu.menuSuratJalan,
+                    translate: 'Surat Jalan',
+                    permission:permissionmenu.MenuSuratJalan,
+                },
+                {
+                    name: 'Penerimaan Kas Bank',
+                    path: pathmenu.menuPenerimaanKasBank,
+                    translate: 'Penerimaan Kas Bank',
+                    permission:permissionmenu.MenuPenerimaanKasBank,
+                },
+                {
+                    name: 'Pengeluaran Kas Bank',
+                    path: pathmenu.menuPengeluaranKasBank,
+                    translate: 'Pengeluaran Kas Bank',
+                    permission:permissionmenu.MenuPengeluaranKasBank,
+                },
+                {
+                    name: 'Invoice',
+                    path: pathmenu.menuInvoice,
+                    translate: 'Invoice',
+                    permission:permissionmenu.MenuPengeluaranKasBank,
+                }
+            ]
+        },
+        {
             name: 'Master',
             icon: 'icon-user',
             translate: 'Master',
@@ -146,62 +183,6 @@ const handleMenu = () => {
             ]
         },
         {
-            name: 'User',
-            icon: 'icon-user',
-            translate: 'label_USER',
-            submenu:[
-                {
-                    name: 'Internal User',
-                    path: pathmenu.menuInternalUser,
-                    translate: 'label_INTERNAL_USERR',
-                    permission:permissionmenu.MenuInternalUser,
-                },
-                // {
-                //     name: 'User Mobile',
-                //     path: pathmenu.menuusermobile,
-                //     translate: 'label_MOBILE_USER',
-                //     permission:permissionmenu.MenuUserMobile,
-                // }
-            ]
-        },
-        {
-            name: 'Transaksi',
-            icon: 'icon-user',
-            translate: 'Transaksi',
-            submenu:[
-                {
-                    name: 'Work Order',
-                    path: pathmenu.menuWorkOrder,
-                    translate: 'Work Order',
-                    permission:permissionmenu.MenuWorkOrder,
-                },
-                {
-                    name: 'Surat Jalan',
-                    path: pathmenu.menuSuratJalan,
-                    translate: 'Surat Jalan',
-                    permission:permissionmenu.MenuSuratJalan,
-                },
-                {
-                    name: 'Penerimaan Kas Bank',
-                    path: pathmenu.menuPenerimaanKasBank,
-                    translate: 'Penerimaan Kas Bank',
-                    permission:permissionmenu.MenuPenerimaanKasBank,
-                },
-                {
-                    name: 'Pengeluaran Kas Bank',
-                    path: pathmenu.menuPengeluaranKasBank,
-                    translate: 'Pengeluaran Kas Bank',
-                    permission:permissionmenu.MenuPengeluaranKasBank,
-                },
-                {
-                    name: 'Invoice',
-                    path: pathmenu.menuInvoice,
-                    translate: 'Invoice',
-                    permission:permissionmenu.MenuPengeluaranKasBank,
-                }
-            ]
-        },
-        {
             name: 'Laporan',
             icon: 'icon-user',
             translate: 'Laporan',
@@ -243,6 +224,25 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuReportHistoryTruck,
                 }
                 
+            ]
+        },
+        {
+            name: 'User',
+            icon: 'icon-user',
+            translate: 'label_USER',
+            submenu:[
+                {
+                    name: 'Internal User',
+                    path: pathmenu.menuInternalUser,
+                    translate: 'label_INTERNAL_USERR',
+                    permission:permissionmenu.MenuInternalUser,
+                },
+                // {
+                //     name: 'User Mobile',
+                //     path: pathmenu.menuusermobile,
+                //     translate: 'label_MOBILE_USER',
+                //     permission:permissionmenu.MenuUserMobile,
+                // }
             ]
         },
        

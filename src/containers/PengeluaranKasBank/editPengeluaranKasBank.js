@@ -399,9 +399,9 @@ export default function EditForm(props) {
             if(data == 'OPTIONS_PAYMENTITEM_TYPE_1'){
                 return false;
             }
-            if(type == 'wo' && data == 'OPTIONS_PAYMENTITEM_TYPE_2'){
-                return false;
-            }
+            // if(type == 'wo' && data == 'OPTIONS_PAYMENTITEM_TYPE_2'){
+            //     return false;
+            // }
 
             if(type == 'wo' && data == 'OPTIONS_PAYMENTITEM_TYPE_4'){
                 return false;

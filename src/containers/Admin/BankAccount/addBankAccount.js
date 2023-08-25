@@ -38,6 +38,7 @@ export default function AddBankAccount(props) {
     const [InputIsActive, setInputIsActive] = useState(true);
     const [InputSaldoAwal, setInputSaldoAwal] = useState('');
     const flagSaldoAwal = isGetPermissions(saldoawal_Permission,'TRANSACTION');
+    const [InputIsShowFinanceJunior, setInputIsShowFinanceJunior] = useState(false);
 
     const handleInputSaldoAwal = (data) =>{
     let val = data.target.value;
@@ -80,6 +81,10 @@ export default function AddBankAccount(props) {
 
     const handleChangeIsActive = (data) =>{
         setInputIsActive(data.target.checked);
+    }
+
+    const handleChangeIsFinanceJunior = (data) =>{
+        setInputIsShowFinanceJunior(data.target.checked);
     }
 
     const handleDateOpen = (data) =>{
@@ -136,6 +141,7 @@ export default function AddBankAccount(props) {
             obj.catatan2 = InputCatatan2;
             obj.isactive = InputIsActive;
             obj.saldoawal = InputSaldoAwal == ''?0:new String(InputSaldoAwal).replaceAll('.','').replaceAll(',','.');
+            obj.showfinancejunior = InputIsShowFinanceJunior;
             dispatch(actions.submitAddBankAccount('',obj,succesHandlerSubmit, errorHandler));
         }
     }
@@ -178,7 +184,8 @@ export default function AddBankAccount(props) {
                 catatan1:InputCatatan1,
                 catatan2:InputCatatan2,
                 isactive:InputIsActive,
-                saldoawal:InputSaldoAwal
+                saldoawal:InputSaldoAwal,
+                IsShowFinanceJunior:InputIsShowFinanceJunior
             }
         }
         validate={values => {
@@ -340,6 +347,17 @@ export default function AddBankAccount(props) {
                                 onBlur={handleBlur}
                                 value={values.catatan2}
                             />
+
+                            <FormGroup check style={{marginTop:'20px'}}>
+                            <Input type="checkbox" name="check" 
+                            id="IsShowFinanceJunior" 
+                            onChange={val => handleChangeIsFinanceJunior(val)}
+                            defaultChecked={values.IsShowFinanceJunior}
+                            checked={values.IsShowFinanceJunior}
+                            style={{transform:'scale(1.5)'}}
+                            />
+                            <Label for="IsShowFinanceJunior" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('Finance Junior')}</Label>
+                            </FormGroup>
 
                             {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 

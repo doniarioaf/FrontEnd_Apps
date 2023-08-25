@@ -63,9 +63,11 @@ export default function ReportKasBank(props) {
     const handleStartDate = (data) =>{
         // setStart(moment(data, "DD MMMM YYYY").toDate())
         if(data !== null){
-            setStart(moment(data, formatdate).toDate())
+            setStart(moment(data, formatdate).toDate());
+            setEnd(moment(data, formatdate).toDate());
         }else{
             setStart(new Date())
+            setEnd(new Date());
         }
     }
 
@@ -117,9 +119,9 @@ export default function ReportKasBank(props) {
 
     const handleEndDate = (data) =>{
         if(data !== null){
-            setEnd(moment(data, formatdate).toDate())
+            setEnd(moment(data, formatdate).toDate());
         }else{
-            setEnd(new Date())
+            setEnd(new Date());
         }
         // setEnd(moment(data, "DD MMMM YYYY").toDate())
     }
