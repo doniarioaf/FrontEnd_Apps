@@ -132,8 +132,8 @@ const checkDiskon = (diskon) =>{
     }
 }
 const setItems = (items) =>{
-    let tanggalDp = '';
-    let jumlahDp = '';
+    let tanggalDp = "";
+    let jumlahDp = "";
     // if(items.summarypenerimaanDP){
     //     if(!isNaN(items.summarypenerimaanDP)){
     //         let summarypenerimaanDP = parseFloat(items.summarypenerimaanDP)
@@ -142,14 +142,34 @@ const setItems = (items) =>{
     //         }   
     //     }
     // }
-    if(items.detailspenerimaan){
-        let filterArrDet = items.detailspenerimaan.filter(output => output.isdownpayment == 'Y');
-        if(filterArrDet.length > 0){
-            let filterArr = items.listpenerimaan.filter(output => output.id == filterArrDet[0].idpenerimaankasbank);
-            if(filterArr.length > 0){
-                tanggalDp = filterArr[0].receivedate?moment (new Date(filterArr[0].receivedate)).format(formatdate):'' ;
+    // if(items.detailspenerimaan){
+    //     let filterArrDet = items.detailspenerimaan.filter(output => output.isdownpayment == 'Y');
+    //     if(filterArrDet.length > 0){
+    //         let filterArr = items.listpenerimaan.filter(output => output.id == filterArrDet[0].idpenerimaankasbank);
+    //         if(filterArr.length > 0){
+    //             tanggalDp = filterArr[0].receivedate?moment (new Date(filterArr[0].receivedate)).format(formatdate):'' ;
+    //         }
+    //         jumlahDp = filterArrDet[0].amount;
+    //     }
+    // }
+
+    if(items.listDP !== null && items.listDP !== undefined){
+        jumlahDp = 0;
+        for(let i=0; i < items.listDP.length > 0; i++){
+            let det = items.listDP[i];
+            if(tanggalDp == ""){
+                tanggalDp = det.tanggal ? moment (new Date(det.tanggal)).format(formatdate):"";
             }
-            jumlahDp = filterArrDet[0].amount;
+
+            if(det.totalinvoice !== null && det.totalinvoice !== undefined){
+                if(!isNaN(det.totalinvoice)){
+                    jumlahDp = jumlahDp + parseFloat(det.totalinvoice);
+                }
+            }
+        }
+
+        if(jumlahDp == 0){
+            jumlahDp = "";
         }
     }
 
@@ -416,7 +436,7 @@ const setItems = (items) =>{
             // rowItem.push(<Text style={styles.hargareimbursement}>{'Total'}</Text>);
             // rowItem.push(<Text style={styles.subtotalreimbursement}>{numToMoney(totalinvoice)}</Text>);
             // rows.push(<View style={styles.row} key={no}>{rowItem}</View>);
-            if(tanggalDp !== '' && jumlahDp !== ''){
+            if(tanggalDp !== "" && jumlahDp !== ""){
                 tagihan = tagihan - parseFloat(jumlahDp);
                 rowItem = [];
                 no++;

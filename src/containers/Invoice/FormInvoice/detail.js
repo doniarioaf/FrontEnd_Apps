@@ -415,6 +415,29 @@ import React, {useState,
             </div>
             </CardBody>
 
+            <table id="tablegrid" hidden={value.idinvoicetype?value.idinvoicetype !== 'REIMBURSEMENT': true }>
+                <tr>
+                    <th>{'No Invoice'}</th>
+                    <th>{'Tanggal'}</th>
+                    <th>{'Jumlah'}</th>
+                </tr>
+                <tbody>
+                    { 
+                        value.listDP?
+                        value.listDP.map((x, i) => {
+                            return (
+                            <tr>
+                                <td>{x.nodocument}</td>
+                                <td>{x.tanggal?moment (new Date(x.tanggal)).format(formatdate):''}</td>
+                                <td>{numToMoney(parseFloat(x.totalinvoice))}</td>
+                            </tr>
+                            )
+                        })
+                        :''
+                    }
+                </tbody>
+            </table>
+
             {
                 <table id="tablegrid" hidden={value.namainvoicetype?value.namainvoicetype=='DP':false}>
                     <tr>

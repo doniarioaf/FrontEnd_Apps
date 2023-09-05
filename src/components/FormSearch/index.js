@@ -81,7 +81,7 @@ const DialogQuickSearch = props => {
                 {name: 'namacargo', title: 'Nama Cargo'},
                 {name: 'name', title: i18n.t('label_NAME')},
             ]
-        }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK'){
+        }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK' || props.seacrhtype == 'PENERIMAAN-KAS-BANK'){
             if(props.seacrhtype1){
                 if(props.seacrhtype1 == 'EMPLOYEE'){
                     data = [
@@ -164,7 +164,7 @@ const DialogQuickSearch = props => {
                 obj.namacargo = InputSearchName;
                 obj.idwo = 0;
                 dispatch(actions.submitAddPenerimaanKasBank('/searchwo',obj,successHandleSearch, props.errorHandler));
-            }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK'){
+            }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK' || props.seacrhtype == 'PENERIMAAN-KAS-BANK'){
                 if(props.seacrhtype1){
                     if(props.seacrhtype1 == 'EMPLOYEE'){
                         let obj = new Object();
@@ -250,7 +250,7 @@ const DialogQuickSearch = props => {
                         'data':el
                     }
                 ], []);
-            }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK'){
+            }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK' || props.seacrhtype == 'PENERIMAAN-KAS-BANK'){
                 if(props.seacrhtype1){
                     if(props.seacrhtype1 == 'EMPLOYEE'){
                         theData = data.data.reduce((obj, el) => [

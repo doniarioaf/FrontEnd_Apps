@@ -95,6 +95,8 @@ export default function AddForm(props) {
     const [IsHideColumnWarehouse, setIsHideColumnWarehouse] = useState(false);
     const [DataTemplate, setDataTemplate] = useState([]);
 
+    const [ListInvoiceDP, setListInvoiceDP] = useState([]);
+
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getInvoiceData('/template',successHandlerTemplate, errorHandler));
@@ -160,10 +162,12 @@ export default function AddForm(props) {
         setInputListItem([]);
         setListSuratJalanWO([]);
         setInputRefNo(noblawb);
-        
+        setListInvoiceDP([]);
         localStorage.setItem('idwo',id);
         
         if(SelInvoiceType == 'REIMBURSEMENT'){
+            setLoading(true);
+            dispatch(actions.getInvoiceData('/invoicedp/'+id,successHandlerInvoiceDP, errorHandler));
             // dispatch(actions.getInvoiceData('/searchpengeluaran/'+id,successHandlerPengeluaran, errorHandler));
         }else{
             setLoading(true);
@@ -171,7 +175,10 @@ export default function AddForm(props) {
         }
         // dispatch(actions.getInvoiceData('/searchsj/'+id,successHandlerSj, errorHandler));
     }
-
+    function successHandlerInvoiceDP(data) {
+        setListInvoiceDP(data.data?data.data:[]);
+        setLoading(false);
+    }
     function successHandlerSJJ(data) {
         let list = [];
         let delivDate = null;
@@ -559,7 +566,7 @@ export default function AddForm(props) {
             setListWO(data.data.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument+' - '+el.noaju,
+                    label: el.nodocument+' - AJU '+el.noaju,
                     jalur: el.jalur,
                     jalurname: el.jalurname,
                     noblawb: el.nobl,
@@ -918,6 +925,28 @@ export default function AddForm(props) {
                                     disabled={true}                       
                             />
                             <div className="invalid-feedback-custom">{ErrInputDeliveredDate}</div>
+
+                            <table id="tablegrid" hidden={values.invtype !== 'REIMBURSEMENT'}>
+                                <tr>
+                                    <th>{'No Invoice'}</th>
+                                    <th>{'Tanggal'}</th>
+                                    <th>{'Jumlah'}</th>
+                                </tr>
+                                <tbody>
+                                    {
+                                        ListInvoiceDP.map((x, i) => {
+                                            return (
+                                            <tr>
+                                                <td>{x.nodocument}</td>
+                                                <td>{x.tanggal?moment (new Date(x.tanggal)).format(formatdate):''}</td>
+                                                <td>{numToMoney(parseFloat(x.totalinvoice))}</td>
+                                            </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+
                             </div>
 
                             <div className="mt-2 col-lg-6 ft-detail mb-5">

@@ -135,15 +135,17 @@ export default function ReportSummaryKegiatanTruck(props) {
     const handleStartDate = (data) =>{
         // setStart(moment(data, "DD MMMM YYYY").toDate())
         if(data !== null){
-            setStart(moment(data, formatdate).toDate())
+            setStart(moment(data, formatdate).toDate());
+            setEnd(moment(data, formatdate).toDate());
         }else{
-            setStart(new Date())
+            setStart(new Date());
+            setEnd(new Date());
         }
     }
 
     const handleEndDate = (data) =>{
         if(data !== null){
-            setEnd(moment(data, formatdate).toDate())
+            setEnd(moment(data, formatdate).toDate());
         }else{
             setEnd(new Date())
         }

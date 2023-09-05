@@ -99,6 +99,8 @@ export default function EditForm(props) {
     const [InputNilaiPPN, setInputNilaiPPN] = useState(null);
     const [DataTemplate, setDataTemplate] = useState([]);
 
+    const [ListInvoiceDP, setListInvoiceDP] = useState([]);
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -110,6 +112,8 @@ export default function EditForm(props) {
         if(data.data){
             let det = data.data;
             let template = det.template;
+
+            setListInvoiceDP(det.listDP?det.listDP:[]);
             setDataTemplate(data.data);
             setInputJalur(det.jalurwo);
             setInputJalurName(det.jalurname);
@@ -302,12 +306,24 @@ export default function EditForm(props) {
         setSelPriceList('');
         setListPriceList([]);
         setInputListItem([]);
+        setListInvoiceDP([]);
         setInputRefNo(noblawb);
 
         setLoading(true);
         localStorage.setItem('idwo',id);
-        dispatch(actions.getInvoiceData('/suratjalan/'+id,successHandlerSJJ, errorHandler));
+
+        if(SelInvoiceType == 'REIMBURSEMENT'){
+            dispatch(actions.getInvoiceData('/invoicedp/'+id,successHandlerInvoiceDP, errorHandler));
+        }else{  
+            dispatch(actions.getInvoiceData('/suratjalan/'+id,successHandlerSJJ, errorHandler));
+        }
+        
         // dispatch(actions.getInvoiceData('/searchsj/'+id,successHandlerSj, errorHandler));
+    }
+
+    function successHandlerInvoiceDP(data) {
+        setListInvoiceDP(data.data?data.data:[]);
+        setLoading(false);
     }
 
     function successHandlerSJJ(data) {
@@ -699,7 +715,7 @@ export default function EditForm(props) {
             setListWO(data.data.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument+' - '+el.noaju,
+                    label: el.nodocument+' - AJU '+el.noaju,
                     jalur: el.jalur,
                     jalurname: el.jalurname,
                     noblawb: el.nobl,
@@ -1170,6 +1186,28 @@ export default function EditForm(props) {
                                     disabled={true}                       
                             />
                             <div className="invalid-feedback-custom">{ErrInputDeliveredDate}</div>
+
+                            <table id="tablegrid" hidden={values.invtype !== 'REIMBURSEMENT'}>
+                                <tr>
+                                    <th>{'No Invoice'}</th>
+                                    <th>{'Tanggal'}</th>
+                                    <th>{'Jumlah'}</th>
+                                </tr>
+                                <tbody>
+                                    {
+                                        ListInvoiceDP.map((x, i) => {
+                                            return (
+                                            <tr>
+                                                <td>{x.nodocument}</td>
+                                                <td>{x.tanggal?moment (new Date(x.tanggal)).format(formatdate):''}</td>
+                                                <td>{numToMoney(parseFloat(x.totalinvoice))}</td>
+                                            </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+
                             </div>
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             <label className="mt-3 form-label required" htmlFor="tanggal">

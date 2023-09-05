@@ -43,13 +43,28 @@ const MenuIndex = () => {
                     'id': el.id,
                     // 'code':el.code?el.code:'',
                     'nodocument': el.nodocument ?el.nodocument:'',
-                    'receivefrom':el.receivefrom?el.receivefrom:'',
+                    'receivefrom':getReceiveFromName(el),
                     'receivedate':el.receivedate?moment (new Date(el.receivedate)).format(formatdate):''
                 }
             ], []);
             setRows(theData);
         }
         setLoading(false);
+    }
+
+    const getReceiveFromName = (data) =>{
+        if(data.idreceivetype){
+            if(data.idreceivetype == 'EMPLOYEE'){
+                return data.employeeName?data.employeeName:''
+            }else if(data.idreceivetype == 'CUSTOMER'){
+                return data.customerName?data.customerName:''
+            }else if(data.idreceivetype == 'VENDOR'){
+                return data.vendorName?data.vendorName:''
+            }else{
+                return data.idreceivetype;
+            }
+        }
+        return data.receivefrom;
     }
 
     function errorHandler(error) {

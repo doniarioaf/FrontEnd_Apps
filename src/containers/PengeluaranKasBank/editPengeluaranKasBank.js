@@ -261,7 +261,7 @@ export default function EditForm(props) {
             let listWO = template.woOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument+' - '+el.noaju
+                    label: el.nodocument+' - AJU '+el.noaju
                 }]
             ), []);
             listWO.push(
@@ -403,9 +403,9 @@ export default function EditForm(props) {
             //     return false;
             // }
 
-            if(type == 'wo' && data == 'OPTIONS_PAYMENTITEM_TYPE_4'){
-                return false;
-            }
+            // if(type == 'wo' && data == 'OPTIONS_PAYMENTITEM_TYPE_4'){
+            //     return false;
+            // }
         }else if(type == 'asset'){
             if(data == 'OPTIONS_PAYMENTITEM_TYPE_3'){
                 return false;
@@ -629,9 +629,9 @@ export default function EditForm(props) {
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
                     let det = InputListItem[i];
-                    if( det.amount !== '' && det.idcoa !== ''){
+                    if( det.amount !== "" ){
                         let objDet = new Object();
-                        objDet.idcoa = det.idcoa !== '' && det.idcoa !== 'nodata' ? det.idcoa:null;
+                        objDet.idcoa = det.idcoa !== "" && det.idcoa !== 'nodata' ? det.idcoa:null;
                         objDet.catatan = det.catatan;
                         objDet.amount = new String(det.amount).replaceAll('.','').replaceAll(',','.');
                         objDet.idasset = det.idasset !== '' && det.idasset !== 'nodata' ? det.idasset:null;
@@ -953,16 +953,11 @@ export default function EditForm(props) {
                             </table>
                             <div className="invalid-feedback-custom">{ErrInputPaymentTo}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="coa">
+                            {/* <label className="mt-3 form-label required" htmlFor="coa">
                                 {i18n.t('COA')}
-                                {/* <span style={{color:'red'}}>*</span> */}
                             </label>
 
                                 <DropdownList
-                                    // className={
-                                    //     touched.branch && errors.branch
-                                    //         ? "input-error" : ""
-                                    // }
                                     name="coa"
                                     filter='contains'
                                     placeholder={i18n.t('select.SELECT_OPTION')}
@@ -972,11 +967,9 @@ export default function EditForm(props) {
                                     data={ListCOA}
                                     textField={'label'}
                                     valueField={'value'}
-                                    // style={{width: '25%'}}
-                                    // disabled={values.isdisabledcountry}
                                     value={values.coa}
                                 />
-                                <div className="invalid-feedback-custom">{ErrSelCOA}</div>
+                                <div className="invalid-feedback-custom">{ErrSelCOA}</div> */}
 
                             <label className="mt-3 form-label required" htmlFor="bank">
                                 {i18n.t('From Kas/Bank')}
@@ -1008,11 +1001,6 @@ export default function EditForm(props) {
                             </label>
                             <Input
                                 name="keterangan"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
                                 type="textarea"
                                 id="keterangan"
                                 maxLength={200}
@@ -1149,7 +1137,7 @@ export default function EditForm(props) {
                                         <th hidden={checkCategory(values.category,'asset')}>{i18n.t('Jenis Sparepart')}</th>
                                         <th hidden={checkCategory(values.category,'asset')}>{i18n.t('Asset Sparepart')}</th>
                                         <th>{i18n.t('Amount')}</th>
-                                        <th>{i18n.t('label_NOTE')}</th>
+                                        {/* <th>{i18n.t('label_NOTE')}</th> */}
                                         <th>{i18n.t('COA')}</th>
                                         <th hidden={true}>{i18n.t('Action')}</th>
                                     </tr>
@@ -1253,7 +1241,7 @@ export default function EditForm(props) {
                                                     />
                                                     </td>
                                                     
-                                                    <td>
+                                                    {/* <td>
                                                     <Input
                                                         name="catatan"
                                                         // className={
@@ -1271,9 +1259,9 @@ export default function EditForm(props) {
                                                         value={x.catatan}
                                                         disabled={false}
                                                     />
-                                                    </td>
+                                                    </td> */}
                                                     
-                                                    <td style={{width: '200px'}}>
+                                                    <td style={{width: '300px'}}>
                                                     <DropdownList
                                                         name="idcoa"
                                                         filter='contains'
@@ -1283,7 +1271,7 @@ export default function EditForm(props) {
                                                         data={ListCOA}
                                                         textField={'label'}
                                                         valueField={'value'}
-                                                        style={{width: '200px'}}
+                                                        style={{width: '300px'}}
                                                         value={x.idcoa}
                                                     />
                                                     </td>

@@ -3,7 +3,7 @@ import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../components/Layout/ContentHeading';
-import {Input,Button,Label,FormGroup,Container} from 'reactstrap';
+import {Input,Button} from 'reactstrap';
 import * as actions                 from '../../store/actions';
 import {useDispatch}   from 'react-redux';
 import { Loading } from '../../components/Common/Loading';
@@ -74,6 +74,11 @@ export default function AddForm(props) {
     const [ErrSelWO, setErrSelWO] = useState('');
     const [ErrItems, setErrItems] = useState('');
 
+    const [SelReceiveFrom, setSelReceiveFrom] = useState('');
+    const ListReceiveFrom = [{value:'EMPLOYEE',label:'Employee'},{value:'CUSTOMER',label:'Customer'},{value:'VENDOR',label:'Vendor'}];
+    const [InputReceiveFromName, setInputReceiveFromName] = useState('');
+    const [ShowQuickSearch, setShowQuickSearch] = useState(false);
+
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getPenerimaanKasBankData('/template',successHandlerTemplate, errorHandler));
@@ -136,6 +141,32 @@ export default function AddForm(props) {
         }
     }
 
+    const handleChangeReceiveType = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelReceiveFrom(id);
+        setInputReceiveFrom('');
+        setInputReceiveFromName('');
+    }
+    const handleShowQuickSearch = () =>{
+        if(SelReceiveFrom !== ''){
+            setShowQuickSearch(true);
+        }
+    }
+
+    const handleQuickSeacrh = (data) =>{
+        setShowQuickSearch(false);
+        setInputReceiveFrom(data.id);
+        if(SelReceiveFrom == 'EMPLOYEE'){
+            setInputReceiveFromName(data.nama);
+        }else if(SelReceiveFrom == 'CUSTOMER'){
+            setInputReceiveFromName(data.customername);
+        }else if(SelReceiveFrom == 'VENDOR'){
+            setInputReceiveFromName(data.nama);
+        }
+        // setInputCustomer(data.customername);
+        // setInputCustomerID(data.id);
+    }
+
     const checkColumnMandatory = () => {
         let flag = true;
         setErrInputReceiveDate('');
@@ -194,10 +225,10 @@ export default function AddForm(props) {
             flag = false;
         }
 
-        if(SelCOA == ''){
-            setErrSelCOA(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(SelCOA == ''){
+        //     setErrSelCOA(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         if(SelBank == ''){
             setErrSelBank(i18n.t('label_REQUIRED'));
@@ -231,8 +262,23 @@ export default function AddForm(props) {
             setLoading(true);
             let obj = new Object();
             obj.receivedate = moment(InputReceiveDate).toDate().getTime();
-            obj.receivefrom = InputReceiveFrom;
-            obj.idcoa = SelCOA;
+            obj.receivefrom = "";
+
+            obj.idreceivetype = SelReceiveFrom;
+            if(SelReceiveFrom == 'EMPLOYEE'){
+                obj.idemployee = InputReceiveFrom;
+                obj.idcustomer = null;
+                obj.idvendor = null;
+            }else if(SelReceiveFrom == 'CUSTOMER'){
+                obj.idemployee = null;
+                obj.idcustomer = InputReceiveFrom;
+                obj.idvendor = null;
+            }else if(SelReceiveFrom == 'VENDOR'){
+                obj.idemployee = null;
+                obj.idcustomer = null;
+                obj.idvendor = InputReceiveFrom;
+            }
+            obj.idcoa = null;//SelCOA;
             obj.idbank = SelBank;
             obj.keterangan = InputKeterangan;
             obj.isactive = true;
@@ -242,7 +288,7 @@ export default function AddForm(props) {
                     let det = InputListItem[i];
                     if(det.catatan !== '' && det.amount !== '' && det.isdownpayment !== ''){
                         let objDet = new Object();
-                        objDet.idcoa = det.idcoa !== '' ? det.idcoa:null;
+                        objDet.idcoa = det.idcoa !== '' && det.idcoa !== 'nodata' ? det.idcoa:null;
                         objDet.catatan = det.catatan;
                         objDet.amount = new String(det.amount).replaceAll('.','').replaceAll(',','.');
                         objDet.isdownpayment = det.isdownpayment;
@@ -381,11 +427,12 @@ export default function AddForm(props) {
         initialValues={
             {
                 receivedate:InputReceiveDate,
-                receivefrom:InputReceiveFrom,
+                receivefrom:InputReceiveFromName,
                 coa:SelCOA,
                 bank:SelBank,
                 keterangan:InputKeterangan,
-                items:InputListItem
+                items:InputListItem,
+                SelReceiveFrom:SelReceiveFrom,
             }
         }
         validate={values => {
@@ -441,6 +488,9 @@ export default function AddForm(props) {
                                 {i18n.t('label_RECEIVE_FROM')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
+                            <table style={{width:'100%'}}>
+                            <tbody>
+                            <td style={{width:'70%'}}>
                             <Input
                                 name="receivefrom"
                                 // className={
@@ -451,13 +501,47 @@ export default function AddForm(props) {
                                 type="text"
                                 id="receivefrom"
                                 maxLength={200}
-                                onChange={val => handleInputReceiveFrom(val)}
+                                // onChange={val => handleInputReceiveFrom(val)}
                                 onBlur={handleBlur}
                                 value={values.receivefrom}
+                                disabled={true}
                             />
+                            </td>
+                            <td style={{width:'30%'}}>
+                            <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="SelReceiveFrom"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeReceiveType(val)}
+                                    onBlur={val => setFieldTouched("SelReceiveFrom", val?.value ? val.value : '')}
+                                    data={ListReceiveFrom}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.SelReceiveFrom}
+                                />
+                            </td>
+
+                            <td>
+                                <IconButton color={'primary'}
+                                    onClick={() =>handleShowQuickSearch()}
+                                >
+                                    <SearchIcon/>
+                                </IconButton>
+                                </td>
+
+                            </tbody>
+                            </table>
+
                             <div className="invalid-feedback-custom">{ErrInputReceiveFrom}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="coa">
+                            {/* <label className="mt-3 form-label required" htmlFor="coa">
                                 {i18n.t('COA')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
@@ -480,7 +564,7 @@ export default function AddForm(props) {
                                     // disabled={values.isdisabledcountry}
                                     value={values.coa}
                                 />
-                                <div className="invalid-feedback-custom">{ErrSelCOA}</div>
+                                <div className="invalid-feedback-custom">{ErrSelCOA}</div> */}
 
                             <label className="mt-3 form-label required" htmlFor="bank">
                                 {i18n.t('To Kas/Bank')}
@@ -799,6 +883,27 @@ export default function AddForm(props) {
                                             errorHandler = {errorHandler}
                                             handlesearch = {handleQuickSeacrhWO}
                                             placeholder = {'Pencarian Berdasarkan No Document atau Nama Customer atau Nama Cargo'}
+                                        ></FormSearch>
+                                        {LoadingSend && <Loading/>}
+                                </StyledDialog>
+
+                                <StyledDialog
+                                    disableBackdropClick
+                                    disableEscapeKeyDown
+                                    maxWidth="md"
+                                    fullWidth={true}
+                                    // style={{height: '80%'}}
+                                    open={ShowQuickSearch}
+                                >
+                                        <FormSearch
+                                            showflag = {setShowQuickSearch}
+                                            flagloadingsend = {setLoadingSend}
+                                            seacrhtype = {'PENERIMAAN-KAS-BANK'}
+                                            seacrhtype1 = {SelReceiveFrom}
+                                            errorHandler = {errorHandler}
+                                            handlesearch = {handleQuickSeacrh}
+                                            placeholder = {SelReceiveFrom == 'CUSTOMER' || SelReceiveFrom == 'VENDOR' ?'Pencarian Berdasarkan Nama Atau Alias':'Pencarian Berdasarkan Nama'}
+
                                         ></FormSearch>
                                         {LoadingSend && <Loading/>}
                                 </StyledDialog>

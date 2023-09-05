@@ -140,6 +140,21 @@ import React, {useState,
         })
     }
 
+    const getReceiveFromName = (data) =>{
+        if(data.idreceivetype){
+            if(data.idreceivetype == 'EMPLOYEE'){
+                return data.employeeName?data.employeeName:''
+            }else if(data.idreceivetype == 'CUSTOMER'){
+                return data.customerName?data.customerName:''
+            }else if(data.idreceivetype == 'VENDOR'){
+                return data.vendorName?data.vendorName:''
+            }else{
+                return data.idreceivetype;
+            }
+        }
+        return data.receivefrom;
+    }
+
     function errorHandler(error) {
         setLoading(false);
         Swal.fire({
@@ -212,16 +227,17 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_RECEIVE_FROM')}</span>
                             <strong className="col-md-7">
-                                {value.receivefrom?value.receivefrom:''}
+                                {getReceiveFromName(value)}
+                                {/* {value.receivefrom?value.receivefrom:''} */}
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('COA')}</span>
                             <strong className="col-md-7">
                                 {value.coaName?value.coaName:''}
                             </strong>
-                            </div>
+                            </div> */}
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Bank')}</span>

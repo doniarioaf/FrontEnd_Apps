@@ -351,12 +351,12 @@ import React, {useState,
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('COA')}</span>
                             <strong className="col-md-7">
                                 {value.coaName?value.coaName:''}
                             </strong>
-                            </div>
+                            </div> */}
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Bank')}</span>
@@ -414,7 +414,7 @@ import React, {useState,
                     <th hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{i18n.t('Jenis Sparepart')}</th>
                     <th hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{i18n.t('Asset Sparepart')}</th>
                     <th>{i18n.t('Amount')}</th>
-                    <th>{i18n.t('label_NOTE')}</th>
+                    {/* <th>{i18n.t('label_NOTE')}</th> */}
                     <th>{i18n.t('COA')}</th>
                     </tr>
                     <tbody>
@@ -428,7 +428,7 @@ import React, {useState,
                                         <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{x.sparepartassettype}</td>
                                         <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{x.idassetsparepart}</td>
                                         <td>{numToMoney(parseFloat(x.amount))}</td>
-                                        <td>{x.catatan}</td>
+                                        {/* <td>{x.catatan}</td> */}
                                         <td>{x.idcoa}</td>
                                     </tr>
 
