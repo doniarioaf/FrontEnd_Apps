@@ -156,6 +156,7 @@ const DialogQuickSearch = props => {
                 obj.idpenerimaan = props.idpenerimaan ?props.idpenerimaan:0;
                 //idpenerimaan
                 obj.type = 'PENERIMAAN';
+                obj.idcustomer = props.idcustomer ? props.idcustomer:null;
                 dispatch(actions.submitAddPenerimaanKasBank('/searchinvoice',obj,successHandleSearch, props.errorHandler));
             }else if(props.seacrhtype == 'PENERIMAANWO'){
                 let obj = new Object();
@@ -163,6 +164,7 @@ const DialogQuickSearch = props => {
                 obj.namacustomer = InputSearchName;
                 obj.namacargo = InputSearchName;
                 obj.idwo = 0;
+                obj.idcustomer = props.idcustomer ? props.idcustomer:null; 
                 dispatch(actions.submitAddPenerimaanKasBank('/searchwo',obj,successHandleSearch, props.errorHandler));
             }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK' || props.seacrhtype == 'PENERIMAAN-KAS-BANK'){
                 if(props.seacrhtype1){

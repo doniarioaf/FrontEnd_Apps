@@ -377,15 +377,25 @@ export default function AddForm(props) {
     };
 
     const handleShowQuickSearchWO = (e, index) => {
-        setShowQuickSearchWO(true);
-        setInputIndex(index);
+        setErrInputReceiveFrom("");
+        if(InputReceiveFrom !== ""){
+            setShowQuickSearchWO(true);
+            setInputIndex(index);
+        }else{
+            setErrInputReceiveFrom(i18n.t('label_REQUIRED'));
+        }
     };
 
     const handleShowQuickSearchInv = (e, index) => {
-        const list = [...InputListItem];
-        setShowQuickSearchINV(true);
-        setInputIndex(index);
-        setInputIndexIdWo(list[index]['idworkorder']);
+        setErrInputReceiveFrom("");
+        if(InputReceiveFrom !== ""){
+            const list = [...InputListItem];
+            setShowQuickSearchINV(true);
+            setInputIndex(index);
+            setInputIndexIdWo(list[index]['idworkorder']);
+        }else{
+            setErrInputReceiveFrom(i18n.t('label_REQUIRED'));
+        }
     };
 
     const handleQuickSeacrhWO = (data) =>{
@@ -625,8 +635,8 @@ export default function AddForm(props) {
                                         <th>{i18n.t('label_NOTE')}</th>
                                         <th>{i18n.t('Amount')}</th>
                                         <th>{i18n.t('DP')}</th>
-                                        <th>{i18n.t('Invoice Number')}</th>
-                                        <th>{i18n.t('label_WO_NUMBER')}</th>
+                                        <th hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>{i18n.t('label_WO_NUMBER')}</th>
+                                        <th hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>{i18n.t('Invoice Number')}</th>
                                         <th>{i18n.t('Action')}</th>
                                     </tr>
                                     <tbody>
@@ -700,60 +710,8 @@ export default function AddForm(props) {
                                                         value={x.isdownpayment}
                                                     />
                                                     </td>
-                                                    <td>
-                                                    
-                                                    <table style={{width:'100%'}}>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td>
-                                                        <Input
-                                                        name="nodocinv"
-                                                        // className={
-                                                        //     touched.namebranch && errors.namebranch
-                                                        //         ? "w-50 input-error"
-                                                        //         : "w-50"
-                                                        // }
-                                                        type="text"
-                                                        id="nodocinv"
-                                                        // maxLength={200}
-                                                        onChange={val => handleInputChange(val,i)}
-                                                        // onBlur={handleBlur}
-                                                        disabled={true}
-                                                        value={x.nodocinv}
-                                                        />
-                                                        
-                                                        </td>
-                                                        <td hidden={x.nodocinv !== ''}>
-                                                        <IconButton color={'primary'}
-                                                            onClick={val =>handleShowQuickSearchInv(val,i)}
-                                                        >
-                                                            <SearchIcon style={{ fontSize: 18 }}/>
-                                                        </IconButton>
-                                                        </td>
-                                                        <td hidden={x.nodocinv == ''}>
-                                                        <IconButton color={'primary'}
-                                                            onClick={val =>handleDeletehINV(val,i)}
-                                                        >
-                                                            <DeleteIcon style={{ fontSize: 18 }}/>
-                                                        </IconButton>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                    </table>
-                                                    {/* <DropdownList
-                                                        name="idinvoice"
-                                                        filter='contains'
-                                                        // placeholder={i18n.t('select.SELECT_OPTION')}
-                                                        
-                                                        onChange={val => handleInputDropDownChange(val,i,'idinvoice')}
-                                                        data={[]}
-                                                        textField={'label'}
-                                                        valueField={'value'}
-                                                        style={{width: '130px'}}
-                                                        value={x.idinvoice}
-                                                    /> */}
-                                                    </td>
-                                                    <td>
+
+                                                    <td hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>
                                                     <table style={{width:'100%'}}>
                                                     <tbody>
                                                     <tr>
@@ -794,19 +752,53 @@ export default function AddForm(props) {
                                                     </tr>
                                                     </tbody>
                                                     </table>
-                                                    {/* <DropdownList
-                                                        name="idworkorder"
-                                                        filter='contains'
-                                                        // placeholder={i18n.t('select.SELECT_OPTION')}
-                                                        
-                                                        onChange={val => handleInputDropDownChange(val,i,'idworkorder')}
-                                                        data={ListWO}
-                                                        textField={'label'}
-                                                        valueField={'value'}
-                                                        style={{width: '130px'}}
-                                                        value={x.idworkorder}
-                                                    /> */}
+                                                    
                                                     </td>
+                                                    
+                                                    <td hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>
+                                                    
+                                                    <table style={{width:'100%'}}>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>
+                                                        <Input
+                                                        name="nodocinv"
+                                                        // className={
+                                                        //     touched.namebranch && errors.namebranch
+                                                        //         ? "w-50 input-error"
+                                                        //         : "w-50"
+                                                        // }
+                                                        type="text"
+                                                        id="nodocinv"
+                                                        // maxLength={200}
+                                                        onChange={val => handleInputChange(val,i)}
+                                                        // onBlur={handleBlur}
+                                                        disabled={true}
+                                                        value={x.nodocinv}
+                                                        />
+                                                        
+                                                        </td>
+                                                        <td hidden={x.nodocinv !== ''}>
+                                                        <IconButton color={'primary'}
+                                                            onClick={val =>handleShowQuickSearchInv(val,i)}
+                                                        >
+                                                            <SearchIcon style={{ fontSize: 18 }}/>
+                                                        </IconButton>
+                                                        </td>
+                                                        <td hidden={x.nodocinv == ''}>
+                                                        <IconButton color={'primary'}
+                                                            onClick={val =>handleDeletehINV(val,i)}
+                                                        >
+                                                            <DeleteIcon style={{ fontSize: 18 }}/>
+                                                        </IconButton>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                    </table>
+                                                    </td>
+
+                                                    
+
                                                     <td>
                                                         <IconButton color={'primary'} hidden={i > 0}
                                                             onClick={() => handleAddClick()}
@@ -864,6 +856,7 @@ export default function AddForm(props) {
                                             handlesearch = {handleQuickSeacrhINV}
                                             placeholder = {'Pencarian Berdasarkan No Document atau Nama Customer'}
                                             idwo = {InputIndexIdWo}
+                                            idcustomer = {InputReceiveFrom}
                                         ></FormSearch>
                                         {LoadingSend && <Loading/>}
                                 </StyledDialog>
@@ -883,6 +876,7 @@ export default function AddForm(props) {
                                             errorHandler = {errorHandler}
                                             handlesearch = {handleQuickSeacrhWO}
                                             placeholder = {'Pencarian Berdasarkan No Document atau Nama Customer atau Nama Cargo'}
+                                            idcustomer = {InputReceiveFrom}
                                         ></FormSearch>
                                         {LoadingSend && <Loading/>}
                                 </StyledDialog>

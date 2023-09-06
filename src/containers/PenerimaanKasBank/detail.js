@@ -154,7 +154,7 @@ import React, {useState,
         }
         return data.receivefrom;
     }
-
+    
     function errorHandler(error) {
         setLoading(false);
         Swal.fire({
@@ -270,8 +270,8 @@ import React, {useState,
                         <th>{i18n.t('label_NOTE')}</th>
                         <th>{i18n.t('Amount')}</th>
                         <th>{i18n.t('DP')}</th>
-                        <th>{i18n.t('Invoice Number')}</th>
-                        <th>{i18n.t('label_WO_NUMBER')}</th>
+                        <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('label_WO_NUMBER')}</th>
+                        <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('Invoice Number')}</th>
                     </tr>
                     <tbody>
                         {
@@ -282,8 +282,8 @@ import React, {useState,
                                         <td>{x.catatan}</td>
                                         <td>{numToMoney(parseFloat(x.amount))}</td>
                                         <td>{x.isdownpayment}</td>
-                                        <td>{x.nodocinv}</td>
-                                        <td>{x.nodocwo}</td>
+                                        <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.nodocwo}</td>
+                                        <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.nodocinv}</td>
                                     </tr>
 
                                 )
