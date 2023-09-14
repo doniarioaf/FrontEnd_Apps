@@ -285,6 +285,11 @@ export default function AddForm(props) {
             setSelSJ('');
             setInputPPN('');
             setInputNilaiPPN(null);
+
+            if(SelWO !== ""){
+                setLoading(true);
+                dispatch(actions.getInvoiceData('/invoicedp/'+SelWO,successHandlerInvoiceDP, errorHandler));
+            }
         }else{
             let ppn = DataTemplate.defaultPPN?numToMoney(parseFloat(DataTemplate.defaultPPN)):'';
             setInputPPN(ppn);
@@ -727,6 +732,7 @@ export default function AddForm(props) {
                 }
             }
         }
+        
         if(total !== 0){
         let diskonVal = new String(diskonnota).replaceAll('.','').replaceAll(',','.');
         if(!isNaN(diskonVal) && diskonVal !== ''){
@@ -736,10 +742,11 @@ export default function AddForm(props) {
                 total = total - ( (parseFloat(diskonVal) / 100) * total );
             }
         }
+        
 
         //20230801
         setInputNilaiPPN(null);
-        if(ppn != undefined){
+        if(ppn !== undefined && ppn !== null && ppn !== ""){
             ppn = new String(ppn).replaceAll('.','').replaceAll(',','.');
             if(!isNaN(ppn)){
                 ppn = parseFloat(ppn);

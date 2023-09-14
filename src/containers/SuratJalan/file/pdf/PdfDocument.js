@@ -1,7 +1,9 @@
-import React from "react";
-import { Page, Document, StyleSheet, Image } from "@react-pdf/renderer";
+import React,{useEffect} from "react";
+import { Page, Document, StyleSheet, Image,Font } from "@react-pdf/renderer";
 import GenerateSuratJalan from "./GenerateSuratJalan";
+import GenerateSuratJalanV1 from "./GenerateSuratJalanV1";
 import logo from "./kseilogo.png";
+
 
 const styles = StyleSheet.create({
     page: {
@@ -23,10 +25,12 @@ const styles = StyleSheet.create({
 });
 
 const PdfDocument = ({ data }) => {
+    
         return (
             <Document>
-                <Page size="A4" style={styles.page} >
-                <GenerateSuratJalan valuedata={data}/>
+                {/* <Page size="A5"   style={styles.page} > */}
+                <Page size="A4" orientation="landscape"  style={styles.page} >
+                <GenerateSuratJalanV1 valuedata={data}/>
                 </Page>
             </Document>
         )

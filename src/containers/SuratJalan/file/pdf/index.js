@@ -12,8 +12,9 @@ import {useHistory}                 from 'react-router-dom';
 import {useDispatch}   from 'react-redux';
 import * as actions                 from '../../../../store/actions';
 import Swal             from "sweetalert2";
-import { formatdate, formatdateDDMMMMYYYY } from '../../../shared/constantValue';
+import { formatdate } from '../../../shared/constantValue';
 import moment                          from 'moment';
+import { jsPDF } from "jspdf";
 
 const SuratJalanIndex = (props) => {
     const history = useHistory();
@@ -36,14 +37,47 @@ const SuratJalanIndex = (props) => {
             let det = data.data;
             det.tanggal = dettemp.tanggal ?moment (new Date(dettemp.tanggal)).format(formatdate):'';
             setValue(det);
+            
 
             // setIsReady(true);
             setTimeout(() => {
+                // generatePDF(det);
                 setIsReady(true);
             }, 1000);
         }
         
         setLoading(false);
+    }
+
+    const generatePDF = (value) =>{
+        console.log("generatePDF ",value);
+        //http://raw.githack.com/MrRio/jsPDF/master/index.html
+        //http://raw.githack.com/MrRio/jsPDF/master/docs/jsPDF.html#setFont
+        let fontSizeNormal = 10;
+        let fontSizeBig = 15;
+        let spaceaddUpDown = 0.6;
+        let spaceUpDown = 1;
+        const doc = new jsPDF({
+            orientation: "landscape",
+            unit: "cm",
+            format: [21.5, 14]
+        });
+        doc.setFont("", "bold");
+        doc.setFontSize(fontSizeNormal);
+        doc.text(value.companyname, 1, spaceUpDown); doc.text("SURAT JALAN", 18, 1);
+        spaceUpDown = spaceUpDown + spaceaddUpDown;
+        doc.text(value.compaddress, 1, spaceUpDown); 
+        
+        doc.setFont("", "normal");
+        doc.text("No. SJ  : "+value.nodocument, 16, spaceUpDown);
+        spaceUpDown = spaceUpDown + spaceaddUpDown;
+        doc.text("No. AJU  : "+value.noajuWO, 16, spaceUpDown);
+
+
+        spaceUpDown = spaceUpDown + spaceaddUpDown;
+        doc.text("Customer : "+value.customertype+". "+value.namacustomer, 1, spaceUpDown);
+
+        doc.save("SuratJalan-"+value.nodocument+".pdf");
     }
 
     const errorHandler = (data) => {

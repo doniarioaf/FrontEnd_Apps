@@ -269,7 +269,7 @@ import React, {useState,
                         <th>{i18n.t('COA')}</th>
                         <th>{i18n.t('label_NOTE')}</th>
                         <th>{i18n.t('Amount')}</th>
-                        <th>{i18n.t('DP')}</th>
+                        {/* <th>{i18n.t('DP')}</th> */}
                         <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('label_WO_NUMBER')}</th>
                         <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('Invoice Number')}</th>
                     </tr>
@@ -281,7 +281,7 @@ import React, {useState,
                                         <td>{x.idcoa}</td>
                                         <td>{x.catatan}</td>
                                         <td>{numToMoney(parseFloat(x.amount))}</td>
-                                        <td>{x.isdownpayment}</td>
+                                        {/* <td>{x.isdownpayment}</td> */}
                                         <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.nodocwo}</td>
                                         <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.nodocinv}</td>
                                     </tr>

@@ -3,7 +3,7 @@ import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../components/Layout/ContentHeading';
-import {Input,Button,Label,FormGroup,Container} from 'reactstrap';
+import {Input,Button} from 'reactstrap';
 import * as actions                 from '../../store/actions';
 import {useDispatch}   from 'react-redux';
 import { Loading } from '../../components/Common/Loading';
@@ -132,13 +132,15 @@ export default function AddForm(props) {
                 setInputListItem(listitems);
             }
             
-
-            setListCOA(template.coaOptions.reduce((obj, el) => (
+            let listCOA = template.coaOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama+' ('+el.code+')'
                 }]
-            ), []));
+            ), []);
+            listCOA.push({value:"nodata",label:"No Data"});
+
+            setListCOA(listCOA);
 
             setListBank(template.bankOptions.reduce((obj, el) => (
                 [...obj, {
@@ -230,7 +232,7 @@ export default function AddForm(props) {
         if(InputListItem.length > 0){
             for(let i=0; i < InputListItem.length; i++){
                 let det = InputListItem[i];
-                if(det.idcoa !== '' || det.catatan !== '' || det.amount !== '' || det.isdownpayment !== '' || det.idinvoice !== '' || det.idworkorder !== '' ){
+                if(det.idcoa !== '' || det.catatan !== '' || det.amount !== ''  || det.idinvoice !== '' || det.idworkorder !== '' ){
                     if(det.catatan == ''){
                         setErrInputCatatan(i18n.t('Catatan')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
@@ -241,17 +243,17 @@ export default function AddForm(props) {
                         flag = false;
                     }
 
-                    if(det.isdownpayment == ''){
-                        setErrIsDownPayment(i18n.t('DP')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }else{
-                        if(det.isdownpayment == 'Y'){
-                            if(det.idworkorder == ''){
-                                setErrSelWO(i18n.t('WO')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
-                            }
-                        }
-                    }
+                    // if(det.isdownpayment == ''){
+                    //     setErrIsDownPayment(i18n.t('DP')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }else{
+                    //     if(det.isdownpayment == 'Y'){
+                    //         if(det.idworkorder == ''){
+                    //             setErrSelWO(i18n.t('WO')+' '+i18n.t('label_REQUIRED'));
+                    //             flag = false;
+                    //         }
+                    //     }
+                    // }
                     listitems.push(det);
                 }
             }
@@ -339,7 +341,7 @@ export default function AddForm(props) {
                         objDet.idcoa = det.idcoa !== '' && det.idcoa !== 'nodata' ? det.idcoa:null;
                         objDet.catatan = det.catatan;
                         objDet.amount = new String(det.amount).replaceAll('.','').replaceAll(',','.');
-                        objDet.isdownpayment = det.isdownpayment;
+                        objDet.isdownpayment = "N";//det.isdownpayment;
                         objDet.idinvoice = det.idinvoice !== '' ? det.idinvoice:null;
                         objDet.idworkorder = det.idworkorder !== '' ? det.idworkorder:null;
                         listdetails.push(objDet);
@@ -690,7 +692,7 @@ export default function AddForm(props) {
                             <div className="invalid-feedback-custom">{ErrSelWO}</div>
                             <div className="invalid-feedback-custom">{ErrInputCatatan}</div>
                             <div className="invalid-feedback-custom">{ErrInputAmount}</div>
-                            <div className="invalid-feedback-custom">{ErrIsDownPayment}</div>
+                            {/* <div className="invalid-feedback-custom">{ErrIsDownPayment}</div> */}
                             {
                                 InputListItem.length == 0?'':
                                 <table id="tablegrid">
@@ -698,7 +700,7 @@ export default function AddForm(props) {
                                         <th>{i18n.t('COA')}</th>
                                         <th>{i18n.t('label_NOTE')}</th>
                                         <th>{i18n.t('Amount')}</th>
-                                        <th>{i18n.t('DP')}</th>
+                                        {/* <th>{i18n.t('DP')}</th> */}
                                         <th hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>{i18n.t('label_WO_NUMBER')}</th>
                                         <th hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>{i18n.t('Invoice Number')}</th>
                                         <th>{i18n.t('Action')}</th>
@@ -760,7 +762,7 @@ export default function AddForm(props) {
                                                         disabled={false}
                                                     />
                                                     </td>
-                                                    <td>
+                                                    {/* <td>
                                                     <DropdownList
                                                         name="isdownpayment"
                                                         filter='contains'
@@ -773,7 +775,7 @@ export default function AddForm(props) {
                                                         style={{width: '130px'}}
                                                         value={x.isdownpayment}
                                                     />
-                                                    </td>
+                                                    </td> */}
 
                                                     <td hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>
                                                     

@@ -192,7 +192,7 @@ export default function EditForm(props) {
                 successHandlerSj(obj);
             }
 
-            dispatch(actions.getInvoiceData('/searchwo/'+det.idcustomer,successHandlerWO, errorHandler));
+            dispatch(actions.getInvoiceData('/searchwoeditfirstload/'+det.idcustomer+'/'+idwo,successHandlerWO, errorHandler));
 
             // if(idwo !== ''){
             //     dispatch(actions.getInvoiceData('/searchsj/'+idwo,successHandlerSj, errorHandler));
@@ -433,6 +433,11 @@ export default function EditForm(props) {
             setSelSJ('');
             setInputPPN('');
             setInputNilaiPPN(null);
+
+            if(SelWO !== ""){
+                setLoading(true);
+                dispatch(actions.getInvoiceData('/invoicedp/'+SelWO,successHandlerInvoiceDP, errorHandler));
+            }
         }else{
             let ppn = DataTemplate.ppn?numToMoney(parseFloat(DataTemplate.ppn)):'';
             setInputPPN(ppn);
@@ -956,7 +961,7 @@ export default function EditForm(props) {
 
         //20230801
         setInputNilaiPPN(null);
-        if(ppn != undefined){
+        if(ppn !== undefined && ppn !== null && ppn !== ""){
             ppn = new String(ppn).replaceAll('.','').replaceAll(',','.');
             if(!isNaN(ppn)){
                 ppn = parseFloat(ppn);

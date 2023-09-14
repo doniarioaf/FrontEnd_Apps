@@ -85,6 +85,7 @@
     "jquery.flot.spline": "themicon/jquery.flot.spline",
     "jquery.flot.tooltip": "github:krzysu/flot.tooltip",
     "js-storage": "1.1.0",
+    "jspdf": "^2.5.1",
     "jszip": "3.6.0",
     "loaders.css": "0.1.2",
     "matchmedia": "0.1.2",

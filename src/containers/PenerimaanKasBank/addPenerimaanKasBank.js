@@ -86,12 +86,14 @@ export default function AddForm(props) {
 
     const successHandlerTemplate = (data) =>{
         if(data.data){
-            setListCOA(data.data.coaOptions.reduce((obj, el) => (
+            let listCOA = data.data.coaOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama+' ('+el.code+')'
                 }]
-            ), []));
+            ), []);
+            listCOA.push({value:"nodata",label:"No Data"});
+            setListCOA(listCOA);
 
             setListBank(data.data.bankOptions.reduce((obj, el) => (
                 [...obj, {
@@ -194,17 +196,17 @@ export default function AddForm(props) {
                         flag = false;
                     }
 
-                    if(det.isdownpayment == ''){
-                        setErrIsDownPayment(i18n.t('DP')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }else{
-                        if(det.isdownpayment == 'Y'){
-                            if(det.idworkorder == ''){
-                                setErrSelWO(i18n.t('WO')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
-                            }
-                        }
-                    }
+                    // if(det.isdownpayment == ''){
+                    //     setErrIsDownPayment(i18n.t('DP')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }else{
+                    //     if(det.isdownpayment == 'Y'){
+                    //         if(det.idworkorder == ''){
+                    //             setErrSelWO(i18n.t('WO')+' '+i18n.t('label_REQUIRED'));
+                    //             flag = false;
+                    //         }
+                    //     }
+                    // }
                     listitems.push(det);
                 }
             }
@@ -291,7 +293,7 @@ export default function AddForm(props) {
                         objDet.idcoa = det.idcoa !== '' && det.idcoa !== 'nodata' ? det.idcoa:null;
                         objDet.catatan = det.catatan;
                         objDet.amount = new String(det.amount).replaceAll('.','').replaceAll(',','.');
-                        objDet.isdownpayment = det.isdownpayment;
+                        objDet.isdownpayment = "N";//det.isdownpayment;
                         objDet.idinvoice = det.idinvoice !== '' ? det.idinvoice:null;
                         objDet.idworkorder = det.idworkorder !== '' ? det.idworkorder:null;
                         listdetails.push(objDet);
@@ -366,6 +368,12 @@ export default function AddForm(props) {
 
         list[index]['idinvoice'] = '';
         list[index]['nodocinv'] = '';
+        setInputListItem(list);
+    };
+
+    const handleDeleteCOA = (e, index) => {
+        const list = [...InputListItem];
+        list[index]['idcoa'] = '';
         setInputListItem(list);
     };
 
@@ -626,7 +634,7 @@ export default function AddForm(props) {
                             <div className="invalid-feedback-custom">{ErrSelWO}</div>
                             <div className="invalid-feedback-custom">{ErrInputCatatan}</div>
                             <div className="invalid-feedback-custom">{ErrInputAmount}</div>
-                            <div className="invalid-feedback-custom">{ErrIsDownPayment}</div>
+                            {/* <div className="invalid-feedback-custom">{ErrIsDownPayment}</div> */}
                             {
                                 InputListItem.length == 0?'':
                                 <table id="tablegrid">
@@ -634,7 +642,7 @@ export default function AddForm(props) {
                                         <th>{i18n.t('COA')}</th>
                                         <th>{i18n.t('label_NOTE')}</th>
                                         <th>{i18n.t('Amount')}</th>
-                                        <th>{i18n.t('DP')}</th>
+                                        {/* <th>{i18n.t('DP')}</th> */}
                                         <th hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>{i18n.t('label_WO_NUMBER')}</th>
                                         <th hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>{i18n.t('Invoice Number')}</th>
                                         <th>{i18n.t('Action')}</th>
@@ -657,6 +665,7 @@ export default function AddForm(props) {
                                                         style={{width: '130px'}}
                                                         value={x.idcoa}
                                                     />
+                                                            
                                                     </td>
                                                     <td>
                                                     <Input
@@ -696,7 +705,7 @@ export default function AddForm(props) {
                                                         disabled={false}
                                                     />
                                                     </td>
-                                                    <td>
+                                                    {/* <td>
                                                     <DropdownList
                                                         name="isdownpayment"
                                                         filter='contains'
@@ -709,7 +718,7 @@ export default function AddForm(props) {
                                                         style={{width: '130px'}}
                                                         value={x.isdownpayment}
                                                     />
-                                                    </td>
+                                                    </td> */}
 
                                                     <td hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>
                                                     <table style={{width:'100%'}}>

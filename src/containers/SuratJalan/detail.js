@@ -40,6 +40,9 @@ import Dialog                       from '@material-ui/core/Dialog';
 
 import Grid                         from '../../components/TableGrid';
 
+import { jsPDF } from "jspdf";
+import Iframe from './Iframe';
+
 const StyledDialog = styled(Dialog)`
 & > .MuiDialog-container > .MuiPaper-root {
     height: 500px;
@@ -73,6 +76,7 @@ const StyledDialog = styled(Dialog)`
 
     const [ShowStatus, setShowStatus] = useState(false);
     const [LoadingSend, setLoadingSend] = useState(false);
+    const [IsReady, setIsReady] = useState(false);
 
     const [rows, setRows] = useState([]);
     const [columns,Setcolumns] = useState([
@@ -81,6 +85,8 @@ const StyledDialog = styled(Dialog)`
         {name: 'tanggal', title: i18n.t('label_DATE')}
     ]);
     const [tableColumnExtensions] = useState([]);
+
+    const [PdfHtml, setPdfHtml] = useState("");
 
     const id = props.match.params.id;
 
@@ -267,6 +273,39 @@ const StyledDialog = styled(Dialog)`
     function onClickView(id) {
     }
 
+    function testPrintPDF() {
+        setIsReady(false);
+        //Ukuran kertas 21,5 x14 cm
+
+        // Landscape export, 2×4 inches
+        const doc = new jsPDF({
+            orientation: "landscape",
+            unit: "cm",
+            format: [21.5, 14]
+        });
+
+        doc.text("Hello world!", 1, 1);
+        let dataUrl = doc.output("bloburl");
+        setPdfHtml(dataUrl);
+        setTimeout(() => {
+            setIsReady(true);
+        }, 1000);
+        // let iframe =  document.createElement('iframe');
+        // document.body.appendChild(iframe);
+        // iframe.style.display = 'none';
+        // iframe.type ='application/pdf'
+        // iframe.src = dataUrl;
+        // iframe.onload = function() {
+        // setTimeout(function() {
+        //     iframe.focus();
+        //     iframe.contentWindow.print();
+        // }, 1);
+        // };
+
+        // doc.save("two-by-four.pdf");
+        
+    }
+
     return (
         <ContentWrapper>
             <ContentHeading history={history} link={pathmenu.detailSuratJalan+'/'+id} label={'Detail Surat Jalan'} labeldefault={'Detail Surat Jalan'} />
@@ -293,7 +332,12 @@ const StyledDialog = styled(Dialog)`
                 {i18n.t('label_OPTIONS')}
                 </span>
             </ButtonMUI>
-
+            {
+                IsReady ?
+                <Iframe source={PdfHtml} />
+                :""
+            }
+            
             <div className="h1 m-3 text-center">
                 <h2>
                     {
@@ -552,6 +596,7 @@ const StyledDialog = styled(Dialog)`
                             <MenuItem hidden={!isGetPermissions(editStatusSuratJalan_Permission,'TRANSACTION')} onClick={() => setShowStatus(true)} >{i18n.t('Penandaan Surat Jalan')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editSuratJalan_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editSuratJalan+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteSuratJalan_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem  onClick={() => testPrintPDF()} >{i18n.t('Tes')}</MenuItem>
                             
                         </div>)
                         
