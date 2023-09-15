@@ -40,6 +40,8 @@ import Dialog                       from '@material-ui/core/Dialog';
 
 import Grid                         from '../../components/TableGrid';
 
+//Live Demo = http://raw.githack.com/MrRio/jsPDF/master/index.html
+// https://www.npmjs.com/package/jspdf
 import { jsPDF } from "jspdf";
 import Iframe from './Iframe';
 
@@ -332,11 +334,11 @@ const StyledDialog = styled(Dialog)`
                 {i18n.t('label_OPTIONS')}
                 </span>
             </ButtonMUI>
-            {
+            {/* {
                 IsReady ?
                 <Iframe source={PdfHtml} />
                 :""
-            }
+            } */}
             
             <div className="h1 m-3 text-center">
                 <h2>
@@ -596,7 +598,7 @@ const StyledDialog = styled(Dialog)`
                             <MenuItem hidden={!isGetPermissions(editStatusSuratJalan_Permission,'TRANSACTION')} onClick={() => setShowStatus(true)} >{i18n.t('Penandaan Surat Jalan')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editSuratJalan_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editSuratJalan+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteSuratJalan_Permission,'TRANSACTION')} onClick={() => submitHandlerDelete()} >{i18n.t('grid.DELETE')}</MenuItem>
-                            <MenuItem  onClick={() => testPrintPDF()} >{i18n.t('Tes')}</MenuItem>
+                            {/* <MenuItem  onClick={() => testPrintPDF()} >{i18n.t('Tes')}</MenuItem> */}
                             
                         </div>)
                         

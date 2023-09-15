@@ -65,6 +65,7 @@
     "draft-js": "0.11.7",
     "easy-pie-chart": "2.1.7",
     "element-closest": "3.0.2",
+    "file-saver": "^2.0.5",
     "flot": "themicon/flot",
     "fontkit": "^1.8.1",
     "formik": "^2.2.9",
