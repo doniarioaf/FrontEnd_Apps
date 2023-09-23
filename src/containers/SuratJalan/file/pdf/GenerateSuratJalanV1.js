@@ -96,10 +96,10 @@ const GenerateSuratJalanV1 = ({ valuedata }) => {
 
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ flexDirection: 'row-reverse' }}>
-                                    <Text style={{ fontFamily: 'roboto', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: '50px' }}>{valuedata != null ? valuedata.compaddress : ''}</Text>
+                                    <Text style={{ fontFamily: 'roboto', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: '401px',maxWidth: '401px' }}>{valuedata != null ? valuedata.compaddress : ''}</Text>
                                 </View>
 
-                                <View style={{ flexDirection: 'row-reverse', marginLeft: '74%' }}>
+                                <View style={{ flexDirection: 'row-reverse', marginLeft: '8%' }}>
                                     <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium }}>{"No. SJ     : " + (valuedata != null ? valuedata.nodocument : '')}</Text>
                                 </View>
                             </View>
@@ -116,7 +116,7 @@ const GenerateSuratJalanV1 = ({ valuedata }) => {
 
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ flexDirection: 'row-reverse' }}>
-                                    <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 426, maxWidth: 426 }}> {valuedata != null ? valuedata.customertype + ". " + valuedata.namacustomer : ''}</Text>
+                                    <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 438, maxWidth: 438 }}> {valuedata != null ? valuedata.customertype + ". " + valuedata.namacustomer : ''}</Text>
                                 </View>
 
                                 <View style={{ flexDirection: 'row-reverse', paddingLeft: '1%' }}>
@@ -126,7 +126,7 @@ const GenerateSuratJalanV1 = ({ valuedata }) => {
 
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ flexDirection: 'row-reverse' }}>
-                                    <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 426, maxWidth: 426 }}> {valuedata != null ? valuedata.customerAddress : ''}</Text>
+                                    <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 438, maxWidth: 438 }}> {valuedata != null ? valuedata.customerAddress : ''}</Text>
                                 </View>
 
                                 <View style={{ flexDirection: 'row-reverse', paddingLeft: '1%' }}>

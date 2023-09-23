@@ -60,7 +60,7 @@ const PdfDocument = ({ data }) => {
     return (
         <Document onRender={(blob) => onRenderDocument(blob, "")} title={(data != null ? data.nodocument : '')}>
             {/* <Page size="A5"   style={styles.page} > */}
-            <Page size="A5" orientation="landscape" style={styles.page} >
+            <Page size="letter" orientation="portrait" style={styles.page} >
                 <GenerateSuratJalanV1 valuedata={data} />
             </Page>
         </Document>
