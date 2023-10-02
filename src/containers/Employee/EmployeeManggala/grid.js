@@ -106,8 +106,16 @@ const EmployeeManggalaGrid = props => {
     const [sorting, setSorting] = useState([]);
     const [pageSizes] = useState(valPageSizes);
     const [loading, setLoading] = useState(props.loading);
-    const [integratedSortingColumnExtensions] = useState([]);
+    const [integratedSortingColumnExtensions] = useState([
+        { columnName: 'idd', compare: comparePriorityNumber },
+    ]);
     const [tableColumnExtensions] = useState(props.columnextension);
+
+    const comparePriorityNumber = (a, b) => {
+        const priorityA = a !== null && a !== undefined && a !== ""?parseInt(a):0;
+        const priorityB = b !== null && b !== undefined && b !== "" ? parseInt(b):0;
+        return (priorityA < priorityB) ? -1 : 1;
+    }
 
     const pagingPanelMessages = {
         showAll: i18n.t('grid.ALL'),

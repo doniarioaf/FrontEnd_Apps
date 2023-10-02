@@ -37,6 +37,7 @@ import { valPageSize, valPageSizes } from '../../containers/shared/constantValue
 // import { addBankAccount_Permission,MenuBankAccount } from '../../shared/permissionMenu';
 
 const FilterIcon = ({type, ...restProps}) => {
+    console.log("restProps ",restProps)
     return <TableFilterRow.Icon type={type} {...restProps} />;
 };
 const StatusFormatter = ({value}) => (
@@ -58,7 +59,6 @@ const TableGrid = props => {
     const [sorting, setSorting] = useState([]);
     const [pageSizes] = useState(valPageSizes);
     const [loading, setLoading] = useState(props.loading);
-    const [integratedSortingColumnExtensions] = useState([]);
     const [tableColumnExtensions] = useState(props.columnextension);
 
     const pagingPanelMessages = {
@@ -179,6 +179,29 @@ const TableGrid = props => {
             </td>
             : <VirtualTable.NoDataCell {...props} />;
     }
+
+    const comparePriorityNumber = (a, b) => {
+        const priorityA = a !== null && a !== undefined && a !== ""?parseInt(a):0;
+        const priorityB = b !== null && b !== undefined && b !== "" ? parseInt(b):0;
+        return (priorityA < priorityB) ? -1 : 1;
+    }
+
+    const comparePriorityTanggal = (a, b) => {
+        const priorityA = new Date(a).getTime();
+        const priorityB = new Date(b).getTime();
+        return (priorityA < priorityB) ? -1 : 1;
+    }
+    const [integratedSortingColumnExtensions] = useState([
+        { columnName: 'noaju', compare: comparePriorityNumber },
+        { columnName: 'tanggal', compare: comparePriorityTanggal },
+        { columnName: 'receivedate', compare: comparePriorityTanggal },
+        { columnName: 'paymentdate', compare: comparePriorityTanggal },
+    ]);
+    const [filteringStateColumnExtensions] = useState([
+        { columnName: 'tanggal', filteringEnabled: false },
+      ]);
+
+  
     return (
         <Paper style={{position: 'relative'}}>
             <Grid
@@ -194,7 +217,8 @@ const TableGrid = props => {
                     pageSize={pageSize}
                     onPageSizeChange={setPageSize}
                 />
-                <FilteringState defaultFilters={[]}/>
+                <FilteringState defaultFilters={[]}
+                columnExtensions={filteringStateColumnExtensions} />
                 <IntegratedFiltering/>
                 <SortingState
                     sorting={sorting}
