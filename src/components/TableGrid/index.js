@@ -37,7 +37,7 @@ import { valPageSize, valPageSizes } from '../../containers/shared/constantValue
 // import { addBankAccount_Permission,MenuBankAccount } from '../../shared/permissionMenu';
 
 const FilterIcon = ({type, ...restProps}) => {
-    console.log("restProps ",restProps)
+    // console.log("restProps ",restProps)
     return <TableFilterRow.Icon type={type} {...restProps} />;
 };
 const StatusFormatter = ({value}) => (
