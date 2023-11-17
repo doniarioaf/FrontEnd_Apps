@@ -7,8 +7,8 @@
   "private": true,
   "homepage": ".",
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
     "build-modernizr": "modernizr -c modernizr-config.json -d src/modernizr.js -u",

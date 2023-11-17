@@ -336,7 +336,7 @@ export default function AddForm(props) {
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
                     let det = InputListItem[i];
-                    if(det.catatan !== '' && det.amount !== '' && det.isdownpayment !== ''){
+                    if(det.catatan !== '' && det.amount !== ''){
                         let objDet = new Object();
                         objDet.idcoa = det.idcoa !== '' && det.idcoa !== 'nodata' ? det.idcoa:null;
                         objDet.catatan = det.catatan;
