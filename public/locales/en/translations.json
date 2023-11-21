@@ -124,6 +124,7 @@
   "label_THRU_DATE":"Thru Date",
   "label_RECEIVE_DATE":"Receive Date",
   "label_RECEIVE_FROM":"Receive From",
+  "label_CHANGE_PASSWORD":"Change Password",
   "validation": {
     "employeemanggala":{
       "noidentitas":{
