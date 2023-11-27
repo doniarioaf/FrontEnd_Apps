@@ -263,7 +263,7 @@ export default function AddPartai(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputNama}</div>
 
-                            <label className="mt-3 form-label" htmlFor="coa">
+                            {/* <label className="mt-3 form-label" htmlFor="coa">
                                 {i18n.t('COA')}
                                 </label>
 
@@ -284,7 +284,7 @@ export default function AddPartai(props) {
                                     // style={{width: '25%'}}
                                     // disabled={values.isdisabledcountry}
                                     value={values.coa}
-                                />
+                                /> */}
 
                             {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 

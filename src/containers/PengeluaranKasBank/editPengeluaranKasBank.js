@@ -495,10 +495,10 @@ export default function EditForm(props) {
                             flag = false;
                         }
 
-                        if(det.idcoa == '' || det.idcoa == 'nodata'){
-                            setErrSelDetailCOA(i18n.t('COA')+' '+i18n.t('label_REQUIRED'));
-                            flag = false;
-                        }
+                        // if(det.idcoa == '' || det.idcoa == 'nodata'){
+                        //     setErrSelDetailCOA(i18n.t('COA')+' '+i18n.t('label_REQUIRED'));
+                        //     flag = false;
+                        // }
                         if(SelWO !== '' && !checkCategory(SelCategory,'invoiceitem')){
                             if( (det.idinvoiceitem == '' || det.idinvoiceitem == 'nodata') && (det.idpaymentitem == '' || det.idpaymentitem == 'nodata')){
                                 setErrSelInvoiceItem(i18n.t('Non/Reimbursement Item')+' '+i18n.t('label_REQUIRED'));
@@ -1138,7 +1138,7 @@ export default function EditForm(props) {
                                         <th hidden={checkCategory(values.category,'asset')}>{i18n.t('Asset Sparepart')}</th>
                                         <th>{i18n.t('Amount')}</th>
                                         {/* <th>{i18n.t('label_NOTE')}</th> */}
-                                        <th>{i18n.t('COA')}</th>
+                                        {/* <th>{i18n.t('COA')}</th> */}
                                         <th hidden={true}>{i18n.t('Action')}</th>
                                     </tr>
                                     <tbody>
@@ -1261,7 +1261,7 @@ export default function EditForm(props) {
                                                     />
                                                     </td> */}
                                                     
-                                                    <td style={{width: '300px'}}>
+                                                    {/* <td style={{width: '300px'}}>
                                                     <DropdownList
                                                         name="idcoa"
                                                         filter='contains'
@@ -1274,7 +1274,7 @@ export default function EditForm(props) {
                                                         style={{width: '300px'}}
                                                         value={x.idcoa}
                                                     />
-                                                    </td>
+                                                    </td> */}
                                                     
                                                     
                                                     <td hidden={true}>

@@ -1001,7 +1001,7 @@ export default function AddForm(props) {
                                         <th hidden={checkCategory(values.category,'asset')}>{i18n.t('Asset Sparepart')}</th>
                                         <th>{i18n.t('Amount')}</th>
                                         {/* <th>{i18n.t('label_NOTE')}</th> */}
-                                        <th>{i18n.t('COA')}</th>
+                                        {/* <th>{i18n.t('COA')}</th> */}
 
                                         <th hidden={true}>{i18n.t('Action')}</th>
                                     </tr>
@@ -1125,7 +1125,7 @@ export default function AddForm(props) {
                                                     />
                                                     </td> */}
                                                     
-                                                    <td style={{width: '300px'}}>
+                                                    {/* <td style={{width: '300px'}}>
                                                     <DropdownList
                                                         name="idcoa"
                                                         filter='contains'
@@ -1138,7 +1138,7 @@ export default function AddForm(props) {
                                                         style={{width: '300px'}}
                                                         value={x.idcoa}
                                                     />
-                                                    </td>
+                                                    </td> */}
                                                     
                                                     
                                                     <td hidden={true}>

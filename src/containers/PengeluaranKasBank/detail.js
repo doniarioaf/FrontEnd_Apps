@@ -415,7 +415,7 @@ import React, {useState,
                     <th hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{i18n.t('Asset Sparepart')}</th>
                     <th>{i18n.t('Amount')}</th>
                     {/* <th>{i18n.t('label_NOTE')}</th> */}
-                    <th>{i18n.t('COA')}</th>
+                    {/* <th>{i18n.t('COA')}</th> */}
                     </tr>
                     <tbody>
                         {
@@ -429,7 +429,7 @@ import React, {useState,
                                         <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{x.idassetsparepart}</td>
                                         <td>{numToMoney(parseFloat(x.amount))}</td>
                                         {/* <td>{x.catatan}</td> */}
-                                        <td>{x.idcoa}</td>
+                                        {/* <td>{x.idcoa}</td> */}
                                     </tr>
 
                                 )

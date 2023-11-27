@@ -33,7 +33,7 @@ const MenuIndex = () => {
         // {name: 'code', title: i18n.t('Code')},
         {name: 'invoicetype', title: i18n.t('label_INVOICE_TYPE')},
         {name: 'nama', title: i18n.t('label_NAME')},
-        {name: 'coa', title: i18n.t('COA')},
+        // {name: 'coa', title: i18n.t('COA')},
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);

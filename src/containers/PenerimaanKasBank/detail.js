@@ -266,8 +266,8 @@ import React, {useState,
             {
                 <table id="tablegrid">
                     <tr>
-                        <th>{i18n.t('COA')}</th>
-                        <th>{i18n.t('label_NOTE')}</th>
+                        <th>{i18n.t('Transaksi')}</th>
+                        {/* <th>{i18n.t('label_NOTE')}</th> */}
                         <th>{i18n.t('Amount')}</th>
                         {/* <th>{i18n.t('DP')}</th> */}
                         <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('label_WO_NUMBER')}</th>
@@ -279,7 +279,7 @@ import React, {useState,
                                 return (
                                     <tr>
                                         <td>{x.idcoa}</td>
-                                        <td>{x.catatan}</td>
+                                        {/* <td>{x.catatan}</td> */}
                                         <td>{numToMoney(parseFloat(x.amount))}</td>
                                         {/* <td>{x.isdownpayment}</td> */}
                                         <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.nodocwo}</td>

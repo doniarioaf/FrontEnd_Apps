@@ -120,27 +120,36 @@ export default function AddForm(props) {
             setSelCOA(det.idcoa);
             setSelBank(det.idbank);
             setInputKeterangan(det.keterangan);
+
+            let listCOA = template.coaOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    // label: el.nama+' ('+el.code+')'
+                    label: el.nama
+                }]
+            ), []);
+            listCOA.push({value:"nodata",label:"No Data"});
+
+            setListCOA(listCOA);
+
+            let defCOA = listCOA.filter(output => output.label == 'Pembayaran Customer');
+            let idcoa = "";
+            // if(defCOA.length > 0){
+            //     idcoa = defCOA[0].value;
+            // }
             
             let listitems = [];
             if(data.data.details){
                 for(let i=0; i < data.data.details.length; i++){
                     let det = data.data.details[i];
-                    listitems.push({ idcoa:det.idcoa,catatan: det.catatan,amount:numToMoney(parseFloat(det.amount)),isdownpayment:det.isdownpayment ,idinvoice:(det.idinvoice?det.idinvoice:""),nodocinv:(det.nodocinvoice?det.nodocinvoice:""),idworkorder:(det.idworkorder?det.idworkorder:''),nodocwo:(det.nodocworkorder?det.nodocworkorder:"")});
+                    listitems.push({ idcoa:det.idcoa?det.idcoa:idcoa,catatan: det.catatan,amount:numToMoney(parseFloat(det.amount)),isdownpayment:det.isdownpayment ,idinvoice:(det.idinvoice?det.idinvoice:""),nodocinv:(det.nodocinvoice?det.nodocinvoice:""),idworkorder:(det.idworkorder?det.idworkorder:''),nodocwo:(det.nodocworkorder?det.nodocworkorder:"")});
                 }
             }
             if(listitems.length > 0){
                 setInputListItem(listitems);
             }
             
-            let listCOA = template.coaOptions.reduce((obj, el) => (
-                [...obj, {
-                    value: el.id,
-                    label: el.nama+' ('+el.code+')'
-                }]
-            ), []);
-            listCOA.push({value:"nodata",label:"No Data"});
-
-            setListCOA(listCOA);
+            
 
             setListBank(template.bankOptions.reduce((obj, el) => (
                 [...obj, {
@@ -233,10 +242,10 @@ export default function AddForm(props) {
             for(let i=0; i < InputListItem.length; i++){
                 let det = InputListItem[i];
                 if(det.idcoa !== '' || det.catatan !== '' || det.amount !== ''  || det.idinvoice !== '' || det.idworkorder !== '' ){
-                    if(det.catatan == ''){
-                        setErrInputCatatan(i18n.t('Catatan')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                    // if(det.catatan == ''){
+                    //     setErrInputCatatan(i18n.t('Catatan')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
                     if(det.amount == ''){
                         setErrInputAmount(i18n.t('Amount')+' '+i18n.t('label_REQUIRED'));
@@ -336,7 +345,7 @@ export default function AddForm(props) {
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
                     let det = InputListItem[i];
-                    if(det.catatan !== '' && det.amount !== ''){
+                    if(det.amount !== ''){
                         let objDet = new Object();
                         objDet.idcoa = det.idcoa !== '' && det.idcoa !== 'nodata' ? det.idcoa:null;
                         objDet.catatan = det.catatan;
@@ -399,7 +408,12 @@ export default function AddForm(props) {
     };    
 
     const handleAddClick = () => {
-        setInputListItem([...InputListItem, { idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:""}]);
+        let defCOA = ListCOA.filter(output => output.label == 'Pembayaran Customer');
+        let idcoa  = "";
+        if(defCOA.length > 0){
+            idcoa = defCOA[0].value;
+        }
+        setInputListItem([...InputListItem, { idcoa:idcoa,catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:""}]);
     };
     
     const handleRemoveClick = index => {
@@ -434,7 +448,6 @@ export default function AddForm(props) {
     };
 
     const handleShowQuickSearchInv = (e, index) => {
-        console.log("InputReceiveFrom ",InputReceiveFrom);
         setErrInputReceiveFrom("");
         if(InputReceiveFrom !== ""){
             const list = [...InputListItem];
@@ -697,8 +710,8 @@ export default function AddForm(props) {
                                 InputListItem.length == 0?'':
                                 <table id="tablegrid">
                                     <tr>
-                                        <th>{i18n.t('COA')}</th>
-                                        <th>{i18n.t('label_NOTE')}</th>
+                                        <th>{i18n.t('Transaksi')}</th>
+                                        {/* <th>{i18n.t('label_NOTE')}</th> */}
                                         <th>{i18n.t('Amount')}</th>
                                         {/* <th>{i18n.t('DP')}</th> */}
                                         <th hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>{i18n.t('label_WO_NUMBER')}</th>
@@ -720,11 +733,11 @@ export default function AddForm(props) {
                                                         data={ListCOA}
                                                         textField={'label'}
                                                         valueField={'value'}
-                                                        style={{width: '130px'}}
+                                                        style={{width: '250px'}}
                                                         value={x.idcoa}
                                                     />
                                                     </td>
-                                                    <td>
+                                                    {/* <td>
                                                     <Input
                                                         name="catatan"
                                                         // className={
@@ -742,7 +755,7 @@ export default function AddForm(props) {
                                                         value={x.catatan}
                                                         disabled={false}
                                                     />
-                                                    </td>
+                                                    </td> */}
                                                     <td>
                                                     <Input
                                                         name="amount"

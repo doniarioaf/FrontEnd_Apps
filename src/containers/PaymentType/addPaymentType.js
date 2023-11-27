@@ -251,7 +251,7 @@ export default function AddPaymentType(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputNama}</div>
 
-                            <label className="mt-3 form-label" htmlFor="coa">
+                            {/* <label className="mt-3 form-label" htmlFor="coa">
                                 {i18n.t('COA')}
                                 </label>
 
@@ -272,7 +272,7 @@ export default function AddPaymentType(props) {
                                     // style={{width: '25%'}}
                                     // disabled={values.isdisabledcountry}
                                     value={values.coa}
-                                />
+                                /> */}
 
                             
 
