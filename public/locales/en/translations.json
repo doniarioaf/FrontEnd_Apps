@@ -124,6 +124,9 @@
   "label_THRU_DATE":"Thru Date",
   "label_RECEIVE_DATE":"Receive Date",
   "label_RECEIVE_FROM":"Receive From",
+  "label_PRODUCT_CODE":"Product Code",
+  "label_PRODUCT_NAME":"Product Name",
+  "label_BARCODE":"Barcode",
   "validation": {
     "employeemanggala":{
       "noidentitas":{
