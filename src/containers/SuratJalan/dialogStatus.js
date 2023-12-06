@@ -209,6 +209,10 @@ const DialogStatus = props => {
                 if(SelVendor !== ''){
                     flagIsClose = true;
                 }
+            }else if(SelKepemilikanMobil == 'NOMOBIL' ){
+                obj.idvendormobil = 0;
+                obj.idemployee_supir = 0;
+                obj.idasset = 0;
             }
             
             obj.lembur = SelIsLembur;
@@ -334,7 +338,7 @@ const DialogStatus = props => {
                 // disabled={values.isdisabledcountry}
                 value={SelStatus}
             />
-            <div hidden={SelKepemilikanMobil == 'MOBILLUAR' || SelKepemilikanMobil == ''}>
+            <div hidden={SelKepemilikanMobil == 'NOMOBIL' || SelKepemilikanMobil == 'MOBILLUAR' || SelKepemilikanMobil == ''}>
             
             <label className="mt-3 form-label required" htmlFor="SelAsset">
                 {i18n.t('Asset')}
@@ -385,7 +389,7 @@ const DialogStatus = props => {
             
             </div>
 
-            <div hidden={SelKepemilikanMobil == 'MOBILSENDIRI' || SelKepemilikanMobil == ''}>
+            <div hidden={SelKepemilikanMobil == 'NOMOBIL' || SelKepemilikanMobil == 'MOBILSENDIRI' || SelKepemilikanMobil == ''}>
             <label className="mt-3 form-label required" htmlFor="SelVendor">
                 {i18n.t('Vendor')}
                 <span style={{color:'red'}}>*</span>
@@ -410,6 +414,7 @@ const DialogStatus = props => {
             />
             </div>
 
+            <div hidden={SelKepemilikanMobil == 'NOMOBIL'}>
             <label className="mt-3 form-label required" htmlFor="SelIsLembur">
                 {i18n.t('Lembur ?')}
                 <span style={{color:'red'}}>*</span>
@@ -432,6 +437,7 @@ const DialogStatus = props => {
                 // disabled={values.isdisabledcountry}
                 value={SelIsLembur}
             />
+            </div>
 
         <label className="mt-3 form-label required" htmlFor="InputTanggalKembali">
             {i18n.t('Tanggal Loading/Unloading')}
