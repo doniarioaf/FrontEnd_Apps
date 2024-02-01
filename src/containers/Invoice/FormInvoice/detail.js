@@ -223,6 +223,14 @@ import React, {useState,
         return 0;
     }
 
+    const arrPengeluaran = (list) => {
+        let val = '';
+        for(let i=0; list.length > i ; i++){
+            val += list[i].nodocumentpengeluaran+',';
+        }
+        return val;
+    }
+
     function onClickPrint() {
         if(IsPrintInvoiceHide){
             Swal.fire({
@@ -379,6 +387,13 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3" hidden={value.namainvoicetype?value.namainvoicetype=='DP':false}>
+                            <span className="col-md-5">{i18n.t('Nilai PPN')}</span>
+                            <strong className="col-md-7">
+                            {value.nilaippn?numToMoney(parseFloat(value.nilaippn)):''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3" hidden={value.namainvoicetype?value.namainvoicetype=='DP':false}>
                             <span className="col-md-5">{i18n.t('Diskon Nota')}</span>
                             <strong className="col-md-7">
                             {value.diskonnota?numToMoney(parseFloat(value.diskonnota)):''}
@@ -392,6 +407,20 @@ import React, {useState,
                             </strong>
                             </div>
 
+                            <div className="row mt-3" >
+                            <span className="col-md-5">{i18n.t('Catatan 1')}</span>
+                            <strong className="col-md-7">
+                            {value.notes1?value.notes1:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3" >
+                            <span className="col-md-5">{i18n.t('Catatan 2')}</span>
+                            <strong className="col-md-7">
+                            {value.notes2?value.notes2:''}
+                            </strong>
+                            </div>
+
                             <div className="row mt-3" hidden={value.idinvoicetype?(value.idinvoicetype == 'REIMBURSEMENT' || value.idinvoicetype == 'DP'?true:false):true}>
                             <span className="col-md-5">{i18n.t('Price List')}</span>
                             <strong className="col-md-7">
@@ -402,7 +431,11 @@ import React, {useState,
                             <div className="row mt-3" hidden={value.idinvoicetype?(value.idinvoicetype == 'REIMBURSEMENT'?false:true):true}>
                             <span className="col-md-5">{i18n.t('Pengeluaran')}</span>
                             <strong className="col-md-7">
-                            {value.detailsprice?(value.detailsprice.length > 0?value.detailsprice[0].nodocumentpengeluaran:''):''}
+                            
+                            {value.detailsprice?(value.detailsprice.length > 0?  
+                                arrPengeluaran(value.detailsprice)
+                                // value.detailsprice[0].nodocumentpengeluaran
+                                :''):''}
                             </strong>
                             </div>
 
@@ -442,6 +475,7 @@ import React, {useState,
                 <table id="tablegrid" hidden={value.namainvoicetype?value.namainvoicetype=='DP':false}>
                     <tr>
                         <th hidden={IsHideColumnWarehouse}>{i18n.t('Warehouse')}</th>
+                        <th>{'No Document'}</th>
                         <th>{i18n.t('Invoice Type')}</th>
                         <th>{i18n.t('Harga')}</th>
                         {/* <th>{i18n.t('Is Mandatory')}</th> */}
@@ -456,7 +490,8 @@ import React, {useState,
                             value.detailsprice.map((x, i) => {
                                 return (
                                     <tr>
-                                        <td width={'350px'} hidden={IsHideColumnWarehouse}>{x.warehouseName}</td>
+                                        <td width={'300px'} hidden={IsHideColumnWarehouse}>{x.warehouseName}</td>
+                                        <td>{x.nodocumentpengeluaran}</td>
                                         <td>{x.invoicetypename}</td>
                                         <td>{numToMoney(parseFloat(x.price))}</td>
                                         {/* <td style={{width:'50px'}}>{x.ismandatory == 'Y'?'Yes':'No'}</td> */}

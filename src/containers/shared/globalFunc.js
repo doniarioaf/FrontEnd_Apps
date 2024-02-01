@@ -270,3 +270,13 @@ export const invoiceTypeName = (data) =>{
 
     return data;
 }
+
+export const numConvToValDB = (amount) =>{
+    if(isNaN(new String(amount))){
+        let stringVal = new String(amount).replaceAll('.','');
+        let finalVal = stringVal.replaceAll(',','.');
+        return finalVal
+    }
+    
+    return amount;
+}
