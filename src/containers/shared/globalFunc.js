@@ -275,7 +275,10 @@ export const numConvToValDB = (amount) =>{
     if(isNaN(new String(amount))){
         let stringVal = new String(amount).replaceAll('.','');
         let finalVal = stringVal.replaceAll(',','.');
-        return finalVal
+        return finalVal;
+    }else{
+        let stringVal = new String(amount).replaceAll('.','');
+        return stringVal;
     }
     
     return amount;

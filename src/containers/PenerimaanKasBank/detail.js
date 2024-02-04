@@ -48,7 +48,7 @@ import React, {useState,
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
 
-    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:""}]);
+    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:"",penyesuaian:"",ketpenyesuaian:""}]);
 
     const classes = useStyles();
     const [open, setOpen] = useState(false);
@@ -101,7 +101,7 @@ import React, {useState,
         if(data.data.details){
             for(let i=0; i < data.data.details.length; i++){
                 let det = data.data.details[i];
-                listitems.push({ idcoa:det.coaname,catatan: det.catatan,amount:det.amount,isdownpayment:(det.isdownpayment == 'Y'?'Yes':'No'),idinvoice:det.idinvoice,nodocinv:det.nodocinvoice,idworkorder:det.idworkorder,nodocwo:det.nodocworkorder});
+                listitems.push({ idcoa:det.coaname,catatan: det.catatan,amount:det.amount,isdownpayment:(det.isdownpayment == 'Y'?'Yes':'No'),idinvoice:det.idinvoice,nodocinv:det.nodocinvoice,idworkorder:det.idworkorder,nodocwo:det.nodocworkorder,penyesuaian:(det.penyesuaian ?det.penyesuaian:0),ketpenyesuaian:det.keterangan_penyesuaian});
             }
         }
         setInputListItem(listitems);
@@ -232,6 +232,13 @@ import React, {useState,
                             </strong>
                             </div>
 
+                            <div className="row mt-3" hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>
+                            <span className="col-md-5">{i18n.t('Work Order')}</span>
+                            <strong className="col-md-7">
+                                {InputListItem.length > 0?InputListItem[0].nodocwo:''}
+                            </strong>
+                            </div>
+
                             {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('COA')}</span>
                             <strong className="col-md-7">
@@ -270,9 +277,12 @@ import React, {useState,
                         {/* <th>{i18n.t('label_NOTE')}</th> */}
                         <th>{i18n.t('Amount')}</th>
                         {/* <th>{i18n.t('DP')}</th> */}
-                        <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('label_WO_NUMBER')}</th>
+                        {/* <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('label_WO_NUMBER')}</th> */}
+                        <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('Penyeseuaian')}</th>
+                        <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('Ket. Penyeseuaian')}</th>
                         <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('Invoice Number')}</th>
                     </tr>
+                    {/* //penyesuaian:"",ketpenyesuaian:"" */}
                     <tbody>
                         {
                             InputListItem.map((x, i) => {
@@ -282,7 +292,9 @@ import React, {useState,
                                         {/* <td>{x.catatan}</td> */}
                                         <td>{numToMoney(parseFloat(x.amount))}</td>
                                         {/* <td>{x.isdownpayment}</td> */}
-                                        <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.nodocwo}</td>
+                                        {/* <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.nodocwo}</td> */}
+                                        <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{numToMoney(parseFloat(x.penyesuaian))}</td>
+                                        <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.ketpenyesuaian}</td>
                                         <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.nodocinv}</td>
                                     </tr>
 
