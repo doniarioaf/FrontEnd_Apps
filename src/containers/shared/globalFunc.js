@@ -276,10 +276,11 @@ export const numConvToValDB = (amount) =>{
         let stringVal = new String(amount).replaceAll('.','');
         let finalVal = stringVal.replaceAll(',','.');
         return finalVal;
-    }else{
-        let stringVal = new String(amount).replaceAll('.','');
-        return stringVal;
     }
+    // else{
+    //     let stringVal = new String(amount).replaceAll('.','');
+    //     return stringVal;
+    // }
     
     return amount;
 }

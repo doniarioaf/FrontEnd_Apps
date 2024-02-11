@@ -720,6 +720,7 @@ export default function EditForm(props) {
             }
 
             obj.detailsprice = SelInvoiceType == 'DP'?[]:listDetailsPrice;
+            
             dispatch(actions.submitEditInvoice('/'+id,obj,succesHandlerSubmit, errorHandler));
         }
 
@@ -833,7 +834,16 @@ export default function EditForm(props) {
             ), []));
 
             if(data.data.details){
+                
                 let listitem = [];
+
+                if(listitemExist !== undefined){
+                    for(let i=0; i < listitemExist.length; i++){
+                        let getExistKBK = listitemExist[i];
+                        listitem.push(getExistKBK);
+                    }
+                }
+
                 let dataval = data.data.details;
                 for(let i=0; i < dataval.length; i++){
                     let det = dataval[i];
@@ -859,17 +869,7 @@ export default function EditForm(props) {
                     obj.subtotal = det.amount;
                     obj.idpengeluarankasbank = det.idpengeluarankasbank;
 
-                    if(listitemExist !== undefined){
-                        let getExistKBK = listitemExist.filter(output => output.nodocument == nodoc);
-                        if(getExistKBK.length > 0){
-                            listitem.push(getExistKBK[0]);
-                        }else{
-                            listitem.push(obj);    
-                        }
-                    }else{
-                        listitem.push(obj);
-                    }
-                    
+                    listitem.push(obj);
                 }
                 calculateTotalInvoice(listitem,InputDiskonNota,InputPPN);
                 setInputListItem(listitem);
