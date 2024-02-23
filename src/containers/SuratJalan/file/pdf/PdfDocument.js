@@ -62,6 +62,7 @@ const PdfDocument = ({ data }) => {
             {/* <Page size="A5"   style={styles.page} > */}
             <Page size="letter" orientation="portrait" style={styles.page} >
                 <GenerateSuratJalanV1 valuedata={data} />
+
             </Page>
         </Document>
     )
