@@ -285,7 +285,8 @@ const GenerateSuratJalanV1 = ({ valuedata }) => {
 
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ flexDirection: 'row-reverse' }}>
-                                    <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 438, maxWidth: 438 }}> {valuedata != null ? valuedata.customerAddress : ''}</Text>
+                                <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 438, maxWidth: 438 }}> {valuedata != null ? valuedata.warehouseaddress : ''}</Text>
+                                    {/* <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 438, maxWidth: 438 }}> {valuedata != null ? valuedata.customerAddress : ''}</Text> */}
                                 </View>
 
                                 <View style={{ flexDirection: 'row-reverse', paddingLeft: '1%' }}>
@@ -295,13 +296,15 @@ const GenerateSuratJalanV1 = ({ valuedata }) => {
 
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ flexDirection: 'row-reverse' }}>
-                                    <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 450, maxWidth: 450 }}> {valuedata != null ? valuedata.customerAddress2 : ''}</Text>
+                                    {/* <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 450, maxWidth: 450 }}> {valuedata != null ? valuedata.customerAddress2 : ''}</Text> */}
+                                    <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 450, maxWidth: 450 }}> {valuedata != null ? valuedata.warehouseaddress2 : ''}</Text>
                                 </View>
                             </View>
 
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ flexDirection: 'row-reverse' }}>
-                                    <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }}> {valuedata != null ? valuedata.customerAddress3 : ''}</Text>
+                                    {/* <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }}> {valuedata != null ? valuedata.customerAddress3 : ''}</Text> */}
+                                    <Text style={{ fontStyle: 'bold', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }}> {valuedata != null ? valuedata.warehouseaddress3 : ''}</Text>
                                 </View>
 
                                 <View style={{ flexDirection: 'row-reverse', paddingLeft: '1%' }}>
