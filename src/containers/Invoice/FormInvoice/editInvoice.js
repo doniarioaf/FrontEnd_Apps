@@ -139,9 +139,12 @@ export default function EditForm(props) {
             }
             let listitem = [];
             let idpricelist = '';
+            
+            setInputWarehouseID(det.idwarehousesuratjalan);
             if(det.detailsprice){
-                for(let i=0; i < det.detailsprice.length; i++){
-                    let dett = det.detailsprice[i];
+                let detailsprice = det.detailsprice.filter(output => output.idwarehouse == det.idwarehousesuratjalan);
+                for(let i=0; i < detailsprice.length; i++){
+                    let dett = detailsprice[i];
                     let obj = new Object();
                     idpricelist = dett.idpricelist;
                     obj.nodocument = dett.nodocumentpengeluaran;
@@ -896,8 +899,9 @@ export default function EditForm(props) {
                 // console.log('SelPriceList ',SelPriceList);
                 // console.log('SelPriceList ',list);
                 if(list.length > 0){
-                for(let i=0; i < list[0].details.length; i++){
-                    let det = list[0].details[i];
+                let detailsprice = InputWarehouseID == "" ?list[0].details:list[0].details.filter(output => output.idwarehouse == InputWarehouseID);
+                for(let i=0; i < detailsprice.length; i++){
+                    let det = detailsprice[i];
                     // console.log('listitems det ',det);
                     // let listitems = InputListItem.filter(output => 
                     //     output.idpricelist == SelPriceList &&

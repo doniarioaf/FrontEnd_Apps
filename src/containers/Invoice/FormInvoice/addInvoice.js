@@ -246,12 +246,18 @@ export default function AddForm(props) {
         setListSuratJalanWO(list);
 
         let idwo = localStorage.getItem('idwo');
+        localStorage.setItem('idSj',idSj);
         setSelSJ(idSj);
         dispatch(actions.getInvoiceData('/searchsj/'+idwo,successHandlerSj, errorHandler));
     }
 
     const successHandlerSj = (data) =>{
+        let idSj = localStorage.getItem('idSj');
         if(data.data){
+            let getSJ = data.data.filter(output => output.id == idSj);
+            if(getSJ.length > 0){
+                setInputWarehouseID(getSJ[0].idwarehouse);
+            }
             setListSJ(data.data.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
@@ -267,7 +273,10 @@ export default function AddForm(props) {
     const handleChangeSj = (data) =>{
         let id = data?.value ? data.value : '';
         let nodoc = data?.nodoc ? data.nodoc : '';
+        let idwarehouse = data?.idwarehouse ? data.idwarehouse : '';
+        
         setSelSJ(id);
+        setInputWarehouseID(idwarehouse);
         setSelPriceList('');
         setListPriceList([]);
         setInputListItem([]);
@@ -352,8 +361,9 @@ export default function AddForm(props) {
         }else{
             setInputListItem([]);
             if(dataval.details){
-                for(let i=0; i < dataval.details.length; i++){
-                    let det = dataval.details[i];
+                let detailsprice = (InputWarehouseID == ''? dataval.details : dataval.details.filter(output => output.idwarehouse == InputWarehouseID));
+                for(let i=0; i < detailsprice.length; i++){
+                    let det = detailsprice[i];
                     let obj = new Object();
                     obj.ischeck = false;
                     obj.nodocument = '';

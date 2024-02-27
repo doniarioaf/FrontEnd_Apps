@@ -48,6 +48,7 @@ import React, {useState,
     const [IsHide, setIsHide] = useState(false);
     const [IsPrintInvoiceHide, setIsPrintInvoiceHide] = useState(false);
     const [value, setValue] = useState([]);
+    const [ListDetailsPrice, setListDetailsPrice] = useState([]);
     const [IsHideColumnWarehouse, setIsHideColumnWarehouse] = useState(false);
 
     const classes = useStyles();
@@ -95,6 +96,10 @@ import React, {useState,
 
     function successHandler(data) {
         setValue(data.data);
+        if(data.data.detailsprice){
+            let detailsprice = data.data.detailsprice.filter(output => output.idwarehouse == data.data.idwarehousesuratjalan);
+            setListDetailsPrice(detailsprice);
+        }
         if(data.data.idinvoicetype == 'REIMBURSEMENT'){
             setIsHideColumnWarehouse(true);
         }
@@ -103,18 +108,18 @@ import React, {useState,
                 setIsHide(true);
             }
         }
-        //setIsPrintInvoiceHide
-        if(data.data.detailspenerimaan){
-            let totalpenerimaan = 0;
-            for(let i=0; i < data.data.detailspenerimaan.length; i++){
-                let val = data.data.detailspenerimaan[i];
-                totalpenerimaan += val.amount?parseFloat(val.amount):0;
-            }
-            let totalInvoice = data.data?.totalinvoice?parseFloat(data.data.totalinvoice):0;
-            if(totalInvoice == 0 || totalpenerimaan >= totalInvoice){
-                setIsPrintInvoiceHide(true);
-            }
-        }
+        
+        // if(data.data.detailspenerimaan){
+        //     let totalpenerimaan = 0;
+        //     for(let i=0; i < data.data.detailspenerimaan.length; i++){
+        //         let val = data.data.detailspenerimaan[i];
+        //         totalpenerimaan += val.amount?parseFloat(val.amount):0;
+        //     }
+        //     let totalInvoice = data.data?.totalinvoice?parseFloat(data.data.totalinvoice):0;
+        //     if(totalInvoice == 0 || totalpenerimaan >= totalInvoice){
+        //         setIsPrintInvoiceHide(true);
+        //     }
+        // }
 
         if(data.data.idwo != undefined && data.data.idwo != null){
             if(data.data.idwo > 0){
@@ -309,10 +314,23 @@ import React, {useState,
                     loading ?<Skeleton count={7} height={21} style={{marginTop: '1rem'}}/> :
                     (
                         <section>
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_NO_DOCUMENT')}</span>
                             <strong className="col-md-7">
                                 {value.nodocument?value.nodocument:''}
+                            </strong>
+                            </div> */}
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Work Order')}</span>
+                            <strong className="col-md-7">
+                            {value.noocumentwo?value.noocumentwo:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('No AJU')}</span>
+                            <strong className="col-md-7">
+                            {value.noajuwo?value.noajuwo:''}
                             </strong>
                             </div>
 
@@ -355,13 +373,6 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('Delivery Date')}</span>
                             <strong className="col-md-7">
                             {value.deliverydate?moment (new Date(value.deliverydate)).format(formatdate):''}
-                            </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Work Order')}</span>
-                            <strong className="col-md-7">
-                            {value.noocumentwo?value.noocumentwo:''}
                             </strong>
                             </div>
 
@@ -424,7 +435,7 @@ import React, {useState,
                             <div className="row mt-3" hidden={value.idinvoicetype?(value.idinvoicetype == 'REIMBURSEMENT' || value.idinvoicetype == 'DP'?true:false):true}>
                             <span className="col-md-5">{i18n.t('Price List')}</span>
                             <strong className="col-md-7">
-                            {value.detailsprice?(value.detailsprice.length > 0?value.detailsprice[0].nodocumentpricelist:''):''}
+                            {value.detailsprice?(ListDetailsPrice.length > 0?ListDetailsPrice[0].nodocumentpricelist:''):''}
                             </strong>
                             </div>
 
@@ -432,8 +443,8 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('Pengeluaran')}</span>
                             <strong className="col-md-7">
                             
-                            {value.detailsprice?(value.detailsprice.length > 0?  
-                                arrPengeluaran(value.detailsprice)
+                            {value.detailsprice?(ListDetailsPrice.length > 0?  
+                                arrPengeluaran(ListDetailsPrice)
                                 // value.detailsprice[0].nodocumentpengeluaran
                                 :''):''}
                             </strong>
@@ -487,7 +498,7 @@ import React, {useState,
                     </tr>
                     <tbody>
                         {   value.detailsprice?
-                            value.detailsprice.map((x, i) => {
+                            ListDetailsPrice.map((x, i) => {
                                 return (
                                     <tr>
                                         <td width={'300px'} hidden={IsHideColumnWarehouse}>{x.warehouseName}</td>
