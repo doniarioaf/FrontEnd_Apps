@@ -176,7 +176,11 @@ export const inputJustNumberAndCommaDot = (temp) =>{
         return false;
     }
 }
-
+export const numToMoneyWithAfterCommaZero = (amount) =>{
+    let val = numToMoney(amount);
+    let returnval = new String(val).includes(',') ?val:val+',00';
+    return returnval;
+}
 export const numToMoney = (amount) =>{
     
     if(amount !== null && !isNaN(amount)){
@@ -272,11 +276,11 @@ export const invoiceTypeName = (data) =>{
 }
 
 export const numConvToValDB = (amount) =>{
-    if(isNaN(new String(amount))){
+    // if(isNaN(new String(amount))){
         let stringVal = new String(amount).replaceAll('.','');
         let finalVal = stringVal.replaceAll(',','.');
         return finalVal;
-    }
+    // }
     // else{
     //     let stringVal = new String(amount).replaceAll('.','');
     //     return stringVal;

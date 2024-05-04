@@ -229,7 +229,7 @@ export default function AddForm(props) {
         }
 
         if(listitems.length == 0){
-            setErrItems(i18n.t('Items')+' '+i18n.t('label_REQUIRED'));
+            setErrItems(i18n.t('Items')+' '+i18n.t('label_REQUIRED')+' , Invoice Not Found');
             flag = false;
         }
 
@@ -277,6 +277,7 @@ export default function AddForm(props) {
     const executeSubmit = () => {
         let flag = checkColumnMandatory();
         if(flag){
+            let idwo = InputIdWO;
             setLoading(true);
             let obj = new Object();
             obj.receivedate = moment(InputReceiveDate).toDate().getTime();
@@ -287,6 +288,7 @@ export default function AddForm(props) {
                 obj.idemployee = InputReceiveFrom;
                 obj.idcustomer = null;
                 obj.idvendor = null;
+                idwo = null;
             }else if(SelReceiveFrom == 'CUSTOMER'){
                 obj.idemployee = null;
                 obj.idcustomer = InputReceiveFrom;
@@ -295,12 +297,13 @@ export default function AddForm(props) {
                 obj.idemployee = null;
                 obj.idcustomer = null;
                 obj.idvendor = InputReceiveFrom;
+                idwo = null;
             }
             obj.idcoa = null;//SelCOA;
             obj.idbank = SelBank;
             obj.keterangan = InputKeterangan;
             obj.isactive = true;
-            obj.idwo = InputIdWO;
+            obj.idwo = idwo;
             let listdetails = [];
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
@@ -314,7 +317,7 @@ export default function AddForm(props) {
                         objDet.keterangan_penyesuaian = det.ketpenyesuaian;
                         objDet.isdownpayment = "N";//det.isdownpayment;
                         objDet.idinvoice = det.idinvoice !== '' ? det.idinvoice:null;
-                        objDet.idworkorder = InputIdWO;//det.idworkorder !== '' ? det.idworkorder:null;
+                        objDet.idworkorder = idwo;//det.idworkorder !== '' ? det.idworkorder:null;
                         listdetails.push(objDet);
                     }
                 }
@@ -1026,7 +1029,7 @@ export default function AddForm(props) {
                                             seacrhtype = {'PENERIMAANWO'}
                                             errorHandler = {errorHandler}
                                             handlesearch = {handleQuickSeacrhWO}
-                                            placeholder = {'Pencarian Berdasarkan No Document atau Nama Customer atau Nama Cargo'}
+                                            placeholder = {'Pencarian Berdasarkan No Document atau No AJU atau Nama Customer atau Nama Cargo'}
                                             idcustomer = {InputReceiveFrom}
                                         ></FormSearch>
                                         {LoadingSend && <Loading/>}

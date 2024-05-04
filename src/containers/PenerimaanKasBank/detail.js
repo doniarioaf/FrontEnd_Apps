@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../shared/globalFunc';
+  import { isGetPermissions,numToMoney,numToMoneyWithAfterCommaZero,reloadToHomeNotAuthorize } from '../shared/globalFunc';
   import { editPenerimaanKasBank_Permission,deletePenerimaanKasBank_Permission,MenuPenerimaanKasBank} from '../shared/permissionMenu';
   import moment                       from "moment/moment";
   import '../CSS/table.css';
@@ -278,8 +278,8 @@ import React, {useState,
                         <th>{i18n.t('Amount')}</th>
                         {/* <th>{i18n.t('DP')}</th> */}
                         {/* <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('label_WO_NUMBER')}</th> */}
-                        <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('Penyeseuaian')}</th>
-                        <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('Ket. Penyeseuaian')}</th>
+                        <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('Penyesuaian')}</th>
+                        <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('Ket. Penyesuaian')}</th>
                         <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('Invoice Number')}</th>
                     </tr>
                     {/* //penyesuaian:"",ketpenyesuaian:"" */}
@@ -290,10 +290,10 @@ import React, {useState,
                                     <tr>
                                         <td>{x.idcoa}</td>
                                         {/* <td>{x.catatan}</td> */}
-                                        <td>{numToMoney(parseFloat(x.amount))}</td>
+                                        <td>{numToMoneyWithAfterCommaZero(parseFloat(x.amount))}</td>
                                         {/* <td>{x.isdownpayment}</td> */}
                                         {/* <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.nodocwo}</td> */}
-                                        <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{numToMoney(parseFloat(x.penyesuaian))}</td>
+                                        <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{numToMoneyWithAfterCommaZero(parseFloat(x.penyesuaian))}</td>
                                         <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.ketpenyesuaian}</td>
                                         <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.nodocinv}</td>
                                     </tr>

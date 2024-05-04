@@ -78,6 +78,7 @@ const DialogQuickSearch = props => {
             data = [
                 {name: 'id', title: 'id'},
                 {name: 'nowo', title: 'No Work Order'},
+                {name: 'noaju', title: 'No AJU'},
                 {name: 'namacargo', title: 'Nama Cargo'},
                 {name: 'name', title: i18n.t('label_NAME')},
             ]
@@ -163,6 +164,7 @@ const DialogQuickSearch = props => {
                 obj.nodocument = InputSearchName;
                 obj.namacustomer = InputSearchName;
                 obj.namacargo = InputSearchName;
+                obj.noaju = InputSearchName;
                 obj.idwo = 0;
                 obj.idcustomer = props.idcustomer ? props.idcustomer:null; 
                 dispatch(actions.submitAddPenerimaanKasBank('/searchwo',obj,successHandleSearch, props.errorHandler));
@@ -249,6 +251,7 @@ const DialogQuickSearch = props => {
                         'nowo': el.nodocument,
                         'namacargo': el.namacargo,
                         'name': el.namaCustomer,
+                        'noaju':el.noaju,
                         'data':el
                     }
                 ], []);

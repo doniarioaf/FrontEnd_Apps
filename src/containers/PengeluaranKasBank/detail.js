@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../shared/globalFunc';
+  import { isGetPermissions,numToMoney,numToMoneyWithAfterCommaZero,reloadToHomeNotAuthorize } from '../shared/globalFunc';
   import { editPengeluaranKasBank_Permission,deletePengeluaranKasBank_Permission,MenuPengeluaranKasBank} from '../shared/permissionMenu';
   import moment                       from "moment/moment";
   import '../CSS/table.css';
@@ -427,7 +427,7 @@ import React, {useState,
                                         <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{x.idasset}</td>
                                         <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{x.sparepartassettype}</td>
                                         <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{x.idassetsparepart}</td>
-                                        <td>{numToMoney(parseFloat(x.amount))}</td>
+                                        <td>{numToMoneyWithAfterCommaZero(parseFloat(x.amount))}</td>
                                         {/* <td>{x.catatan}</td> */}
                                         {/* <td>{x.idcoa}</td> */}
                                     </tr>

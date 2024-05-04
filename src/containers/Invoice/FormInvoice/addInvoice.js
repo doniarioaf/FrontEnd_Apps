@@ -316,7 +316,7 @@ export default function AddForm(props) {
             let ppn = DataTemplate.defaultPPN?numToMoney(parseFloat(DataTemplate.defaultPPN)):'';
             setInputPPN(ppn);
             if(ppn !== ''){
-                calculateTotalInvoice(InputListItem,InputDiskonNota,ppn);
+                calculateTotalInvoice(InputListItem,InputDiskonNota,ppn,InputNilaiPPN);
             }
             if(SelWO !== '' && SelSJ == ''){
                 setLoading(true);
@@ -397,8 +397,21 @@ export default function AddForm(props) {
         if(flagReg){
             val = formatMoney(val);
             let valtemp = val;
-            calculateTotalInvoice(InputListItem,valtemp,InputPPN);
+            calculateTotalInvoice(InputListItem,valtemp,InputPPN,InputNilaiPPN);
             setInputDiskonNota(val);
+        }
+        
+    }
+
+    const handleChangeNilaiPPN = (data) =>{
+        let val = data.target.value;
+        // val = new String(val).replaceAll('.','').replaceAll(',','.');
+        let flagReg = inputJustNumberAndCommaDot(val);
+        if(flagReg){
+            val = formatMoney(val);
+            let valtemp = val;
+            calculateTotalInvoice(InputListItem,InputDiskonNota,InputPPN,valtemp);
+            setInputNilaiPPN(val);
         }
         
     }
@@ -421,7 +434,7 @@ export default function AddForm(props) {
         if(flagReg){
             val = formatMoney(val);
             let valtemp = val;
-            calculateTotalInvoice(InputListItem,InputDiskonNota,valtemp);
+            // calculateTotalInvoice(InputListItem,InputDiskonNota,valtemp,InputNilaiPPN);
             setInputPPN(val);
         }
         
@@ -719,7 +732,7 @@ export default function AddForm(props) {
                     obj.idpengeluarankasbank = det.idpengeluarankasbank;
                     listitem.push(obj);
                 }
-                calculateTotalInvoice(listitem,InputDiskonNota,InputPPN);
+                calculateTotalInvoice(listitem,InputDiskonNota,InputPPN,InputNilaiPPN);
                 setInputListItem(listitem);
             }
             
@@ -756,7 +769,7 @@ export default function AddForm(props) {
         const list = [...InputListItem];
         list[index][name] = valTemp;
 
-        calculateTotalInvoice(list,InputDiskonNota,InputPPN);
+        calculateTotalInvoice(list,InputDiskonNota,InputPPN,InputNilaiPPN);
 
         setInputListItem(list);
     }
@@ -793,10 +806,10 @@ export default function AddForm(props) {
             // const list = [...InputListItem];
             list[index][name] = valTemp;
         }
-        calculateTotalInvoice(list,InputDiskonNota,InputPPN);
+        calculateTotalInvoice(list,InputDiskonNota,InputPPN,InputNilaiPPN);
         setInputListItem(list);
     };
-    const calculateTotalInvoice = (list,diskonnota,ppn) => {
+    const calculateTotalInvoice = (list,diskonnota,ppn,nilaippn) => {
         let total = 0;
         for(let i=0; i < list.length; i++){
             let det = list[i];
@@ -823,18 +836,28 @@ export default function AddForm(props) {
         
 
         //20230801
-        setInputNilaiPPN(null);
-        if(ppn !== undefined && ppn !== null && ppn !== ""){
-            // ppn = new String(ppn).replaceAll('.','').replaceAll(',','.');
-            ppn = new String(ppn).replaceAll(',','.');
-            if(!isNaN(ppn)){
-                ppn = parseFloat(ppn);
-                let valPPN = parseFloat(ppn / 100);
-                let totalPPN = total * valPPN;
-                setInputNilaiPPN(totalPPN);
-                total = total + totalPPN;
+        //24-04-2024, Nilai PPN mau di input manual saja, jadi ini di remark
+        // setInputNilaiPPN(null);
+        // if(ppn !== undefined && ppn !== null && ppn !== ""){
+        //     // ppn = new String(ppn).replaceAll('.','').replaceAll(',','.');
+        //     ppn = new String(ppn).replaceAll(',','.');
+        //     if(!isNaN(ppn)){
+        //         ppn = parseFloat(ppn);
+        //         let valPPN = parseFloat(ppn / 100);
+        //         let totalPPN = total * valPPN;
+        //         setInputNilaiPPN(totalPPN);
+        //         total = total + totalPPN;
+        //     }
+        // }
+
+        if(nilaippn != undefined && nilaippn != null && nilaippn !== ''){
+            let nilaippnVal = new String(nilaippn).replaceAll('.','')
+            nilaippnVal = nilaippnVal.replaceAll(',','.');
+            if(!isNaN(nilaippnVal)){
+                total = total + parseFloat(nilaippnVal);    
             }
         }
+
         }
         setInputTotalInvoice(numToMoney(total));
     }
@@ -1150,9 +1173,11 @@ export default function AddForm(props) {
                                 name="nilaippn"
                                 type="text"
                                 id="nilaippn"
+                                onChange={val => handleChangeNilaiPPN(val)}
                                 onBlur={handleBlur}
-                                value={values.nilaippn !== ''?numToMoney(values.nilaippn):''}
-                                disabled={true}
+                                // value={values.nilaippn !== ''?numToMoney(values.nilaippn):''}
+                                value={values.nilaippn}
+                                disabled={false}
                             />
 
                             <label className="mt-3 form-label required" htmlFor="discnota">
@@ -1195,7 +1220,7 @@ export default function AddForm(props) {
                             />
 
                             <label className="mt-3 form-label" htmlFor="notes1">
-                                {'Catatan 1'}
+                                {'Catatan'}
                             </label>
                             <Input
                                 name="notes1"
@@ -1208,7 +1233,7 @@ export default function AddForm(props) {
                             />
 
                             <label className="mt-3 form-label" htmlFor="notes2">
-                                {'Catatan 2'}
+                                {'No. Faktur Pajak'}
                             </label>
                             <Input
                                 name="notes2"
