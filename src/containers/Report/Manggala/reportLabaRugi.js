@@ -59,10 +59,9 @@ export default function ReportKasBank(props) {
                     label: el.namabank
                 }]
             ), []);
-            
-            listBank.push({value:'ALL',label:'ALL'});
-            
         }
+        listBank.push({value:'ALL',label:'ALL'});
+        setSelBank('ALL');
         setListBank(listBank);
         setLoading(false);
     }
