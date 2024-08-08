@@ -466,7 +466,7 @@ export default function AddForm(props) {
                 'nodocinv':el.nodocument,
                 'idworkorder':'',
                 'nodocwo':'',
-                'penyesuaian':'',
+                'penyesuaian':numToMoney(el.totalinvoice),
                 'ketpenyesuaian':''
             }
         ], []);
