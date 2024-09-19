@@ -89,6 +89,7 @@ const MenuIndex = () => {
                 onclickadd={onClickAdd}
                 permissionview={!isGetPermissions(MenuWorkOrder,'READ')}
                 onclickview={onClickView}
+                listfilterdisabled={['tanggal']}
             />
             </div>
             </Container>

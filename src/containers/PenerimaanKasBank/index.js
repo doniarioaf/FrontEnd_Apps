@@ -24,6 +24,8 @@ const MenuIndex = () => {
         // {name: 'code', title: i18n.t('Code')},
         {name: 'nodocument', title: i18n.t('label_NO_DOCUMENT')},
         {name: 'receivefrom', title: i18n.t('label_RECEIVE_FROM')},
+        {name: 'nowo', title: i18n.t('No. WO')},
+        {name: 'noaju', title: i18n.t('No AJU')},
         {name: 'receivedate', title: i18n.t('label_RECEIVE_DATE')},
     ]);
     const [tableColumnExtensions] = useState([]);
@@ -41,15 +43,31 @@ const MenuIndex = () => {
                 ...obj,
                 {
                     'id': el.id,
-                    // 'code':el.code?el.code:'',
+                    'noaju':el.noajuWo?el.noajuWo:'',
+                    'nowo':el.nodocumentWo?el.nodocumentWo:'',
                     'nodocument': el.nodocument ?el.nodocument:'',
-                    'receivefrom':el.receivefrom?el.receivefrom:'',
+                    'receivefrom':getReceiveFromName(el),
                     'receivedate':el.receivedate?moment (new Date(el.receivedate)).format(formatdate):''
                 }
             ], []);
             setRows(theData);
         }
         setLoading(false);
+    }
+
+    const getReceiveFromName = (data) =>{
+        if(data.idreceivetype){
+            if(data.idreceivetype == 'EMPLOYEE'){
+                return data.employeeName?data.employeeName:''
+            }else if(data.idreceivetype == 'CUSTOMER'){
+                return data.customerName?data.customerName:''
+            }else if(data.idreceivetype == 'VENDOR'){
+                return data.vendorName?data.vendorName:''
+            }else{
+                return data.idreceivetype;
+            }
+        }
+        return data.receivefrom;
     }
 
     function errorHandler(error) {

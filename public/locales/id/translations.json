@@ -124,6 +124,7 @@
     "label_THRU_DATE":"Sampai Tanggal",
     "label_RECEIVE_DATE":"Diterima Tanggal",
     "label_RECEIVE_FROM":"Diterima Dari",
+    "label_CHANGE_PASSWORD":"Ubah Kata Sandi",
     "validation": {
       "employeemanggala":{
         "noidentitas":{

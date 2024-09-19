@@ -38,6 +38,7 @@ export default function EditBankAccount(props) {
     const [InputIsActive, setInputIsActive] = useState(true);
     const [InputSaldoAwal, setInputSaldoAwal] = useState('');
     const flagSaldoAwal = isGetPermissions(saldoawal_Permission,'TRANSACTION');
+    const [InputIsShowFinanceJunior, setInputIsShowFinanceJunior] = useState(false);
 
     const id = props.match.params.id;
 
@@ -56,6 +57,7 @@ export default function EditBankAccount(props) {
         setInputCatatan2(det.catatan2);
         setInputIsActive(det.isactive ? true:false);
         setInputSaldoAwal(det.saldoawal?numToMoneyWithComma(det.saldoawal):'');
+        setInputIsShowFinanceJunior(det.showfinancejunior ? true:false);
         setLoading(false);
     }
 
@@ -100,6 +102,10 @@ export default function EditBankAccount(props) {
 
     const handleChangeIsActive = (data) =>{
         setInputIsActive(data.target.checked);
+    }
+
+    const handleChangeIsFinanceJunior = (data) =>{
+        setInputIsShowFinanceJunior(data.target.checked);
     }
 
     const handleDateOpen = (data) =>{
@@ -156,6 +162,7 @@ export default function EditBankAccount(props) {
             obj.catatan2 = InputCatatan2;
             obj.isactive = InputIsActive;
             obj.saldoawal = InputSaldoAwal == ''?0:new String(InputSaldoAwal).replaceAll('.','').replaceAll(',','.');
+            obj.showfinancejunior = InputIsShowFinanceJunior;
             dispatch(actions.submitEditBankAccount('/'+id,obj,succesHandlerSubmit, errorHandler));
         }
     }
@@ -198,7 +205,8 @@ export default function EditBankAccount(props) {
                 catatan1:InputCatatan1,
                 catatan2:InputCatatan2,
                 isactive:InputIsActive,
-                saldoawal:InputSaldoAwal
+                saldoawal:InputSaldoAwal,
+                IsShowFinanceJunior:InputIsShowFinanceJunior
             }
         }
         validate={values => {
@@ -360,6 +368,17 @@ export default function EditBankAccount(props) {
                                 onBlur={handleBlur}
                                 value={values.catatan2}
                             />
+
+                            <FormGroup check style={{marginTop:'20px'}}>
+                            <Input type="checkbox" name="check" 
+                            id="IsShowFinanceJunior" 
+                            onChange={val => handleChangeIsFinanceJunior(val)}
+                            defaultChecked={values.IsShowFinanceJunior}
+                            checked={values.IsShowFinanceJunior}
+                            style={{transform:'scale(1.5)'}}
+                            />
+                            <Label for="IsShowFinanceJunior" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('Finance Junior')}</Label>
+                            </FormGroup>
 
                             {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 

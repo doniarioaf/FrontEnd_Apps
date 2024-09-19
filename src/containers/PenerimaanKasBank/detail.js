@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../shared/globalFunc';
+  import { isGetPermissions,numToMoney,numToMoneyWithAfterCommaZero,reloadToHomeNotAuthorize } from '../shared/globalFunc';
   import { editPenerimaanKasBank_Permission,deletePenerimaanKasBank_Permission,MenuPenerimaanKasBank} from '../shared/permissionMenu';
   import moment                       from "moment/moment";
   import '../CSS/table.css';
@@ -48,7 +48,7 @@ import React, {useState,
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
 
-    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:""}]);
+    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:"",penyesuaian:"",ketpenyesuaian:""}]);
 
     const classes = useStyles();
     const [open, setOpen] = useState(false);
@@ -101,7 +101,7 @@ import React, {useState,
         if(data.data.details){
             for(let i=0; i < data.data.details.length; i++){
                 let det = data.data.details[i];
-                listitems.push({ idcoa:det.coaname,catatan: det.catatan,amount:det.amount,isdownpayment:(det.isdownpayment == 'Y'?'Yes':'No'),idinvoice:det.idinvoice,nodocinv:det.nodocinvoice,idworkorder:det.idworkorder,nodocwo:det.nodocworkorder});
+                listitems.push({ idcoa:det.coaname,catatan: det.catatan,amount:det.amount,isdownpayment:(det.isdownpayment == 'Y'?'Yes':'No'),idinvoice:det.idinvoice,nodocinv:det.nodocinvoice,idworkorder:det.idworkorder,nodocwo:det.nodocworkorder,penyesuaian:(det.penyesuaian ?det.penyesuaian:0),ketpenyesuaian:det.keterangan_penyesuaian});
             }
         }
         setInputListItem(listitems);
@@ -140,6 +140,21 @@ import React, {useState,
         })
     }
 
+    const getReceiveFromName = (data) =>{
+        if(data.idreceivetype){
+            if(data.idreceivetype == 'EMPLOYEE'){
+                return data.employeeName?data.employeeName:''
+            }else if(data.idreceivetype == 'CUSTOMER'){
+                return data.customerName?data.customerName:''
+            }else if(data.idreceivetype == 'VENDOR'){
+                return data.vendorName?data.vendorName:''
+            }else{
+                return data.idreceivetype;
+            }
+        }
+        return data.receivefrom;
+    }
+    
     function errorHandler(error) {
         setLoading(false);
         Swal.fire({
@@ -212,16 +227,24 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_RECEIVE_FROM')}</span>
                             <strong className="col-md-7">
-                                {value.receivefrom?value.receivefrom:''}
+                                {getReceiveFromName(value)}
+                                {/* {value.receivefrom?value.receivefrom:''} */}
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            <div className="row mt-3" hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>
+                            <span className="col-md-5">{i18n.t('Work Order')}</span>
+                            <strong className="col-md-7">
+                                {InputListItem.length > 0?InputListItem[0].nodocwo:''}
+                            </strong>
+                            </div>
+
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('COA')}</span>
                             <strong className="col-md-7">
                                 {value.coaName?value.coaName:''}
                             </strong>
-                            </div>
+                            </div> */}
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Bank')}</span>
@@ -250,24 +273,29 @@ import React, {useState,
             {
                 <table id="tablegrid">
                     <tr>
-                        <th>{i18n.t('COA')}</th>
-                        <th>{i18n.t('label_NOTE')}</th>
+                        <th>{i18n.t('Transaksi')}</th>
+                        {/* <th>{i18n.t('label_NOTE')}</th> */}
                         <th>{i18n.t('Amount')}</th>
-                        <th>{i18n.t('DP')}</th>
-                        <th>{i18n.t('Invoice Number')}</th>
-                        <th>{i18n.t('label_WO_NUMBER')}</th>
+                        {/* <th>{i18n.t('DP')}</th> */}
+                        {/* <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('label_WO_NUMBER')}</th> */}
+                        <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('Penyesuaian')}</th>
+                        <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('Ket. Penyesuaian')}</th>
+                        <th hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{i18n.t('Invoice Number')}</th>
                     </tr>
+                    {/* //penyesuaian:"",ketpenyesuaian:"" */}
                     <tbody>
                         {
                             InputListItem.map((x, i) => {
                                 return (
                                     <tr>
                                         <td>{x.idcoa}</td>
-                                        <td>{x.catatan}</td>
-                                        <td>{numToMoney(parseFloat(x.amount))}</td>
-                                        <td>{x.isdownpayment}</td>
-                                        <td>{x.nodocinv}</td>
-                                        <td>{x.nodocwo}</td>
+                                        {/* <td>{x.catatan}</td> */}
+                                        <td>{numToMoneyWithAfterCommaZero(parseFloat(x.amount))}</td>
+                                        {/* <td>{x.isdownpayment}</td> */}
+                                        {/* <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.nodocwo}</td> */}
+                                        <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{numToMoneyWithAfterCommaZero(parseFloat(x.penyesuaian))}</td>
+                                        <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.ketpenyesuaian}</td>
+                                        <td hidden={value.idreceivetype?(value.idreceivetype == "EMPLOYEE" || value.idreceivetype == "VENDOR"):false}>{x.nodocinv}</td>
                                     </tr>
 
                                 )

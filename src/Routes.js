@@ -133,15 +133,16 @@ const menuInternalUser = lazy(() => import('./containers/Admin/InternalUser'));
 const addInternalUser = lazy(() => import('./containers/Admin/InternalUser/addFormInternalUser'));
 const detailInternalUser = lazy(() => import('./containers/Admin/InternalUser/detail'));
 const editInternalUser = lazy(() => import('./containers/Admin/InternalUser/editFormInternalUser'));
+const changePasswordInternalUser = lazy(() => import('./containers/Admin/InternalUser/changePasswordForm'));
 
 const menuCustomerType = lazy(() => import('./containers/Customer/CustomerType'));
 const addCustomerType = lazy(() => import('./containers/Customer/CustomerType/addFormCustomerType'));
 const editCustomerType = lazy(() => import('./containers/Customer/CustomerType/editFormCustomerType'));
 
-const menuCustomer = lazy(() => import('./containers/Customer/Customers'));
-const detailCustomer = lazy(() => import('./containers/Customer/Customers/detail'));
-const addFormCustomer = lazy(() => import('./containers/Customer/Customers/addFormCustomer'));
-const editFormCustomer = lazy(() => import('./containers/Customer/Customers/editFormCustomer'));
+// const menuCustomer = lazy(() => import('./containers/Customer/Customers'));
+// const detailCustomer = lazy(() => import('./containers/Customer/Customers/detail'));
+// const addFormCustomer = lazy(() => import('./containers/Customer/Customers/addFormCustomer'));
+// const editFormCustomer = lazy(() => import('./containers/Customer/Customers/editFormCustomer'));
 
 const menuUserMobile = lazy(() => import('./containers/Admin/UserMobile'));
 const addUserMobile = lazy(() => import('./containers/Admin/UserMobile/addFormUserMobile'));
@@ -421,7 +422,8 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addinternaluser} component={waitFor(addInternalUser)}/>
                             <Route path={pathmenu.detailinternaluser+'/:id'} component={waitFor(detailInternalUser)}/>
                             <Route path={pathmenu.editinternaluser+'/:id'} component={waitFor(editInternalUser)}/>
-
+                            <Route path={pathmenu.changePasswordInternalUser+'/:id'} component={waitFor(changePasswordInternalUser)}/>
+                            
                             <Route path={pathmenu.menucustomertype} component={waitFor(menuCustomerType)}/>
                             <Route path={pathmenu.addcustomertype} component={waitFor(addCustomerType)}/>
                             <Route path={pathmenu.editcustomertype+'/:id'} component={waitFor(editCustomerType)}/>

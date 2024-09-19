@@ -142,7 +142,7 @@ export default function MenuAdd(props) {
             setListWorkOrder(template.woOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
-                    label: el.nodocument+' - '+el.namaCustomer+' - '+el.namacargo,
+                    label: el.nodocument+' - '+el.namaCustomer+' - '+el.namacargo+' - AJU '+el.noaju,
                     dataval:el
                 }]
             ), []));

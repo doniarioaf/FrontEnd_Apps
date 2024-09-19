@@ -3,13 +3,13 @@ import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../components/Layout/ContentHeading';
-import {Input,Button,Label,FormGroup,Container} from 'reactstrap';
+import {Input,Button} from 'reactstrap';
 import * as actions                 from '../../store/actions';
 import {useDispatch}   from 'react-redux';
 import { Loading } from '../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-import { reloadToHomeNotAuthorize,inputJustNumberAndCommaDot,formatMoney, numToMoney } from '../shared/globalFunc';
+import { reloadToHomeNotAuthorize,inputJustNumberAndCommaDot,formatMoney, numToMoney,numConvToValDB } from '../shared/globalFunc';
 import { editPenerimaanKasBank_Permission} from '../shared/permissionMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
@@ -68,12 +68,21 @@ export default function AddForm(props) {
     const [ListWO, setListWO] = useState([]);
     const [ListChooseYN, setListChooseYN] = useState([]);
 
-    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:""}]);
+    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:"",penyesuaian:"",ketpenyesuaian:""}]);
     const [ErrInputCatatan, setErrInputCatatan] = useState('');
     const [ErrInputAmount, setErrInputAmount] = useState('');
     const [ErrIsDownPayment, setErrIsDownPayment] = useState('');
     const [ErrSelWO, setErrSelWO] = useState('');
     const [ErrItems, setErrItems] = useState('');
+
+    const [SelReceiveFrom, setSelReceiveFrom] = useState('');
+    const ListReceiveFrom = [{value:'EMPLOYEE',label:'Employee'},{value:'CUSTOMER',label:'Customer'},{value:'VENDOR',label:'Vendor'}];
+    const [InputReceiveFromName, setInputReceiveFromName] = useState('');
+    const [ShowQuickSearch, setShowQuickSearch] = useState(false);
+
+    const [InputWO, setInputWO] = useState('');
+    const [InputIdWO, setInputIdWO] = useState('');
+    const [DefaultCoa, setDefaultCoa] = useState('');
 
     const id = props.match.params.id;
 
@@ -82,36 +91,74 @@ export default function AddForm(props) {
         dispatch(actions.getPenerimaanKasBankData('/template/'+id,successHandlerTemplate, errorHandler));
     }, []);
 
+    const getReceiveFromName = (data) =>{
+        if(data.idreceivetype){
+            if(data.idreceivetype == 'EMPLOYEE'){
+                setInputReceiveFrom(data.idemployee);
+                setInputReceiveFromName(data.employeeName?data.employeeName:'');
+            }else if(data.idreceivetype == 'CUSTOMER'){
+                setInputReceiveFrom(data.idcustomer);
+                setInputReceiveFromName(data.customerName?data.customerName:'');
+            }else if(data.idreceivetype == 'VENDOR'){
+                setInputReceiveFrom(data.idvendor);
+                setInputReceiveFromName(data.vendorName?data.vendorName:'');
+            }
+        }else{
+            setInputReceiveFrom("");
+            setSelReceiveFrom("");
+        }
+        
+    }
+
     const successHandlerTemplate = (data) =>{
         if(data.data){
             let det = data.data;
             let template = det.template;
 
+            setSelReceiveFrom(det.idreceivetype);
+            getReceiveFromName(det);
+
             setInputNoDoc(det.nodocument);
             setInputReceiveDate(det.receivedate?moment(new Date(det.receivedate), formatdate).toDate():null);
-            setInputReceiveFrom(det.receivefrom);
+            // setInputReceiveFrom(det.receivefrom);
             setSelCOA(det.idcoa);
             setSelBank(det.idbank);
             setInputKeterangan(det.keterangan);
+
+            let listCOA = template.coaOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    // label: el.nama+' ('+el.code+')'
+                    label: el.nama
+                }]
+            ), []);
+            listCOA.push({value:"nodata",label:"No Data"});
+
+            setListCOA(listCOA);
+
+            let defCOA = listCOA.filter(output => output.label == 'Pembayaran Customer');
+            let idcoa = "";
+            if(defCOA.length > 0){
+                setDefaultCoa(defCOA[0].value);
+            //     idcoa = defCOA[0].value;
+            }
             
             let listitems = [];
             if(data.data.details){
                 for(let i=0; i < data.data.details.length; i++){
                     let det = data.data.details[i];
-                    listitems.push({ idcoa:det.idcoa,catatan: det.catatan,amount:numToMoney(parseFloat(det.amount)),isdownpayment:det.isdownpayment ,idinvoice:(det.idinvoice?det.idinvoice:''),nodocinv:det.nodocinvoice,idworkorder:(det.idworkorder?det.idworkorder:''),nodocwo:det.nodocworkorder});
+                    setInputIdWO(det.idworkorder);
+                    setInputWO(det.nodocworkorder+' ('+det.noaju+')');
+
+                    let penyesuaian = det.penyesuaian ? det.penyesuaian:det.amount;
+                    listitems.push({ idcoa:det.idcoa?det.idcoa:idcoa,catatan: det.catatan,amount:numToMoney(parseFloat(det.amount)),isdownpayment:det.isdownpayment ,idinvoice:(det.idinvoice?det.idinvoice:""),nodocinv:(det.nodocinvoice?det.nodocinvoice:""),idworkorder:(det.idworkorder?det.idworkorder:''),nodocwo:(det.nodocworkorder?det.nodocworkorder:""),penyesuaian:(penyesuaian ? numToMoney(parseFloat(penyesuaian)):0),ketpenyesuaian:det.keterangan_penyesuaian});
                 }
             }
             if(listitems.length > 0){
                 setInputListItem(listitems);
             }
             
-
-            setListCOA(template.coaOptions.reduce((obj, el) => (
-                [...obj, {
-                    value: el.id,
-                    label: el.nama+' ('+el.code+')'
-                }]
-            ), []));
+            
 
             setListBank(template.bankOptions.reduce((obj, el) => (
                 [...obj, {
@@ -130,6 +177,35 @@ export default function AddForm(props) {
             setListChooseYN([{value:'Y',label:'Yes'},{value:'N',label:'No'}])
         }
         setLoading(false);
+    }
+
+    const handleChangeReceiveType = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelReceiveFrom(id);
+        setInputReceiveFrom('');
+        setInputReceiveFromName('');
+    }
+    const handleShowQuickSearch = () =>{
+        if(SelReceiveFrom !== ''){
+            setShowQuickSearch(true);
+        }
+    }
+
+    const handleQuickSeacrh = (data) =>{
+        setShowQuickSearch(false);
+        setInputReceiveFrom(data.id);
+        if(SelReceiveFrom == 'EMPLOYEE'){
+            setInputReceiveFromName(data.nama);
+        }else if(SelReceiveFrom == 'CUSTOMER'){
+            setInputReceiveFromName(data.customername);
+        }else if(SelReceiveFrom == 'VENDOR'){
+            setInputReceiveFromName(data.nama);
+        }
+
+        setInputIdWO('');
+        setInputWO('');
+        // setInputCustomer(data.customername);
+        // setInputCustomerID(data.id);
     }
 
     const handleInputReceiveFrom = (data) =>{
@@ -177,35 +253,35 @@ export default function AddForm(props) {
         if(InputListItem.length > 0){
             for(let i=0; i < InputListItem.length; i++){
                 let det = InputListItem[i];
-                if(det.idcoa !== '' || det.catatan !== '' || det.amount !== '' || det.isdownpayment !== '' || det.idinvoice !== '' || det.idworkorder !== '' ){
-                    if(det.catatan == ''){
-                        setErrInputCatatan(i18n.t('Catatan')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+                if(det.idcoa !== '' || det.catatan !== '' || det.amount !== ''  || det.idinvoice !== '' || det.idworkorder !== '' ){
+                    // if(det.catatan == ''){
+                    //     setErrInputCatatan(i18n.t('Catatan')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }
 
                     if(det.amount == ''){
                         setErrInputAmount(i18n.t('Amount')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
                     }
 
-                    if(det.isdownpayment == ''){
-                        setErrIsDownPayment(i18n.t('DP')+' '+i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }else{
-                        if(det.isdownpayment == 'Y'){
-                            if(det.idworkorder == ''){
-                                setErrSelWO(i18n.t('WO')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
-                            }
-                        }
-                    }
+                    // if(det.isdownpayment == ''){
+                    //     setErrIsDownPayment(i18n.t('DP')+' '+i18n.t('label_REQUIRED'));
+                    //     flag = false;
+                    // }else{
+                    //     if(det.isdownpayment == 'Y'){
+                    //         if(det.idworkorder == ''){
+                    //             setErrSelWO(i18n.t('WO')+' '+i18n.t('label_REQUIRED'));
+                    //             flag = false;
+                    //         }
+                    //     }
+                    // }
                     listitems.push(det);
                 }
             }
         }
 
         if(listitems.length == 0){
-            setErrItems(i18n.t('Items')+' '+i18n.t('label_REQUIRED'));
+            setErrItems(i18n.t('Items')+' '+i18n.t('label_REQUIRED')+' , Invoice Not Found');
             flag = false;
         }
 
@@ -219,10 +295,10 @@ export default function AddForm(props) {
             flag = false;
         }
 
-        if(SelCOA == ''){
-            setErrSelCOA(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(SelCOA == ''){
+        //     setErrSelCOA(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         if(SelBank == ''){
             setErrSelBank(i18n.t('label_REQUIRED'));
@@ -253,26 +329,48 @@ export default function AddForm(props) {
     const executeSubmit = () => {
         let flag = checkColumnMandatory();
         if(flag){
+            let idwo = InputIdWO;
             setLoading(true);
             let obj = new Object();
             obj.receivedate = moment(InputReceiveDate).toDate().getTime();
-            obj.receivefrom = InputReceiveFrom;
-            obj.idcoa = SelCOA;
+            obj.receivefrom = "";
+
+            obj.idreceivetype = SelReceiveFrom;
+            if(SelReceiveFrom == 'EMPLOYEE'){
+                obj.idemployee = InputReceiveFrom;
+                obj.idcustomer = null;
+                obj.idvendor = null;
+                idwo = null;
+            }else if(SelReceiveFrom == 'CUSTOMER'){
+                obj.idemployee = null;
+                obj.idcustomer = InputReceiveFrom;
+                obj.idvendor = null;
+            }else if(SelReceiveFrom == 'VENDOR'){
+                obj.idemployee = null;
+                obj.idcustomer = null;
+                obj.idvendor = InputReceiveFrom;
+                idwo = null;
+            }
+
+            obj.idcoa = null;//SelCOA;
             obj.idbank = SelBank;
             obj.keterangan = InputKeterangan;
             obj.isactive = true;
+            obj.idwo = idwo;
             let listdetails = [];
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
                     let det = InputListItem[i];
-                    if(det.catatan !== '' && det.amount !== '' && det.isdownpayment !== ''){
+                    if(det.amount !== ''){
                         let objDet = new Object();
-                        objDet.idcoa = det.idcoa !== '' ? det.idcoa:null;
+                        objDet.idcoa = det.idcoa !== '' && det.idcoa !== 'nodata' ? det.idcoa:null;
                         objDet.catatan = det.catatan;
-                        objDet.amount = new String(det.amount).replaceAll('.','').replaceAll(',','.');
-                        objDet.isdownpayment = det.isdownpayment;
+                        objDet.amount = numConvToValDB(det.amount);//.replaceAll('.','').replaceAll(',','.');
+                        objDet.penyesuaian = numConvToValDB(det.penyesuaian);
+                        objDet.keterangan_penyesuaian = det.ketpenyesuaian;
+                        objDet.isdownpayment = "N";//det.isdownpayment;
                         objDet.idinvoice = det.idinvoice !== '' ? det.idinvoice:null;
-                        objDet.idworkorder = det.idworkorder !== '' ? det.idworkorder:null;
+                        objDet.idworkorder = idwo;//det.idworkorder !== '' ? det.idworkorder:null;
                         listdetails.push(objDet);
                     }
                 }
@@ -308,7 +406,7 @@ export default function AddForm(props) {
         const { name, value } = e.target;
         let valTemp = value;
         const list = [...InputListItem];
-        if(name == 'amount'){
+        if(name == 'amount' || name == 'penyesuaian'){
             let flagReg = inputJustNumberAndCommaDot(value);
             if(flagReg){
                 valTemp = formatMoney(value);
@@ -328,7 +426,12 @@ export default function AddForm(props) {
     };    
 
     const handleAddClick = () => {
-        setInputListItem([...InputListItem, { idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:""}]);
+        let defCOA = ListCOA.filter(output => output.label == 'Pembayaran Customer');
+        let idcoa  = "";
+        if(defCOA.length > 0){
+            idcoa = defCOA[0].value;
+        }
+        setInputListItem([...InputListItem, { idcoa:idcoa,catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:""}]);
     };
     
     const handleRemoveClick = index => {
@@ -355,29 +458,63 @@ export default function AddForm(props) {
     };
 
     const handleShowQuickSearchWO = (e, index) => {
-        setShowQuickSearchWO(true);
-        setInputIndex(index);
+        setErrInputReceiveFrom("");
+        if(InputReceiveFrom !== ""){
+            setShowQuickSearchWO(true);
+            // setInputIndex(index);
+        }
     };
 
     const handleShowQuickSearchInv = (e, index) => {
-        const list = [...InputListItem];
-        setShowQuickSearchINV(true);
-        setInputIndex(index);
-        setInputIndexIdWo(list[index]['idworkorder']);
+        setErrInputReceiveFrom("");
+        if(InputReceiveFrom !== ""){
+            const list = [...InputListItem];
+            setShowQuickSearchINV(true);
+            setInputIndex(index);
+            setInputIndexIdWo(list[index]['idworkorder']);
+        }
     };
 
     const handleQuickSeacrhWO = (data) =>{
         setShowQuickSearchWO(false);
 
-        const list = [...InputListItem];
-        list[InputIndex]['idworkorder'] = data.id;
-        list[InputIndex]['nodocwo'] = data.nodocument;
+        setInputIdWO(data.id);
+        setInputWO(data.nodocument+' - '+data.noaju);
 
-        list[InputIndex]['idinvoice'] = '';
-        list[InputIndex]['nodocinv'] = '';
-        setInputListItem(list);
-        setInputIndex('');
+        setLoading(true);
+        dispatch(actions.getPenerimaanKasBankData('/getListInvoiceNotPaid/'+data.id,successHandlerListInvNotPaid, errorHandler));
+
+        // const list = [...InputListItem];
+        // list[InputIndex]['idworkorder'] = data.id;
+        // list[InputIndex]['nodocwo'] = data.nodocument;
+
+        // list[InputIndex]['idinvoice'] = '';
+        // list[InputIndex]['nodocinv'] = '';
+        // setInputListItem(list);
+        // setInputIndex('');
         //idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:""
+    }
+
+    const successHandlerListInvNotPaid = (data) =>{
+        
+        const theData = data.data.reduce((obj, el) => [
+            ...obj,
+            {
+                'idcoa': DefaultCoa,
+                'catatan': "",
+                'amount':numToMoney(el.totalinvoice),
+                'isdownpayment':"",
+                'idinvoice':el.id,
+                'nodocinv':el.nodocument,
+                'idworkorder':'',
+                'nodocwo':'',
+                'penyesuaian':'',
+                'ketpenyesuaian':''
+            }
+        ], []);
+        
+        setInputListItem(theData);
+        setLoading(false);
     }
 
     const handleQuickSeacrhINV = (data) =>{
@@ -405,11 +542,13 @@ export default function AddForm(props) {
             {   
                 nodoc:InputNoDoc,
                 receivedate:InputReceiveDate,
-                receivefrom:InputReceiveFrom,
+                receivefrom:InputReceiveFromName,
                 coa:SelCOA,
                 bank:SelBank,
                 keterangan:InputKeterangan,
-                items:InputListItem
+                items:InputListItem,
+                SelReceiveFrom:SelReceiveFrom,
+                workorder:InputWO
             }
         }
         validate={values => {
@@ -485,6 +624,9 @@ export default function AddForm(props) {
                                 {i18n.t('label_RECEIVE_FROM')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
+                            <table style={{width:'100%'}}>
+                            <tbody>
+                            <td style={{width:'70%'}}>
                             <Input
                                 name="receivefrom"
                                 // className={
@@ -495,13 +637,93 @@ export default function AddForm(props) {
                                 type="text"
                                 id="receivefrom"
                                 maxLength={200}
-                                onChange={val => handleInputReceiveFrom(val)}
+                                // onChange={val => handleInputReceiveFrom(val)}
+                                disabled={true}
                                 onBlur={handleBlur}
                                 value={values.receivefrom}
                             />
+                            </td>
+                            <td style={{width:'30%'}}>
+                            <DropdownList
+                                    // className={
+                                    //     touched.branch && errors.branch
+                                    //         ? "input-error" : ""
+                                    // }
+                                    name="SelReceiveFrom"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeReceiveType(val)}
+                                    onBlur={val => setFieldTouched("SelReceiveFrom", val?.value ? val.value : '')}
+                                    data={ListReceiveFrom}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.SelReceiveFrom}
+                                />
+                            </td>
+
+                            <td>
+                                <IconButton color={'primary'}
+                                    onClick={() =>handleShowQuickSearch()}
+                                >
+                                    <SearchIcon/>
+                                </IconButton>
+                                </td>
+                            </tbody>
+                            </table>
+                            
                             <div className="invalid-feedback-custom">{ErrInputReceiveFrom}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="coa">
+                            <div hidden={values.SelReceiveFrom == "" || values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>
+                            <label className="mt-3 form-label required" htmlFor="workorder">
+                                {i18n.t('Work Order')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <table style={{width:'100%'}}>
+                            <tbody>
+                            <tr>
+                                <td>
+                                <Input
+                                name="workorder"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="workorder"
+                                // maxLength={200}
+                                // onChange={val => handleInputChange(val,i)}
+                                // onBlur={handleBlur}
+                                disabled={true}
+                                value={values.workorder}
+                                />
+                                
+                                </td>
+
+                                 <td >
+                                <IconButton color={'primary'}
+                                    onClick={val =>handleShowQuickSearchWO("","")}
+                                >
+                                    <SearchIcon />
+                                </IconButton>
+                                </td> 
+
+                                {/* <td hidden={x.nodocwo == ''}>
+                                <IconButton color={'primary'}
+                                    onClick={val =>handleDeleteWO(val,i)}
+                                >
+                                    <DeleteIcon style={{ fontSize: 18 }}/>
+                                </IconButton>
+                                </td> */}
+                            </tr>
+                            </tbody>
+                            </table>
+                            </div>
+
+                            {/* <label className="mt-3 form-label required" htmlFor="coa">
                                 {i18n.t('COA')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
@@ -524,7 +746,7 @@ export default function AddForm(props) {
                                     // disabled={values.isdisabledcountry}
                                     value={values.coa}
                                 />
-                                <div className="invalid-feedback-custom">{ErrSelCOA}</div>
+                                <div className="invalid-feedback-custom">{ErrSelCOA}</div> */}
 
                             <label className="mt-3 form-label required" htmlFor="bank">
                                 {i18n.t('To Kas/Bank')}
@@ -577,17 +799,19 @@ export default function AddForm(props) {
                             <div className="invalid-feedback-custom">{ErrSelWO}</div>
                             <div className="invalid-feedback-custom">{ErrInputCatatan}</div>
                             <div className="invalid-feedback-custom">{ErrInputAmount}</div>
-                            <div className="invalid-feedback-custom">{ErrIsDownPayment}</div>
+                            {/* <div className="invalid-feedback-custom">{ErrIsDownPayment}</div> */}
                             {
                                 InputListItem.length == 0?'':
                                 <table id="tablegrid">
                                     <tr>
-                                        <th>{i18n.t('COA')}</th>
-                                        <th>{i18n.t('label_NOTE')}</th>
+                                        <th>{i18n.t('Transaksi')}</th>
+                                        {/* <th>{i18n.t('label_NOTE')}</th> */}
                                         <th>{i18n.t('Amount')}</th>
-                                        <th>{i18n.t('DP')}</th>
-                                        <th>{i18n.t('Invoice Number')}</th>
-                                        <th>{i18n.t('label_WO_NUMBER')}</th>
+                                        <th>{i18n.t('Penyesuaian')}</th>
+                                        <th>{i18n.t('Ket. Penyesuaian')}</th>
+                                        {/* <th>{i18n.t('DP')}</th> */}
+                                        {/* <th hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>{i18n.t('label_WO_NUMBER')}</th> */}
+                                        <th hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>{i18n.t('Invoice Number')}</th>
                                         <th>{i18n.t('Action')}</th>
                                     </tr>
                                     <tbody>
@@ -605,11 +829,11 @@ export default function AddForm(props) {
                                                         data={ListCOA}
                                                         textField={'label'}
                                                         valueField={'value'}
-                                                        style={{width: '130px'}}
+                                                        style={{width: '250px'}}
                                                         value={x.idcoa}
                                                     />
                                                     </td>
-                                                    <td>
+                                                    {/* <td>
                                                     <Input
                                                         name="catatan"
                                                         // className={
@@ -627,7 +851,7 @@ export default function AddForm(props) {
                                                         value={x.catatan}
                                                         disabled={false}
                                                     />
-                                                    </td>
+                                                    </td> */}
                                                     <td>
                                                     <Input
                                                         name="amount"
@@ -647,7 +871,47 @@ export default function AddForm(props) {
                                                         disabled={false}
                                                     />
                                                     </td>
+
                                                     <td>
+                                                    <Input
+                                                        name="penyesuaian"
+                                                        // className={
+                                                        //     touched.amount && errors.amount
+                                                        //         ? "w-50 input-error"
+                                                        //         : "w-50"
+                                                        // }
+                                                        type="text"
+                                                        id="penyesuaian"
+                                                        onChange={val => handleInputChange(val,i)}
+                                                        onBlur={handleBlur}
+                                                        // placeholder={i18n.t('label_AMOUNT')}
+                                                        // style={{width: '25%'}}
+                                                        // value={values.amount}
+                                                        value={x.penyesuaian}
+                                                        disabled={false}
+                                                    />
+                                                    </td>
+
+                                                    <td>
+                                                    <Input
+                                                        name="ketpenyesuaian"
+                                                        // className={
+                                                        //     touched.amount && errors.amount
+                                                        //         ? "w-50 input-error"
+                                                        //         : "w-50"
+                                                        // }
+                                                        type="text"
+                                                        id="ketpenyesuaian"
+                                                        onChange={val => handleInputChange(val,i)}
+                                                        onBlur={handleBlur}
+                                                        // placeholder={i18n.t('label_AMOUNT')}
+                                                        // style={{width: '25%'}}
+                                                        // value={values.amount}
+                                                        value={x.ketpenyesuaian}
+                                                        disabled={false}
+                                                    />
+                                                    </td>
+                                                    {/* <td>
                                                     <DropdownList
                                                         name="isdownpayment"
                                                         filter='contains'
@@ -660,62 +924,9 @@ export default function AddForm(props) {
                                                         style={{width: '130px'}}
                                                         value={x.isdownpayment}
                                                     />
-                                                    </td>
-                                                    <td>
-                                                    
-                                                    <table style={{width:'100%'}}>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td>
-                                                        <Input
-                                                        name="nodocinv"
-                                                        // className={
-                                                        //     touched.namebranch && errors.namebranch
-                                                        //         ? "w-50 input-error"
-                                                        //         : "w-50"
-                                                        // }
-                                                        type="text"
-                                                        id="nodocinv"
-                                                        // maxLength={200}
-                                                        onChange={val => handleInputChange(val,i)}
-                                                        // onBlur={handleBlur}
-                                                        disabled={true}
-                                                        value={x.nodocinv}
-                                                        />
-                                                        
-                                                        </td>
-                                                        <td hidden={x.nodocinv !== ''}>
-                                                        <IconButton color={'primary'}
-                                                            onClick={val =>handleShowQuickSearchInv(val,i)}
-                                                        >
-                                                            <SearchIcon style={{ fontSize: 18 }}/>
-                                                        </IconButton>
-                                                        </td>
-                                                        <td hidden={x.nodocinv == ''}>
-                                                        <IconButton color={'primary'}
-                                                            onClick={val =>handleDeletehINV(val,i)}
-                                                        >
-                                                            <DeleteIcon style={{ fontSize: 18 }}/>
-                                                        </IconButton>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                    </table>
+                                                    </td> */}
 
-                                                    {/* <DropdownList
-                                                        name="idinvoice"
-                                                        filter='contains'
-                                                        // placeholder={i18n.t('select.SELECT_OPTION')}
-                                                        
-                                                        onChange={val => handleInputDropDownChange(val,i,'idinvoice')}
-                                                        data={[]}
-                                                        textField={'label'}
-                                                        valueField={'value'}
-                                                        style={{width: '130px'}}
-                                                        value={x.idinvoice}
-                                                    /> */}
-                                                    </td>
-                                                    <td>
+                                                    {/* <td hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>
                                                     
                                                     <table style={{width:'100%'}}>
                                                     <tbody>
@@ -757,20 +968,50 @@ export default function AddForm(props) {
                                                     </tr>
                                                     </tbody>
                                                     </table>
+                                                    </td> */}
 
-                                                    {/* <DropdownList
-                                                        name="idworkorder"
-                                                        filter='contains'
-                                                        // placeholder={i18n.t('select.SELECT_OPTION')}
+                                                    <td hidden={values.SelReceiveFrom == "EMPLOYEE" || values.SelReceiveFrom == "VENDOR"}>
+                                                    
+                                                    <table style={{width:'100%'}}>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>
+                                                        <Input
+                                                        name="nodocinv"
+                                                        // className={
+                                                        //     touched.namebranch && errors.namebranch
+                                                        //         ? "w-50 input-error"
+                                                        //         : "w-50"
+                                                        // }
+                                                        type="text"
+                                                        id="nodocinv"
+                                                        // maxLength={200}
+                                                        onChange={val => handleInputChange(val,i)}
+                                                        // onBlur={handleBlur}
+                                                        disabled={true}
+                                                        value={x.nodocinv}
+                                                        />
                                                         
-                                                        onChange={val => handleInputDropDownChange(val,i,'idworkorder')}
-                                                        data={ListWO}
-                                                        textField={'label'}
-                                                        valueField={'value'}
-                                                        style={{width: '130px'}}
-                                                        value={x.idworkorder}
-                                                    /> */}
+                                                        </td>
+                                                        <td hidden={x.nodocinv !== ""}>
+                                                        <IconButton color={'primary'}
+                                                            onClick={val =>handleShowQuickSearchInv(val,i)}
+                                                        >
+                                                            <SearchIcon style={{ fontSize: 18 }}/>
+                                                        </IconButton>
+                                                        </td>
+                                                        <td hidden={x.nodocinv == ''}>
+                                                        <IconButton color={'primary'}
+                                                            onClick={val =>handleDeletehINV(val,i)}
+                                                        >
+                                                            <DeleteIcon style={{ fontSize: 18 }}/>
+                                                        </IconButton>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                    </table>
                                                     </td>
+
                                                     <td>
                                                         <IconButton color={'primary'} hidden={i > 0}
                                                             onClick={() => handleAddClick()}
@@ -829,6 +1070,7 @@ export default function AddForm(props) {
                                             placeholder = {'Pencarian Berdasarkan No Document atau Nama Customer'}
                                             idwo = {InputIndexIdWo}
                                             idpenerimaan = {id}
+                                            idcustomer = {InputReceiveFrom}
                                         ></FormSearch>
                                         {LoadingSend && <Loading/>}
                                 </StyledDialog>
@@ -847,7 +1089,29 @@ export default function AddForm(props) {
                                             seacrhtype = {'PENERIMAANWO'}
                                             errorHandler = {errorHandler}
                                             handlesearch = {handleQuickSeacrhWO}
-                                            placeholder = {'Pencarian Berdasarkan No Document atau Nama Customer atau Nama Cargo'}
+                                            placeholder = {'Pencarian Berdasarkan No Document atau No AJU atau Nama Customer atau Nama Cargo'}
+                                            idcustomer = {InputReceiveFrom}
+                                        ></FormSearch>
+                                        {LoadingSend && <Loading/>}
+                                </StyledDialog>
+
+                                <StyledDialog
+                                    disableBackdropClick
+                                    disableEscapeKeyDown
+                                    maxWidth="md"
+                                    fullWidth={true}
+                                    // style={{height: '80%'}}
+                                    open={ShowQuickSearch}
+                                >
+                                        <FormSearch
+                                            showflag = {setShowQuickSearch}
+                                            flagloadingsend = {setLoadingSend}
+                                            seacrhtype = {'PENERIMAAN-KAS-BANK'}
+                                            seacrhtype1 = {SelReceiveFrom}
+                                            errorHandler = {errorHandler}
+                                            handlesearch = {handleQuickSeacrh}
+                                            placeholder = {SelReceiveFrom == 'CUSTOMER' || SelReceiveFrom == 'VENDOR' ?'Pencarian Berdasarkan Nama Atau Alias':'Pencarian Berdasarkan Nama'}
+
                                         ></FormSearch>
                                         {LoadingSend && <Loading/>}
                                 </StyledDialog>

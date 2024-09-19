@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../shared/globalFunc';
+  import { isGetPermissions,numToMoney,numToMoneyWithAfterCommaZero,reloadToHomeNotAuthorize } from '../shared/globalFunc';
   import { editPengeluaranKasBank_Permission,deletePengeluaranKasBank_Permission,MenuPengeluaranKasBank} from '../shared/permissionMenu';
   import moment                       from "moment/moment";
   import '../CSS/table.css';
@@ -351,12 +351,12 @@ import React, {useState,
                             </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('COA')}</span>
                             <strong className="col-md-7">
                                 {value.coaName?value.coaName:''}
                             </strong>
-                            </div>
+                            </div> */}
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Bank')}</span>
@@ -414,8 +414,8 @@ import React, {useState,
                     <th hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{i18n.t('Jenis Sparepart')}</th>
                     <th hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{i18n.t('Asset Sparepart')}</th>
                     <th>{i18n.t('Amount')}</th>
-                    <th>{i18n.t('label_NOTE')}</th>
-                    <th>{i18n.t('COA')}</th>
+                    {/* <th>{i18n.t('label_NOTE')}</th> */}
+                    {/* <th>{i18n.t('COA')}</th> */}
                     </tr>
                     <tbody>
                         {
@@ -427,9 +427,9 @@ import React, {useState,
                                         <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{x.idasset}</td>
                                         <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{x.sparepartassettype}</td>
                                         <td hidden={checkCategory(value.idpaymenttype?value.idpaymenttype:'','asset')}>{x.idassetsparepart}</td>
-                                        <td>{numToMoney(parseFloat(x.amount))}</td>
-                                        <td>{x.catatan}</td>
-                                        <td>{x.idcoa}</td>
+                                        <td>{numToMoneyWithAfterCommaZero(parseFloat(x.amount))}</td>
+                                        {/* <td>{x.catatan}</td> */}
+                                        {/* <td>{x.idcoa}</td> */}
                                     </tr>
 
                                 )

@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { isGetPermissions,numToMoney,numToMoneyWithAfterCommaZero,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { editInvoice_Permission,deleteInvoice_Permission,MenuInvoice} from '../../shared/permissionMenu';
   import moment                       from "moment/moment";
   import '../../CSS/table.css';
@@ -48,6 +48,7 @@ import React, {useState,
     const [IsHide, setIsHide] = useState(false);
     const [IsPrintInvoiceHide, setIsPrintInvoiceHide] = useState(false);
     const [value, setValue] = useState([]);
+    const [ListDetailsPrice, setListDetailsPrice] = useState([]);
     const [IsHideColumnWarehouse, setIsHideColumnWarehouse] = useState(false);
 
     const classes = useStyles();
@@ -95,6 +96,10 @@ import React, {useState,
 
     function successHandler(data) {
         setValue(data.data);
+        if(data.data.detailsprice){
+            let detailsprice = data.data.detailsprice.filter(output => output.idwarehouse == data.data.idwarehousesuratjalan);
+            setListDetailsPrice(detailsprice);
+        }
         if(data.data.idinvoicetype == 'REIMBURSEMENT'){
             setIsHideColumnWarehouse(true);
         }
@@ -103,18 +108,18 @@ import React, {useState,
                 setIsHide(true);
             }
         }
-        //setIsPrintInvoiceHide
-        if(data.data.detailspenerimaan){
-            let totalpenerimaan = 0;
-            for(let i=0; i < data.data.detailspenerimaan.length; i++){
-                let val = data.data.detailspenerimaan[i];
-                totalpenerimaan += val.amount?parseFloat(val.amount):0;
-            }
-            let totalInvoice = data.data?.totalinvoice?parseFloat(data.data.totalinvoice):0;
-            if(totalInvoice == 0 || totalpenerimaan >= totalInvoice){
-                setIsPrintInvoiceHide(true);
-            }
-        }
+        
+        // if(data.data.detailspenerimaan){
+        //     let totalpenerimaan = 0;
+        //     for(let i=0; i < data.data.detailspenerimaan.length; i++){
+        //         let val = data.data.detailspenerimaan[i];
+        //         totalpenerimaan += val.amount?parseFloat(val.amount):0;
+        //     }
+        //     let totalInvoice = data.data?.totalinvoice?parseFloat(data.data.totalinvoice):0;
+        //     if(totalInvoice == 0 || totalpenerimaan >= totalInvoice){
+        //         setIsPrintInvoiceHide(true);
+        //     }
+        // }
 
         if(data.data.idwo != undefined && data.data.idwo != null){
             if(data.data.idwo > 0){
@@ -218,9 +223,17 @@ import React, {useState,
     const getAmountPayment = (idpenerimaankasbank,details) => {
         let listfilter = details.filter(output => output.idpenerimaankasbank == idpenerimaankasbank);
         if(listfilter.length > 0){
-            return numToMoney(parseFloat(listfilter[0].amount));
+            return numToMoneyWithAfterCommaZero(parseFloat(listfilter[0].amount));
         }
         return 0;
+    }
+
+    const arrPengeluaran = (list) => {
+        let val = '';
+        for(let i=0; list.length > i ; i++){
+            val += list[i].nodocumentpengeluaran+',';
+        }
+        return val;
     }
 
     function onClickPrint() {
@@ -301,10 +314,23 @@ import React, {useState,
                     loading ?<Skeleton count={7} height={21} style={{marginTop: '1rem'}}/> :
                     (
                         <section>
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_NO_DOCUMENT')}</span>
                             <strong className="col-md-7">
                                 {value.nodocument?value.nodocument:''}
+                            </strong>
+                            </div> */}
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('No AJU')}</span>
+                            <strong className="col-md-7">
+                            {value.noajuwo?value.noajuwo:''}
+                            </strong>
+                            </div>
+                            
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Work Order')}</span>
+                            <strong className="col-md-7">
+                            {value.noocumentwo?value.noocumentwo:''}
                             </strong>
                             </div>
 
@@ -351,13 +377,6 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Work Order')}</span>
-                            <strong className="col-md-7">
-                            {value.noocumentwo?value.noocumentwo:''}
-                            </strong>
-                            </div>
-
-                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Penjaluran')}</span>
                             <strong className="col-md-7">
                             {value.jalurname?value.jalurname:''}
@@ -374,35 +393,60 @@ import React, {useState,
                             <div className="row mt-3" hidden={value.namainvoicetype?value.namainvoicetype=='DP':false}>
                             <span className="col-md-5">{i18n.t('PPN')}</span>
                             <strong className="col-md-7">
-                            {value.ppn?numToMoney(parseFloat(value.ppn)):''}
+                            {value.ppn?numToMoneyWithAfterCommaZero(parseFloat(value.ppn)):''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3" hidden={value.namainvoicetype?value.namainvoicetype=='DP':false}>
+                            <span className="col-md-5">{i18n.t('Nilai PPN')}</span>
+                            <strong className="col-md-7">
+                            {value.nilaippn?numToMoneyWithAfterCommaZero(parseFloat(value.nilaippn)):''}
                             </strong>
                             </div>
 
                             <div className="row mt-3" hidden={value.namainvoicetype?value.namainvoicetype=='DP':false}>
                             <span className="col-md-5">{i18n.t('Diskon Nota')}</span>
                             <strong className="col-md-7">
-                            {value.diskonnota?numToMoney(parseFloat(value.diskonnota)):''}
+                            {value.diskonnota?numToMoneyWithAfterCommaZero(parseFloat(value.diskonnota)):''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
                             <span className="col-md-5">{value.namainvoicetype?(value.namainvoicetype == 'DP'?'DP':'Total'):i18n.t('Total')}</span>
                             <strong className="col-md-7">
-                            {value.totalinvoice?numToMoney(parseFloat(value.totalinvoice)):''}
+                            {value.totalinvoice?numToMoneyWithAfterCommaZero(parseFloat(value.totalinvoice)):''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3" >
+                            <span className="col-md-5">{i18n.t('Catatan')}</span>
+                            <strong className="col-md-7">
+                            {value.notes1?value.notes1:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3" >
+                            <span className="col-md-5">{i18n.t('No. Faktur Pajak')}</span>
+                            <strong className="col-md-7">
+                            {value.notes2?value.notes2:''}
                             </strong>
                             </div>
 
                             <div className="row mt-3" hidden={value.idinvoicetype?(value.idinvoicetype == 'REIMBURSEMENT' || value.idinvoicetype == 'DP'?true:false):true}>
                             <span className="col-md-5">{i18n.t('Price List')}</span>
                             <strong className="col-md-7">
-                            {value.detailsprice?(value.detailsprice.length > 0?value.detailsprice[0].nodocumentpricelist:''):''}
+                            {value.detailsprice?(ListDetailsPrice.length > 0?ListDetailsPrice[0].nodocumentpricelist:''):''}
                             </strong>
                             </div>
 
                             <div className="row mt-3" hidden={value.idinvoicetype?(value.idinvoicetype == 'REIMBURSEMENT'?false:true):true}>
                             <span className="col-md-5">{i18n.t('Pengeluaran')}</span>
                             <strong className="col-md-7">
-                            {value.detailsprice?(value.detailsprice.length > 0?value.detailsprice[0].nodocumentpengeluaran:''):''}
+                            
+                            {value.detailsprice?(ListDetailsPrice.length > 0?  
+                                arrPengeluaran(ListDetailsPrice)
+                                // value.detailsprice[0].nodocumentpengeluaran
+                                :''):''}
                             </strong>
                             </div>
 
@@ -415,10 +459,34 @@ import React, {useState,
             </div>
             </CardBody>
 
+            <table id="tablegrid" hidden={value.idinvoicetype?value.idinvoicetype !== 'REIMBURSEMENT': true }>
+                <tr>
+                    <th>{'No Invoice'}</th>
+                    <th>{'Tanggal'}</th>
+                    <th>{'Jumlah'}</th>
+                </tr>
+                <tbody>
+                    { 
+                        value.listDP?
+                        value.listDP.map((x, i) => {
+                            return (
+                            <tr>
+                                <td>{x.nodocument}</td>
+                                <td>{x.tanggal?moment (new Date(x.tanggal)).format(formatdate):''}</td>
+                                <td>{numToMoneyWithAfterCommaZero(parseFloat(x.totalinvoice))}</td>
+                            </tr>
+                            )
+                        })
+                        :''
+                    }
+                </tbody>
+            </table>
+
             {
                 <table id="tablegrid" hidden={value.namainvoicetype?value.namainvoicetype=='DP':false}>
                     <tr>
                         <th hidden={IsHideColumnWarehouse}>{i18n.t('Warehouse')}</th>
+                        <th>{'No Document'}</th>
                         <th>{i18n.t('Invoice Type')}</th>
                         <th>{i18n.t('Harga')}</th>
                         {/* <th>{i18n.t('Is Mandatory')}</th> */}
@@ -430,17 +498,18 @@ import React, {useState,
                     </tr>
                     <tbody>
                         {   value.detailsprice?
-                            value.detailsprice.map((x, i) => {
+                            ListDetailsPrice.map((x, i) => {
                                 return (
                                     <tr>
-                                        <td width={'350px'} hidden={IsHideColumnWarehouse}>{x.warehouseName}</td>
+                                        <td width={'300px'} hidden={IsHideColumnWarehouse}>{x.warehouseName}</td>
+                                        <td>{x.nodocumentpengeluaran}</td>
                                         <td>{x.invoicetypename}</td>
-                                        <td>{numToMoney(parseFloat(x.price))}</td>
+                                        <td>{numToMoneyWithAfterCommaZero(parseFloat(x.price))}</td>
                                         {/* <td style={{width:'50px'}}>{x.ismandatory == 'Y'?'Yes':'No'}</td> */}
                                         {/* <td style={{backgroundColor:x.jalur !== ''? (x.jalur == 'HIJAU'?'greenyellow':'red'):''}}>{x.jalur == 'MERAH'?'Merah':'Hijau'}</td> */}
                                         <td>{x.qty}</td>
-                                        <td>{numToMoney(parseFloat(x.diskon))}</td>
-                                        <td>{numToMoney(parseFloat(x.subtotal))}</td>
+                                        <td>{numToMoneyWithAfterCommaZero(parseFloat(x.diskon))}</td>
+                                        <td>{numToMoneyWithAfterCommaZero(parseFloat(x.subtotal))}</td>
                                     </tr>
                                 )
                             })

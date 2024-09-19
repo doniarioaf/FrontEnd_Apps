@@ -78,10 +78,11 @@ const DialogQuickSearch = props => {
             data = [
                 {name: 'id', title: 'id'},
                 {name: 'nowo', title: 'No Work Order'},
+                {name: 'noaju', title: 'No AJU'},
                 {name: 'namacargo', title: 'Nama Cargo'},
                 {name: 'name', title: i18n.t('label_NAME')},
             ]
-        }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK'){
+        }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK' || props.seacrhtype == 'PENERIMAAN-KAS-BANK'){
             if(props.seacrhtype1){
                 if(props.seacrhtype1 == 'EMPLOYEE'){
                     data = [
@@ -156,15 +157,18 @@ const DialogQuickSearch = props => {
                 obj.idpenerimaan = props.idpenerimaan ?props.idpenerimaan:0;
                 //idpenerimaan
                 obj.type = 'PENERIMAAN';
+                obj.idcustomer = props.idcustomer ? props.idcustomer:null;
                 dispatch(actions.submitAddPenerimaanKasBank('/searchinvoice',obj,successHandleSearch, props.errorHandler));
             }else if(props.seacrhtype == 'PENERIMAANWO'){
                 let obj = new Object();
                 obj.nodocument = InputSearchName;
                 obj.namacustomer = InputSearchName;
                 obj.namacargo = InputSearchName;
+                obj.noaju = InputSearchName;
                 obj.idwo = 0;
+                obj.idcustomer = props.idcustomer ? props.idcustomer:null; 
                 dispatch(actions.submitAddPenerimaanKasBank('/searchwo',obj,successHandleSearch, props.errorHandler));
-            }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK'){
+            }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK' || props.seacrhtype == 'PENERIMAAN-KAS-BANK'){
                 if(props.seacrhtype1){
                     if(props.seacrhtype1 == 'EMPLOYEE'){
                         let obj = new Object();
@@ -247,10 +251,11 @@ const DialogQuickSearch = props => {
                         'nowo': el.nodocument,
                         'namacargo': el.namacargo,
                         'name': el.namaCustomer,
+                        'noaju':el.noaju,
                         'data':el
                     }
                 ], []);
-            }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK'){
+            }else if(props.seacrhtype == 'PENGELUAARAN-KAS-BANK' || props.seacrhtype == 'PENERIMAAN-KAS-BANK'){
                 if(props.seacrhtype1){
                     if(props.seacrhtype1 == 'EMPLOYEE'){
                         theData = data.data.reduce((obj, el) => [

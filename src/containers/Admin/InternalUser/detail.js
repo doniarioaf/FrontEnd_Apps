@@ -25,7 +25,7 @@ import React, {useState,
   import moment                       from "moment/moment";
   import {Loading}                    from '../../../components/Common/Loading';
   import { reloadToHomeNotAuthorize,isGetPermissions } from '../../shared/globalFunc';
-  import { MenuInternalUser, editInternalUser_Permission,deleteInternalUser_Permission } from '../../shared/permissionMenu';
+  import { MenuInternalUser, editInternalUser_Permission,deleteInternalUser_Permission, changePasswordInternalUser_Permission } from '../../shared/permissionMenu';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -281,9 +281,8 @@ import React, {useState,
                         :(<div>
                             <MenuItem hidden={!isGetPermissions(editInternalUser_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editinternaluser+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteInternalUser_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
-                            {/* <MenuItem hidden={isGetPermissions(DeleteInternalUser_Permission,'TRANSACTION')}  onClick={() => isDeleteAlert()}>{i18n.t('mobileuser.DELETE')}</MenuItem>
-                            <MenuItem hidden={isGetPermissions(ChangePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowChangePassword(true)}>{i18n.t('mobileuser.CHANGEPASSWORD')}</MenuItem>
-                            <MenuItem hidden={isGetPermissions(UnlockInternalUser_Permission,'TRANSACTION')}  onClick={() => setShowUnlock(true)}>{i18n.t('mobileuser.UNLOCKMOBILEUSER')}</MenuItem> */}
+                            <MenuItem hidden={!isGetPermissions(changePasswordInternalUser_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.changePasswordInternalUser+'/'+id)}>{i18n.t('label_CHANGE_PASSWORD')}</MenuItem>
+                            
                         </div>)
                         
                     }

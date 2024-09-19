@@ -41,14 +41,14 @@ const styles = StyleSheet.create({
     }
 });
 
-const getNameContact = (data) =>{
-    if(data != undefined && data != null){
-        if(data.length > 0){
-            return data[0].namakontak;
-        }
-    }
-    return '';
-}
+// const getNameContact = (data) =>{
+//     if(data != undefined && data != null){
+//         if(data.length > 0){
+//             return data[0].namakontak;
+//         }
+//     }
+//     return '';
+// }
 const GenerateInvoice = ({ valuedata }) => (
     <Fragment>
         <View style={styles.container}>
@@ -107,6 +107,10 @@ const GenerateInvoice = ({ valuedata }) => (
         <Text style={{width:'150',textAlign:'center'}}>{valuedata != null?valuedata.namapenagih:''}</Text>
         <Text style={{marginTop:60}}>{'(.......................................................)'}</Text>
         </View>  
+
+        <Text style={{marginTop:'5px'}}>{'Catatan :'}</Text>
+        <Text >{valuedata != null?valuedata.notes1:''}</Text>   
+        <Text >{valuedata != null?valuedata.notes2:''}</Text>   
     </Fragment>
 );
 export default GenerateInvoice;

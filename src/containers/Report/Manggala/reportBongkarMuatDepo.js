@@ -39,9 +39,11 @@ export default function ReportBongkarMuatDepo(props) {
     const handleStartDate = (data) =>{
         // setStart(moment(data, "DD MMMM YYYY").toDate())
         if(data !== null){
-            setStart(moment(data, formatdate).toDate())
+            setStart(moment(data, formatdate).toDate());
+            setEnd(moment(data, formatdate).toDate());
         }else{
             setStart(new Date());
+            setEnd(new Date());
         }
     }
 

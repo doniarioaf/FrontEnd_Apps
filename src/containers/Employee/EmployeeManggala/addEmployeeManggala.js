@@ -291,61 +291,61 @@ export default function AddEmployeeManggala(props) {
             setErrSelStatusKaryawan('');
             setErrSelJabatan('');
             setErrInputName('');
-            setErrInputNoIdentitas('');
-            setErrInputAlamat('');
+            // setErrInputNoIdentitas('');
+            // setErrInputAlamat('');
             setErrSelStatus('');
-            setErrInputNamePasangan('');
-            setErrInputBank('');
-            setErrInputNoRek('');
-            setErrInputAtasNama('');
-            setErrInputGaji('');
+            // setErrInputNamePasangan('');
+            // setErrInputBank('');
+            // setErrInputNoRek('');
+            // setErrInputAtasNama('');
+            // setErrInputGaji('');
             setErrSelJenisKelamin('');
 
-            setErrInfoFamilyNamaAnak('');
-            setErrInfoFamilyJenisKelamin('');
-            setErrInfoFamilyStatus('');
+            // setErrInfoFamilyNamaAnak('');
+            // setErrInfoFamilyJenisKelamin('');
+            // setErrInfoFamilyStatus('');
 
-            setErrInputTanggalLahir('');
-            setErrInputTanggalLahirPasangan('');
-            setErrInputTanggalMulai('');
-            setErrInfoFamilyTanggalLahir('');
+            // setErrInputTanggalLahir('');
+            // setErrInputTanggalLahirPasangan('');
+            // setErrInputTanggalMulai('');
+            // setErrInfoFamilyTanggalLahir('');
             
-            if(InputListInfoFamily.length > 0){
-                for(let i=0; i < InputListInfoFamily.length; i++){
-                    let det = InputListInfoFamily[i];
-                    if(det.namaanak !== '' || det.jeniskelamin !== '' || det.status !== '' ){
-                        if(det.namaanak == ''){
-                            setErrInfoFamilyNamaAnak(i18n.t('label_CHILD_NAME')+' '+i18n.t('label_REQUIRED'));
-                            flag = false;
-                        }
+            // if(InputListInfoFamily.length > 0){
+            //     for(let i=0; i < InputListInfoFamily.length; i++){
+            //         let det = InputListInfoFamily[i];
+            //         if(det.namaanak !== '' || det.jeniskelamin !== '' || det.status !== '' ){
+            //             if(det.namaanak == ''){
+            //                 setErrInfoFamilyNamaAnak(i18n.t('label_CHILD_NAME')+' '+i18n.t('label_REQUIRED'));
+            //                 flag = false;
+            //             }
 
-                        if(det.jeniskelamin == ''){
-                            setErrInfoFamilyJenisKelamin(i18n.t('label_GENDER')+' '+i18n.t('label_REQUIRED'));
-                            flag = false;
-                        }
+            //             if(det.jeniskelamin == ''){
+            //                 setErrInfoFamilyJenisKelamin(i18n.t('label_GENDER')+' '+i18n.t('label_REQUIRED'));
+            //                 flag = false;
+            //             }
 
-                        if(det.status == ''){
-                            setErrInfoFamilyStatus('Status '+i18n.t('label_REQUIRED'));
-                            flag = false;
-                        }
+            //             if(det.status == ''){
+            //                 setErrInfoFamilyStatus('Status '+i18n.t('label_REQUIRED'));
+            //                 flag = false;
+            //             }
 
-                        if(det.tanggallahir == null){
-                            setErrInfoFamilyTanggalLahir(i18n.t('label_DATE_OF_BIRTH')+' '+i18n.t('label_REQUIRED'));
-                            flag = false;
-                        }
-                    }
-                }
-            }
+            //             if(det.tanggallahir == null){
+            //                 setErrInfoFamilyTanggalLahir(i18n.t('label_DATE_OF_BIRTH')+' '+i18n.t('label_REQUIRED'));
+            //                 flag = false;
+            //             }
+            //         }
+            //     }
+            // }
 
-            if(InputTanggalLahir == null){
-                setErrInputTanggalLahir(i18n.t('label_REQUIRED'));
-                flag = false;
-            }
+            // if(InputTanggalLahir == null){
+            //     setErrInputTanggalLahir(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
 
-            if(InputTanggalMulai == null){
-                setErrInputTanggalMulai(i18n.t('label_REQUIRED'));
-                flag = false;
-            }
+            // if(InputTanggalMulai == null){
+            //     setErrInputTanggalMulai(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
 
             if(SelStatusKaryawan == ''){
                 setErrSelStatusKaryawan(i18n.t('label_REQUIRED'));
@@ -362,53 +362,54 @@ export default function AddEmployeeManggala(props) {
                 flag = false;
             }
 
-            if(InputNoIdentitas == ''){
-                setErrInputNoIdentitas(i18n.t('label_REQUIRED'));
-                flag = false;
-            }
+            // if(InputNoIdentitas == ''){
+            //     setErrInputNoIdentitas(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
 
-            if(InputAlamat == ''){
-                setErrInputAlamat(i18n.t('label_REQUIRED'));
-                flag = false;
-            }
+            // if(InputAlamat == ''){
+            //     setErrInputAlamat(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
 
             if(SelStatus == ''){
                 setErrSelStatus(i18n.t('label_REQUIRED'));
                 flag = false;
-            }else{
-                if(SelStatus == 'MENIKAH'){
-                    if(InputNamePasangan == ''){
-                        setErrInputNamePasangan(i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+            }
+            // else{
+            //     if(SelStatus == 'MENIKAH'){
+            //         if(InputNamePasangan == ''){
+            //             setErrInputNamePasangan(i18n.t('label_REQUIRED'));
+            //             flag = false;
+            //         }
 
-                    if(InputTanggalLahirPasangan == null){
-                        setErrInputTanggalLahirPasangan(i18n.t('label_REQUIRED'));
-                        flag = false;
-                    }
+            //         if(InputTanggalLahirPasangan == null){
+            //             setErrInputTanggalLahirPasangan(i18n.t('label_REQUIRED'));
+            //             flag = false;
+            //         }
                     
-                }
-            }
-            if(InputBank == ''){
-                setErrInputBank(i18n.t('label_REQUIRED'));
-                flag = false;
-            }
-            if(InputNoRek == ''){
-                setErrInputNoRek(i18n.t('label_REQUIRED'));
-                flag = false;
-            }
+            //     }
+            // }
+            // if(InputBank == ''){
+            //     setErrInputBank(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
+            // if(InputNoRek == ''){
+            //     setErrInputNoRek(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
 
-            if(InputAtasNama == ''){
-                setErrInputAtasNama(i18n.t('label_REQUIRED'));
-                flag = false;
-            }
+            // if(InputAtasNama == ''){
+            //     setErrInputAtasNama(i18n.t('label_REQUIRED'));
+            //     flag = false;
+            // }
 
-            if(!cekAksesGaji('IS_ONLY_READ')){
-                if(InputGaji == ''){
-                    setErrInputGaji(i18n.t('label_REQUIRED'));
-                    flag = false;
-                }    
-            }
+            // if(!cekAksesGaji('IS_ONLY_READ')){
+            //     if(InputGaji == ''){
+            //         setErrInputGaji(i18n.t('label_REQUIRED'));
+            //         flag = false;
+            //     }    
+            // }
             if(SelJenisKelamin == ''){
                 setErrSelJenisKelamin(i18n.t('label_REQUIRED'));
                 flag = false;
@@ -451,7 +452,7 @@ export default function AddEmployeeManggala(props) {
                 obj.status = SelStatus;
                 if(SelStatus == 'MENIKAH'){
                     obj.namapasangan = InputNamePasangan;
-                    obj.tanggallahirpasangan = moment(InputTanggalLahirPasangan).toDate().getTime();
+                    obj.tanggallahirpasangan = InputTanggalLahirPasangan !== null?moment(InputTanggalLahirPasangan).toDate().getTime():null;
                 }else{
                     obj.namapasangan = '';
                     obj.tanggallahirpasangan = null;
@@ -692,29 +693,6 @@ export default function AddEmployeeManggala(props) {
                                 />
                                 <div className="invalid-feedback-custom">{ErrSelJabatan}</div>
 
-                                <div hidden={cekAksesGaji('IS_HIDE')}>
-                                <label className="mt-3 form-label required" htmlFor="gaji">
-                                {i18n.t('label_SALARY')}
-                                <span style={{color:'red'}}>*</span>
-                                </label>
-                                <Input
-                                    name="gaji"
-                                    // className={
-                                    //     touched.namebranch && errors.namebranch
-                                    //         ? "w-50 input-error"
-                                    //         : "w-50"
-                                    // }
-                                    maxLength={20}
-                                    type="text"
-                                    id="gaji"
-                                    disabled={cekAksesGaji('IS_ONLY_READ')}
-                                    onChange={val => handleInputGaji(val)}
-                                    onBlur={handleBlur}
-                                    value={values.gaji !== ''?numToMoney(parseFloat(values.gaji)):''}
-                                />
-                                <div className="invalid-feedback-custom">{ErrInputGaji}</div>
-                                </div>
-
                                 <label className="mt-3 form-label required" htmlFor="nama">
                                 {i18n.t('label_NAME')}
                                 <span style={{color:'red'}}>*</span>
@@ -734,26 +712,6 @@ export default function AddEmployeeManggala(props) {
                                     value={values.nama}
                                 />
                                 <div className="invalid-feedback-custom">{ErrInputName}</div>
-
-                                <label className="mt-3 form-label required" htmlFor="noidentitas">
-                                {i18n.t('label_NUMBER_IDENTITY')}
-                                <span style={{color:'red'}}>*</span>
-                                </label>
-                                <Input
-                                    name="noidentitas"
-                                    // className={
-                                    //     touched.namebranch && errors.namebranch
-                                    //         ? "w-50 input-error"
-                                    //         : "w-50"
-                                    // }
-                                    type="text"
-                                    id="noidentitas"
-                                    maxLength={30}
-                                    onChange={val => handleInputNoIdentitas(val)}
-                                    onBlur={handleBlur}
-                                    value={values.noidentitas}
-                                />
-                                <div className="invalid-feedback-custom">{ErrInputNoIdentitas}</div>
 
                                 <label className="mt-3 form-label required" htmlFor="status">
                                 {i18n.t('label_GENDER')}
@@ -780,9 +738,54 @@ export default function AddEmployeeManggala(props) {
                                 />
                                 <div className="invalid-feedback-custom">{ErrSelJenisKelamin}</div>
 
+                                <div hidden={cekAksesGaji('IS_HIDE')}>
+                                <label className="mt-3 form-label required" htmlFor="gaji">
+                                {i18n.t('label_SALARY')}
+                                {/* <span style={{color:'red'}}>*</span> */}
+                                </label>
+                                <Input
+                                    name="gaji"
+                                    // className={
+                                    //     touched.namebranch && errors.namebranch
+                                    //         ? "w-50 input-error"
+                                    //         : "w-50"
+                                    // }
+                                    maxLength={20}
+                                    type="text"
+                                    id="gaji"
+                                    disabled={cekAksesGaji('IS_ONLY_READ')}
+                                    onChange={val => handleInputGaji(val)}
+                                    onBlur={handleBlur}
+                                    value={values.gaji !== ''?numToMoney(parseFloat(values.gaji)):''}
+                                />
+                                <div className="invalid-feedback-custom">{ErrInputGaji}</div>
+                                </div>
+
+                                
+
+                                <label className="mt-3 form-label required" htmlFor="noidentitas">
+                                {i18n.t('label_NUMBER_IDENTITY')}
+                                {/* <span style={{color:'red'}}>*</span> */}
+                                </label>
+                                <Input
+                                    name="noidentitas"
+                                    // className={
+                                    //     touched.namebranch && errors.namebranch
+                                    //         ? "w-50 input-error"
+                                    //         : "w-50"
+                                    // }
+                                    type="text"
+                                    id="noidentitas"
+                                    maxLength={30}
+                                    onChange={val => handleInputNoIdentitas(val)}
+                                    onBlur={handleBlur}
+                                    value={values.noidentitas}
+                                />
+                                <div className="invalid-feedback-custom">{ErrInputNoIdentitas}</div>
+
                                 <label className="mt-3 form-label required" htmlFor="tanggallahir">
                                     {i18n.t('label_DATE_OF_BIRTH')}
-                                    <span style={{color:'red'}}>*</span>
+                                    {/* <span style={{color:'red'}}>*</span> */}
                                 </label>
                                 <DatePicker
                                         name="tanggallahir"
@@ -802,7 +805,7 @@ export default function AddEmployeeManggala(props) {
 
                                 <label className="mt-3 form-label required" htmlFor="alamat">
                                 {i18n.t('label_ADDRESS')+' 1'}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                                 </label>
                                 <Input
                                     name="alamat"
@@ -878,7 +881,7 @@ export default function AddEmployeeManggala(props) {
                                 <div hidden={ !(values.status == 'MENIKAH')}>
                                 <label className="mt-3 form-label required" htmlFor="namapasangan">
                                 {i18n.t('label_COUPLE_NAME')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                                 </label>
                                 <Input
                                     name="namapasangan"
@@ -898,7 +901,7 @@ export default function AddEmployeeManggala(props) {
 
                                 <label className="mt-3 form-label required" htmlFor="tanggallahirpasangan">
                                     {i18n.t('label_COUPLE_BIRTH_DATE')}
-                                    <span style={{color:'red'}}>*</span>
+                                    {/* <span style={{color:'red'}}>*</span> */}
                                 </label>
                                 <DatePicker
                                         name="tanggallahirpasangan"
@@ -920,7 +923,7 @@ export default function AddEmployeeManggala(props) {
 
                                 <label className="mt-3 form-label required" htmlFor="bank">
                                 {i18n.t('Bank')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                                 </label>
                                 <Input
                                     name="bank"
@@ -940,7 +943,7 @@ export default function AddEmployeeManggala(props) {
 
                                 <label className="mt-3 form-label required" htmlFor="norek">
                                 {i18n.t('label_NUMBER_ACCOUNT')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                                 </label>
                                 <Input
                                     name="norek"
@@ -960,7 +963,7 @@ export default function AddEmployeeManggala(props) {
 
                                 <label className="mt-3 form-label required" htmlFor="atasnama">
                                 {i18n.t('label_ON_BEHALF_OF')}
-                                <span style={{color:'red'}}>*</span>
+                                {/* <span style={{color:'red'}}>*</span> */}
                                 </label>
                                 <Input
                                     name="atasnama"
@@ -980,7 +983,7 @@ export default function AddEmployeeManggala(props) {
 
                                 <label className="mt-3 form-label required" htmlFor="tanggalmulai">
                                     {i18n.t('label_START_DATE')}
-                                    <span style={{color:'red'}}>*</span>
+                                    {/* <span style={{color:'red'}}>*</span> */}
                                 </label>
                                 <DatePicker
                                         name="tanggalmulai"
@@ -1000,7 +1003,7 @@ export default function AddEmployeeManggala(props) {
 
                                 <label className="mt-3 form-label required" htmlFor="tanggalresign">
                                     {i18n.t('label_RESIGN_DATE')}
-                                    <span style={{color:'red'}}>*</span>
+                                    {/* <span style={{color:'red'}}>*</span> */}
                                 </label>
                                 <DatePicker
                                         name="tanggalresign"

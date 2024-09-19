@@ -24,7 +24,7 @@ const MenuIndex = () => {
         // {name: 'code', title: i18n.t('Code')},
         {name: 'nodocument', title: i18n.t('label_NO_DOCUMENT')},
         {name: 'paymentto', title: i18n.t('Payment To')},
-        {name: 'nodocumentwo', title: i18n.t('label_NO_DOCUMENT')+' WO'},
+        {name: 'nodocumentwo', title: i18n.t('No')+' WO'},
         {name: 'noaju', title: i18n.t('No AJU')},
         {name: 'paymentdate', title: i18n.t('Payment Date')},
     ]);
