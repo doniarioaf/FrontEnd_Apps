@@ -40,3 +40,11 @@ export const logoutUser = (successHandler, errorHandler) => {
     }
 }
 
+export const preLoginUser = (payload, successHandler, errorHandler) => {
+    return {
+        type: actions.PRE_LOGIN_USER,
+        payload: payload,
+        successHandler,
+        errorHandler,
+    }
+}

@@ -3,7 +3,7 @@ import axios        from '../../Axios-BizzApps';
 import {put, call}         from 'redux-saga/effects';
 import * as actions                from '../actions';
 import CryptoJS from 'crypto-js';
-import {loginURL,checkAuthURL,baseUserAppsURL} from '../../containers/shared/apiURL';
+import {loginURL,preloginURL,checkAuthURL,baseUserAppsURL} from '../../containers/shared/apiURL';
 import * as key from '../../containers/shared/constantKey';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
@@ -65,6 +65,16 @@ export function* logoutUserSaga(action) {
         action.successHandler(response);
     }catch (error) {
         // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(handleMessageError(error).msg);
+    }
+}
+
+export function* preLoginUserSaga(action) {
+    try {
+        const response = yield AxiosLogin.post(preloginURL,action.payload,{timeout:4000})
+        .then(response => response.data ?response.data:[] );
+        action.successHandler(response);
+    }catch (error) {
         action.errorHandler(handleMessageError(error).msg);
     }
 }

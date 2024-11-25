@@ -9,7 +9,8 @@ export {
     authSuccess,
     checkUser,
     retrieveDatacheckUser,
-    logoutUser
+    logoutUser,
+    preLoginUser
 } from './login';
 
 export {

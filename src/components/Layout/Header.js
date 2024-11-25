@@ -112,6 +112,7 @@ class Header extends Component {
                         </li>
 
                         {/* <li className="nav-item d-none d-md-block"> */}
+                        
                         <ToggleLangMenu onMenu={true}/>
                             <ToggleUserMenu/>
                         {/* </li> */}

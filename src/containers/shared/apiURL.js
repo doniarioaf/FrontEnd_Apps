@@ -5,6 +5,7 @@ export const baseApiURL =
     'http://localhost:8080/v1';
     // 'http://147.139.139.25:80/sinarmediasakti/v1';
 export const loginURL = `${baseApiURL}/login`;
+export const preloginURL = `${baseApiURL}/prelogin`;
 export const checkAuthURL = `${baseApiURL}/checkuser`;
 export const baseBranchURL = param => `${baseApiURL}/branch${param}`;
 export const baseCompanyURL = param => `${baseApiURL}/company${param}`;

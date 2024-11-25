@@ -7,6 +7,8 @@ import {makeStyles}          from '@material-ui/core/styles';
 import TranslateIcon         from '@material-ui/icons/Translate';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import {useTranslation}      from 'react-i18next';
+import { decryptObject } from '../../containers/shared/globalFunc';
+import * as key from '../../containers/shared/constantKey';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,7 +41,7 @@ const MenuListComposition = (props) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const {i18n} = useTranslation();
-    const [office, setOffice] = React.useState('');
+    const [office, setOffice] = React.useState(decryptObject(key.branch).displayName);
     const handleToggle = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -64,7 +66,7 @@ const MenuListComposition = (props) => {
 
     return (
         <div className={classes.root}>
-             {/* <Button
+             <Button
                 className={props.onMenu ? classes.buttonWhite : classes.buttonBlack}
                 // ref={anchorRef}
                 aria-controls={'simple-menu'}
@@ -72,7 +74,7 @@ const MenuListComposition = (props) => {
                 // onClick={handleToggle}
             >
                 {office}
-            </Button> */}
+            </Button>
             <Tooltip title={i18n.t('label_CHANGE_LANGUAGE')}>
                 <Button
                     className={props.onMenu ? classes.buttonWhite : classes.buttonBlack}

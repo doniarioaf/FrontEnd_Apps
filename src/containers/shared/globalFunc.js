@@ -270,3 +270,18 @@ export const invoiceTypeName = (data) =>{
 
     return data;
 }
+
+export const decryptObject = (keystorage)  =>{
+    const objectenc = localStorage.getItem(keystorage) ? localStorage.getItem(keystorage):[];
+    try{
+        const bytes = CryptoJS.AES.decrypt(objectenc, key.keyEcncrypt);
+        const objectdec = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        console.log('decryptObject ',objectdec);
+        // let idx = permissionsuser.indexOf('');
+        return objectdec;
+    }catch(err){
+        console.log('decryptObjecterr ',err);
+        // window.location.href = '/';
+        return [];
+    }
+}
