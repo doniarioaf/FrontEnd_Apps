@@ -2,7 +2,7 @@ import React, {useState, useEffect}    from 'react';
 import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
-import {Input,Button} from 'reactstrap';
+import {Input,Button,FormGroup,Label,Card, CardBody} from 'reactstrap';
 import * as actions                 from '../../../store/actions';
 import {useDispatch}   from 'react-redux';
 // import { reloadToHomeNotAuthorize } from '../../../../shared/maskFunc';
@@ -12,6 +12,12 @@ import {useHistory}                 from 'react-router-dom';
 import Select from 'react-select';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { editInternalUser_Permission } from '../../shared/permissionMenu';
+
+import Grid                         from '../Company/gridBranch';
+import {DropdownList}      from 'react-widgets';
+import { IconButton } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import "react-widgets/dist/css/react-widgets.css";
 
 export default function EditFormInternalUser(props) {
     reloadToHomeNotAuthorize(editInternalUser_Permission,'TRANSACTION');
@@ -44,6 +50,20 @@ export default function EditFormInternalUser(props) {
     const [roles, setRoles] = useState([]);
     const [ErrRoles, setErrRoles] = useState('');
 
+    const [ListBranch, setListBranch] = useState([]);
+    const [SelBranch, setSelBranch] = useState('');
+    const [ErrSelBranch, setErrSelBranch] = useState('');
+    const [hiddenColumns] = useState(['id']);
+    const [RowsBranch, setRowsBranch] = useState([]);
+    const [columns] = useState([
+        {name: 'id', title: 'id'},
+        {name: 'name', title: i18n.t('label_NAME')},
+    ]);
+    const [StartdefaultHeight] = useState(150);
+    const [defaultHeight, setdefaultHeight] = useState(StartdefaultHeight+'px');
+
+    const [IsAllBranch, setIsAllBranch] = useState(false);
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -53,7 +73,15 @@ export default function EditFormInternalUser(props) {
     }, []);
 
     function successHandler(data) {
+        
         if(data.data){
+            setListBranch(data.data.branchOptions.reduce((obj, el) => (
+                [...obj, {
+                    value: el.idbranch,
+                    label: el.displayName
+                }]
+            ), []));
+
             dispatch(actions.getUserAppsDataWithParam('/'+id,data.data.roleoptions,successHandlerDetail, errorHandler));
         }
         
@@ -66,6 +94,22 @@ export default function EditFormInternalUser(props) {
         setInputNoTlp(detail.notelepon);
         setInputEmail(detail.email);
         setInputAddress(detail.address);
+        let isAllBranch = detail.isallbranch?true:false;
+        setIsAllBranch(isAllBranch);
+
+        if(!isAllBranch){
+            let branchs = data.data.branchs?data.data.branchs:[];
+            let listbranch = branchs.reduce((obj, el) => [
+                ...obj,
+                {
+                    'id': el.idbranch,
+                    'name': el.displayName
+                }
+            ], []);
+            setRowsBranch(listbranch);
+            setHeightGridListCharges(listbranch);
+        }
+        
 
         let theData = param.reduce((obj, el) => (
             [...obj, {
@@ -89,6 +133,48 @@ export default function EditFormInternalUser(props) {
         setSelectedRoles(selectedData);
         setListRoles(theData);
         setLoading(false);
+    }
+
+    const handleChangeBranche = (data) =>{
+        let idbranch = data?.value ? data.value : '';
+        setSelBranch(idbranch);
+    }
+    const setHeightGridListCharges = (dataval) =>{
+        if(dataval.length > 2){
+            let height = ( 50 * (dataval.length - 2) ) + StartdefaultHeight;
+            if(height > 600){
+                height = 600;
+            }
+            setdefaultHeight(height+'px');
+        }
+    }
+    const handleAddListBranch = () => {
+        let dataval = [];
+        let filterid = RowsBranch.filter(output => output.id == SelBranch);
+        if(filterid.length == 0){
+            let listfilteroutput = ListBranch.filter(output => output.value == SelBranch);
+            if(listfilteroutput.length > 0){
+                dataval = [...RowsBranch];
+                let filter = listfilteroutput[0];
+                let obj = {
+                    'id':filter.value,
+                    'name':filter.label
+                };
+                dataval.push(obj);
+                setRowsBranch(dataval);
+                setHeightGridListCharges(dataval);
+            }
+        }
+    }
+    const handleSubstractListDetailTrans = (id) =>{
+        let listfilter = RowsBranch.filter(output => output.id !== id);
+        let dataval = [...listfilter];
+        setRowsBranch(dataval);
+        setHeightGridListCharges(dataval);
+    }
+
+    const handleChangeIsAllBranch = (data) =>{
+        setIsAllBranch(data.target.checked);
     }
 
     const handleInputUsername = (data) =>{
@@ -148,6 +234,7 @@ export default function EditFormInternalUser(props) {
         setErrInputNoTlp('');
         setErrInputAddress('');
         setErrRoles('');
+        setErrSelBranch('');
 
         if(InputUsername == ''){
             setErrInputUsername(i18n.t('label_REQUIRED'));
@@ -178,6 +265,10 @@ export default function EditFormInternalUser(props) {
         }
         if(roles.length == 0){
             setErrRoles(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+        if(!IsAllBranch && RowsBranch.length == 0){
+            setErrSelBranch(i18n.t('label_REQUIRED'));
             flag = false;
         }
         return flag;
@@ -213,6 +304,16 @@ export default function EditFormInternalUser(props) {
             obj.address = InputAddress;
             obj.email = InputAddress;
             obj.roles = roles;
+            obj.isallbranch = IsAllBranch;
+            if(IsAllBranch){
+                obj.branchs = [];
+            }else{
+                let temp = [];        
+                for(var i=0; i < RowsBranch.length ; i++){
+                    temp.push(RowsBranch[i].id);
+                }
+                obj.branchs = temp;
+            }
             dispatch(actions.submitEditUserApps(id,obj,succesHandlerSubmit, errorHandler));
         }
     }
@@ -251,6 +352,8 @@ export default function EditFormInternalUser(props) {
                 notlp:InputNoTlp,
                 email:InputEmail,
                 address:InputAddress,
+                isallbranch:IsAllBranch,
+                branch:SelBranch
             }
         }
         validate={values => {
@@ -372,6 +475,43 @@ export default function EditFormInternalUser(props) {
                                 value={values.notlp}
                             />
                             <div className="invalid-feedback-custom">{ErrInputNoTlp}</div>
+
+                            <div className="row mt-0" hidden={values.isallbranch}>
+                            <div className="mt-0 col-lg-11 ft-detail mb-5" style={{paddingRight:'0px'}}>
+                            <label className="mt-3 form-label required" htmlFor="branch">
+                                {i18n.t('label_BRANCH')}
+                            </label>
+
+                            <DropdownList
+                                // className={
+                                //     touched.branch && errors.branch
+                                //         ? "input-error" : ""
+                                // }
+                                name="branch"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeBranche(val)}
+                                onBlur={val => setFieldTouched("branch", val?.value ? val.value : '')}
+                                data={ListBranch}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.branch}
+                            />
+                            </div>
+
+                            <div className="mt-0 col-lg-1 ft-detail mb-5" style={{paddingLeft:'0px',paddingTop:'35px'}}>
+                            <IconButton color={'primary'}
+                                onClick={() => handleAddListBranch()}
+                            >
+                                <AddIcon style={{ fontSize: 30 }}/>
+                            </IconButton>
+                            </div>
+
+                            </div>
+
                             </div>
 
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
@@ -428,11 +568,19 @@ export default function EditFormInternalUser(props) {
                                 // placeholder={i18n.t('select.SELECT_OPTION')}
                             />
 
+                            <FormGroup check style={{marginTop:'20px'}}>
+                            <Input type="checkbox" name="check" 
+                            id="isallbranch" 
+                            onChange={val => handleChangeIsAllBranch(val)}
+                            defaultChecked={values.isallbranch}
+                            checked={values.isallbranch}
+                            style={{transform:'scale(1.5)'}}
+                            />
+                            <Label for="isallbranch" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('All Branch?')}</Label>
+                            </FormGroup>
                             </div>
 
                             </div>
-                            </ContentWrapper>
-                            {loading && <Loading/>}
                             <Button
                             // disabled={props.activeStep === 0}
                                 style={{marginLeft:"20%"}}
@@ -448,6 +596,26 @@ export default function EditFormInternalUser(props) {
                             >
                             {'Submit'}
                             </Button>
+
+                            <Card hidden={values.isallbranch}>
+                            <div className="invalid-feedback-custom">{ErrSelBranch}</div>
+                            <CardBody>
+                            <div className="table-responsive" style={{height:defaultHeight}}>
+                                <Grid
+                                    rows={RowsBranch}
+                                    columns={columns}
+                                    totalCounts={RowsBranch.length}
+                                    loading={loading}
+                                    columnextension={[]}
+                                    handleSubstractList={handleSubstractListDetailTrans}
+                                />
+                            </div>
+                            </CardBody>
+                            </Card>
+
+                            </ContentWrapper>
+                            {loading && <Loading/>}
+                            
                         </form>
 
                     )

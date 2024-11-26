@@ -276,11 +276,9 @@ export const decryptObject = (keystorage)  =>{
     try{
         const bytes = CryptoJS.AES.decrypt(objectenc, key.keyEcncrypt);
         const objectdec = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        console.log('decryptObject ',objectdec);
         // let idx = permissionsuser.indexOf('');
         return objectdec;
     }catch(err){
-        console.log('decryptObjecterr ',err);
         // window.location.href = '/';
         return [];
     }

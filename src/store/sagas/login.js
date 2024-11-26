@@ -9,7 +9,7 @@ import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* loginUserSaga(action) {
     try {
-        const response = yield AxiosLogin.post(loginURL,action.payload,{timeout:4000})
+        const response = yield AxiosLogin.post(loginURL,action.payload,{timeout:10000})
         .then(response => response.data ?response.data:[] );
         // console.log('loginUserSaga ',response);
         let flag = false;
@@ -71,7 +71,7 @@ export function* logoutUserSaga(action) {
 
 export function* preLoginUserSaga(action) {
     try {
-        const response = yield AxiosLogin.post(preloginURL,action.payload,{timeout:4000})
+        const response = yield AxiosLogin.post(preloginURL,action.payload,{timeout:10000})
         .then(response => response.data ?response.data:[] );
         action.successHandler(response);
     }catch (error) {

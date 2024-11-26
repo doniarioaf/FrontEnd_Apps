@@ -26,6 +26,7 @@ import React, {useState,
   import {Loading}                    from '../../../components/Common/Loading';
   import { reloadToHomeNotAuthorize,isGetPermissions } from '../../shared/globalFunc';
   import { MenuInternalUser, editInternalUser_Permission,deleteInternalUser_Permission } from '../../shared/permissionMenu';
+  import Grid                         from '../Company/gridBranch';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -51,6 +52,15 @@ import React, {useState,
     const [isprint, setIsPrint] = useState(false);
     // const [showchangepassword, setShowChangePassword] = useState(false);
     // const [showunlock, setShowUnlock] = useState(false);
+
+    const [RowsBranch, setRowsBranch] = useState([]);
+    const [columns] = useState([
+        {name: 'id', title: 'id'},
+        {name: 'name', title: i18n.t('label_NAME')},
+    ]);
+    const [StartdefaultHeight] = useState(150);
+    const [defaultHeight, setdefaultHeight] = useState(StartdefaultHeight+'px');
+
     const id = props.match.params.id;
 
 
@@ -101,6 +111,17 @@ import React, {useState,
                 }
                 setRoles(arr.join());
             }
+
+            let branchs = data.data.branchs?data.data.branchs:[];
+            let listbranch = branchs.reduce((obj, el) => [
+                ...obj,
+                {
+                    'id': el.idbranch,
+                    'name': el.displayName
+                }
+            ], []);
+            setRowsBranch(listbranch);
+            // setHeightGridListCharges(listbranch);
         }
         setLoading(false);
     }
@@ -237,6 +258,13 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Is All Branch')}</span>
+                                <strong className="col-md-7">
+                                {value.isallbranch?'Yes':'No'}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_CREATED')}</span>
                                 <strong className="col-md-7">
                                 {value.created?moment (new Date(value.created)).format('DD MMMM YYYY'):''}
@@ -297,6 +325,21 @@ import React, {useState,
         </Paper>
         </div>
         {props.loading && <Loading/>}
+
+        <div><p className="lead text-center"><h2>{i18n.t('label_LIST_BRANCH')}</h2></p></div>
+        <Card>
+        <CardBody>
+        <div className="table-responsive" style={{height:defaultHeight}}>
+            <Grid
+                rows={RowsBranch}
+                columns={columns}
+                totalCounts={RowsBranch.length}
+                loading={loading}
+                columnextension={[]}
+            />
+        </div>
+        </CardBody>
+        </Card>
 
         </ContentWrapper>
 
