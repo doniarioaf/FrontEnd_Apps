@@ -32,12 +32,19 @@ const handleMenu = () => {
                 
             ]
         },
-        // {
-        //     name: 'Master',
-        //     icon: 'icon-user',
-        //     translate: 'Master',
-        //     submenu:[]
-        // },
+        {
+            name: 'Master',
+            icon: 'icon-user',
+            translate: 'Master',
+            submenu:[
+                {
+                    name: 'Parameter',
+                    path: pathmenu.menuParameter,
+                    translate: 'Parameter',
+                    permission:permissionmenu.MenuParameterClient,
+                }
+            ]
+        },
         {
             name: 'User',
             icon: 'icon-user',

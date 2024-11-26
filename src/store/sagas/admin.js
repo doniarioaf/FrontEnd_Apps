@@ -1,6 +1,6 @@
 import axios        from '../../Axios-BizzApps';
 import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileURL,
-    baseAddressURL,} from '../../containers/shared/apiURL';
+    baseAddressURL,baseParameterClientURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -207,6 +207,42 @@ export function* submitEditUserMobileSaga(action) {
 export function* getAddressDataSaga(action) {
     try {
         const response = yield axios.get(baseAddressURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getParameterClientSaga(action) {
+    try {
+        const response = yield axios.get(baseParameterClientURL(action.param)).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitAddParameterClientSaga(action) {
+    try {
+        const response = yield axios.post(baseParameterClientURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitEditParameterClientSaga(action) {
+    try {
+        const response = yield axios.put(baseParameterClientURL(action.param),action.payload).then(response => response.data);
+        action.successHandler(response);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* submitDeleteParameterClientSaga(action) {
+    try {
+        const response = yield axios.delete(baseParameterClientURL(action.param)).then(response => response.data);
         action.successHandler(response);
     }catch (error) {
         action.errorHandler(handleMessageError(error));

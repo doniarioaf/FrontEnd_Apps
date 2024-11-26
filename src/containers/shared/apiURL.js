@@ -13,3 +13,4 @@ export const baseRoleURL = param => `${baseApiURL}/role${param}`;
 export const baseUserAppsURL = param => `${baseApiURL}/userapps${param}`;
 export const baseUserMobileURL = param => `${baseApiURL}/usermobile${param}`;
 export const baseAddressURL = param => `${baseApiURL}/address${param}`;
+export const baseParameterClientURL = param => `${baseApiURL}/parameterclient${param}`;

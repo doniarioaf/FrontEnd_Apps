@@ -37,4 +37,8 @@ export {
     submitDeleteUser,
     submitDeleteUserMobile,
     getAddressData,
+    getParameterClientData,
+    submitAddParameterClient,
+    submitEditParameterClient,
+    submitDeleteParameterClient
 } from './admin';

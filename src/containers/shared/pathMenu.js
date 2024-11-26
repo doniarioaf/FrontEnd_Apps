@@ -19,3 +19,7 @@ export const addusermobile = `/user/add/usermobile`;
 export const detailusermobile = `/user/detail/usermobile`;
 export const editusermobile = `/user/edit/usermobile`;
 export const unauthorized = `/unauthorizedapps`;
+export const menuParameter = `/parameter`;
+export const addparameter = `/form/add/parameter`;
+export const editparameter = `/form/edit/parameter`;
+export const detailparameter = `/form/detail/parameter`;

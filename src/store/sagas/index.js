@@ -32,6 +32,10 @@ import {
     submitEditUserMobileSaga,
     submitPostCompanySaga,
     getAddressDataSaga,
+    getParameterClientSaga,
+    submitAddParameterClientSaga,
+    submitEditParameterClientSaga,
+    submitDeleteParameterClientSaga
 } from './admin';
 
 
@@ -65,5 +69,10 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_ADD_USERMOBILE, submitAddUserMobileSaga),
         takeEvery(actions.SUBMIT_EDIT_USERMOBILE, submitEditUserMobileSaga),
         takeEvery(actions.GET_ADDRESS_DATA, getAddressDataSaga),
+
+        takeEvery(actions.GET_PARAMETERCLIENT_DATA, getParameterClientSaga),
+        takeEvery(actions.SUBMIT_ADD_PARAMETERCLIENT, submitAddParameterClientSaga),
+        takeEvery(actions.SUBMIT_EDIT_PARAMETERCLIENT, submitEditParameterClientSaga),
+        takeEvery(actions.SUBMIT_DELETE_PARAMETERCLIENT, submitDeleteParameterClientSaga),
     ]);
 }

@@ -140,6 +140,11 @@ const addUserMobile = lazy(() => import('./containers/Admin/UserMobile/addFormUs
 const editUserMobile = lazy(() => import('./containers/Admin/UserMobile/editFormUserMobileForm'));
 const detailUserMobile = lazy(() => import('./containers/Admin/UserMobile/detail'));
 
+const menuParameter = lazy(() => import('./containers/Parameter/Client'));
+const detailMenuParameter = lazy(() => import('./containers/Parameter/Client/detail'));
+const addMenuParameter = lazy(() => import('./containers/Parameter/Client/add'));
+const editMenuParameter = lazy(() => import('./containers/Parameter/Client/edit'));
+
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -290,7 +295,10 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.editusermobile+'/:id'} component={waitFor(editUserMobile)}/>
                             <Route path={pathmenu.detailusermobile+'/:id'} component={waitFor(detailUserMobile)}/>
 
-                            
+                            <Route path={pathmenu.menuParameter} component={waitFor(menuParameter)}/>
+                            <Route path={pathmenu.addparameter} component={waitFor(addMenuParameter)}/>
+                            <Route path={pathmenu.editparameter+'/:id'} component={waitFor(editMenuParameter)}/>
+                            <Route path={pathmenu.detailparameter+'/:id'} component={waitFor(detailMenuParameter)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

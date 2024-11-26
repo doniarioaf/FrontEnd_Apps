@@ -218,3 +218,41 @@ export const getAddressData = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getParameterClientData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PARAMETERCLIENT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddParameterClient = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PARAMETERCLIENT,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditParameterClient = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PARAMETERCLIENT,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteParameterClient = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_PARAMETERCLIENT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
