@@ -38,6 +38,12 @@ const handleMenu = () => {
             translate: 'Master',
             submenu:[
                 {
+                    name: 'Customer',
+                    path: pathmenu.menuCustomer,
+                    translate: 'Customer',
+                    permission:permissionmenu.MenuParameterClient,
+                },
+                {
                     name: 'Parameter',
                     path: pathmenu.menuParameter,
                     translate: 'Parameter',

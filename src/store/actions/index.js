@@ -40,5 +40,7 @@ export {
     getParameterClientData,
     submitAddParameterClient,
     submitEditParameterClient,
-    submitDeleteParameterClient
+    submitDeleteParameterClient,
+    getCustomerData,
+    submitCustomerData
 } from './admin';

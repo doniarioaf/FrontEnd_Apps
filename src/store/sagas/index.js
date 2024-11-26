@@ -35,7 +35,9 @@ import {
     getParameterClientSaga,
     submitAddParameterClientSaga,
     submitEditParameterClientSaga,
-    submitDeleteParameterClientSaga
+    submitDeleteParameterClientSaga,
+    getCustomerSaga,
+    submitCustomerSaga
 } from './admin';
 
 
@@ -74,5 +76,7 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_ADD_PARAMETERCLIENT, submitAddParameterClientSaga),
         takeEvery(actions.SUBMIT_EDIT_PARAMETERCLIENT, submitEditParameterClientSaga),
         takeEvery(actions.SUBMIT_DELETE_PARAMETERCLIENT, submitDeleteParameterClientSaga),
+        takeEvery(actions.GET_CUSTOMER_DATA, getCustomerSaga),
+        takeEvery(actions.SUBMIT_CUSTOMER, submitCustomerSaga),
     ]);
 }

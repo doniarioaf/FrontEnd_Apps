@@ -22,6 +22,10 @@ export const addParameterClient_Permission = ['CREATE_PARAMETERCLIENT'];
 export const editParameterClient_Permission = ['READ_PARAMETERCLIENT','EDIT_PARAMETERCLIENT'];
 export const deleteParameterClient_Permission = ['DELETE_PARAMETERCLIENT'];
 
+export const addCustomer_Permission = ['CREATE_CUSTOMER'];
+export const editCustomer_Permission = ['READ_CUSTOMER','EDIT_CUSTOMER'];
+export const deleteCustomer_Permission = ['DELETE_CUSTOMER'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -29,3 +33,4 @@ export const MenuRole = ['READ_ROLE'];
 export const MenuParameterClient = ['READ_PARAMETERCLIENT'];
 export const MenuInternalUser = ['READ_USER'];
 export const MenuUserMobile = ['READ_USER_MOBILE'];
+export const MenuCustomer = ['READ_CUSTOMER'];

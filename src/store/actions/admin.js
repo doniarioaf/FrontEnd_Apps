@@ -256,3 +256,21 @@ export const submitDeleteParameterClient = (param, successHandler, errorHandler)
         errorHandler,
     }
 }
+
+export const getCustomerData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_CUSTOMER_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitCustomerData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_CUSTOMER,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

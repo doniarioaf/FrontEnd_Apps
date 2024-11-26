@@ -14,3 +14,4 @@ export const baseUserAppsURL = param => `${baseApiURL}/userapps${param}`;
 export const baseUserMobileURL = param => `${baseApiURL}/usermobile${param}`;
 export const baseAddressURL = param => `${baseApiURL}/address${param}`;
 export const baseParameterClientURL = param => `${baseApiURL}/parameterclient${param}`;
+export const baseCustomerURL = param => `${baseApiURL}/customer${param}`;

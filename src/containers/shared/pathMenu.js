@@ -23,3 +23,7 @@ export const menuParameter = `/parameter`;
 export const addparameter = `/form/add/parameter`;
 export const editparameter = `/form/edit/parameter`;
 export const detailparameter = `/form/detail/parameter`;
+export const menuCustomer = `/customer`;
+export const addCustomer = `/form/add/customer`;
+export const detailCustomer = `/form/detail/customer`;
+export const editCustomer = `/form/edit/customer`;

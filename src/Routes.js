@@ -145,6 +145,11 @@ const detailMenuParameter = lazy(() => import('./containers/Parameter/Client/det
 const addMenuParameter = lazy(() => import('./containers/Parameter/Client/add'));
 const editMenuParameter = lazy(() => import('./containers/Parameter/Client/edit'));
 
+const menuCustomer = lazy(() => import('./containers/Master/Customer'));
+const addCustomer = lazy(() => import('./containers/Master/Customer/add'));
+const detailcustomer = lazy(() => import('./containers/Master/Customer/detail'));
+const editcustomer = lazy(() => import('./containers/Master/Customer/edit'));
+
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -299,6 +304,11 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addparameter} component={waitFor(addMenuParameter)}/>
                             <Route path={pathmenu.editparameter+'/:id'} component={waitFor(editMenuParameter)}/>
                             <Route path={pathmenu.detailparameter+'/:id'} component={waitFor(detailMenuParameter)}/>
+
+                            <Route path={pathmenu.menuCustomer} component={waitFor(menuCustomer)}/>
+                            <Route path={pathmenu.detailCustomer+'/:id'} component={waitFor(detailcustomer)}/>
+                            <Route path={pathmenu.addCustomer} component={waitFor(addCustomer)}/>
+                            <Route path={pathmenu.editCustomer+'/:id'} component={waitFor(editcustomer)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             
