@@ -42,5 +42,7 @@ export {
     submitEditParameterClient,
     submitDeleteParameterClient,
     getCustomerData,
-    submitCustomerData
+    submitCustomerData,
+    getProductData,
+    submitProductData
 } from './admin';

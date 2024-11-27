@@ -26,6 +26,10 @@ export const addCustomer_Permission = ['CREATE_CUSTOMER'];
 export const editCustomer_Permission = ['READ_CUSTOMER','EDIT_CUSTOMER'];
 export const deleteCustomer_Permission = ['DELETE_CUSTOMER'];
 
+export const addProduct_Permission = ['CREATE_PRODUCT'];
+export const editProduct_Permission = ['READ_PRODUCT','EDIT_PRODUCT'];
+export const deleteProduct_Permission = ['DELETE_PRODUCT'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -34,3 +38,4 @@ export const MenuParameterClient = ['READ_PARAMETERCLIENT'];
 export const MenuInternalUser = ['READ_USER'];
 export const MenuUserMobile = ['READ_USER_MOBILE'];
 export const MenuCustomer = ['READ_CUSTOMER'];
+export const MenuProduct = ['READ_PRODUCT'];

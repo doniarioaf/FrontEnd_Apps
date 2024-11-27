@@ -44,6 +44,12 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuParameterClient,
                 },
                 {
+                    name: 'Product',
+                    path: pathmenu.menuProduct,
+                    translate: 'Product',
+                    permission:permissionmenu.MenuParameterClient,
+                },
+                {
                     name: 'Parameter',
                     path: pathmenu.menuParameter,
                     translate: 'Parameter',

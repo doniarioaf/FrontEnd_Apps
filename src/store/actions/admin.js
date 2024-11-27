@@ -274,3 +274,21 @@ export const submitCustomerData = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getProductData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PRODUCT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitProductData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PRODUCT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

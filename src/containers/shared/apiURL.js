@@ -15,3 +15,4 @@ export const baseUserMobileURL = param => `${baseApiURL}/usermobile${param}`;
 export const baseAddressURL = param => `${baseApiURL}/address${param}`;
 export const baseParameterClientURL = param => `${baseApiURL}/parameterclient${param}`;
 export const baseCustomerURL = param => `${baseApiURL}/customer${param}`;
+export const baseProductURL = param => `${baseApiURL}/product${param}`;
