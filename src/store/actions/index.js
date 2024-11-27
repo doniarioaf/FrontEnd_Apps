@@ -46,5 +46,7 @@ export {
     getProductData,
     submitProductData,
     getVendorData,
-    submitVendorData
+    submitVendorData,
+    getInventoriData,
+    submitInventoriData
 } from './admin';

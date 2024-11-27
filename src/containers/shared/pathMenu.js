@@ -35,3 +35,7 @@ export const menuVendor = `/vendor`;
 export const addVendor = `/form/add/vendor`;
 export const detailVendor = `/form/detail/vendor`;
 export const editVendor = `/form/edit/vendor`;
+export const menuInventori = `/inventori`;
+export const addInventori = `/form/add/inventori`;
+export const detailInventori = `/form/detail/inventori`;
+export const editInventori = `/form/edit/inventori`;

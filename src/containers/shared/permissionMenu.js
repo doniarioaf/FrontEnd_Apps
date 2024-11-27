@@ -34,6 +34,11 @@ export const addVendor_Permission = ['CREATE_VENDOR'];
 export const editVendor_Permission = ['READ_VENDOR','EDIT_VENDOR'];
 export const deleteVendor_Permission = ['DELETE_VENDOR'];
 
+export const addInventori_Permission = ['CREATE_INVENTORI'];
+export const editInventori_Permission = ['READ_INVENTORI','EDIT_INVENTORI'];
+export const deleteInventori_Permission = ['DELETE_INVENTORI'];
+
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -44,3 +49,4 @@ export const MenuUserMobile = ['READ_USER_MOBILE'];
 export const MenuCustomer = ['READ_CUSTOMER'];
 export const MenuProduct = ['READ_PRODUCT'];
 export const MenuVendor = ['READ_VENDOR'];
+export const MenuInventori = ['READ_INVENTORI'];

@@ -310,3 +310,21 @@ export const submitVendorData = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getInventoriData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_INVENTORI_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitInventoriData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_INVENTORI,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

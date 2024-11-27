@@ -160,6 +160,11 @@ const addVendor = lazy(() => import('./containers/Master/Vendor/add'));
 const detailVendor = lazy(() => import('./containers/Master/Vendor/detail'));
 const editVendor = lazy(() => import('./containers/Master/Vendor/edit'));
 
+const menuInventori = lazy(() => import('./containers/Master/Inventori'));
+const addInventori = lazy(() => import('./containers/Master/Inventori/add'));
+const detailInventori = lazy(() => import('./containers/Master/Inventori/detail'));
+const editInventori = lazy(() => import('./containers/Master/Inventori/edit'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -328,6 +333,11 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addVendor} component={waitFor(addVendor)}/>
                             <Route path={pathmenu.detailVendor+'/:id'} component={waitFor(detailVendor)}/>
                             <Route path={pathmenu.editVendor+'/:id'} component={waitFor(editVendor)}/>
+
+                            <Route path={pathmenu.menuInventori} component={waitFor(menuInventori)}/>
+                            <Route path={pathmenu.addInventori} component={waitFor(addInventori)}/>
+                            <Route path={pathmenu.detailInventori+'/:id'} component={waitFor(detailInventori)}/>
+                            <Route path={pathmenu.editInventori+'/:id'} component={waitFor(editInventori)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             
