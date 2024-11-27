@@ -165,6 +165,11 @@ const addInventori = lazy(() => import('./containers/Master/Inventori/add'));
 const detailInventori = lazy(() => import('./containers/Master/Inventori/detail'));
 const editInventori = lazy(() => import('./containers/Master/Inventori/edit'));
 
+const menuCategoryProduct = lazy(() => import('./containers/Master/CategoryProduct'));
+const addCategoryProduct = lazy(() => import('./containers/Master/CategoryProduct/add'));
+const detailCategoryProduct = lazy(() => import('./containers/Master/CategoryProduct/detail'));
+const editCategoryProduct = lazy(() => import('./containers/Master/CategoryProduct/edit'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -338,6 +343,12 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addInventori} component={waitFor(addInventori)}/>
                             <Route path={pathmenu.detailInventori+'/:id'} component={waitFor(detailInventori)}/>
                             <Route path={pathmenu.editInventori+'/:id'} component={waitFor(editInventori)}/>
+                            
+                            <Route path={pathmenu.menuCategoryProduct} component={waitFor(menuCategoryProduct)}/>
+                            <Route path={pathmenu.addcategoryproduct} component={waitFor(addCategoryProduct)}/>
+                            <Route path={pathmenu.detailcategoryproduct+'/:id'} component={waitFor(detailCategoryProduct)}/>
+                            <Route path={pathmenu.editcategoryproduct+'/:id'} component={waitFor(editCategoryProduct)}/>
+                            
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

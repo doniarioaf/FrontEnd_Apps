@@ -18,3 +18,4 @@ export const baseCustomerURL = param => `${baseApiURL}/customer${param}`;
 export const baseProductURL = param => `${baseApiURL}/product${param}`;
 export const baseVendorURL = param => `${baseApiURL}/vendor${param}`;
 export const baseInventoriURL = param => `${baseApiURL}/inventori${param}`;
+export const baseCategoryProductURL = param => `${baseApiURL}/categoryproduct${param}`;

@@ -39,3 +39,7 @@ export const menuInventori = `/inventori`;
 export const addInventori = `/form/add/inventori`;
 export const detailInventori = `/form/detail/inventori`;
 export const editInventori = `/form/edit/inventori`;
+export const menuCategoryProduct = `/categoryproduct`;
+export const addcategoryproduct = `/form/add/categoryproduct`;
+export const detailcategoryproduct = `/form/detail/categoryproduct`;
+export const editcategoryproduct = `/form/edit/categoryproduct`;

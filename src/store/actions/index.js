@@ -48,5 +48,7 @@ export {
     getVendorData,
     submitVendorData,
     getInventoriData,
-    submitInventoriData
+    submitInventoriData,
+    getCategoryProductData,
+    submitCategoryProductData
 } from './admin';

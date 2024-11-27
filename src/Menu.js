@@ -38,6 +38,12 @@ const handleMenu = () => {
             translate: 'Master',
             submenu:[
                 {
+                    name: 'Category Product',
+                    path: pathmenu.menuCategoryProduct,
+                    translate: 'Category Product',
+                    permission:permissionmenu.MenuCategoryProduct,
+                },
+                {
                     name: 'Customer',
                     path: pathmenu.menuCustomer,
                     translate: 'Customer',

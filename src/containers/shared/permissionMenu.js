@@ -38,6 +38,10 @@ export const addInventori_Permission = ['CREATE_INVENTORI'];
 export const editInventori_Permission = ['READ_INVENTORI','EDIT_INVENTORI'];
 export const deleteInventori_Permission = ['DELETE_INVENTORI'];
 
+export const addCategoryProduct_Permission = ['READ_CATEGORYPRODUCT'];
+export const editCategoryProduct_Permission = ['READ_CATEGORYPRODUCT','EDIT_CATEGORYPRODUCT'];
+export const deleteCategoryProduct_Permission = ['DELETE_CATEGORYPRODUCT'];
+
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
@@ -50,3 +54,4 @@ export const MenuCustomer = ['READ_CUSTOMER'];
 export const MenuProduct = ['READ_PRODUCT'];
 export const MenuVendor = ['READ_VENDOR'];
 export const MenuInventori = ['READ_INVENTORI'];
+export const MenuCategoryProduct = ['READ_CATEGORYPRODUCT'];

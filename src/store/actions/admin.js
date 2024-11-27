@@ -328,3 +328,21 @@ export const submitInventoriData = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getCategoryProductData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_CATEGORYPRODUCT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitCategoryProductData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_CATEGORYPRODUCT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
