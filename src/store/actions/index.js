@@ -44,5 +44,7 @@ export {
     getCustomerData,
     submitCustomerData,
     getProductData,
-    submitProductData
+    submitProductData,
+    getVendorData,
+    submitVendorData
 } from './admin';

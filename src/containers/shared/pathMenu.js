@@ -31,3 +31,7 @@ export const menuProduct = `/product`;
 export const addProduct = `/form/add/product`;
 export const detailProduct = `/form/detail/product`;
 export const editProduct = `/form/edit/product`;
+export const menuVendor = `/vendor`;
+export const addVendor = `/form/add/vendor`;
+export const detailVendor = `/form/detail/vendor`;
+export const editVendor = `/form/edit/vendor`;

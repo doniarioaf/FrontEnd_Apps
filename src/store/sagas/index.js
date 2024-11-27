@@ -39,7 +39,9 @@ import {
     getCustomerSaga,
     submitCustomerSaga,
     getProductSaga,
-    submitProductSaga
+    submitProductSaga,
+    getVendorSaga,
+    submitVendorSaga
 } from './admin';
 
 
@@ -82,5 +84,7 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_CUSTOMER, submitCustomerSaga),
         takeEvery(actions.GET_PRODUCT_DATA, getProductSaga),
         takeEvery(actions.SUBMIT_PRODUCT, submitProductSaga),
+        takeEvery(actions.GET_VENDOR_DATA, getVendorSaga),
+        takeEvery(actions.SUBMIT_VENDOR, submitVendorSaga),
     ]);
 }

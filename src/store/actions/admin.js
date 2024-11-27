@@ -292,3 +292,21 @@ export const submitProductData = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getVendorData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_VENDOR_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitVendorData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_VENDOR,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
