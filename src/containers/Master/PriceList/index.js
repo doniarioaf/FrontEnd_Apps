@@ -28,7 +28,7 @@ const PriceListIndex = () => {
     const [columns] = useState([
         {name: 'id', title: 'id'},
         // {name: 'code', title: i18n.t('Code')},
-        {name: 'date', title: i18n.t('Date')},
+        {name: 'pricedate', title: i18n.t('Price Date')},
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -48,7 +48,7 @@ const PriceListIndex = () => {
                 ...obj,
                 {
                     'id': el.id,
-                    'date': el.pricedate ?el.pricedate:'',
+                    'pricedate': el.pricedate ?el.pricedate:'',
                 }
             ], []);
             setRows(theData);
