@@ -62,6 +62,12 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuMappingStock,
                 },
                 {
+                    name: 'Price List',
+                    path: pathmenu.menupricelist,
+                    translate: 'Price List',
+                    permission:permissionmenu.MenuProduct,
+                },
+                {
                     name: 'Product',
                     path: pathmenu.menuProduct,
                     translate: 'Product',

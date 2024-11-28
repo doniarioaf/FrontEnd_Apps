@@ -283,3 +283,16 @@ export const decryptObject = (keystorage)  =>{
         return [];
     }
 }
+
+export const addDays = (date, days)  =>{
+    //const date = new Date(); *Harus new Date*
+    return date.setDate(date.getDate() + days);
+}
+
+export const firstAndLastDateInMonth = ()  =>{
+    let date = new Date();
+    let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    return {first:firstDay,last:lastDay};
+}
+

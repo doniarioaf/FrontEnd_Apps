@@ -52,5 +52,7 @@ export {
     getCategoryProductData,
     submitCategoryProductData,
     getMappingStockData,
-    submitMappingStockData
+    submitMappingStockData,
+    getPriceListData,
+    submitPriceListData
 } from './admin';

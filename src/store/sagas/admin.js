@@ -3,7 +3,8 @@ import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileU
     baseAddressURL,baseParameterClientURL,baseCustomerURL,baseProductURL,baseVendorURL,
     baseInventoriURL,
     baseCategoryProductURL,
-    baseMappingStockURL} from '../../containers/shared/apiURL';
+    baseMappingStockURL,
+    basePriceListURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -442,6 +443,39 @@ export function* submitMappingStockSaga(action) {
             action.successHandler(response,propsdata);
         }else if(type == 'DELETE'){
             const response = yield axios.delete(baseMappingStockURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getPriceListSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:'';
+    try {
+        const response = yield axios.get(basePriceListURL(url)).then(response => response.data);
+        action.successHandler(response,propsdata);
+    }catch (error) {
+        action.errorHandler(handleMessageError(error),propsdata);
+    }
+}
+
+export function* submitPriceListSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:[];
+    try {
+        if(type == 'ADD'){
+            const response = yield axios.post(basePriceListURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'EDIT'){
+            const response = yield axios.put(basePriceListURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'DELETE'){
+            const response = yield axios.delete(basePriceListURL(url)).then(response => response.data);
             action.successHandler(response,propsdata);
         }
         

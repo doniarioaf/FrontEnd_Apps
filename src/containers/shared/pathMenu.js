@@ -47,3 +47,4 @@ export const menumappingstock = `/mappingstock`;
 export const addmappingstock = `/form/add/mappingstock`;
 export const detailmappingstock = `/form/detail/mappingstock`;
 export const editmappingstock = `/form/edit/mappingstock`;
+export const menupricelist = `/pricelist`;

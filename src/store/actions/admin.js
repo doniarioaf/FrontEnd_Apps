@@ -364,3 +364,21 @@ export const submitMappingStockData = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getPriceListData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PRICELIST_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitPriceListData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PRICELIST,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

@@ -175,6 +175,8 @@ const addMappingStock = lazy(() => import('./containers/Master/MappingStock/add'
 const detailMappingStock = lazy(() => import('./containers/Master/MappingStock/detail'));
 const editMappingStock = lazy(() => import('./containers/Master/MappingStock/edit'));
 
+const menuPriceList = lazy(() => import('./containers/Master/PriceList'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -359,6 +361,8 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addmappingstock} component={waitFor(addMappingStock)}/>
                             <Route path={pathmenu.detailmappingstock+'/:id'} component={waitFor(detailMappingStock)}/>
                             <Route path={pathmenu.editmappingstock+'/:id'} component={waitFor(editMappingStock)}/>
+
+                            <Route path={pathmenu.menupricelist} component={waitFor(menuPriceList)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

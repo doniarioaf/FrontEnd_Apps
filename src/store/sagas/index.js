@@ -47,7 +47,9 @@ import {
     getCategoryProductSaga,
     submitCategoryProductSaga,
     getMappingStockSaga,
-    submitMappingStockSaga
+    submitMappingStockSaga,
+    getPriceListSaga,
+    submitPriceListSaga
 } from './admin';
 
 
@@ -98,5 +100,7 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_CATEGORYPRODUCT, submitCategoryProductSaga),
         takeEvery(actions.GET_MAPPINGSTOCK_DATA, getMappingStockSaga),
         takeEvery(actions.SUBMIT_MAPPINGSTOCK, submitMappingStockSaga),
+        takeEvery(actions.GET_PRICELIST_DATA, getPriceListSaga),
+        takeEvery(actions.SUBMIT_PRICELIST, submitPriceListSaga),
     ]);
 }
