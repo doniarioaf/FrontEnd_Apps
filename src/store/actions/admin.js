@@ -346,3 +346,21 @@ export const submitCategoryProductData = (param, successHandler, errorHandler) =
         errorHandler,
     }
 }
+
+export const getMappingStockData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_MAPPINGSTOCK_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitMappingStockData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_MAPPINGSTOCK,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

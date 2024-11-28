@@ -43,3 +43,7 @@ export const menuCategoryProduct = `/categoryproduct`;
 export const addcategoryproduct = `/form/add/categoryproduct`;
 export const detailcategoryproduct = `/form/detail/categoryproduct`;
 export const editcategoryproduct = `/form/edit/categoryproduct`;
+export const menumappingstock = `/mappingstock`;
+export const addmappingstock = `/form/add/mappingstock`;
+export const detailmappingstock = `/form/detail/mappingstock`;
+export const editmappingstock = `/form/edit/mappingstock`;
