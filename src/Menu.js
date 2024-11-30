@@ -62,12 +62,6 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuMappingStock,
                 },
                 {
-                    name: 'Price List',
-                    path: pathmenu.menupricelist,
-                    translate: 'Price List',
-                    permission:permissionmenu.MenuProduct,
-                },
-                {
                     name: 'Product',
                     path: pathmenu.menuProduct,
                     translate: 'Product',
@@ -85,6 +79,19 @@ const handleMenu = () => {
                     translate: 'Parameter',
                     permission:permissionmenu.MenuVendor,
                 }
+            ]
+        },
+        {
+            name: 'Transaksi',
+            icon: 'icon-user',
+            translate: 'Transaksi',
+            submenu:[
+                {
+                    name: 'Price List',
+                    path: pathmenu.menupricelist,
+                    translate: 'Price List',
+                    permission:permissionmenu.MenuProduct,
+                },
             ]
         },
         {

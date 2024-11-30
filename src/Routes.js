@@ -176,6 +176,9 @@ const detailMappingStock = lazy(() => import('./containers/Master/MappingStock/d
 const editMappingStock = lazy(() => import('./containers/Master/MappingStock/edit'));
 
 const menuPriceList = lazy(() => import('./containers/Master/PriceList'));
+const addPriceList = lazy(() => import('./containers/Master/PriceList/add'));
+const detailPriceList = lazy(() => import('./containers/Master/PriceList/detail'));
+const editPriceList = lazy(() => import('./containers/Master/PriceList/edit'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -363,6 +366,9 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.editmappingstock+'/:id'} component={waitFor(editMappingStock)}/>
 
                             <Route path={pathmenu.menupricelist} component={waitFor(menuPriceList)}/>
+                            <Route path={pathmenu.addpricelist} component={waitFor(addPriceList)}/>
+                            <Route path={pathmenu.detailpricelist+'/:id'} component={waitFor(detailPriceList)}/>
+                            <Route path={pathmenu.editpricelist+'/:id'} component={waitFor(editPriceList)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

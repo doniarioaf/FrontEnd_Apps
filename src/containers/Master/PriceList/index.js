@@ -48,7 +48,7 @@ const PriceListIndex = () => {
                 ...obj,
                 {
                     'id': el.id,
-                    'pricedate': el.pricedate ?el.pricedate:'',
+                    'pricedate': el.pricedate ?moment(el.pricedate).format(formatdate):'',
                 }
             ], []);
             setRows(theData);
@@ -66,10 +66,10 @@ const PriceListIndex = () => {
     }
 
     function onClickAdd() {
-        history.push(pathmenu.addmappingstock);
+        history.push(pathmenu.addpricelist);
     }
     function onClickView(id) {
-        history.push(pathmenu.detailmappingstock+'/'+id);
+        history.push(pathmenu.detailpricelist+'/'+id);
     }
 
     const handleChangeFrom = (data) =>{
@@ -164,7 +164,7 @@ const PriceListIndex = () => {
                 onclickadd={onClickAdd}
                 permissionview={!isGetPermissions(MenuMappingStock,'READ')}
                 onclickview={onClickView}
-                listfilterdisabled = {['date']}
+                listfilterdisabled = {['pricedate']}
             />
             </div>
             </Container>
