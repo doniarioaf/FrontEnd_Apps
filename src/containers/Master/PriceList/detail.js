@@ -25,7 +25,7 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
   import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { editMappingStock_Permission,deleteMappingStock_Permission,MenuMappingStock } from '../../shared/permissionMenu';
+  import { editPriceList_Permission,deletePriceList_Permission,MenuPriceList } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { colourPrimaryInHexa, formatdate, formatdatetime } from '../../shared/constantValue';
   import '../../CSS/table.css';
@@ -41,7 +41,7 @@ import React, {useState,
 
 
   function Detail(props) {
-    reloadToHomeNotAuthorize(MenuMappingStock,'READ');
+    reloadToHomeNotAuthorize(MenuPriceList,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
@@ -282,8 +282,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editMappingStock_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpricelist+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deleteMappingStock_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editPriceList_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpricelist+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deletePriceList_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             
                         </div>)
                         

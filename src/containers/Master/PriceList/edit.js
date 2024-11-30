@@ -10,7 +10,7 @@ import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { addMappingStock_Permission } from '../../shared/permissionMenu';
+import { editPriceList_Permission } from '../../shared/permissionMenu';
 import * as pathmenu           from '../../shared/pathMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
@@ -19,8 +19,8 @@ import "react-widgets/dist/css/react-widgets.css";
 import { formatdate } from '../../shared/constantValue';
 import '../../CSS/table.css';
 
-export default function AddPriceList(props) {
-    reloadToHomeNotAuthorize(addMappingStock_Permission,'TRANSACTION');
+export default function EditPriceList(props) {
+    reloadToHomeNotAuthorize(editPriceList_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -42,18 +42,6 @@ export default function AddPriceList(props) {
 
     function successHandler(data,propsdata) {
         dispatch(actions.getPriceListData({url:'/template',propsdata:data.data},successHandlerTemplate, errorHandler));
-        // if(data.data){
-        //     const theData = data.data.categoryProductOpt.reduce((obj, el) => [
-        //         ...obj,
-        //         {
-        //             'categoryproductid':el.id,
-        //             'categoryproduct': el.nama+' ('+el.size+')',
-        //             'price': 0,
-        //         }
-        //     ], []);
-        //     setListCategoryProduct(theData);
-        // }
-        // dispatch(actions.getPriceListData({url:'?from='+PriceDate.getTime()+'&to='+PriceDate.getTime()},successCheckData, errorHandler));
     }
 
     function successHandlerTemplate(data,propsdata) {

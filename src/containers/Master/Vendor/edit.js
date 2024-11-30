@@ -14,6 +14,7 @@ import { editVendor_Permission } from '../../shared/permissionMenu';
 import * as pathmenu           from '../../shared/pathMenu';
 import momentLocalizer                 from 'react-widgets-moment';
 import "react-widgets/dist/css/react-widgets.css";
+import Select from 'react-select';
 
 export default function EditVendor(props) {
     reloadToHomeNotAuthorize(editVendor_Permission,'TRANSACTION');
@@ -37,6 +38,10 @@ export default function EditVendor(props) {
     const [InputNoAkunBank, setInputNoAkunBank] = useState('');
     const [InputNamaAkunBank, setInputNamaAkunBank] = useState('');
 
+    const [SelectedVendorNotInlcueCategoryProd, setSelectedVendorNotInlcueCategoryProd] = useState([]);
+    const [ListVendorNotInlcueCategoryProd, setListVendorNotInlcueCategoryProd] = useState([]);
+    const [VendorNotInlcueCategoryProd, setVendorNotInlcueCategoryProd] = useState([]);
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -46,15 +51,44 @@ export default function EditVendor(props) {
 
     function successHandler(data,propsdata) {
         let val = data.data;
+        dispatch(actions.getVendorData({url:'/template',propsdata:val},successHandlerTemplate, errorHandler));
+    }
+
+    function successHandlerTemplate(data,propsdata) {
+        let val = propsdata;
+        let template = data.data;
+
+       
         setInputNama(val.nama);
         setInputAlias(val.alias);
         setInputType(val.type);
         setInputBankName(val.bank);
         setInputNoAkunBank(val.accountnobank);
         setInputNamaAkunBank(val.accountnamebank);
+
+        let selectedData = [];
+        let VendorNotInlcueCategoryProd = [];
+        for(let i=0; i < val.items.length ; i++){
+                let ven = val.items[i];
+                const options = { value: ven.idcategoryproduct, label: ven.nama+' ('+ven.size+')' };
+                selectedData.push(options);
+                VendorNotInlcueCategoryProd.push(ven.idcategoryproduct);
+        }
+        // setVendorNotInlcueCategoryProd(VendorNotInlcueCategoryProd);
+        // setSelectedVendorNotInlcueCategoryProd(selectedData);
+        if(template.categoryProductOpt){
+            const theData = template.categoryProductOpt.reduce((obj, el) => [
+                ...obj,
+                {
+                    value:el.id,
+                    label: el.nama+' ('+el.size+')',
+                }
+            ], []);
+            setListVendorNotInlcueCategoryProd(theData);
+        }
+
         setLoading(false);
     }
-
     const checkColumnMandatory = (values) => {
         let flag = true;
         setErrInputNama('');
@@ -100,6 +134,7 @@ export default function EditVendor(props) {
             obj.bank = values.bankname;
             obj.accountnobank = values.accnobank;
             obj.accountnamebank = values.accnamebank;
+            obj.idcategoryproduct = VendorNotInlcueCategoryProd;
             dispatch(actions.submitVendorData({url:'/'+id,payload:obj,type:'EDIT'},succesHandlerSubmit, errorHandler));
         }
     }
@@ -120,6 +155,16 @@ export default function EditVendor(props) {
             //   Swal.fire('Changes are not saved', '', 'info')
             }
           })
+    }
+
+    const handleCategoryProdChange = (data) =>{
+        let temp = [];        
+        if(data !== null && data.length > 0){
+          for(var i=0; i < data.length ; i++){
+            temp.push(data[i].value);
+          }
+        }
+        setVendorNotInlcueCategoryProd(temp);
     }
 
     const errorHandler = (data,propsdata) => {
@@ -289,7 +334,23 @@ export default function EditVendor(props) {
                                 onBlur={handleBlur}
                                 value={values.accnamebank}
                             />
+                            <label className="mt-3 form-label required" htmlFor="role">
+                                {i18n.t('Category Not Include')}
+                            </label>
+                            <Select
+                                // defaultValue={[options[0], options[1]]}
+                                defaultValue={SelectedVendorNotInlcueCategoryProd}
+                                isMulti
+                                name="colors"
+                                options={ListVendorNotInlcueCategoryProd}
+                                onChange={val => handleCategoryProdChange(val)}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                                // placeholder={i18n.t('select.SELECT_OPTION')}
+                            />
+
                             </div>
+                            
                             
                             </div>
                             

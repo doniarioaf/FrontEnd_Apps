@@ -1,4 +1,4 @@
-import React, {useState}    from 'react';
+import React, {useState,useEffect}    from 'react';
 import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
@@ -14,6 +14,7 @@ import { addVendor_Permission } from '../../shared/permissionMenu';
 import * as pathmenu           from '../../shared/pathMenu';
 import momentLocalizer                 from 'react-widgets-moment';
 import "react-widgets/dist/css/react-widgets.css";
+import Select from 'react-select';
 
 export default function AddVendor(props) {
     reloadToHomeNotAuthorize(addVendor_Permission,'TRANSACTION');
@@ -37,6 +38,29 @@ export default function AddVendor(props) {
     const [InputNoAkunBank, setInputNoAkunBank] = useState('');
     const [InputNamaAkunBank, setInputNamaAkunBank] = useState('');
     const [InputAddress, setInputAddress] = useState('');
+
+    const [SelectedVendorNotInlcueCategoryProd, setSelectedVendorNotInlcueCategoryProd] = useState([]);
+    const [ListVendorNotInlcueCategoryProd, setListVendorNotInlcueCategoryProd] = useState([]);
+    const [VendorNotInlcueCategoryProd, setVendorNotInlcueCategoryProd] = useState([]);
+
+    useEffect(() => {
+        setLoading(true);
+        dispatch(actions.getVendorData({url:'/template'},successHandler, errorHandler));
+    }, []);
+    function successHandler(data,propsdata) {
+        if(data.data){
+            const theData = data.data.categoryProductOpt.reduce((obj, el) => [
+                ...obj,
+                {
+                    value:el.id,
+                    label: el.nama+' ('+el.size+')',
+                }
+            ], []);
+            setListVendorNotInlcueCategoryProd(theData);
+        }
+        setLoading(false);
+    }
+
 
     const checkColumnMandatory = (values) => {
         let flag = true;
@@ -83,6 +107,7 @@ export default function AddVendor(props) {
             obj.bank = values.bankname;
             obj.accountnobank = values.accnobank;
             obj.accountnamebank = values.accnamebank;
+            obj.idcategoryproduct = VendorNotInlcueCategoryProd;
             dispatch(actions.submitVendorData({url:'',payload:obj,type:'ADD'},succesHandlerSubmit, errorHandler));
         }
     }
@@ -103,6 +128,16 @@ export default function AddVendor(props) {
             //   Swal.fire('Changes are not saved', '', 'info')
             }
           })
+    }
+
+    const handleCategoryProdChange = (data) =>{
+        let temp = [];        
+        if(data !== null && data.length > 0){
+          for(var i=0; i < data.length ; i++){
+            temp.push(data[i].value);
+          }
+        }
+        setVendorNotInlcueCategoryProd(temp);
     }
 
     const errorHandler = (data,propsdata) => {
@@ -227,6 +262,8 @@ export default function AddVendor(props) {
                                 value={values.type}
                             />
                             <div className="invalid-feedback-custom">{ErrInputType}</div>
+
+                            
                             
                             </div>
 
@@ -272,6 +309,22 @@ export default function AddVendor(props) {
                                 onBlur={handleBlur}
                                 value={values.accnamebank}
                             />
+
+                            <label className="mt-3 form-label required" htmlFor="role">
+                                {i18n.t('Category Not Include')}
+                            </label>
+                            <Select
+                                // defaultValue={[options[0], options[1]]}
+                                defaultValue={SelectedVendorNotInlcueCategoryProd}
+                                isMulti
+                                name="colors"
+                                options={ListVendorNotInlcueCategoryProd}
+                                onChange={val => handleCategoryProdChange(val)}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                                // placeholder={i18n.t('select.SELECT_OPTION')}
+                            />
+
                             </div>
                             
                             </div>

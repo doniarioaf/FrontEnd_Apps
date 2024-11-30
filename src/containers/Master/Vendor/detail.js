@@ -50,6 +50,7 @@ import React, {useState,
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
+    const [CategoryNotInclude, setCategoryNotInclude] = useState([]);
 
     const id = props.match.params.id;
 
@@ -90,6 +91,14 @@ import React, {useState,
 
     function successHandler(data,propsdata) {
         setValue(data.data);
+        if(data.data.items){
+            let arr = [];
+                for(let i=0; i < data.data.items.length ; i++){
+                    let val = data.data.items[i];
+                    arr.push(val.categoryproductName+' ('+val.categoryproductSize+')');
+                }
+                setCategoryNotInclude(arr.join());
+        }
         setLoading(false);
     }
 
@@ -220,6 +229,13 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('label_ACC_NAME')}</span>
                                 <strong className="col-md-7">
                                 {value.accountnamebank ?value.accountnamebank:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Category Not Include')}</span>
+                                <strong className="col-md-7">
+                                {CategoryNotInclude}
                                 </strong>
                             </div>
 

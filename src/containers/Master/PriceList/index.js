@@ -9,7 +9,7 @@ import Swal                         from 'sweetalert2';
 import * as actions                 from '../../../store/actions';
 import * as pathmenu           from '../../shared/pathMenu';
 import { reloadToHomeNotAuthorize,isGetPermissions, firstAndLastDateInMonth } from '../../shared/globalFunc';
-import { MenuMappingStock,addMappingStock_Permission } from '../../shared/permissionMenu';
+import { MenuPriceList,addPriceList_Permission } from '../../shared/permissionMenu';
 import {useHistory}                 from 'react-router-dom';
 import {DatePicker}      from 'react-widgets';
 import { formatdate } from '../../shared/constantValue';
@@ -20,7 +20,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import { IconButton } from '@material-ui/core';
 
 const PriceListIndex = () => {
-    reloadToHomeNotAuthorize(MenuMappingStock,'READ');
+    reloadToHomeNotAuthorize(MenuPriceList,'READ');
     momentLocalizer();
     const history = useHistory();
     const [rows, setRows] = useState([]);
@@ -160,9 +160,9 @@ const PriceListIndex = () => {
                 totalCounts={rows.length}
                 loading={loading}
                 columnextension={tableColumnExtensions}
-                permissionadd={!isGetPermissions(addMappingStock_Permission,'TRANSACTION')}
+                permissionadd={!isGetPermissions(addPriceList_Permission,'TRANSACTION')}
                 onclickadd={onClickAdd}
-                permissionview={!isGetPermissions(MenuMappingStock,'READ')}
+                permissionview={!isGetPermissions(MenuPriceList,'READ')}
                 onclickview={onClickView}
                 listfilterdisabled = {['pricedate']}
             />

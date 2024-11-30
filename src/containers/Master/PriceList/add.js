@@ -10,7 +10,7 @@ import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { addMappingStock_Permission } from '../../shared/permissionMenu';
+import { addPriceList_Permission } from '../../shared/permissionMenu';
 import * as pathmenu           from '../../shared/pathMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
@@ -20,7 +20,7 @@ import { formatdate } from '../../shared/constantValue';
 import '../../CSS/table.css';
 
 export default function AddPriceList(props) {
-    reloadToHomeNotAuthorize(addMappingStock_Permission,'TRANSACTION');
+    reloadToHomeNotAuthorize(addPriceList_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();

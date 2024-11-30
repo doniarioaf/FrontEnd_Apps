@@ -47,6 +47,11 @@ export const editMappingStock_Permission = ['READ_MAPPINGSTOCK','EDIT_MAPPINGSTO
 export const deleteMappingStock_Permission = ['DELETE_MAPPINGSTOCK'];
 
 
+export const addPriceList_Permission = ['READ_PRICELIST','CREATE_PRICELIST'];
+export const editPriceList_Permission = ['READ_PRICELIST','EDIT_PRICELIST'];
+export const deletePriceList_Permission = ['DELETE_PRICELIST'];
+
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -60,3 +65,4 @@ export const MenuVendor = ['READ_VENDOR'];
 export const MenuInventori = ['READ_INVENTORI'];
 export const MenuCategoryProduct = ['READ_CATEGORYPRODUCT'];
 export const MenuMappingStock = ['READ_MAPPINGSTOCK'];
+export const MenuPriceList = ['READ_PRICELIST'];
