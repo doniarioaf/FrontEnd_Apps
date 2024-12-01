@@ -54,5 +54,7 @@ export {
     getMappingStockData,
     submitMappingStockData,
     getPriceListData,
-    submitPriceListData
+    submitPriceListData,
+    getPurchaseReceiveData,
+    submitPurchaseReceiveData
 } from './admin';

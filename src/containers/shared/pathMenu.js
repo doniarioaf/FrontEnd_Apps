@@ -51,3 +51,5 @@ export const menupricelist = `/pricelist`;
 export const addpricelist = `/form/add/pricelist`;
 export const detailpricelist = `/form/detail/pricelist`;
 export const editpricelist = `/form/edit/pricelist`;
+export const menupurchasereceive = `/purchasereceive`;
+export const addpurchasereceive = `/form/add/purchasereceive`;

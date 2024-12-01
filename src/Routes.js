@@ -180,6 +180,9 @@ const addPriceList = lazy(() => import('./containers/Master/PriceList/add'));
 const detailPriceList = lazy(() => import('./containers/Master/PriceList/detail'));
 const editPriceList = lazy(() => import('./containers/Master/PriceList/edit'));
 
+const menuPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive'));
+const addPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/add'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -369,6 +372,9 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addpricelist} component={waitFor(addPriceList)}/>
                             <Route path={pathmenu.detailpricelist+'/:id'} component={waitFor(detailPriceList)}/>
                             <Route path={pathmenu.editpricelist+'/:id'} component={waitFor(editPriceList)}/>
+
+                            <Route path={pathmenu.menupurchasereceive} component={waitFor(menuPurchaseReceive)}/>
+                            <Route path={pathmenu.addpurchasereceive} component={waitFor(addPurchaseReceive)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

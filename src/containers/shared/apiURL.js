@@ -21,3 +21,4 @@ export const baseInventoriURL = param => `${baseApiURL}/inventori${param}`;
 export const baseCategoryProductURL = param => `${baseApiURL}/categoryproduct${param}`;
 export const baseMappingStockURL = param => `${baseApiURL}/mappingstock${param}`;
 export const basePriceListURL = param => `${baseApiURL}/pricelist${param}`;
+export const basePurchaseReceiveURL = param => `${baseApiURL}/purchasereceive${param}`;

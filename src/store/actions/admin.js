@@ -382,3 +382,21 @@ export const submitPriceListData = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getPurchaseReceiveData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PURCHASERECEIVE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitPurchaseReceiveData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PURCHASERECEIVE,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

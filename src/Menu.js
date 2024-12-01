@@ -92,6 +92,12 @@ const handleMenu = () => {
                     translate: 'Price List',
                     permission:permissionmenu.MenuProduct,
                 },
+                {
+                    name: 'Purchase Receive',
+                    path: pathmenu.menupurchasereceive,
+                    translate: 'Purchase Receive',
+                    permission:permissionmenu.MenuProduct,
+                },
             ]
         },
         {
