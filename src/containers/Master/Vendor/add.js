@@ -9,7 +9,7 @@ import {useDispatch}   from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { addVendor_Permission } from '../../shared/permissionMenu';
 import * as pathmenu           from '../../shared/pathMenu';
 import momentLocalizer                 from 'react-widgets-moment';
@@ -33,6 +33,9 @@ export default function AddVendor(props) {
 
     const [InputType, setInputType] = useState('');
     const [ErrInputType, setErrInputType] = useState('');
+
+    const [InputPricebox, setInputPricebox] = useState('');
+    const [InputPriceOngkos, setInputPriceOngkos] = useState('');
 
     const [InputBankName, setInputBankName] = useState('');
     const [InputNoAkunBank, setInputNoAkunBank] = useState('');
@@ -108,6 +111,8 @@ export default function AddVendor(props) {
             obj.accountnobank = values.accnobank;
             obj.accountnamebank = values.accnamebank;
             obj.idcategoryproduct = VendorNotInlcueCategoryProd;
+            obj.pricebox = new String(values.pricebox).replaceAll(".","") !== ''?new String(values.pricebox).replaceAll(".",""):0;
+            obj.priceongkos = new String(values.priceongkos).replaceAll(".","") !== ''?new String(values.priceongkos).replaceAll(".",""):0;
             dispatch(actions.submitVendorData({url:'',payload:obj,type:'ADD'},succesHandlerSubmit, errorHandler));
         }
     }
@@ -158,7 +163,9 @@ export default function AddVendor(props) {
                 bankname:InputBankName,
                 accnobank:InputNoAkunBank,
                 accnamebank:InputNamaAkunBank,
-                type:InputType
+                type:InputType,
+                priceongkos:InputPriceOngkos,
+                pricebox:InputPricebox
             }
         }
         validate={values => {
@@ -169,6 +176,8 @@ export default function AddVendor(props) {
             setInputNoAkunBank(values.accnobank);
             setInputNamaAkunBank(values.accnamebank);
             setInputType(values.type);
+            setInputPriceOngkos(values.priceongkos);
+            setInputPricebox(values.pricebox);
             return errors;
         }}
         enableReinitialize="true"
@@ -203,17 +212,11 @@ export default function AddVendor(props) {
                             </label>
                             <Input
                                 name="nama"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
                                 type="text"
                                 id="nama"
                                 maxLength={150}
                                 
                                 onChange={handleChange}
-                                // onChange={val => handleInputNama(val)}
                                 onBlur={handleBlur}
                                 value={values.nama}
                             />
@@ -263,7 +266,31 @@ export default function AddVendor(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputType}</div>
 
-                            
+                            <label className="mt-3 form-label required" htmlFor="pricebox">
+                                {i18n.t('Price Box')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <Input
+                                name="pricebox"
+                                type="text"
+                                id="pricebox"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.pricebox !== ''?numToMoney(parseFloat(new String(values.pricebox).replaceAll(".",""))):''}
+                            />
+
+                            <label className="mt-3 form-label required" htmlFor="priceongkos">
+                                {i18n.t('Price Ongkos')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <Input
+                                name="priceongkos"
+                                type="text"
+                                id="priceongkos"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.priceongkos !== ''?numToMoney(parseFloat(new String(values.priceongkos).replaceAll(".",""))):''}
+                            />
                             
                             </div>
 

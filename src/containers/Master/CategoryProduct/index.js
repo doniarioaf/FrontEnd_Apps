@@ -22,7 +22,7 @@ const CategoryProductIndex = () => {
         // {name: 'code', title: i18n.t('Code')},
         {name: 'name', title: i18n.t('label_NAME')},
         {name: 'size', title: i18n.t('Size')},
-        {name: 'weight', title: i18n.t('Weight')}
+        // {name: 'weight', title: i18n.t('Weight')}
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -41,7 +41,7 @@ const CategoryProductIndex = () => {
                     'id': el.id,
                     'name': el.nama ?el.nama:'',
                     'size': el.size ?el.size:'',
-                    'weight': el.weight ?el.weight:'',
+                    // 'weight': el.weight ?el.weight:'',
                 }
             ], []);
             setRows(theData);

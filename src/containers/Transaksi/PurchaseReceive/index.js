@@ -96,7 +96,7 @@ const PurchaseReceiveIndex = () => {
     function onClickSearch() {
         if(from != null && to != null){
             setLoading(true);
-            dispatch(actions.getPriceListData({url:'?from='+from.getTime()+'&to='+to.getTime()},successHandler, errorHandler));
+            dispatch(actions.getPurchaseReceiveData({url:'?from='+from.getTime()+'&to='+to.getTime()},successHandler, errorHandler));
         }
         
     }

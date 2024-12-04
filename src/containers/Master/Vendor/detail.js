@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { editVendor_Permission,deleteVendor_Permission,MenuVendor } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdatetime } from '../../shared/constantValue';
@@ -229,6 +229,20 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('label_ACC_NAME')}</span>
                                 <strong className="col-md-7">
                                 {value.accountnamebank ?value.accountnamebank:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Price Box')}</span>
+                                <strong className="col-md-7">
+                                {value.pricebox ?numToMoney(value.pricebox):''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Price Ongkos')}</span>
+                                <strong className="col-md-7">
+                                {value.priceongkos ?numToMoney(value.priceongkos):''}
                                 </strong>
                             </div>
 

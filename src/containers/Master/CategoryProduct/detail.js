@@ -196,9 +196,23 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Weight')}</span>
+                            <span className="col-md-5">{i18n.t('Weight From')}</span>
                             <strong className="col-md-7">
-                                {value.weight?value.weight:''}
+                                {value.weightfromingram?value.weightfromingram:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Weight To')}</span>
+                            <strong className="col-md-7">
+                                {value.weighttoingram?value.weighttoingram:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Jumlah Items per koli')}</span>
+                            <strong className="col-md-7">
+                                {value.jumlahitemsperkoli?value.jumlahitemsperkoli:''}
                             </strong>
                             </div>
 

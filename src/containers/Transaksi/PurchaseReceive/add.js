@@ -1,9 +1,9 @@
-import React, {useState,useEffect}    from 'react';
+import React, {useState,useEffect,useRef}    from 'react';
 import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
 import ContentHeading               from '../../../components/Layout/ContentHeading';
-import {Button, Input} from 'reactstrap';
+import {Button, Input,FormGroup,Label} from 'reactstrap';
 import * as actions                 from '../../../store/actions';
 import {useDispatch}   from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
@@ -18,6 +18,10 @@ import {DatePicker,DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import { formatdate } from '../../shared/constantValue';
 import '../../CSS/table.css';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { IconButton } from '@material-ui/core';
+import { calculateTotalPrice, setPriceBoxOngkosByVendor } from './utilityPurchaseReceive';
 
 export default function AddPurchaseReceive(props) {
     reloadToHomeNotAuthorize(addPriceList_Permission,'TRANSACTION');
@@ -46,17 +50,25 @@ export default function AddPurchaseReceive(props) {
     const [ErrInputKoli, setErrInputKoli] = useState('');
 
     const [InputNotes, setInputNotes] = useState('');
-
-    const [PriceDate, setPriceDate] = useState(new Date());
-    const [PriceData, setPriceData] = useState([]);
-    const [ErrPriceDate, setErrPriceDate] = useState("");
     
     const [ListItemsPurchaseReceive, setListItemsPurchaseReceive] = useState([]);
+    const [ListItemsPurchaseReceiveMati, setListItemsPurchaseReceiveMati] = useState([]);
+    const [ListItemsPurchaseReceiveBiaya, setListItemsPurchaseReceiveBiaya] = useState([]);
     const [ListProduct, setListProduct] = useState([]);
+    const [ListCategoryProduct, setListCategoryProduct] = useState([]);
+
+    const [InputTotalPrice, setInputTotalPrice] = useState(0);
+    const [IsDefaultSetorTotalPrice, setIsDefaultSetorTotalPrice] = useState(true);
+    const [InputSetor, setInputSetor] = useState(0);
+    const [SisaDeposit, setSisaDeposit] = useState(0);
+    const [TambahDeposit, setTambahDeposit] = useState(0);
+    const [IsTambahDeposit, setIsTambahDeposit] = useState(false);
+
+  
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getPurchaseReceiveData({url:'/template?pricedate='+PriceDate.getTime()},successHandler, errorHandler));
+        dispatch(actions.getPurchaseReceiveData({url:'/template'},successHandler, errorHandler));
     }, []);
 
     function successHandler(data,propsdata) {
@@ -81,39 +93,71 @@ export default function AddPurchaseReceive(props) {
             ], []);
             setListProduct(theDataProd);
 
-            setPriceData(data.data.priceItems);
-            setListItems(data.data.priceItems,theDataProd);
+            const theDataCharge = data.data.chargeOpt.reduce((obj, el) => [
+                ...obj,
+                {
+                    'idcharge':el.id,
+                    'namabiaya': el.nama,
+                    'qty':el.nama == 'SETOR'?1:0,
+                    'price':0,
+                    'subtotal':0
+                }
+            ], []);
+            setListItemsPurchaseReceiveBiaya(theDataCharge);
         }
         setLoading(false);
     }
 
-    function setListItems(data,listprod){
-            //{idproduct:'',idcategoryproduct:'',categoryproductname,qty:0,qtybonus:0,qtymati:0,itemsprice:0,subtotalprice:0}
-            console.log('setListItems ',listprod);
-            setListItemsPurchaseReceive([]);
-            if(data != null && data.items){
-                let idproduct = '';
-                // console.log('idproduct ',listprod.get(0));
-                if(listprod != null && listprod.length == 1){
+    // function setListItems(data,listprod){
+            
+    //         setListItemsPurchaseReceive([]);
+    //         setListItemsPurchaseReceiveMati([]);
+    //         if(data != null){
+    //             let idproduct = '';
+    //             // console.log('idproduct ',listprod.get(0));
+    //             if(listprod != null && listprod.length == 1){
                     
-                    idproduct = listprod[0].value;
+    //                 idproduct = listprod[0].value;
                     
-                }
-                const theData = data.items.reduce((obj, el) => [
-                    ...obj,
-                    {
-                        'idproduct':idproduct,
-                        'idcategoryproduct': el.categoryproductid,
-                        'categoryproductname': el.categoryproductidName,
-                        'qty':0,
-                        'qtybonus':0,
-                        'qtymati':0,
-                        'itemsprice':el.amount?numToMoney(el.amount):0,
-                        'subtotalprice':0
-                    }
-                ], []);
-                setListItemsPurchaseReceive(theData);
-            }
+    //             }
+    //             const theData = data.reduce((obj, el) => [
+    //                 ...obj,
+    //                 {
+    //                     'idproduct':idproduct,
+    //                     'idcategoryproduct': el.id,
+    //                     'categoryproductname': el.nama,
+    //                     'qty':0,
+    //                     'qtybonus':0,
+    //                     'qtymati':0,
+    //                     'itemsprice':0,
+    //                     'subtotalprice':0
+    //                 }
+    //             ], []);
+
+    //             const theDataMati = data.reduce((obj, el) => [
+    //                 ...obj,
+    //                 {
+    //                     'idproduct':idproduct,
+    //                     'idcategoryproduct': el.id,
+    //                     'categoryproductname': el.nama,
+    //                     'qty':0,
+    //                     'qtybonus':0,
+    //                     'qtymati':0,
+    //                     'itemsprice':0,
+    //                     'subtotalprice':0
+    //                 }
+    //             ], []);
+
+               
+    //             setListItemsPurchaseReceive(theData);
+    //             setListItemsPurchaseReceiveMati(theDataMati);
+    //         }
+    // }
+    function setorValue(totalprice,isdefaultnota){
+        if(isdefaultnota){
+            setInputSetor(totalprice);
+        }
+        
     }
 
     const checkColumnMandatory = (values) => {
@@ -124,15 +168,12 @@ export default function AddPurchaseReceive(props) {
         setErrInputBank('');
         setErrInputAccNoBank('');
         setErrInputAccNameBank('');
-        setErrPriceDate('');
+        
         if(ReceiveDate == null){
             setErrReceiveDate(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(PriceDate == null){
-            setErrPriceDate(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        
         if(SelVendor == ''){
             setErrSelVendor(i18n.t('label_REQUIRED'));
             flag = false;
@@ -154,6 +195,10 @@ export default function AddPurchaseReceive(props) {
             setErrInputAccNameBank(i18n.t('label_REQUIRED'));
             flag = false;
         }
+        // if(ListItemsPurchaseReceive.length == 0){
+        //     setErrPriceDate(i18n.t('Silahkan pilih price list yang tersedia'));
+        //     flag = false;
+        // }
         
         return flag;
     }
@@ -172,29 +217,87 @@ export default function AddPurchaseReceive(props) {
     }
 
     const executeSubmit = (values) => {
-        if(AlreadyGeneratePrice){
-            msgInfo();
-        }else{
-            let flag = checkColumnMandatory(values);
-            if(flag){
-                setLoading(true);
-                let obj = new Object();
-
-                // obj.pricedate = PriceDate.getTime();
-                // let items = [];
-                // if(ListCategoryProduct.length > 0){
-                //     items = ListCategoryProduct.reduce((obj, el) => [
-                //         ...obj,
-                //         {
-                //             'categoryproductid': el.categoryproductid,
-                //             'amount': new String(el.price).replaceAll('.','') !== ''?new String(el.price).replaceAll('.',''):'0',
-                //         }
-                //     ], []);
-                // }
-                // obj.items = items;
-                dispatch(actions.submitPriceListData({url:'',payload:obj,type:'ADD'},succesHandlerSubmit, errorHandler));
+        let flag = checkColumnMandatory(values);
+        if(flag){
+            setIsTambahDeposit(false);
+            let totalprice = new String(values.totalprice).replaceAll('.','') !== ''?new String(values.totalprice).replaceAll('.',''):0;
+            let sisadeposit = new String(SisaDeposit).replaceAll('.','') !== ''?new String(SisaDeposit).replaceAll('.',''):0;
+            let tambahdeposit = new String(values.tambahdeposit).replaceAll('.','') !== ''?new String(values.tambahdeposit).replaceAll('.',''):0;
+            let totaldeposit = parseFloat(sisadeposit) + parseFloat(tambahdeposit);
+            if(parseFloat(totalprice) > totaldeposit){
+                
+                setIsTambahDeposit(true);
+                flag = false;
+                msgInfo('Deposit Kurang, Silahkan tambah deposit terlebih dahulu');
+                // window.scrollTo(0, 0);
             }
-    }
+        }
+        if(flag){
+
+            setLoading(true);
+            let obj = new Object();
+            obj.idvendor = SelVendor;
+            obj.transactiondate = ReceiveDate.getTime();
+            obj.koli = values.koli;
+            obj.notes = values.notes;
+            obj.bank = values.bank;
+            obj.accountnobank = values.accnobank;
+            obj.accountnamebank = values.accnamabank;
+            obj.totalprice = new String(values.totalprice).replaceAll('.','') !== ''?new String(values.totalprice).replaceAll('.',''):0;
+            obj.setor = new String(values.setor).replaceAll('.','') !== ''?new String(values.setor).replaceAll('.',''):0;
+            obj.isdefaultvaluesetor = IsDefaultSetorTotalPrice;
+            obj.tambahdeposit = new String(values.tambahdeposit).replaceAll('.','') !== ''?new String(values.tambahdeposit).replaceAll('.',''):0;
+            let items = [];
+            if(ListItemsPurchaseReceive.length > 0){
+                items = ListItemsPurchaseReceive.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        'idproduct': el.idproduct,
+                        'idcategoryproduct': el.idcategoryproduct,
+                        'qty': el.qty,
+                        'qtybonus': el.qtybonus,
+                        'price':  new String(el.itemsprice).replaceAll('.','') !== ''?new String(el.itemsprice).replaceAll('.',''):'0',
+                        'subtotalprice': new String(el.subtotalprice).replaceAll('.','') !== ''?new String(el.subtotalprice).replaceAll('.',''):'0',
+                        'type':'H'
+                    }
+                ], []);
+
+                for(let i=0; i < ListItemsPurchaseReceiveMati.length; i++){
+                    let el = ListItemsPurchaseReceiveMati[i];
+                    items.push(
+                        {
+                            'idproduct': el.idproduct,
+                            'idcategoryproduct': el.idcategoryproduct,
+                            'qty': el.qty,
+                            'qtybonus': el.qtybonus,
+                            'price':  new String(el.itemsprice).replaceAll('.','') !== ''?new String(el.itemsprice).replaceAll('.',''):'0',
+                            'subtotalprice': new String(el.subtotalprice).replaceAll('.','') !== ''?new String(el.subtotalprice).replaceAll('.',''):'0',
+                            'type':'M'
+                        }
+                    );
+                }
+                
+            }
+            obj.items = items;
+
+            let charges = [];
+            if(ListItemsPurchaseReceiveBiaya.length > 0){
+                for(let i=0; i < ListItemsPurchaseReceiveBiaya.length; i++){
+                    let el = ListItemsPurchaseReceiveBiaya[i];
+                    charges.push(
+                        {
+                            'idcharge': el.idcharge,
+                            'qty': el.qty,
+                            'price':  new String(el.price).replaceAll('.','') !== ''?new String(el.price).replaceAll('.',''):'0',
+                            'subtotalprice': new String(el.subtotal).replaceAll('.','') !== ''?new String(el.subtotal).replaceAll('.',''):'0'
+                        }
+                    );
+                }
+            }
+            obj.charges = charges;
+            dispatch(actions.submitPurchaseReceiveData({url:'',payload:obj,type:'ADD'},succesHandlerSubmit, errorHandler));
+        }
+    
     }
 
     const submitHandler = (values) => {
@@ -224,6 +327,27 @@ export default function AddPurchaseReceive(props) {
         })
     }
 
+    const msgInfo = (text) => {
+        
+          Swal.fire({
+            icon: 'info',
+            title: 'Information',
+            text: text,
+            showDenyButton: false,
+            showCancelButton: false,
+            confirmButtonText: `Ok`,
+            denyButtonText: `Don't save`,
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                history.go
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+    }
+
     const handleChangeReceiveDate = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
@@ -233,33 +357,135 @@ export default function AddPurchaseReceive(props) {
             setReceiveDate(null)
         }
     }
+ 
 
-    const handleChangePriceDate = (data) =>{
-        //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
-        if(data !== null){
-            let datetrans = moment(data, formatdate).toDate(); 
-            setPriceDate(datetrans)
+    const handleInputChangeItems = (e, index,type) => {
+        const { name, value } = e.target;
+        let flag = true;
+        let subtotal = 0;
+        if(name == 'qty' || name == 'qtybonus' || name == 'qtymati' || name == 'itemsprice'){
+            let valPriceTemp = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'0';
+            if(isNaN(valPriceTemp) && valPriceTemp !== ''){
+                flag = false;
+            }else{
+                if(name == 'qty' ){
+                    const listTemp = [...ListItemsPurchaseReceive];
+                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.','') !== ''?new String(listTemp[index]['itemsprice']).replaceAll('.',''):'0';
 
-            setLoading(true);
-            dispatch(actions.getPurchaseReceiveData({url:'/searchpricelist?pricedate='+datetrans.getTime()},successHandlerPrice, errorHandler));
-        }else{
-            setPriceDate(null)
+                    let qtybonustemp = new String(listTemp[index]['qtybonus']).replaceAll('.','') !== ''?new String(listTemp[index]['qtybonus']).replaceAll('.',''):'0';
+                    let qtyTemp = parseInt(valPriceTemp) + parseInt(qtybonustemp);
+                    subtotal = parseInt(qtyTemp) * parseFloat(pricetemp);
+                }else if(name == 'qtybonus' ){
+                    const listTemp = [...ListItemsPurchaseReceive];
+                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.','') !== ''?new String(listTemp[index]['itemsprice']).replaceAll('.',''):'0';
+
+                    let qtytemp = new String(listTemp[index]['qty']).replaceAll('.','') !== ''?new String(listTemp[index]['qty']).replaceAll('.',''):'0';
+                    let qtyBonusTemp = parseInt(valPriceTemp) + parseInt(qtytemp);
+                    subtotal = parseInt(qtyBonusTemp) * parseFloat(pricetemp);
+                }else if(name == 'qtymati' ){
+                    const listTemp = [...ListItemsPurchaseReceiveMati];
+                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.','') !== ''?new String(listTemp[index]['itemsprice']).replaceAll('.',''):'0';
+
+                    subtotal = parseInt(valPriceTemp) * parseFloat(pricetemp);
+                }else if(name == 'itemsprice' ){
+                    let listTemp = [];
+                    let qtytemp = 0;
+                    if(type == 'H'){
+                        listTemp = [...ListItemsPurchaseReceive];
+                        qtytemp = new String(listTemp[index]['qty']).replaceAll('.','') !== ''?new String(listTemp[index]['qty']).replaceAll('.',''):'0';
+                    }else{
+                        listTemp = [...ListItemsPurchaseReceiveMati];
+                        qtytemp = new String(listTemp[index]['qtymati']).replaceAll('.','') !== ''?new String(listTemp[index]['qtymati']).replaceAll('.',''):'0';
+                    }
+                    
+                    let qtybonustemp = new String(listTemp[index]['qtybonus']).replaceAll('.','') !== ''?new String(listTemp[index]['qtybonus']).replaceAll('.',''):'0';
+                    let totalQty = parseInt(qtytemp) + parseInt(qtybonustemp);
+                    
+                    subtotal = parseInt(valPriceTemp) * parseFloat(totalQty);
+                }
+                //
+            }
+            
+        }
+        if(flag){
+            if(type == 'H'){
+                const list = [...ListItemsPurchaseReceive];
+                let valPrice = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'';
+                list[index][name] = valPrice;
+                list[index]['subtotalprice'] = subtotal;
+                setListItemsPurchaseReceive(list);
+                let totalPrice = calculateTotalPrice(list,ListItemsPurchaseReceiveBiaya);
+                setInputTotalPrice(totalPrice);
+                // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
+                setorValue(totalPrice,IsDefaultSetorTotalPrice);
+            }else if(type == 'M'){
+                const list = [...ListItemsPurchaseReceiveMati];
+                let valPrice = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'';
+                list[index][name] = valPrice;
+                list[index]['subtotalprice'] = subtotal;
+                setListItemsPurchaseReceiveMati(list);
+            }
+            
         }
     }
 
-    function successHandlerPrice(data,propsdata){
-        setPriceData(data.data);
-        setListItems(data.data,ListProduct);
-        setLoading(false);
-    } 
-
-    const handleInputChangePrice = (e, index) => {
+    const handleInputChangeBiaya = (e, index) => {
         const { name, value } = e.target;
-        const list = [...ListCategoryProduct];
-        let valPrice = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'0';
-        list[index][name] = valPrice;
-        setListCategoryProduct(list);
+        let flag = true;
+        let subtotal = 0;
+        if(name == 'qty' || name == 'price'){
+            let valPriceTemp = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'0';
+            
+            if(isNaN(valPriceTemp) && valPriceTemp !== ''){
+                flag = false;
+            }else{
+                const listTemp = [...ListItemsPurchaseReceiveBiaya];
+            
+                if(name == 'qty' ){
+                    let namaBiaya = listTemp[index]['namabiaya'];
+                    if(namaBiaya == 'SETOR' && valPriceTemp !== ''){
+                        if(parseInt(valPriceTemp) > 1){
+                            flag = false;
+                        }
+                    }
+                    if(flag){
+                        let pricetemp = new String(listTemp[index]['price']).replaceAll('.','') !== ''?new String(listTemp[index]['price']).replaceAll('.',''):'0';
+                        subtotal = parseInt(valPriceTemp) * parseFloat(pricetemp);
+                    }
+                }else if(name == 'price' ){
+                    let qtyemp = new String(listTemp[index]['qty']).replaceAll('.','') !== ''?new String(listTemp[index]['qty']).replaceAll('.',''):'0';
+                    subtotal = parseInt(qtyemp) * parseFloat(valPriceTemp);
+                }
+            }
+            
+            
+        }
+        if(flag){
+            const list = [...ListItemsPurchaseReceiveBiaya];
+            let valPrice = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'';
+            list[index][name] = valPrice;
+            list[index]['subtotal'] = subtotal;
+            setListItemsPurchaseReceiveBiaya(list);
+            let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive,list);
+            setInputTotalPrice(totalPrice);
+            // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
+            setorValue(totalPrice,IsDefaultSetorTotalPrice);
+        }
+        
     }
+
+    const handleInputDropDownChange = (e, index,name,type) => {
+        if(type == 'H'){
+            const list = [...ListItemsPurchaseReceive];
+            list[index][name] = e.value;
+            setListItemsPurchaseReceive(list);
+        }else if(type == 'M'){
+            const list = [...ListItemsPurchaseReceiveMati];
+            list[index][name] = e.value;
+            setListItemsPurchaseReceiveMati(list);
+        }
+        
+    };    
 
     const handleChangeVendor = (data) =>{
         let id = data?.value ? data.value : '';
@@ -267,9 +493,117 @@ export default function AddPurchaseReceive(props) {
 
         let valdata = data?.data ? data.data : '';
 
+        setInputSetor(0);
+
+        setListCategoryProduct([]);
+        setListItemsPurchaseReceive([]);
+        setListItemsPurchaseReceiveMati([]);
         setInputBank(valdata.bank);
         setInputAccNoBank(valdata.accountnobank);
         setInputAccNameBank(valdata.accountnamebank);
+
+        
+        setLoading(true);
+        let listCharge = setPriceBoxOngkosByVendor(ListItemsPurchaseReceiveBiaya,valdata.pricebox,valdata.priceongkos);
+        setListItemsPurchaseReceiveBiaya(listCharge);
+        let totalPrice = calculateTotalPrice([],listCharge);
+        setInputTotalPrice(totalPrice);
+        if(IsDefaultSetorTotalPrice){
+            setInputSetor(totalPrice);
+        }
+
+        dispatch(actions.getPurchaseReceiveData({url:'/searchvendor?idvendor='+id},successHandlerVendor, errorHandler));
+    }
+    function successHandlerVendor(data,propsdata){
+        const theDataProd = data.data.categoryproductOpt.reduce((obj, el) => [
+            ...obj,
+            {
+                'value':el.id,
+                'label': el.nama,
+                'data':el
+            }
+        ], []);
+        setListCategoryProduct(theDataProd);
+        setSisaDeposit(data.data.sisaDeposit?data.data.sisaDeposit:0);
+
+        // setListItems(data.data.categoryproductOpt,ListProduct);
+        setLoading(false);
+    }
+
+    const handleAddItemsHidup = () => {
+        let idproduct = '';
+        if(ListProduct != null && ListProduct.length == 1){
+            idproduct = ListProduct[0].value;
+        }
+        setListItemsPurchaseReceive([...ListItemsPurchaseReceive, 
+            { 
+                'idproduct':idproduct,
+                'idcategoryproduct': '',
+                'categoryproductname': '',
+                'qty':0,
+                'qtybonus':0,
+                'qtymati':0,
+                'itemsprice':0,
+                'subtotalprice':0
+            }]);
+    };
+
+
+    const handleRemoveItemsHidup = index => {
+        const list = [...ListItemsPurchaseReceive];
+        list.splice(index, 1);
+        setListItemsPurchaseReceive(list);
+        let totalPrice = calculateTotalPrice(list,ListItemsPurchaseReceiveBiaya);
+        setInputTotalPrice(totalPrice);
+        // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
+        setorValue(totalPrice,IsDefaultSetorTotalPrice);
+    };
+
+    const handleRemoveItemsMati = index => {
+        const list = [...ListItemsPurchaseReceiveMati];
+        list.splice(index, 1);
+        setListItemsPurchaseReceiveMati(list);
+    };
+
+    const handleAddItemsMati = () => {
+        let idproduct = '';
+        if(ListProduct != null && ListProduct.length == 1){
+            idproduct = ListProduct[0].value;
+        }
+        setListItemsPurchaseReceiveMati([...ListItemsPurchaseReceiveMati, 
+            { 
+                'idproduct':idproduct,
+                'idcategoryproduct': '',
+                'categoryproductname': '',
+                'qty':0,
+                'qtybonus':0,
+                'qtymati':0,
+                'itemsprice':0,
+                'subtotalprice':0
+            }]);
+    };
+
+    // const handleAddBiaya = () => {
+    //     setListItemsPurchaseReceiveBiaya([...ListItemsPurchaseReceiveBiaya, { namabiaya:"",qty: "",price:"",subtotal:""}]);
+    // };
+
+    const handleRemoveBiaya = index => {
+        const list = [...ListItemsPurchaseReceiveBiaya];
+        list.splice(index, 1);
+        setListItemsPurchaseReceiveBiaya(list);
+        let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive,list);
+        setInputTotalPrice(totalPrice);
+        // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(list,totalPrice));
+        setorValue(totalPrice,IsDefaultSetorTotalPrice);
+    };
+
+    const handleChangeIsDefaultSetor = (data) =>{
+        let checked = data.target.checked;
+        setIsDefaultSetorTotalPrice(checked);
+        if(checked){
+            setorValue(InputTotalPrice,checked);
+        }
+        
     }
 
     return (
@@ -277,13 +611,18 @@ export default function AddPurchaseReceive(props) {
         initialValues={
             {
                 receivedate:ReceiveDate,
-                pricedate:PriceDate,
                 vendor:SelVendor,
                 bank:InputBank,
                 accnobank:InputAccNoBank,
                 accnamabank:InputAccNameBank,
                 koli:InputKoli,
-                notes:InputNotes
+                notes:InputNotes,
+                totalprice:InputTotalPrice,
+                isdefaultsetortotalprice:IsDefaultSetorTotalPrice,
+                setor:InputSetor,
+                sisadeposit:SisaDeposit,
+                istambahdeposit:IsTambahDeposit,
+                tambahdeposit:TambahDeposit
             }
         }
         validate={values => {
@@ -293,6 +632,8 @@ export default function AddPurchaseReceive(props) {
             setInputAccNameBank(values.accnamabank)
             setInputKoli(values.koli);
             setInputNotes(values.notes);
+            setInputSetor(values.setor);
+            setTambahDeposit(values.tambahdeposit);
             return errors;
         }}
         enableReinitialize="true"
@@ -314,7 +655,7 @@ export default function AddPurchaseReceive(props) {
                     } = formikProps;
 
                     return(
-                        <form className="mb-6" onSubmit={handleSubmit}  name="FormCustomer">
+                        <form className="mb-6" onSubmit={handleSubmit}  name="FormPurchaseReceive">
                             <ContentWrapper>
                             <ContentHeading history={history} link={pathmenu.addpurchasereceive} label={'Add Purchase Receive'} labeldefault={'Add Purchase Receive'} />
 
@@ -410,19 +751,6 @@ export default function AddPurchaseReceive(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrReceiveDate}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="pricedate">
-                                {i18n.t('Price Date')}
-                            </label>
-                            <span style={{color:'red'}}>*</span>
-
-                            <DatePicker
-                            name="pricedate"
-                            onChange={val => handleChangePriceDate(val)}
-                            format={formatdate}
-                            value={values.pricedate}
-                            />
-                            <div className="invalid-feedback-custom">{ErrPriceDate}</div>
-
                             <label className="mt-3 form-label required" htmlFor="koli">
                                 {i18n.t('Koli')}
                                 <span style={{color:'red'}}>*</span>
@@ -439,11 +767,12 @@ export default function AddPurchaseReceive(props) {
                                 value={values.koli}
                             />
                             <div className="invalid-feedback-custom">{ErrInputKoli}</div>
-
+                            
                             <label className="mt-3 form-label required" htmlFor="notes">
                                 {i18n.t('Notes')}
                             </label>
                             <Input
+                                
                                 name="notes"
                                 type="text"
                                 id="notes"
@@ -454,60 +783,147 @@ export default function AddPurchaseReceive(props) {
                                 onBlur={handleBlur}
                                 value={values.notes}
                             />
-                            </div>
-
-                            {/* <div hidden={AlreadyGeneratePrice} className="mt-2 col-lg-6 ft-detail mb-5">
-                                {
-                                    values.listCategoryProduct.length == 0?'':
-                                    <div className="row justify-content-center">
-                                        <table id="tablegrid">
-                                        <tbody>
-                                        <tr>
-                                            <th style={{width:'60%',textAlign:'center'}}>{i18n.t('Category Product')}</th>
-                                            <th style={{width:'40%',textAlign:'center'}}>Price</th>
-                                        </tr>
-                                        
-                                        {
-                                            values.listCategoryProduct.map((x, i) => {
-                                                return (
-                                                    <tr>
-                                                        <td>{x.categoryproduct}</td>
-                                                        <td>
-                                                            
-                                                            <Input
-                                                                name="price"
-                                                                type="text"
-                                                                id="price"
-                                                                onChange={val => handleInputChangePrice(val,i)}
-                                                                onBlur={handleBlur}
-                                                                value={x.price !== ''?numToMoney(parseFloat(x.price)):''}
-                                                                />
-                                                            
-                                                        </td>
-                                                    </tr>
-                                                )
-                                            })
-                                        }
-                                        </tbody>
-                                        </table>
-                                    </div>
-                                }
-                            </div> */}
-                            
-                            </div>
-                            
-
                             {
-                                ListItemsPurchaseReceive.length == 0?'':
+                                values.istambahdeposit?
+                                <table width={'100%'}>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                            <label className="mt-3 form-label required" htmlFor="sisadeposit">
+                                                {i18n.t('Sisa Deposit')}
+                                            </label>
+                                            <Input
+                                                name="sisadeposit"
+                                                type="text"
+                                                id="sisadeposit"
+                                                maxLength={100}
+                                                
+                                                onChange={handleChange}
+                                                // onChange={val => handleInputNama(val)}
+                                                onBlur={handleBlur}
+                                                value={values.sisadeposit !== ''?numToMoney(values.sisadeposit):''}
+                                                disabled={true}
+                                            />
+                                            </td>
+                                            <td>
+                                            <label className="mt-3 form-label required" htmlFor="tambahdeposit">
+                                                {i18n.t('Tambah Deposit')}
+                                            </label>
+                                            <Input
+                                                name="tambahdeposit"
+                                                type="text"
+                                                id="tambahdeposit"
+                                                maxLength={100}
+                                                
+                                                onChange={handleChange}
+                                                // onChange={val => handleInputNama(val)}
+                                                onBlur={handleBlur}
+                                                value={new String(values.tambahdeposit).replaceAll(".","") !== ''?numToMoney(parseFloat(new String(values.tambahdeposit).replaceAll(".",""))):''}
+                                                disabled={false}
+                                                style={{borderColor:'red'}}
+                                            />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                :
+                                <div>
+                                    <label className="mt-3 form-label required" htmlFor="sisadeposit">
+                                        {i18n.t('Sisa Deposit')}
+                                    </label>
+                                    <Input
+                                        
+                                        name="sisadeposit"
+                                        type="text"
+                                        id="sisadeposit"
+                                        maxLength={100}
+                                        
+                                        onChange={handleChange}
+                                        // onChange={val => handleInputNama(val)}
+                                        onBlur={handleBlur}
+                                        value={values.sisadeposit !== ''?numToMoney(values.sisadeposit):''}
+                                        disabled={true}
+                                    />
+                                </div>   
+                            }
+                            
+
+                            <label className="mt-3 form-label required" htmlFor="totalprice">
+                                {i18n.t('Total Nota')}
+                            </label>
+                            <Input
+                                name="totalprice"
+                                type="text"
+                                id="totalprice"
+                                maxLength={100}
+                                
+                                onChange={handleChange}
+                                // onChange={val => handleInputNama(val)}
+                                onBlur={handleBlur}
+                                value={values.totalprice !== ''?numToMoney(values.totalprice):''}
+                                disabled={true}
+                            />
+
+                            <label className="mt-3 form-label required" htmlFor="totalprice">
+                                {i18n.t('Setor')}
+                            </label>
+                            <table width={'100%'}>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                        <Input
+                                            name="setor"
+                                            type="text"
+                                            id="setor"
+                                            maxLength={100}
+                                            
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={new String(values.setor).replaceAll(".","") !== ''?numToMoney(parseFloat(new String(values.setor).replaceAll(".",""))):''}
+                                            disabled={values.isdefaultsetortotalprice}
+                                        />
+                                        </td>
+                                        <td style={{paddingLeft:'10px'}}>
+                                        <FormGroup check >
+                                        <Input type="checkbox" name="check" 
+                                        id="isdefaultsetortotalprice" 
+                                        onChange={val => handleChangeIsDefaultSetor(val)}
+                                        defaultChecked={values.isdefaultsetortotalprice}
+                                        checked={values.isdefaultsetortotalprice}
+                                        style={{transform:'scale(1.5)'}}
+                                        />
+                                        <Label for="isdefaultsetortotalprice" check style={{transform:'scale(1.5)',marginLeft:'30px'}}>{i18n.t('Default Total Nota?')}</Label>
+                                        </FormGroup>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            
+                            </div>
+                            
+                            
+                            {
+                                // ListItemsPurchaseReceive.length == 0?'':
                                 <div className="row justify-content-center">
+                                    <h4>{'Input Items Hidup'}</h4>
                                     <table id="tablegrid">
                                         <tbody>
                                         <tr>
+                                            <th style={{width:'50px'}}>
+                                            <IconButton 
+                                            style={{color:'white'}}
+                                                onClick={() => handleAddItemsHidup()}
+                                                hidden={values.vendor == ''}
+                                            >
+                                                <AddIcon style={{ fontSize: 25 }}/>
+                                            </IconButton>
+                                            </th>
                                             <th >{i18n.t('Product')}</th>
                                             <th >{i18n.t('Category Product')}</th>
-                                            <th >{i18n.t('Qty (Hidup)')}</th>
+                                            <th >{i18n.t('Qty')}</th>
                                             <th >{i18n.t('Qty Bonus')}</th>
-                                            <th >{i18n.t('Qty (Mati)')}</th>
                                             <th >{i18n.t('Price')}</th>
                                             <th >{i18n.t('Subtotal Price')}</th>
                                         </tr>
@@ -515,11 +931,22 @@ export default function AddPurchaseReceive(props) {
                                                 ListItemsPurchaseReceive.map((x, i) => {
                                                     return (
                                                         <tr>
+                                                            <td >
+                                                            <IconButton 
+                                                            color={'primary'}
+                                                            // style={{color:'white'}}
+                                                                onClick={() => handleRemoveItemsHidup(i)}
+                                                            // hidden={showplusdebit}
+                                                            >
+                                                                <DeleteIcon style={{ fontSize: 18 }}/>
+                                                            </IconButton>
+                                                            </td>
                                                             <td style={{width:'20%'}}>
                                                             <DropdownList
-                                                                name="Product"
+                                                                name="idproduct"
                                                                 filter='contains'
                                                                 placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                onChange={val => handleInputDropDownChange(val,i,'idproduct','H')}
                                                                 data={ListProduct}
                                                                 textField={'label'}
                                                                 valueField={'value'}
@@ -527,56 +954,66 @@ export default function AddPurchaseReceive(props) {
                                                                 
                                                             />
                                                             </td>
-                                                            <td><Input
+                                                            <td style={{width:'20%'}}>
+                                                            <DropdownList
+                                                                name="idcategoryproduct"
+                                                                filter='contains'
+                                                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                onChange={val => handleInputDropDownChange(val,i,'idcategoryproduct','H')}
+                                                                data={ListCategoryProduct}
+                                                                textField={'label'}
+                                                                valueField={'value'}
+                                                                value={x.idcategoryproduct}
+                                                                
+                                                            />
+                                                                {/* <Input
                                                                 name="categoryproductname"
                                                                 type="text"
                                                                 id="categoryproductname"
                                                                 // onChange={val => handleInputChangePrice(val,i)}
                                                                 onBlur={handleBlur}
                                                                 value={x.categoryproductname}
-                                                                /></td>
+                                                                disabled={true}
+                                                                /> */}
+                                                                </td>
                                                             <td><Input
                                                                 name="qty"
                                                                 type="text"
                                                                 id="qty"
-                                                                // onChange={val => handleInputChangePrice(val,i)}
-                                                                onBlur={handleBlur}
+                                                                onChange={val => handleInputChangeItems(val,i,'H')}
+                                                                // onBlur={handleBlur}
                                                                 value={x.qty}
                                                                 /></td>
                                                             <td><Input
                                                                 name="qtybonus"
                                                                 type="text"
                                                                 id="qtybonus"
-                                                                // onChange={val => handleInputChangePrice(val,i)}
-                                                                onBlur={handleBlur}
+                                                                onChange={val => handleInputChangeItems(val,i,'H')}
+                                                                // onBlur={handleBlur}
                                                                 value={x.qtybonus}
                                                                 /></td>
 
-                                                                <td><Input
-                                                                name="qtymati"
-                                                                type="text"
-                                                                id="qtymati"
-                                                                // onChange={val => handleInputChangePrice(val,i)}
-                                                                onBlur={handleBlur}
-                                                                value={x.qtymati}
-                                                                /></td>
-
-                                                                <td><Input
+                                                                <td style={{width:'15%'}}>
+                                                                <Input
                                                                 name="itemsprice"
                                                                 type="text"
                                                                 id="itemsprice"
-                                                                // onChange={val => handleInputChangePrice(val,i)}
-                                                                onBlur={handleBlur}
-                                                                value={x.itemsprice}
+                                                                onChange={val => handleInputChangeItems(val,i,'H')}
+                                                                // onBlur={handleBlur}
+                                                                value={x.itemsprice !== ''?numToMoney(parseFloat(x.itemsprice)):''}
+                                                                disabled={false}
                                                                 /></td>
 
-                                                                <td><Input
+                                                                <td style={{width:'15%'}}>
+                                                                <Input
                                                                 name="subtotalprice"
                                                                 type="text"
                                                                 id="subtotalprice"
                                                                 // onChange={val => handleInputChangePrice(val,i)}
-                                                                onBlur={handleBlur}
-                                                                value={x.subtotalprice}
+                                                                // onBlur={handleBlur}
+                                                                // value={x.subtotalprice}
+                                                                value={x.subtotalprice !== ''?numToMoney(parseFloat(x.subtotalprice)):''}
+                                                                disabled={true}
                                                                 /></td>
                                                                 
                                                         </tr>
@@ -587,7 +1024,204 @@ export default function AddPurchaseReceive(props) {
                                     </table>
                                 </div>
                             }
-                            {/* //{idproduct:'',idcategoryproduct:'',categoryproductname,qty:0,qtybonus:0,qtymati:0,itemsprice:0,subtotalprice:0} */}
+
+                            
+                            {
+                                // ListItemsPurchaseReceiveMati.length == 0?'':
+                                <div className="row justify-content-center">
+                                    <h4>{'Input Items Mati'}</h4>
+                                    <table id="tablegrid">
+                                        <tbody>
+                                        <tr>
+                                        <th style={{width:'50px'}}>
+                                            <IconButton 
+                                            style={{color:'white'}}
+                                                onClick={() => handleAddItemsMati()}
+                                                hidden={values.vendor == ''}
+                                            >
+                                                <AddIcon style={{ fontSize: 25 }}/>
+                                            </IconButton>
+                                            </th>
+                                            <th >{i18n.t('Product')}</th>
+                                            <th >{i18n.t('Category Product')}</th>
+                                            <th >{i18n.t('Qty')}</th>
+                                            <th >{i18n.t('Price')}</th>
+                                            <th >{i18n.t('Subtotal Price')}</th>
+                                        </tr>
+                                            {
+                                                ListItemsPurchaseReceiveMati.map((x, i) => {
+                                                    return (
+                                                        <tr>
+                                                            <td >
+                                                            <IconButton 
+                                                            color={'primary'}
+                                                            // style={{color:'white'}}
+                                                                onClick={() => handleRemoveItemsMati(i)}
+                                                            // hidden={showplusdebit}
+                                                            >
+                                                                <DeleteIcon style={{ fontSize: 18 }}/>
+                                                            </IconButton>
+                                                            </td>
+                                                            <td style={{width:'20%'}}>
+                                                            <DropdownList
+                                                                name="idproduct"
+                                                                filter='contains'
+                                                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                onChange={val => handleInputDropDownChange(val,i,'idproduct','M')}
+                                                                data={ListProduct}
+                                                                textField={'label'}
+                                                                valueField={'value'}
+                                                                value={x.idproduct}
+                                                                
+                                                            />
+                                                            </td>
+                                                            <td style={{width:'20%'}}>
+                                                            <DropdownList
+                                                                name="idcategoryproduct"
+                                                                filter='contains'
+                                                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                onChange={val => handleInputDropDownChange(val,i,'idcategoryproduct','M')}
+                                                                data={ListCategoryProduct}
+                                                                textField={'label'}
+                                                                valueField={'value'}
+                                                                value={x.idcategoryproduct}
+                                                                
+                                                            />
+                                                                {/* <Input
+                                                                name="categoryproductname"
+                                                                type="text"
+                                                                id="categoryproductname"
+                                                                // onChange={val => handleInputChangePrice(val,i)}
+                                                                onBlur={handleBlur}
+                                                                value={x.categoryproductname}
+                                                                disabled={true}
+                                                                /> */}
+                                                                </td>
+                                                            <td><Input
+                                                                name="qtymati"
+                                                                type="text"
+                                                                id="qtymati"
+                                                                onChange={val => handleInputChangeItems(val,i,'M')}
+                                                                // onBlur={handleBlur}
+                                                                value={x.qtymati}
+                                                                /></td>
+
+                                                                <td style={{width:'15%'}}>
+                                                                <Input
+                                                                name="itemsprice"
+                                                                type="text"
+                                                                id="itemsprice"
+                                                                onChange={val => handleInputChangeItems(val,i,'M')}
+                                                                // onBlur={handleBlur}
+                                                                value={x.itemsprice !== ''?numToMoney(parseFloat(x.itemsprice)):''}
+                                                                disabled={false}
+                                                                /></td>
+
+                                                                <td style={{width:'15%'}}>
+                                                                <Input
+                                                                name="subtotalprice"
+                                                                type="text"
+                                                                id="subtotalprice"
+                                                                // onChange={val => handleInputChangePrice(val,i)}
+                                                                // onBlur={handleBlur}
+                                                                value={x.subtotalprice !== ''?numToMoney(parseFloat(x.subtotalprice)):''}
+                                                                disabled={true}
+                                                                /></td>
+                                                                
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+
+                            
+                            
+                            {
+                                // ListItemsPurchaseReceiveBiaya.length == 0?'':
+                                <div className="row justify-content-center">
+                                    <h4>{'Input Biaya'}</h4>
+                                    <table id="tablegrid">
+                                        <tbody>
+                                        <tr>
+                                            <th>
+                                            {/* <IconButton 
+                                            style={{color:'white'}}
+                                                onClick={() => handleAddBiaya()}
+                                            >
+                                                <AddIcon style={{ fontSize: 25 }}/>
+                                            </IconButton> */}
+                                            </th>
+                                            <th >{i18n.t('Nama')}</th>
+                                            <th >{i18n.t('Qty')}</th>
+                                            <th >{i18n.t('Price')}</th>
+                                            <th >{i18n.t('Subtotal Price')}</th>
+                                        </tr>
+                                            {
+                                                ListItemsPurchaseReceiveBiaya.map((x, i) => {
+                                                    return (
+                                                        <tr>
+                                                            <td >
+                                                            <IconButton 
+                                                            color={'primary'}
+                                                            // style={{color:'white'}}
+                                                                onClick={() => handleRemoveBiaya(i)}
+                                                            // hidden={showplusdebit}
+                                                            >
+                                                                <DeleteIcon style={{ fontSize: 18 }}/>
+                                                            </IconButton>
+                                                            </td>
+                                                            <td><Input
+                                                                name="namabiaya"
+                                                                type="text"
+                                                                id="namabiaya"
+                                                                // onChange={val => handleInputChangeBiaya(val,i)}
+                                                                // onBlur={handleBlur}
+                                                                value={x.namabiaya}
+                                                                disabled={true}
+                                                                /></td>
+                                                            <td><Input
+                                                                name="qty"
+                                                                type="text"
+                                                                id="qty"
+                                                                onChange={val => handleInputChangeBiaya(val,i)}
+                                                                onBlur={handleBlur}
+                                                                value={x.qty}
+                                                                /></td>
+
+                                                                <td style={{width:'15%'}}>
+                                                                <Input
+                                                                name="price"
+                                                                type="text"
+                                                                id="price"
+                                                                onChange={val => handleInputChangeBiaya(val,i)}
+                                                                onBlur={handleBlur}
+                                                                value={x.price !== ''?numToMoney(parseFloat(x.price)):''}
+                                                                disabled={x.namabiaya == 'BOX' || x.namabiaya == 'ONGKOS'}
+                                                                /></td>
+
+                                                                <td style={{width:'15%'}}>
+                                                                <Input
+                                                                name="subtotal"
+                                                                type="text"
+                                                                id="subtotal"
+                                                                // onChange={val => handleInputChangePrice(val,i)}
+                                                                onBlur={handleBlur}
+                                                                value={x.subtotal !== ''?numToMoney(parseFloat(x.subtotal)):''}
+                                                                disabled={true}
+                                                                /></td>
+                                                                
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                        
                             </ContentWrapper>
                             {loading && <Loading/>}
                             <div className="row justify-content-center" style={{marginTop:'-30px',marginBottom:'20px'}}>

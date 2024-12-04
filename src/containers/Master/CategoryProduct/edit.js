@@ -31,6 +31,10 @@ export default function EditCategoryProduct(props) {
     const [InputWeight, setInputWeight] = useState('');
     const [ErrInputWeight, setErrInputWeight] = useState('');
 
+    const [InputWeightFrom, setInputWeightFrom] = useState('');
+    const [InputWeightTo, setInputWeightTo] = useState('');
+    const [InputJumlahItemsPerKoli, setInputJumlahItemsPerKoli] = useState('');
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -42,7 +46,9 @@ export default function EditCategoryProduct(props) {
         let val = data.data;
         setInputNama(val.nama);
         setInputSize(val.size);
-        setInputWeight(val.weight);
+        setInputWeightFrom(val.weightfromingram);
+        setInputWeightTo(val.weighttoingram);
+        setInputJumlahItemsPerKoli(val.jumlahitemsperkoli);
         setLoading(false);
     }
 
@@ -86,7 +92,9 @@ export default function EditCategoryProduct(props) {
             let obj = new Object();
             obj.nama = values.nama;
             obj.size = values.size;
-            obj.weight = values.weight;
+            obj.weightfromingram = values.weightfrom !=='' ?values.weightfrom:0;
+            obj.weighttoingram = values.weightto !== ''?values.weightto:0;
+            obj.jumlahitemsperkoli = values.jumlahitemsperkoli !== ''?values.jumlahitemsperkoli:0;
             dispatch(actions.submitCategoryProductData({url:'/'+id,payload:obj,type:'EDIT'},succesHandlerSubmit, errorHandler));
         }
     }
@@ -124,14 +132,18 @@ export default function EditCategoryProduct(props) {
             {
                 nama:InputNama,
                 size:InputSize,
-                weight:InputWeight,
+                weightfrom:InputWeightFrom,
+                weightto:InputWeightTo,
+                jumlahitemsperkoli:InputJumlahItemsPerKoli,
             }
         }
         validate={values => {
             const errors = {};
             setInputNama(values.nama);
             setInputSize(values.size)
-            setInputWeight(values.weight);
+            setInputWeightFrom(values.weightfrom);
+            setInputWeightTo(values.weightto);
+            setInputJumlahItemsPerKoli(values.jumlahitemsperkoli);
             return errors;
         }}
         enableReinitialize="true"
@@ -194,22 +206,62 @@ export default function EditCategoryProduct(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputSize}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="weight">
-                                {i18n.t('Weight')}
+                            <label className="mt-3 form-label required" htmlFor="weightfrom">
+                                {i18n.t('Weight From')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <Input
-                                name="weight"
+                                name="weightfrom"
                                 type="text"
-                                id="weight"
-                                maxLength={100}
-                                
-                                onChange={handleChange}
-                                // onChange={val => handleInputNama(val)}
+                                id="weightfrom"
+                                onChange={val => {
+                                    let value = val.target.value;
+                                    if (!isNaN(value) || value == '') {
+                                        setFieldValue("weightfrom", value);
+                                    }
+                                }
+                            }
                                 onBlur={handleBlur}
-                                value={values.weight}
+                                value={values.weightfrom}
                             />
-                            <div className="invalid-feedback-custom">{ErrInputWeight}</div>
+
+                            <label className="mt-3 form-label required" htmlFor="weightto">
+                                {i18n.t('Weight To')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <Input
+                                name="weightto"
+                                type="text"
+                                id="weightto"
+                                onChange={val => {
+                                    let value = val.target.value;
+                                    if (!isNaN(value) || value == '') {
+                                        setFieldValue("weightto", value);
+                                    }
+                                }
+                            }
+                                onBlur={handleBlur}
+                                value={values.weightto}
+                            />
+
+                            <label className="mt-3 form-label required" htmlFor="jumlahitemsperkoli">
+                                {i18n.t('Jumlah Items per koli')}
+                                <span style={{color:'red'}}>{'*'}</span>
+                            </label>
+                            <Input
+                                name="jumlahitemsperkoli"
+                                type="text"
+                                id="jumlahitemsperkoli"
+                                onChange={val => {
+                                    let value = val.target.value;
+                                    if (!isNaN(value) || value == '') {
+                                        setFieldValue("jumlahitemsperkoli", value);
+                                    }
+                                }
+                            }
+                                onBlur={handleBlur}
+                                value={values.jumlahitemsperkoli}
+                            />
                             
                             </div>
                             
