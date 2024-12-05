@@ -74,3 +74,16 @@ export const setSetorValueTotalPrice = (listcharge,totalprice)  =>{
     return listBiaya;
 
 }
+
+/**
+ * BOX = + totaprice
+ * BOAT = + totaprice
+ * BANTUAN = + totaprice
+ * ONGKOS = - totaprice
+ * SETOR = - totaprice
+ */
+export const addKurungBukaPadaValue = (nama,value)  =>{
+    /** yang bertanda minus, kasih kurung buka, artinya nilai itu dikurang */
+    if(nama == 'ONGKOS') { return '('+value+')'}
+    return value;
+}

@@ -72,7 +72,7 @@ const PurchaseReceiveIndex = () => {
         history.push(pathmenu.addpurchasereceive);
     }
     function onClickView(id) {
-        history.push(pathmenu.detailpricelist+'/'+id);
+        history.push(pathmenu.printnota+'/'+id);
     }
 
     const handleChangeFrom = (data) =>{
