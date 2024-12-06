@@ -268,7 +268,7 @@ export default function AddPurchaseReceive(props) {
                         {
                             'idproduct': el.idproduct,
                             'idcategoryproduct': el.idcategoryproduct,
-                            'qty': el.qty,
+                            'qty': el.qtymati,
                             'qtybonus': el.qtybonus,
                             'price':  new String(el.itemsprice).replaceAll('.','') !== ''?new String(el.itemsprice).replaceAll('.',''):'0',
                             'subtotalprice': new String(el.subtotalprice).replaceAll('.','') !== ''?new String(el.subtotalprice).replaceAll('.',''):'0',

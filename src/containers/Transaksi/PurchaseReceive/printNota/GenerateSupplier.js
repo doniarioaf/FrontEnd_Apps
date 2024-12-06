@@ -270,15 +270,19 @@ const setInformasiNilaiUang = (items) =>{
         if(val == 'SALDO' && saldoDepositBeforeNotaSubmit > 0){
             label = 'Saldo :';
             value = numToMoney(saldoDepositBeforeNotaSubmit);
+            break;
         }else if(val == 'SETOR' && setor !== totalprice){
             label = 'Setor :';
             value = numToMoney(setor);
+            break;
         }else if(val == 'TAMBAHDP' && tambahDP > 0){
             label = 'Tambah DP :';
             value = numToMoney(tambahDP);
+            break;
         }else if(val == 'SISADP' && sisaDeposit > 0){
             label = 'Sisa Deposit :';
             value = numToMoney(sisaDeposit);
+            break;
         }
     }
         if(no == 1){
@@ -401,11 +405,11 @@ const GenerateSupplier = ({ valuedata }) => {
                     <View style={{ marginTop: '20px' }}>
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ flexDirection: 'row-reverse' }}>
-                                <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeMedium, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{valuedata != null ? valuedata.companyName : ''}</Text>
+                                <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{valuedata != null ? valuedata.companyName : ''}</Text>
                             </View>
 
-                            <View style={{ flexDirection: 'row-reverse', marginLeft: '40%' }}>
-                                <Text style={{ fontSize: fontSizeMedium }}>{"Kepada  : "}{valuedata != null ? valuedata.vendorNama : ''}</Text>
+                            <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                                <Text style={{ fontSize: fontSizeBig }}>{"Kepada  : "}{valuedata != null ? valuedata.vendorNama : ''}</Text>
                             </View>
                         </View>
 
@@ -414,8 +418,8 @@ const GenerateSupplier = ({ valuedata }) => {
                                 <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{''}</Text>
                             </View>
 
-                            <View style={{ flexDirection: 'row-reverse', marginLeft: '40%' }}>
-                                <Text style={{ fontSize: fontSizeMedium }}>{'Koli        : '}{valuedata != null ? valuedata.koli : ''}</Text>
+                            <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                                <Text style={{ fontSize: fontSizeBig }}>{'Koli        : '}{valuedata != null ? valuedata.koli : ''}</Text>
                             </View>
                         </View>
 
@@ -424,8 +428,8 @@ const GenerateSupplier = ({ valuedata }) => {
                                 <Text style={[{ margin: '0 auto', textAlign: 'right', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{'NOTA SUPPLIER'}</Text>
                             </View>
 
-                            <View style={{ flexDirection: 'row-reverse', marginLeft: '40%' }}>
-                                <Text style={{ fontSize: fontSizeMedium }}>{'Tanggal : '}{valuedata != null ? valuedata.transactiondate : ''}</Text>
+                            <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                                <Text style={{ fontSize: fontSizeBig }}>{'Tanggal : '}{valuedata != null ? valuedata.transactiondate : ''}</Text>
                             </View>
                         </View>
 
