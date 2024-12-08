@@ -64,6 +64,8 @@ export default function AddPurchaseReceive(props) {
     const [TambahDeposit, setTambahDeposit] = useState(0);
     const [IsTambahDeposit, setIsTambahDeposit] = useState(false);
 
+    const [ListInventori, setListInventori] = useState([]);
+    const [ListItemsInventori, setListItemsInventori] = useState([]);
   
 
     useEffect(() => {
@@ -104,6 +106,16 @@ export default function AddPurchaseReceive(props) {
                 }
             ], []);
             setListItemsPurchaseReceiveBiaya(theDataCharge);
+
+            const theDataInventori = data.data.inventoriOpt.reduce((obj, el) => [
+                ...obj,
+                {
+                    'value':el.id,
+                    'label': el.nama,
+                    'data':el
+                }
+            ], []);
+            setListInventori(theDataInventori);
         }
         setLoading(false);
     }
@@ -225,10 +237,10 @@ export default function AddPurchaseReceive(props) {
             let tambahdeposit = new String(values.tambahdeposit).replaceAll('.','') !== ''?new String(values.tambahdeposit).replaceAll('.',''):0;
             let totaldeposit = parseFloat(sisadeposit) + parseFloat(tambahdeposit);
             if(parseFloat(totalprice) > totaldeposit){
-                
+                let tambahdp = parseFloat(totalprice) - totaldeposit;
                 setIsTambahDeposit(true);
                 flag = false;
-                msgInfo('Deposit Kurang, Silahkan tambah deposit terlebih dahulu');
+                msgInfo("Deposit Kurang "+numToMoney(tambahdp)+", Silahkan tambah deposit terlebih dahulu");
                 // window.scrollTo(0, 0);
             }
         }
@@ -295,6 +307,23 @@ export default function AddPurchaseReceive(props) {
                 }
             }
             obj.charges = charges;
+
+            let inventori = [];
+            if(ListItemsInventori.length > 0){
+                for(let i=0; i < ListItemsInventori.length; i++){
+                    let el = ListItemsInventori[i];
+                    inventori.push(
+                        {
+                            'idinventori': el.idinventori,
+                            'qty': el.qty,
+                            'price':  new String(el.price).replaceAll('.','') !== ''?new String(el.price).replaceAll('.',''):'0',
+                            'subtotalprice': new String(el.subtotalprice).replaceAll('.','') !== ''?new String(el.subtotalprice).replaceAll('.',''):'0'
+                        }
+                    );
+                }
+            }
+            obj.inventori = inventori;
+
             dispatch(actions.submitPurchaseReceiveData({url:'',payload:obj,type:'ADD'},succesHandlerSubmit, errorHandler));
         }
     
@@ -414,7 +443,7 @@ export default function AddPurchaseReceive(props) {
                 list[index][name] = valPrice;
                 list[index]['subtotalprice'] = subtotal;
                 setListItemsPurchaseReceive(list);
-                let totalPrice = calculateTotalPrice(list,ListItemsPurchaseReceiveBiaya);
+                let totalPrice = calculateTotalPrice(list,ListItemsPurchaseReceiveBiaya,ListItemsInventori);
                 setInputTotalPrice(totalPrice);
                 // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
                 setorValue(totalPrice,IsDefaultSetorTotalPrice);
@@ -466,7 +495,7 @@ export default function AddPurchaseReceive(props) {
             list[index][name] = valPrice;
             list[index]['subtotal'] = subtotal;
             setListItemsPurchaseReceiveBiaya(list);
-            let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive,list);
+            let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive,list,ListItemsInventori);
             setInputTotalPrice(totalPrice);
             // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
             setorValue(totalPrice,IsDefaultSetorTotalPrice);
@@ -485,7 +514,50 @@ export default function AddPurchaseReceive(props) {
             setListItemsPurchaseReceiveMati(list);
         }
         
-    };    
+    };
+
+    const handleInputChangeInventori = (e, index) => {
+        const { name, value } = e.target;
+        let flag = true;
+        let subtotal = 0;
+        if(name == 'qty' || name == 'price'){
+            let valPriceTemp = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'0';
+            
+            if(isNaN(valPriceTemp) && valPriceTemp !== ''){
+                flag = false;
+            }else{
+                const listTemp = [...ListItemsInventori];
+            
+                if(name == 'qty' ){
+                    let pricetemp = new String(listTemp[index]['price']).replaceAll('.','') !== ''?new String(listTemp[index]['price']).replaceAll('.',''):'0';
+                    subtotal = parseInt(valPriceTemp) * parseFloat(pricetemp);
+                }else if(name == 'price' ){
+                    let qtyemp = new String(listTemp[index]['qty']).replaceAll('.','') !== ''?new String(listTemp[index]['qty']).replaceAll('.',''):'0';
+                    subtotal = parseInt(qtyemp) * parseFloat(valPriceTemp);
+                }
+            }
+            
+            
+        }
+        if(flag){
+            const list = [...ListItemsInventori];
+            let valPrice = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'';
+            list[index][name] = valPrice;
+            list[index]['subtotalprice'] = subtotal;
+            setListItemsInventori(list);
+
+            let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive,ListItemsPurchaseReceiveBiaya,list);
+            setInputTotalPrice(totalPrice);
+            setorValue(totalPrice,IsDefaultSetorTotalPrice);
+        }
+        
+    }
+    
+    const handleInputDropDownChangeInventori = (e, index,name) => {
+        const list = [...ListItemsInventori];
+        list[index][name] = e.value;
+        setListItemsInventori(list);
+    };
 
     const handleChangeVendor = (data) =>{
         let id = data?.value ? data.value : '';
@@ -498,6 +570,7 @@ export default function AddPurchaseReceive(props) {
         setListCategoryProduct([]);
         setListItemsPurchaseReceive([]);
         setListItemsPurchaseReceiveMati([]);
+        setListItemsInventori([]);
         setInputBank(valdata.bank);
         setInputAccNoBank(valdata.accountnobank);
         setInputAccNameBank(valdata.accountnamebank);
@@ -506,7 +579,7 @@ export default function AddPurchaseReceive(props) {
         setLoading(true);
         let listCharge = setPriceBoxOngkosByVendor(ListItemsPurchaseReceiveBiaya,valdata.pricebox,valdata.priceongkos);
         setListItemsPurchaseReceiveBiaya(listCharge);
-        let totalPrice = calculateTotalPrice([],listCharge);
+        let totalPrice = calculateTotalPrice([],listCharge,[]);
         setInputTotalPrice(totalPrice);
         if(IsDefaultSetorTotalPrice){
             setInputSetor(totalPrice);
@@ -553,7 +626,7 @@ export default function AddPurchaseReceive(props) {
         const list = [...ListItemsPurchaseReceive];
         list.splice(index, 1);
         setListItemsPurchaseReceive(list);
-        let totalPrice = calculateTotalPrice(list,ListItemsPurchaseReceiveBiaya);
+        let totalPrice = calculateTotalPrice(list,ListItemsPurchaseReceiveBiaya,ListItemsInventori);
         setInputTotalPrice(totalPrice);
         // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
         setorValue(totalPrice,IsDefaultSetorTotalPrice);
@@ -583,6 +656,28 @@ export default function AddPurchaseReceive(props) {
             }]);
     };
 
+    const handleRemoveInventori = index => {
+        const list = [...ListItemsInventori];
+        list.splice(index, 1);
+        setListItemsInventori(list);
+
+        let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive,ListItemsPurchaseReceiveBiaya,list);
+        setInputTotalPrice(totalPrice);
+        // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
+        setorValue(totalPrice,IsDefaultSetorTotalPrice);
+    };
+
+    const handleAddItemsInventori = () => {
+        setListItemsInventori([...ListItemsInventori, 
+            { 
+                'idinventori':'',
+                'inventoriname':'',
+                'qty':0,
+                'price':0,
+                'subtotalprice':0
+            }]);
+    };
+
     // const handleAddBiaya = () => {
     //     setListItemsPurchaseReceiveBiaya([...ListItemsPurchaseReceiveBiaya, { namabiaya:"",qty: "",price:"",subtotal:""}]);
     // };
@@ -591,7 +686,7 @@ export default function AddPurchaseReceive(props) {
         const list = [...ListItemsPurchaseReceiveBiaya];
         list.splice(index, 1);
         setListItemsPurchaseReceiveBiaya(list);
-        let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive,list);
+        let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive,list,ListItemsInventori);
         setInputTotalPrice(totalPrice);
         // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(list,totalPrice));
         setorValue(totalPrice,IsDefaultSetorTotalPrice);
@@ -907,7 +1002,7 @@ export default function AddPurchaseReceive(props) {
                             {
                                 // ListItemsPurchaseReceive.length == 0?'':
                                 <div className="row justify-content-center">
-                                    <h4>{'Input Items Hidup'}</h4>
+                                    <h4>{'Input Item Hidup'}</h4>
                                     <table id="tablegrid">
                                         <tbody>
                                         <tr>
@@ -1029,7 +1124,7 @@ export default function AddPurchaseReceive(props) {
                             {
                                 // ListItemsPurchaseReceiveMati.length == 0?'':
                                 <div className="row justify-content-center">
-                                    <h4>{'Input Items Mati'}</h4>
+                                    <h4>{'Input Item Mati'}</h4>
                                     <table id="tablegrid">
                                         <tbody>
                                         <tr>
@@ -1210,6 +1305,95 @@ export default function AddPurchaseReceive(props) {
                                                                 // onChange={val => handleInputChangePrice(val,i)}
                                                                 onBlur={handleBlur}
                                                                 value={x.subtotal !== ''?numToMoney(parseFloat(x.subtotal)):''}
+                                                                disabled={true}
+                                                                /></td>
+                                                                
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+
+                            
+{
+                                // ListItemsPurchaseReceiveMati.length == 0?'':
+                                <div className="row justify-content-center">
+                                    <h4>{'Input Item Inventori'}</h4>
+                                    <table id="tablegrid">
+                                        <tbody>
+                                        <tr>
+                                        <th style={{width:'50px'}}>
+                                            <IconButton 
+                                            style={{color:'white'}}
+                                                onClick={() => handleAddItemsInventori()}
+                                                hidden={values.vendor == ''}
+                                            >
+                                                <AddIcon style={{ fontSize: 25 }}/>
+                                            </IconButton>
+                                            </th>
+                                            <th >{i18n.t('Nama')}</th>
+                                            <th >{i18n.t('Qty')}</th>
+                                            <th >{i18n.t('Price')}</th>
+                                            <th >{i18n.t('Subtotal Price')}</th>
+                                        </tr>
+                                            {
+                                                ListItemsInventori.map((x, i) => {
+                                                    return (
+                                                        <tr>
+                                                            <td >
+                                                            <IconButton 
+                                                            color={'primary'}
+                                                            // style={{color:'white'}}
+                                                                onClick={() => handleRemoveInventori(i)}
+                                                            // hidden={showplusdebit}
+                                                            >
+                                                                <DeleteIcon style={{ fontSize: 18 }}/>
+                                                            </IconButton>
+                                                            </td>
+                                                            <td style={{width:'20%'}}>
+                                                            <DropdownList
+                                                                name="idinventori"
+                                                                filter='contains'
+                                                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                onChange={val => handleInputDropDownChangeInventori(val,i,'idinventori')}
+                                                                data={ListInventori}
+                                                                textField={'label'}
+                                                                valueField={'value'}
+                                                                value={x.idinventori}
+                                                                
+                                                            />
+                                                            </td>
+                                                            <td><Input
+                                                                name="qty"
+                                                                type="text"
+                                                                id="qty"
+                                                                onChange={val => handleInputChangeInventori(val,i)}
+                                                                // onBlur={handleBlur}
+                                                                value={x.qty}
+                                                                /></td>
+
+                                                                <td style={{width:'15%'}}>
+                                                                <Input
+                                                                name="price"
+                                                                type="text"
+                                                                id="price"
+                                                                onChange={val => handleInputChangeInventori(val,i)}
+                                                                // onBlur={handleBlur}
+                                                                value={x.price !== ''?numToMoney(parseFloat(x.price)):''}
+                                                                disabled={false}
+                                                                /></td>
+
+                                                                <td style={{width:'15%'}}>
+                                                                <Input
+                                                                name="subtotalprice"
+                                                                type="text"
+                                                                id="subtotalprice"
+                                                                // onChange={val => handleInputChangePrice(val,i)}
+                                                                // onBlur={handleBlur}
+                                                                value={x.subtotalprice !== ''?numToMoney(parseFloat(x.subtotalprice)):''}
                                                                 disabled={true}
                                                                 /></td>
                                                                 

@@ -116,6 +116,55 @@ const setCharges = (items) =>{
     }
     return null;
 }
+
+const setInventori= (items) =>{
+    if(items != undefined && items != null){
+        let listRow = [];
+        let listfilteroutput = items.filter(output => output.qty > 0);
+        for(let i=0; i < listfilteroutput.length; i++){
+            let rowItem = [];
+            let det = listfilteroutput[i];
+
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.no, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
+                </View>
+            );
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.product,height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 290, maxWidth: 290, marginTop: '5px', fontSize: fontSizeBig }]}>{det.inventoriname}</Text>
+                </View>
+            );
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.size, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
+                </View> 
+            );
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.gram, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
+                </View> 
+            );
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.qty, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.qty}</Text>
+                </View> 
+            );
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.price, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?numToMoney(det.price):''}</Text>
+                </View> 
+            );
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.subtotalprice?numToMoney(det.subtotalprice) :''}</Text>
+                </View> 
+            );
+            listRow.push(<View style={styles.tableRow}>{rowItem}</View>);
+        }
+        return listRow;
+    }
+}
 const setItems = (items) =>{
     
     if(items != undefined && items != null){
@@ -242,6 +291,9 @@ const setUdangMati = (items) =>{
 }
 
 const setInformasiNilaiUang = (items) =>{
+    if(items.notatype == 'INTERNAL' || items.notatype == 'PAJAK'){
+        return null;
+    }
     /**
      * Jika setor sesuai nota,maka kolom setor jangan dimunculkan, hanya muncul saldo dan sisa deposit
      * jika supplier tidak ada deposit makan jangan ditampilkan info deposit
@@ -343,50 +395,37 @@ const setInformasiNilaiUang = (items) =>{
             );
         }
     }
-    // row.push(
-    //     <View style={{ flexDirection: 'row' }}>
-    //         <View style={{ flexDirection: 'row-reverse' }}>
-    //             <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{'Saldo : '}{numToMoney(saldoDepositBeforeNotaSubmit)}</Text>
-    //         </View>
-
-    //         <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-    //             <Text style={{ fontSize: fontSizeBig }}>{'Bank :  '}{items.bank}</Text>
-    //         </View>
-    //     </View>
-    // );
-    // row.push(
-    //     <View style={{ flexDirection: 'row' }}>
-    //         <View style={{ flexDirection: 'row-reverse' }}>
-    //             <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{'Setor : '}{numToMoney(setor)}</Text>
-    //         </View>
-
-    //         <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-    //             <Text style={{ fontSize: fontSizeBig }}>{'Nama :  '}{items.accountnamebank}</Text>
-    //         </View>
-    //     </View>
-    // );
-
-    // row.push(
-    //     <View style={{ flexDirection: 'row' }}>
-    //         <View style={{ flexDirection: 'row-reverse' }}>
-    //             <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{'Tambah DP : '}{numToMoney(tambahDP)}</Text>
-    //         </View>
-
-    //         <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-    //             <Text style={{ fontSize: fontSizeBig }}>{'No Rekening :  '}{items.accountnobank}</Text>
-    //         </View>
-    //     </View>
-    // );
-
-    // row.push(
-    //     <View style={{ flexDirection: 'row' }}>
-    //         <View style={{ flexDirection: 'row-reverse', }}>
-    //             <Text style={{ fontSize: fontSizeBig }}>{'Sisa DP :'}{numToMoney(sisaDeposit)}</Text>
-    //         </View>
-    //     </View>
-    // );
     return row;
 
+}
+
+const setNotes = (items) =>{
+    if(items != undefined && items != null && items != ""){
+        if(new String(items).includes("|")){
+            let arrNotes = new String(items).split("|");
+            let listRow = [];
+            for(let i=0; i < arrNotes.length; i++){
+                let note = arrNotes[i];
+                listRow.push(
+                    <View style={{ flexDirection: 'row'}}>
+                    <View style={{ flexDirection: 'row-reverse', }}>
+                            <Text style={{ fontSize: fontSizeBig }}>{note}</Text>
+                        </View>
+                    </View>
+                );
+            }
+            return listRow;
+        }else{
+            return [
+                <View style={{ flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row-reverse', }}>
+                        <Text style={{ fontSize: fontSizeBig }}>{items}</Text>
+                    </View>
+                </View>
+            ];        
+        }
+    }
+    return null;
 }
 
 const GenerateSupplier = ({ valuedata }) => {
@@ -465,6 +504,9 @@ const GenerateSupplier = ({ valuedata }) => {
                             {/* Charges */}
                             {setCharges(valuedata != null ? valuedata.charges : [])}
 
+                            {/* Charges */}
+                            {setInventori(valuedata != null ? valuedata.inventori : [])}
+
                             {/* Total */}
                             <View style={styles.tableRow}>
                                 <View style={[styles.tableColWidth, { width:styles.width.no, height: "25px" }]}>
@@ -501,6 +543,8 @@ const GenerateSupplier = ({ valuedata }) => {
 
                             {/* List udang Mati */}
                             {setUdangMati(valuedata != null ? valuedata.items : [])}
+
+                            {setNotes(valuedata != null ? valuedata.notes : "")}
 
                             {setInformasiNilaiUang(valuedata != null ? valuedata : [])}
 

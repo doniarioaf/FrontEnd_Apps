@@ -54,3 +54,4 @@ export const editpricelist = `/form/edit/pricelist`;
 export const menupurchasereceive = `/purchasereceive`;
 export const addpurchasereceive = `/form/add/purchasereceive`;
 export const printnota = `/form/nota/purchasereceive`;
+export const detailpurchasereceive = `/form/detail/purchasereceive`;

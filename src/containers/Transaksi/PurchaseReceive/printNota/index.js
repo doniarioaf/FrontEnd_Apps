@@ -20,6 +20,9 @@ import PdfDocumentSupplier from './PdfDocumentSupplier';
 import PdfDocumentInternal from './PdfDocumentInternal';
 import PdfDocumentPajak from './PdfDocumentPajak';
 
+import { formatdate } from '../../../shared/constantValue';
+import moment                          from 'moment';
+
 export default function PrintNota(props) {
     reloadToHomeNotAuthorize(addMappingStock_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
@@ -41,12 +44,17 @@ export default function PrintNota(props) {
 
     function generatePDF(){
         setLoading(true);
+        setIsReady(false);
         dispatch(actions.getPurchaseReceiveData({url:'/printnota/'+id},successHandler, errorHandler));
     }
 
     function successHandler(data,propsdata){
         if (data.data) {
+            let det = data.data;
+
             let dettemp = data.data;
+            dettemp.notatype = SelPrintType;
+            dettemp.transactiondate = det.transactiondate ?moment (new Date(det.transactiondate)).format(formatdate):'';
             setValue(dettemp);
 
             setTimeout(() => {
@@ -68,14 +76,16 @@ export default function PrintNota(props) {
     }
 
     const viewPdfDocument = (printType,value) => {
-        if(printType == 'SUPPLIER'){
-            return <PdfDocumentSupplier data={value} />
-        }else if(printType == 'INTERNAL'){
-            return <PdfDocumentInternal data={value} />
-        }else if(printType == 'PAJAK'){
-            return <PdfDocumentPajak data={value} />
-        }
-        return '';
+        
+        return <PdfDocumentSupplier data={value} />
+        // if(printType == 'SUPPLIER'){
+        //     return <PdfDocumentSupplier data={value} />
+        // }else if(printType == 'INTERNAL'){
+        //     return <PdfDocumentInternal data={value} />
+        // }else if(printType == 'PAJAK'){
+        //     return <PdfDocumentPajak data={value} />
+        // }
+        // return '';
     }
 
     return (
