@@ -96,7 +96,7 @@ const handleMenu = () => {
                     name: 'Purchase Receive',
                     path: pathmenu.menupurchasereceive,
                     translate: 'Purchase Receive',
-                    permission:permissionmenu.MenuProduct,
+                    permission:permissionmenu.MenuPurchaseReceive,
                 },
             ]
         },

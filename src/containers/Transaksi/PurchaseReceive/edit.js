@@ -1,4 +1,4 @@
-import React, {useState,useEffect}    from 'react';
+import React, {useState,useEffect,useRef}    from 'react';
 import {Formik}                        from 'formik';
 import {useTranslation}                from 'react-i18next';
 import ContentWrapper               from '../../../components/Layout/ContentWrapper';
@@ -10,7 +10,7 @@ import { Loading } from '../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { addPurchaseReceive_Permission } from '../../shared/permissionMenu';
+import { editPurchaseReceive_Permission } from '../../shared/permissionMenu';
 import * as pathmenu           from '../../shared/pathMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
@@ -23,8 +23,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
 import { calculateTotalPrice, setPriceBoxOngkosByVendor } from './utilityPurchaseReceive';
 
-export default function AddPurchaseReceive(props) {
-    reloadToHomeNotAuthorize(addPurchaseReceive_Permission,'TRANSACTION');
+export default function EditPurchaseReceive(props) {
+    reloadToHomeNotAuthorize(editPurchaseReceive_Permission,'TRANSACTION');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -68,7 +68,8 @@ export default function AddPurchaseReceive(props) {
     const [ListItemsInventori, setListItemsInventori] = useState([]);
 
     const [ErrItemsHidup, setErrItemsHidup] = useState("");
-  
+    
+    const id = props.match.params.id;
 
     useEffect(() => {
         setLoading(true);
@@ -119,10 +120,85 @@ export default function AddPurchaseReceive(props) {
             ], []);
             setListInventori(theDataInventori);
         }
-        setLoading(false);
+        dispatch(actions.getPurchaseReceiveData( {url:'/'+id},successHandlerDetail, errorHandler));
+        // setLoading(false);
     }
+    function successHandlerDetail(data,propsdata) {
+        let det = data.data;
+        let idvendor = det.idvendor;
+        setSelVendor(idvendor);
+        setInputBank(det.bank);
+        setInputAccNoBank(det.accountnobank);
+        setInputAccNameBank(det.accountnamebank);
+        setReceiveDate(det.transactiondate?new Date(det.transactiondate):null);
+        setInputKoli(det.koli);
+        setInputNotes(det.notes);
+        let sisaDeposit = det.sisaDeposit?det.sisaDeposit:0;
+        let setor = det.setor?det.setor:0;
+        let totalSisaDeposit = parseFloat(sisaDeposit) + parseFloat(setor);
+        setSisaDeposit(totalSisaDeposit);
+        setInputTotalPrice(det.totalprice?det.totalprice:0);
+        setInputSetor(setor);
+        setIsDefaultSetorTotalPrice(det.isdefaultvaluesetor);
 
-    
+        let listfilteroutputHidup = det.items.filter(output => output.type == 'H');
+        let listfilteroutputMati = det.items.filter(output => output.type == 'M');
+        const theDataItems = listfilteroutputHidup.reduce((obj, el) => [
+            ...obj,
+            {
+                'idproduct':el.idproduct,
+                'idcategoryproduct': el.idcategoryproduct,
+                'qty':el.qty,
+                'qtybonus':el.qtybonus,
+                'qtymati':0,
+                'itemsprice':el.price?el.price:0,//numToMoney(parseFloat(el.price)):0,
+                'subtotalprice':el.subtotalprice?el.subtotalprice:0//numToMoney(parseFloat(el.subtotalprice)):0,
+            }
+        ], []);
+        setListItemsPurchaseReceive(theDataItems);
+
+        const theDataItemsMati = listfilteroutputMati.reduce((obj, el) => [
+            ...obj,
+            {
+                'idproduct':el.idproduct,
+                'idcategoryproduct': el.idcategoryproduct,
+                'qty':0,
+                'qtybonus':0,
+                'qtymati':el.qty,
+                'itemsprice':el.price?el.price:0,//?numToMoney(parseFloat(el.price)):0,
+                'subtotalprice':el.subtotalprice?el.subtotalprice:0,//?numToMoney(parseFloat(el.subtotalprice)):0,
+            }
+        ], []);
+        setListItemsPurchaseReceiveMati(theDataItemsMati);
+
+        const theDataCharge = det.charges.reduce((obj, el) => [
+            ...obj,
+            {
+                'idcharge':el.idcharge,
+                'namabiaya': el.chargename,
+                'qty':el.qty?el.qty:0,
+                'price':el.price?el.price:0,
+                'subtotal':el.subtotalprice?el.subtotalprice:0
+            }
+        ], []);
+        setListItemsPurchaseReceiveBiaya(theDataCharge);
+
+        const theDataInventori = det.inventori.reduce((obj, el) => [
+            ...obj,
+            {
+                'idinventori':el.idinventori,
+                'inventoriname':'',
+                'qty':el.qty?el.qty:0,
+                'price':el.price?el.price:0,
+                'subtotalprice':el.subtotalprice?el.subtotalprice:0
+            }
+        ], []);
+        setListItemsInventori(theDataInventori);
+
+        dispatch(actions.getPurchaseReceiveData({url:'/searchvendor?idvendor='+idvendor},successHandlerVendor, errorHandler));
+        
+        // setLoading(false);
+    }
     function setorValue(totalprice,isdefaultnota){
         if(isdefaultnota){
             setInputSetor(totalprice);
@@ -305,7 +381,7 @@ export default function AddPurchaseReceive(props) {
             }
             obj.inventori = inventori;
 
-            dispatch(actions.submitPurchaseReceiveData({url:'',payload:obj,type:'ADD'},succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitPurchaseReceiveData({url:'/'+id,payload:obj,type:'EDIT'},succesHandlerSubmit, errorHandler));
         }
     
     }
@@ -733,7 +809,7 @@ export default function AddPurchaseReceive(props) {
                     return(
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormPurchaseReceive">
                             <ContentWrapper>
-                            <ContentHeading history={history} link={pathmenu.addpurchasereceive} label={'Add Purchase Receive'} labeldefault={'Add Purchase Receive'} />
+                            <ContentHeading history={history} link={pathmenu.editpurchasereceive+"/"+id} label={'Edit Purchase Receive'} labeldefault={'Edit Purchase Receive'} />
 
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
@@ -754,8 +830,7 @@ export default function AddPurchaseReceive(props) {
                                 data={ListVendor}
                                 textField={'label'}
                                 valueField={'value'}
-                                // style={{width: '25%'}}
-                                // disabled={values.isdisabledcountry}
+                                disabled={true}
                                 value={values.vendor}
                             />
                             <div className="invalid-feedback-custom">{ErrSelVendor}</div>
@@ -982,7 +1057,6 @@ export default function AddPurchaseReceive(props) {
                             <div className="invalid-feedback-custom" style={{fontSize:'larger'}}>{ErrItemsHidup}</div>
                             {
                                 // ListItemsPurchaseReceive.length == 0?'':
-                                
                                 <div className="row justify-content-center">
                                     <h4>{'Input Item Hidup'}</h4>
                                     <table id="tablegrid">

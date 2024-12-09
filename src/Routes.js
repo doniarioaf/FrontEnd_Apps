@@ -184,6 +184,7 @@ const menuPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseRe
 const addPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/add'));
 const printNota = lazy(() => import('./containers/Transaksi/PurchaseReceive/printNota'));
 const detailPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/detail'));
+const editPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/edit'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -379,6 +380,7 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addpurchasereceive} component={waitFor(addPurchaseReceive)}/>
                             <Route path={pathmenu.printnota+'/:id'} component={waitFor(printNota)}/>
                             <Route path={pathmenu.detailpurchasereceive+'/:id'} component={waitFor(detailPurchaseReceive)}/>
+                            <Route path={pathmenu.editpurchasereceive+'/:id'} component={waitFor(editPurchaseReceive)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

@@ -10,21 +10,21 @@ import { Loading } from '../../../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import { reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
-import { addMappingStock_Permission } from '../../../shared/permissionMenu';
+import { MenuPurchaseReceive } from '../../../shared/permissionMenu';
 import * as pathmenu           from '../../../shared/pathMenu';
 import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 
 import { PDFViewer } from '@react-pdf/renderer';
 import PdfDocumentSupplier from './PdfDocumentSupplier';
-import PdfDocumentInternal from './PdfDocumentInternal';
-import PdfDocumentPajak from './PdfDocumentPajak';
+// import PdfDocumentInternal from './PdfDocumentInternal';
+// import PdfDocumentPajak from './PdfDocumentPajak';
 
 import { formatdate } from '../../../shared/constantValue';
 import moment                          from 'moment';
 
 export default function PrintNota(props) {
-    reloadToHomeNotAuthorize(addMappingStock_Permission,'TRANSACTION');
+    reloadToHomeNotAuthorize(MenuPurchaseReceive,'READ');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();

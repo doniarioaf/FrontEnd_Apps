@@ -25,7 +25,7 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
   import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { editProduct_Permission,deleteProduct_Permission,MenuProduct } from '../../shared/permissionMenu';
+  import { MenuPurchaseReceive, deletePurchaseReceive_Permission, editPurchaseReceive_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime } from '../../shared/constantValue';
   import '../../CSS/table.css';
@@ -41,7 +41,7 @@ import React, {useState,
 
 
   function Detail(props) {
-    reloadToHomeNotAuthorize(MenuProduct,'READ');
+    reloadToHomeNotAuthorize(MenuPurchaseReceive,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
@@ -120,7 +120,7 @@ import React, {useState,
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
                 setLoading(true);
-                dispatch(actions.submitProductData( {url:'/'+id,type:'DELETE'} ,succesHandlerSubmit, errorHandler));
+                dispatch(actions.submitPurchaseReceiveData( {url:'/'+id,type:'DELETE'} ,succesHandlerSubmit, errorHandler));
             //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
             //   Swal.fire('Changes are not saved', '', 'info')
@@ -136,7 +136,7 @@ import React, {useState,
             text: i18n.t('label_SUCCESS')
         }).then((result) => {
             if (result.isConfirmed) {
-                history.push(pathmenu.menuProduct);
+                history.push(pathmenu.menupurchasereceive);
             }
         })
     }
@@ -434,9 +434,9 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editProduct_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editProduct+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deleteProduct_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deleteProduct_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Nota')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editPurchaseReceive_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpurchasereceive+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deletePurchaseReceive_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(MenuPurchaseReceive,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Nota')}</MenuItem>
                             
                         </div>)
                         
