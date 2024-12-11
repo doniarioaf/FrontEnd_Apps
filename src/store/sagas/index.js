@@ -51,7 +51,9 @@ import {
     getPriceListSaga,
     submitPriceListSaga,
     getPurchaseReceiveSaga,
-    submitPurchaseReceiveSaga
+    submitPurchaseReceiveSaga,
+    getDepositDataSaga,
+    submitDepositSaga
 } from './admin';
 
 
@@ -106,5 +108,7 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_PRICELIST, submitPriceListSaga),
         takeEvery(actions.GET_PURCHASERECEIVE_DATA, getPurchaseReceiveSaga),
         takeEvery(actions.SUBMIT_PURCHASERECEIVE, submitPurchaseReceiveSaga),
+        takeEvery(actions.GET_DEPOSIT_DATA, getDepositDataSaga),
+        takeEvery(actions.SUBMIT_DEPOSIT, submitDepositSaga),
     ]);
 }

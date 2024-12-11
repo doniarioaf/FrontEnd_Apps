@@ -87,6 +87,12 @@ const handleMenu = () => {
             translate: 'Transaksi',
             submenu:[
                 {
+                    name: 'Deposit',
+                    path: pathmenu.menudeposit,
+                    translate: 'Deposit',
+                    permission:permissionmenu.MenuDeposit,
+                },
+                {
                     name: 'Price List',
                     path: pathmenu.menupricelist,
                     translate: 'Price List',

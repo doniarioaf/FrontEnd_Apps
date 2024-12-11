@@ -186,6 +186,11 @@ const printNota = lazy(() => import('./containers/Transaksi/PurchaseReceive/prin
 const detailPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/detail'));
 const editPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/edit'));
 
+const menuDeposit = lazy(() => import('./containers/Transaksi/Deposit'));
+const addDeposit = lazy(() => import('./containers/Transaksi/Deposit/add'));
+const detailDeposit = lazy(() => import('./containers/Transaksi/Deposit/detail'));
+const editDeposit = lazy(() => import('./containers/Transaksi/Deposit/edit'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -381,6 +386,11 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.printnota+'/:id'} component={waitFor(printNota)}/>
                             <Route path={pathmenu.detailpurchasereceive+'/:id'} component={waitFor(detailPurchaseReceive)}/>
                             <Route path={pathmenu.editpurchasereceive+'/:id'} component={waitFor(editPurchaseReceive)}/>
+
+                            <Route path={pathmenu.menudeposit} component={waitFor(menuDeposit)}/>
+                            <Route path={pathmenu.adddeposit} component={waitFor(addDeposit)}/>
+                            <Route path={pathmenu.detaildeposit+'/:id'} component={waitFor(detailDeposit)}/>
+                            <Route path={pathmenu.editdeposit+'/:id'} component={waitFor(editDeposit)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

@@ -54,6 +54,10 @@ export const addPurchaseReceive_Permission = ['READ_PURCHASERECEIVE','CREATE_PUR
 export const editPurchaseReceive_Permission = ['READ_PURCHASERECEIVE','EDIT_PURCHASERECEIVE'];
 export const deletePurchaseReceive_Permission = ['DELETE_PURCHASERECEIVE'];
 
+export const addDeposit_Permission = ['READ_DEPOSIT','CREATE_DEPOSIT'];
+export const editDeposit_Permission = ['READ_DEPOSIT','EDIT_DEPOSIT'];
+export const deleteDeposit_Permission = ['DELETE_DEPOSIT'];
+
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
@@ -70,3 +74,4 @@ export const MenuCategoryProduct = ['READ_CATEGORYPRODUCT'];
 export const MenuMappingStock = ['READ_MAPPINGSTOCK'];
 export const MenuPriceList = ['READ_PRICELIST'];
 export const MenuPurchaseReceive = ['READ_PURCHASERECEIVE'];
+export const MenuDeposit = ['READ_DEPOSIT'];

@@ -25,9 +25,9 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
   import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { editVendor_Permission,deleteVendor_Permission,MenuVendor } from '../../shared/permissionMenu';
+  import { editDeposit_Permission,deleteDeposit_Permission,MenuDeposit } from '../../shared/permissionMenu';
   import moment                          from 'moment';
-  import { formatdatetime } from '../../shared/constantValue';
+  import { formatdate, formatdatetime } from '../../shared/constantValue';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,7 +40,7 @@ import React, {useState,
 
 
   function Detail(props) {
-    reloadToHomeNotAuthorize(MenuVendor,'READ');
+    reloadToHomeNotAuthorize(MenuDeposit,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
@@ -50,7 +50,6 @@ import React, {useState,
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
-    const [CategoryNotInclude, setCategoryNotInclude] = useState([]);
 
     const id = props.match.params.id;
 
@@ -86,19 +85,12 @@ import React, {useState,
 
       useEffect(() => {
         setLoading(true);
-        dispatch(actions.getVendorData( {url:'/'+id},successHandler, errorHandler));
+        dispatch(actions.getDepositData( {url:'/'+id},successHandler, errorHandler));
     }, []);
 
     function successHandler(data,propsdata) {
         setValue(data.data);
-        if(data.data.items){
-            let arr = [];
-                for(let i=0; i < data.data.items.length ; i++){
-                    let val = data.data.items[i];
-                    arr.push(val.categoryproductName+' ('+val.categoryproductSize+')');
-                }
-                setCategoryNotInclude(arr.join());
-        }
+       
         setLoading(false);
     }
 
@@ -114,7 +106,7 @@ import React, {useState,
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
                 setLoading(true);
-                dispatch(actions.submitVendorData( {url:'/'+id,type:'DELETE'} ,succesHandlerSubmit, errorHandler));
+                dispatch(actions.submitDeposit( {url:'/'+id,type:'DELETE'} ,succesHandlerSubmit, errorHandler));
             //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
             //   Swal.fire('Changes are not saved', '', 'info')
@@ -130,23 +122,23 @@ import React, {useState,
             text: i18n.t('label_SUCCESS')
         }).then((result) => {
             if (result.isConfirmed) {
-                history.push(pathmenu.menuVendor);
+                history.push(pathmenu.menudeposit);
             }
         })
     }
 
-    function errorHandler(error,propsdata) {
+    function errorHandler(data,propsdata) {
         setLoading(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: '' + error
+            text: data.msg
         })
     }
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} link={pathmenu.detailVendor+'/'+id} label={'Detail'} labeldefault={'Detail'} />
+            <ContentHeading history={history} link={pathmenu.detaildeposit+'/'+id} label={'Detail'} labeldefault={'Detail'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -175,7 +167,7 @@ import React, {useState,
                 <h2>
                     {
                         !loading  ?
-                            value.nama :
+                            value.vendorName :
                             <Skeleton style={{maxWidth: 300}}/>
                     }
                 </h2>
@@ -191,65 +183,23 @@ import React, {useState,
                     (
                         <section>
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_NAME')}</span>
+                            <span className="col-md-5">{i18n.t('Vendor')}</span>
                             <strong className="col-md-7">
-                                {value.nama?value.nama:''}
+                                {value.vendorName?value.vendorName:''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Alias')}</span>
+                            <span className="col-md-5">{i18n.t('Tanggal')}</span>
                             <strong className="col-md-7">
-                                {value.alias?value.alias:''}
+                                {value.depositdate?moment(value.depositdate).format(formatdate):''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Type')}</span>
-                            <strong className="col-md-7">
-                                {value.type?value.type:''}
-                            </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Bank')}</span>
-                            <strong className="col-md-7">
-                                {value.bank?value.bank:''}
-                            </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_ACC_NO')}</span>
+                            <span className="col-md-5">{i18n.t('Amount')}</span>
                                 <strong className="col-md-7">
-                                {value.accountnobank ?value.accountnobank:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_ACC_NAME')}</span>
-                                <strong className="col-md-7">
-                                {value.accountnamebank ?value.accountnamebank:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Price Box')}</span>
-                                <strong className="col-md-7">
-                                {value.pricebox ?numToMoney(value.pricebox):''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Price Ongkos')}</span>
-                                <strong className="col-md-7">
-                                {value.priceongkos ?numToMoney(value.priceongkos):''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Category Not Include')}</span>
-                                <strong className="col-md-7">
-                                {CategoryNotInclude}
+                                {value.amount ?numToMoney(value.amount):''}
                                 </strong>
                             </div>
 
@@ -309,8 +259,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editVendor_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editVendor+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deleteVendor_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editDeposit_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editdeposit+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteDeposit_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             
                         </div>)
                         

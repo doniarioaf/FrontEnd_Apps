@@ -22,6 +22,7 @@ import PdfDocumentSupplier from './PdfDocumentSupplier';
 
 import { formatdate } from '../../../shared/constantValue';
 import moment                          from 'moment';
+import './App.css';
 
 export default function PrintNota(props) {
     reloadToHomeNotAuthorize(MenuPurchaseReceive,'READ');
@@ -36,6 +37,8 @@ export default function PrintNota(props) {
     const [IsReady, setIsReady] = useState(false);
 
     const id = props.match.params.id;
+
+    const fileName = "PurchaseReceive";
 
     const handleChangePrintType = (data) =>{
         let id = data?.value ? data.value : '';
@@ -86,6 +89,17 @@ export default function PrintNota(props) {
         //     return <PdfDocumentPajak data={value} />
         // }
         // return '';
+    }
+
+    const handleSuccesPDF = (dataUrl, namaFile) => {
+        var fileLink = document.createElement('a');
+        fileLink.href = dataUrl;//URL.createObjectURL(dataUrl);
+
+        // it forces the name of the downloaded file
+        fileLink.download = namaFile + '.pdf';
+        fileLink.click();
+        fileLink.remove();
+
     }
 
     return (
@@ -139,12 +153,20 @@ export default function PrintNota(props) {
                 <div className="App">
                     <div className='download-link'>
                     {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? 'SuratJalan-' + Value.nodocument : fileName))}>{"Download"}</div> */}
-                    <div >{"Download"}</div>
+                    <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div>
                     </div>
 
-                    <PDFViewer fileName={"myPdf.pdf"} width={800} height={500} showToolbar={false}>
+                    <PDFViewer style={{
+                            width: '100%',
+                            height: '100vh',
+                            border: 'none', // Remove any borders or default styles
+                        }} fileName={"myPdf.pdf"} 
+                        width={800} height={500} >
                         {viewPdfDocument(SelPrintType,Value)}
+
                     </PDFViewer>
+                    
+                    
                 </div>
                 :''
             }

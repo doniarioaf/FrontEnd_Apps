@@ -400,3 +400,21 @@ export const submitPurchaseReceiveData = (param, successHandler, errorHandler) =
         errorHandler,
     }
 }
+
+export const getDepositData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_DEPOSIT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeposit = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DEPOSIT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

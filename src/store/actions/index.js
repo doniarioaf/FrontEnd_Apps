@@ -56,5 +56,7 @@ export {
     getPriceListData,
     submitPriceListData,
     getPurchaseReceiveData,
-    submitPurchaseReceiveData
+    submitPurchaseReceiveData,
+    getDepositData,
+    submitDeposit
 } from './admin';
