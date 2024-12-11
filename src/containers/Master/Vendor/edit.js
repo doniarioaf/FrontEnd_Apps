@@ -37,6 +37,12 @@ export default function EditVendor(props) {
     const [InputPricebox, setInputPricebox] = useState('');
     const [InputPriceOngkos, setInputPriceOngkos] = useState('');
 
+    const [InputPacking, setInputPacking] = useState('');
+    const [InputKurir, setInputKurir] = useState('');
+    const [InputKomisi, setInputKomisi] = useState('');
+    const [InputProfit, setInputProfit] = useState('');
+    const [InputValue1, setInputValue1] = useState('');
+
     const [InputBankName, setInputBankName] = useState('');
     const [InputNoAkunBank, setInputNoAkunBank] = useState('');
     const [InputNamaAkunBank, setInputNamaAkunBank] = useState('');
@@ -68,8 +74,14 @@ export default function EditVendor(props) {
         setInputBankName(val.bank);
         setInputNoAkunBank(val.accountnobank);
         setInputNamaAkunBank(val.accountnamebank);
-        setInputPriceOngkos(val.priceongkos?numToMoney(val.priceongkos):'');
-        setInputPricebox(val.pricebox?numToMoney(val.pricebox):'');
+        setInputPriceOngkos(val.priceongkos?val.priceongkos:'0');
+        setInputPricebox(val.pricebox?val.pricebox:'0');
+
+        setInputPacking(val.packing?val.packing:'0');
+        setInputKurir(val.kurir?val.kurir:'0');
+        setInputKomisi(val.komisi?val.komisi:'0');
+        setInputProfit(val.profit?val.profit:'0');
+        setInputValue1(val.value1?val.value1:'0');
 
         let selectedData = [];
         let VendorNotInlcueCategoryProd = [];
@@ -142,6 +154,11 @@ export default function EditVendor(props) {
             obj.idcategoryproduct = VendorNotInlcueCategoryProd;
             obj.pricebox = new String(values.pricebox).replaceAll(".","") !== ''?new String(values.pricebox).replaceAll(".",""):0;
             obj.priceongkos = new String(values.priceongkos).replaceAll(".","") !== ''?new String(values.priceongkos).replaceAll(".",""):0;
+            obj.packing = new String(values.packing).replaceAll(".","") !== ''?new String(values.packing).replaceAll(".",""):0;
+            obj.kurir = new String(values.kurir).replaceAll(".","") !== ''?new String(values.kurir).replaceAll(".",""):0;
+            obj.komisi = new String(values.komisi).replaceAll(".","") !== ''?new String(values.komisi).replaceAll(".",""):0;
+            obj.profit = new String(values.profit).replaceAll(".","") !== ''?new String(values.profit).replaceAll(".",""):0;
+            obj.value1 = new String(values.value1).replaceAll(".","") !== ''?new String(values.value1).replaceAll(".",""):0;
             dispatch(actions.submitVendorData({url:'/'+id,payload:obj,type:'EDIT'},succesHandlerSubmit, errorHandler));
         }
     }
@@ -183,6 +200,17 @@ export default function EditVendor(props) {
         })
     }
 
+    function setValueOngkos(packing,kurir,komisi,profit,value1){
+        let packingTemp = packing !== ''? parseFloat(new String(packing).replaceAll(".","")):0;
+        let kurirTemp = kurir !== ''? parseFloat(new String(kurir).replaceAll(".","")):0;
+        let komisiTemp = komisi !== ''? parseFloat(new String(komisi).replaceAll(".","")):0;
+        let profitTemp = profit !== ''? parseFloat(new String(profit).replaceAll(".","")):0;
+        let value1Temp = value1 !== ''? parseFloat(new String(value1).replaceAll(".","")):0;
+
+        let ongkos = packingTemp+kurirTemp+komisiTemp+profitTemp+value1Temp;
+        setInputPriceOngkos(ongkos);
+        
+    }
     return (
         <Formik
         initialValues={
@@ -194,7 +222,12 @@ export default function EditVendor(props) {
                 accnamebank:InputNamaAkunBank,
                 type:InputType,
                 priceongkos:InputPriceOngkos,
-                pricebox:InputPricebox
+                pricebox:InputPricebox,
+                packing:InputPacking,
+                kurir:InputKurir,
+                komisi:InputKomisi,
+                profit:InputProfit,
+                value1:InputValue1
             }
         }
         validate={values => {
@@ -207,6 +240,12 @@ export default function EditVendor(props) {
             setInputType(values.type);
             setInputPriceOngkos(values.priceongkos);
             setInputPricebox(values.pricebox);
+            setInputPacking(values.packing);
+            setInputKurir(values.kurir);
+            setInputKomisi(values.komisi);
+            setInputProfit(values.profit);
+            setInputValue1(values.value1);
+            setValueOngkos(values.packing,values.kurir,values.komisi,values.profit,values.value1);
             return errors;
         }}
         enableReinitialize="true"
@@ -314,18 +353,42 @@ export default function EditVendor(props) {
                                 value={values.pricebox !== ''?numToMoney(parseFloat(new String(values.pricebox).replaceAll(".",""))):''}
                             />
 
-                            <label className="mt-3 form-label required" htmlFor="priceongkos">
-                                {i18n.t('Price Ongkos')}
-                                <span style={{color:'red'}}>*</span>
+                            <label className="mt-3 form-label required" htmlFor="packing">
+                                {i18n.t('Packing')}
                             </label>
                             <Input
-                                name="priceongkos"
+                                name="packing"
                                 type="text"
-                                id="priceongkos"
+                                id="packing"
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                value={values.priceongkos !== ''?numToMoney(parseFloat(new String(values.priceongkos).replaceAll(".",""))):''}
+                                value={values.packing !== ''?numToMoney(parseFloat(new String(values.packing).replaceAll(".",""))):''}
                             />
+
+                            <label className="mt-3 form-label required" htmlFor="kurir">
+                                {i18n.t('Kurir')}
+                            </label>
+                            <Input
+                                name="kurir"
+                                type="text"
+                                id="kurir"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.kurir !== ''?numToMoney(parseFloat(new String(values.kurir).replaceAll(".",""))):''}
+                            />
+
+                            <label className="mt-3 form-label required" htmlFor="komisi">
+                                {i18n.t('Komisi')}
+                            </label>
+                            <Input
+                                name="komisi"
+                                type="text"
+                                id="komisi"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.komisi !== ''?numToMoney(parseFloat(new String(values.komisi).replaceAll(".",""))):''}
+                            />
+
                             
                             </div>
 
@@ -384,6 +447,44 @@ export default function EditVendor(props) {
                                 className="basic-multi-select"
                                 classNamePrefix="select"
                                 // placeholder={i18n.t('select.SELECT_OPTION')}
+                            />
+
+                            <label className="mt-3 form-label required" htmlFor="profit">
+                                {i18n.t('Profit')}
+                            </label>
+                            <Input
+                                name="profit"
+                                type="text"
+                                id="profit"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.profit !== ''?numToMoney(parseFloat(new String(values.profit).replaceAll(".",""))):''}
+                            />
+
+                            <label className="mt-3 form-label required" htmlFor="value1">
+                                {i18n.t('Value 1')}
+                            </label>
+                            <Input
+                                name="value1"
+                                type="text"
+                                id="value1"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.value1 !== ''?numToMoney(parseFloat(new String(values.value1).replaceAll(".",""))):''}
+                            />
+
+                            <label className="mt-3 form-label required" htmlFor="priceongkos">
+                                {i18n.t('Price Ongkos')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <Input
+                                name="priceongkos"
+                                type="text"
+                                id="priceongkos"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.priceongkos !== ''?numToMoney(parseFloat(new String(values.priceongkos).replaceAll(".",""))):''}
+                                disabled={true}
                             />
 
                             </div>

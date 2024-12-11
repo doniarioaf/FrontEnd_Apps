@@ -235,14 +235,50 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Price Box')}</span>
                                 <strong className="col-md-7">
-                                {value.pricebox ?numToMoney(value.pricebox):''}
+                                {value.pricebox ?numToMoney(value.pricebox):'0'}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Packing')}</span>
+                                <strong className="col-md-7">
+                                {value.packing ?numToMoney(value.packing):'0'}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Kurir')}</span>
+                                <strong className="col-md-7">
+                                {value.kurir ?numToMoney(value.kurir):'0'}
+                                </strong>
+                            </div>
+
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Komisi')}</span>
+                                <strong className="col-md-7">
+                                {value.komisi ?numToMoney(value.komisi):'0'}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Profit')}</span>
+                                <strong className="col-md-7">
+                                {value.profit ?numToMoney(value.profit):'0'}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Value 1')}</span>
+                                <strong className="col-md-7">
+                                {value.value1 ?numToMoney(value.value1):'0'}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Price Ongkos')}</span>
                                 <strong className="col-md-7">
-                                {value.priceongkos ?numToMoney(value.priceongkos):''}
+                                {value.priceongkos ?numToMoney(value.priceongkos):'0'}
                                 </strong>
                             </div>
 
