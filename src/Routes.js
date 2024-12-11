@@ -191,6 +191,11 @@ const addDeposit = lazy(() => import('./containers/Transaksi/Deposit/add'));
 const detailDeposit = lazy(() => import('./containers/Transaksi/Deposit/detail'));
 const editDeposit = lazy(() => import('./containers/Transaksi/Deposit/edit'));
 
+const menuArea = lazy(() => import('./containers/Master/Area'));
+const addArea = lazy(() => import('./containers/Master/Area/add'));
+const detailArea = lazy(() => import('./containers/Master/Area/detail'));
+const editArea = lazy(() => import('./containers/Master/Area/edit'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -391,6 +396,11 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.adddeposit} component={waitFor(addDeposit)}/>
                             <Route path={pathmenu.detaildeposit+'/:id'} component={waitFor(detailDeposit)}/>
                             <Route path={pathmenu.editdeposit+'/:id'} component={waitFor(editDeposit)}/>
+
+                            <Route path={pathmenu.menuarea} component={waitFor(menuArea)}/>
+                            <Route path={pathmenu.addarea} component={waitFor(addArea)}/>
+                            <Route path={pathmenu.detailarea+'/:id'} component={waitFor(detailArea)}/>
+                            <Route path={pathmenu.editarea+'/:id'} component={waitFor(editArea)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

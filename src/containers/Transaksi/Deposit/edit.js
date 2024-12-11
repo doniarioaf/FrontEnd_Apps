@@ -203,7 +203,9 @@ export default function EditDeposit(props) {
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
 
-                            <label className="mt-3 form-label required" htmlFor="depositdate">
+                            {/* sementara deposit date di hilangkan dulu, bisa bikin rancu untuk parameter perhitungan deposit, karena di takutkan admin bisa ubah2 tanggal. bisa beda dengan tanggal pembuatan */}
+                            
+                            {/* <label className="mt-3 form-label required" htmlFor="depositdate">
                                 {i18n.t('Deposit Date')}
                             </label>
                             <span style={{color:'red'}}>*</span>
@@ -215,7 +217,7 @@ export default function EditDeposit(props) {
                             value={values.depositdate}
                             disabled={true}
                             />
-                            <div className="invalid-feedback-custom">{ErrInputDepositDate}</div>
+                            <div className="invalid-feedback-custom">{ErrInputDepositDate}</div> */}
 
                             <label className="mt-3 form-label required" htmlFor="vendor">
                                 {i18n.t('Vendor')}

@@ -58,5 +58,7 @@ export {
     getPurchaseReceiveData,
     submitPurchaseReceiveData,
     getDepositData,
-    submitDeposit
+    submitDeposit,
+    getAreaData,
+    submitArea
 } from './admin';

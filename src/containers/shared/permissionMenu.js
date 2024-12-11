@@ -58,6 +58,10 @@ export const addDeposit_Permission = ['READ_DEPOSIT','CREATE_DEPOSIT'];
 export const editDeposit_Permission = ['READ_DEPOSIT','EDIT_DEPOSIT'];
 export const deleteDeposit_Permission = ['DELETE_DEPOSIT'];
 
+export const addArea_Permission = ['CREATE_AREA'];
+export const editArea_Permission = ['READ_AREA','EDIT_AREA'];
+export const deleteArea_Permission = ['DELETE_AREA'];
+
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
@@ -75,3 +79,4 @@ export const MenuMappingStock = ['READ_MAPPINGSTOCK'];
 export const MenuPriceList = ['READ_PRICELIST'];
 export const MenuPurchaseReceive = ['READ_PURCHASERECEIVE'];
 export const MenuDeposit = ['READ_DEPOSIT'];
+export const MenuArea = ['READ_AREA'];

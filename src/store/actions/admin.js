@@ -418,3 +418,21 @@ export const submitDeposit = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getAreaData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_AREA_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitArea = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_AREA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

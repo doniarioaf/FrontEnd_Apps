@@ -23,3 +23,4 @@ export const baseMappingStockURL = param => `${baseApiURL}/mappingstock${param}`
 export const basePriceListURL = param => `${baseApiURL}/pricelist${param}`;
 export const basePurchaseReceiveURL = param => `${baseApiURL}/purchasereceive${param}`;
 export const baseDepositURL = param => `${baseApiURL}/deposit${param}`;
+export const baseAreaURL = param => `${baseApiURL}/area${param}`;

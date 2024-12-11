@@ -60,3 +60,7 @@ export const menudeposit = `/deposit`;
 export const adddeposit = `/form/add/deposit`;
 export const detaildeposit = `/form/detail/deposit`;
 export const editdeposit = `/form/edit/deposit`;
+export const menuarea = `/area`;
+export const addarea = `/form/add/area`;
+export const detailarea = `/form/detail/area`;
+export const editarea = `/form/edit/area`;
