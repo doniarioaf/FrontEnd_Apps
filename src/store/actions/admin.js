@@ -436,3 +436,21 @@ export const submitArea = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getDraftPurchaseReceiveData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_DRAFTPURCHASERECEIVE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDraftPurchaseReceive = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DRAFTPURCHASERECEIVE,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

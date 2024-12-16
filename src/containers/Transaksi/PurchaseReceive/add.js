@@ -1,20 +1,20 @@
-import React, {useState,useEffect}    from 'react';
-import {Formik}                        from 'formik';
-import {useTranslation}                from 'react-i18next';
-import ContentWrapper               from '../../../components/Layout/ContentWrapper';
-import ContentHeading               from '../../../components/Layout/ContentHeading';
-import {Button, Input,FormGroup,Label} from 'reactstrap';
-import * as actions                 from '../../../store/actions';
-import {useDispatch}   from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { Formik } from 'formik';
+import { useTranslation } from 'react-i18next';
+import ContentWrapper from '../../../components/Layout/ContentWrapper';
+import ContentHeading from '../../../components/Layout/ContentHeading';
+import { Button, Input, FormGroup, Label } from 'reactstrap';
+import * as actions from '../../../store/actions';
+import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
-import Swal             from "sweetalert2";
-import {useHistory}                 from 'react-router-dom';
+import Swal from "sweetalert2";
+import { useHistory } from 'react-router-dom';
 import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { addPurchaseReceive_Permission } from '../../shared/permissionMenu';
-import * as pathmenu           from '../../shared/pathMenu';
-import moment                          from 'moment';
-import momentLocalizer                 from 'react-widgets-moment';
-import {DatePicker,DropdownList}      from 'react-widgets';
+import * as pathmenu from '../../shared/pathMenu';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets-moment';
+import { DatePicker, DropdownList } from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import { formatdate } from '../../shared/constantValue';
 import '../../CSS/table.css';
@@ -24,14 +24,14 @@ import { IconButton } from '@material-ui/core';
 import { calculateTotalPrice, setPriceBoxOngkosByVendor } from './utilityPurchaseReceive';
 
 export default function AddPurchaseReceive(props) {
-    reloadToHomeNotAuthorize(addPurchaseReceive_Permission,'TRANSACTION');
-    const {i18n} = useTranslation('translations');
+    reloadToHomeNotAuthorize(addPurchaseReceive_Permission, 'TRANSACTION');
+    const { i18n } = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
     momentLocalizer();
 
     const [loading, setLoading] = useState(false);
-    
+
     const [ReceiveDate, setReceiveDate] = useState(new Date());
     const [ErrReceiveDate, setErrReceiveDate] = useState("");
 
@@ -50,7 +50,7 @@ export default function AddPurchaseReceive(props) {
     const [ErrInputKoli, setErrInputKoli] = useState('');
 
     const [InputNotes, setInputNotes] = useState('');
-    
+
     const [ListItemsPurchaseReceive, setListItemsPurchaseReceive] = useState([]);
     const [ListItemsPurchaseReceiveMati, setListItemsPurchaseReceiveMati] = useState([]);
     const [ListItemsPurchaseReceiveBiaya, setListItemsPurchaseReceiveBiaya] = useState([]);
@@ -68,21 +68,21 @@ export default function AddPurchaseReceive(props) {
     const [ListItemsInventori, setListItemsInventori] = useState([]);
 
     const [ErrItemsHidup, setErrItemsHidup] = useState("");
-  
+
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getPurchaseReceiveData({url:'/template'},successHandler, errorHandler));
+        dispatch(actions.getPurchaseReceiveData({ url: '/template' }, successHandler, errorHandler));
     }, []);
 
-    function successHandler(data,propsdata) {
-        if(data.data){
+    function successHandler(data, propsdata) {
+        if (data.data) {
             const theData = data.data.vendorOpt.reduce((obj, el) => [
                 ...obj,
                 {
-                    'value':el.id,
-                    'label': el.nama+' ('+el.alias+')',
-                    'data':el
+                    'value': el.id,
+                    'label': el.nama + ' (' + el.alias + ')',
+                    'data': el
                 }
             ], []);
             setListVendor(theData);
@@ -90,9 +90,9 @@ export default function AddPurchaseReceive(props) {
             const theDataProd = data.data.productOpt.reduce((obj, el) => [
                 ...obj,
                 {
-                    'value':el.id,
+                    'value': el.id,
                     'label': el.nama,
-                    'data':el
+                    'data': el
                 }
             ], []);
             setListProduct(theDataProd);
@@ -100,11 +100,11 @@ export default function AddPurchaseReceive(props) {
             const theDataCharge = data.data.chargeOpt.reduce((obj, el) => [
                 ...obj,
                 {
-                    'idcharge':el.id,
+                    'idcharge': el.id,
                     'namabiaya': el.nama,
-                    'qty':el.nama == 'SETOR'?1:0,
-                    'price':0,
-                    'subtotal':0
+                    'qty': el.nama == 'SETOR' ? 1 : 0,
+                    'price': 0,
+                    'subtotal': 0
                 }
             ], []);
             setListItemsPurchaseReceiveBiaya(theDataCharge);
@@ -112,9 +112,9 @@ export default function AddPurchaseReceive(props) {
             const theDataInventori = data.data.inventoriOpt.reduce((obj, el) => [
                 ...obj,
                 {
-                    'value':el.id,
+                    'value': el.id,
                     'label': el.nama,
-                    'data':el
+                    'data': el
                 }
             ], []);
             setListInventori(theDataInventori);
@@ -122,12 +122,12 @@ export default function AddPurchaseReceive(props) {
         setLoading(false);
     }
 
-    
-    function setorValue(totalprice,isdefaultnota){
-        if(isdefaultnota){
+
+    function setorValue(totalprice, isdefaultnota) {
+        if (isdefaultnota) {
             setInputSetor(totalprice);
         }
-        
+
     }
 
     const checkColumnMandatory = (values) => {
@@ -140,51 +140,51 @@ export default function AddPurchaseReceive(props) {
         setErrInputAccNameBank('');
         setErrItemsHidup('');
 
-        if(ListItemsPurchaseReceive.length > 0){
-            for(let i=0; i < ListItemsPurchaseReceive.length; i++){
+        if (ListItemsPurchaseReceive.length > 0) {
+            for (let i = 0; i < ListItemsPurchaseReceive.length; i++) {
                 let det = ListItemsPurchaseReceive[i];
-                if(parseInt(det.qty) <= 0){
+                if (parseInt(det.qty) <= 0) {
                     setErrItemsHidup(i18n.t('Qty Harus diatas 0'));
                     flag = false;
                     break;
-                }else if(det.itemsprice == ''){
+                } else if (det.itemsprice == '') {
                     setErrItemsHidup(i18n.t('Price harus diatas 0'));
                     flag = false;
                     break;
-                }else if(parseFloat(det.itemsprice) <= 0){
+                } else if (parseFloat(det.itemsprice) <= 0) {
                     setErrItemsHidup(i18n.t('Price harus diatas 0'));
                     flag = false;
                     break;
                 }
             }
-        }else{
+        } else {
             setErrItemsHidup(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        
-        if(ReceiveDate == null){
+
+        if (ReceiveDate == null) {
             setErrReceiveDate(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        
-        if(SelVendor == ''){
+
+        if (SelVendor == '') {
             setErrSelVendor(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
-        if(InputKoli == ''){
+        if (InputKoli == '') {
             setErrInputKoli(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(InputBank == ''){
+        if (InputBank == '') {
             setErrInputBank(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(InputAccNoBank == ''){
+        if (InputAccNoBank == '') {
             setErrInputAccNoBank(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(InputAccNameBank == ''){
+        if (InputAccNameBank == '') {
             setErrInputAccNameBank(i18n.t('label_REQUIRED'));
             flag = false;
         }
@@ -192,11 +192,11 @@ export default function AddPurchaseReceive(props) {
         //     setErrPriceDate(i18n.t('Silahkan pilih price list yang tersedia'));
         //     flag = false;
         // }
-        
+
         return flag;
     }
 
-    const succesHandlerSubmit = (data,propsdata) => {
+    const succesHandlerSubmit = (data, propsdata) => {
         setLoading(false);
         Swal.fire({
             icon: 'success',
@@ -211,21 +211,21 @@ export default function AddPurchaseReceive(props) {
 
     const executeSubmit = (values) => {
         let flag = checkColumnMandatory(values);
-        if(flag){
+        if (flag) {
             setIsTambahDeposit(false);
-            let totalprice = new String(values.totalprice).replaceAll('.','') !== ''?new String(values.totalprice).replaceAll('.',''):0;
-            let sisadeposit = new String(SisaDeposit).replaceAll('.','') !== ''?new String(SisaDeposit).replaceAll('.',''):0;
-            let tambahdeposit = new String(values.tambahdeposit).replaceAll('.','') !== ''?new String(values.tambahdeposit).replaceAll('.',''):0;
+            let totalprice = new String(values.totalprice).replaceAll('.', '') !== '' ? new String(values.totalprice).replaceAll('.', '') : 0;
+            let sisadeposit = new String(SisaDeposit).replaceAll('.', '') !== '' ? new String(SisaDeposit).replaceAll('.', '') : 0;
+            let tambahdeposit = new String(values.tambahdeposit).replaceAll('.', '') !== '' ? new String(values.tambahdeposit).replaceAll('.', '') : 0;
             let totaldeposit = parseFloat(sisadeposit) + parseFloat(tambahdeposit);
-            if(parseFloat(totalprice) > totaldeposit){
+            if (parseFloat(totalprice) > totaldeposit) {
                 let tambahdp = parseFloat(totalprice) - totaldeposit;
                 setIsTambahDeposit(true);
                 flag = false;
-                msgInfo("Deposit Kurang "+numToMoney(tambahdp)+", Silahkan tambah deposit terlebih dahulu");
+                msgInfo("Deposit Kurang " + numToMoney(tambahdp) + ", Silahkan tambah deposit terlebih dahulu");
                 // window.scrollTo(0, 0);
             }
         }
-        if(flag){
+        if (flag) {
 
             setLoading(true);
             let obj = new Object();
@@ -236,12 +236,12 @@ export default function AddPurchaseReceive(props) {
             obj.bank = values.bank;
             obj.accountnobank = values.accnobank;
             obj.accountnamebank = values.accnamabank;
-            obj.totalprice = new String(values.totalprice).replaceAll('.','') !== ''?new String(values.totalprice).replaceAll('.',''):0;
-            obj.setor = new String(values.setor).replaceAll('.','') !== ''?new String(values.setor).replaceAll('.',''):0;
+            obj.totalprice = new String(values.totalprice).replaceAll('.', '') !== '' ? new String(values.totalprice).replaceAll('.', '') : 0;
+            obj.setor = new String(values.setor).replaceAll('.', '') !== '' ? new String(values.setor).replaceAll('.', '') : 0;
             obj.isdefaultvaluesetor = IsDefaultSetorTotalPrice;
-            obj.tambahdeposit = new String(values.tambahdeposit).replaceAll('.','') !== ''?new String(values.tambahdeposit).replaceAll('.',''):0;
+            obj.tambahdeposit = new String(values.tambahdeposit).replaceAll('.', '') !== '' ? new String(values.tambahdeposit).replaceAll('.', '') : 0;
             let items = [];
-            if(ListItemsPurchaseReceive.length > 0){
+            if (ListItemsPurchaseReceive.length > 0) {
                 items = ListItemsPurchaseReceive.reduce((obj, el) => [
                     ...obj,
                     {
@@ -249,13 +249,13 @@ export default function AddPurchaseReceive(props) {
                         'idcategoryproduct': el.idcategoryproduct,
                         'qty': el.qty,
                         'qtybonus': el.qtybonus,
-                        'price':  new String(el.itemsprice).replaceAll('.','') !== ''?new String(el.itemsprice).replaceAll('.',''):'0',
-                        'subtotalprice': new String(el.subtotalprice).replaceAll('.','') !== ''?new String(el.subtotalprice).replaceAll('.',''):'0',
-                        'type':'H'
+                        'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
+                        'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
+                        'type': 'H'
                     }
                 ], []);
 
-                for(let i=0; i < ListItemsPurchaseReceiveMati.length; i++){
+                for (let i = 0; i < ListItemsPurchaseReceiveMati.length; i++) {
                     let el = ListItemsPurchaseReceiveMati[i];
                     items.push(
                         {
@@ -263,26 +263,26 @@ export default function AddPurchaseReceive(props) {
                             'idcategoryproduct': el.idcategoryproduct,
                             'qty': el.qtymati,
                             'qtybonus': el.qtybonus,
-                            'price':  new String(el.itemsprice).replaceAll('.','') !== ''?new String(el.itemsprice).replaceAll('.',''):'0',
-                            'subtotalprice': new String(el.subtotalprice).replaceAll('.','') !== ''?new String(el.subtotalprice).replaceAll('.',''):'0',
-                            'type':'M'
+                            'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
+                            'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
+                            'type': 'M'
                         }
                     );
                 }
-                
+
             }
             obj.items = items;
 
             let charges = [];
-            if(ListItemsPurchaseReceiveBiaya.length > 0){
-                for(let i=0; i < ListItemsPurchaseReceiveBiaya.length; i++){
+            if (ListItemsPurchaseReceiveBiaya.length > 0) {
+                for (let i = 0; i < ListItemsPurchaseReceiveBiaya.length; i++) {
                     let el = ListItemsPurchaseReceiveBiaya[i];
                     charges.push(
                         {
                             'idcharge': el.idcharge,
                             'qty': el.qty,
-                            'price':  new String(el.price).replaceAll('.','') !== ''?new String(el.price).replaceAll('.',''):'0',
-                            'subtotalprice': new String(el.subtotal).replaceAll('.','') !== ''?new String(el.subtotal).replaceAll('.',''):'0'
+                            'price': new String(el.price).replaceAll('.', '') !== '' ? new String(el.price).replaceAll('.', '') : '0',
+                            'subtotalprice': new String(el.subtotal).replaceAll('.', '') !== '' ? new String(el.subtotal).replaceAll('.', '') : '0'
                         }
                     );
                 }
@@ -290,24 +290,24 @@ export default function AddPurchaseReceive(props) {
             obj.charges = charges;
 
             let inventori = [];
-            if(ListItemsInventori.length > 0){
-                for(let i=0; i < ListItemsInventori.length; i++){
+            if (ListItemsInventori.length > 0) {
+                for (let i = 0; i < ListItemsInventori.length; i++) {
                     let el = ListItemsInventori[i];
                     inventori.push(
                         {
                             'idinventori': el.idinventori,
                             'qty': el.qty,
-                            'price':  new String(el.price).replaceAll('.','') !== ''?new String(el.price).replaceAll('.',''):'0',
-                            'subtotalprice': new String(el.subtotalprice).replaceAll('.','') !== ''?new String(el.subtotalprice).replaceAll('.',''):'0'
+                            'price': new String(el.price).replaceAll('.', '') !== '' ? new String(el.price).replaceAll('.', '') : '0',
+                            'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0'
                         }
                     );
                 }
             }
             obj.inventori = inventori;
 
-            dispatch(actions.submitPurchaseReceiveData({url:'',payload:obj,type:'ADD'},succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitPurchaseReceiveData({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
-    
+
     }
 
     const submitHandler = (values) => {
@@ -317,20 +317,20 @@ export default function AddPurchaseReceive(props) {
             showCancelButton: true,
             confirmButtonText: `Confirm`,
             denyButtonText: `Don't save`,
-          }).then((result) => {
+        }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
                 executeSubmit(values);
-            //   Swal.fire('Saved!', '', 'success')
+                //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
-            //   Swal.fire('Changes are not saved', '', 'info')
+                //   Swal.fire('Changes are not saved', '', 'info')
             }
-          })
+        })
     }
 
-    const errorHandler = (data,propsdata) => {
+    const errorHandler = (data, propsdata) => {
         setLoading(false);
-          Swal.fire({
+        Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: data.msg
@@ -338,8 +338,8 @@ export default function AddPurchaseReceive(props) {
     }
 
     const msgInfo = (text) => {
-        
-          Swal.fire({
+
+        Swal.fire({
             icon: 'info',
             title: 'Information',
             text: text,
@@ -351,91 +351,91 @@ export default function AddPurchaseReceive(props) {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
                 history.go
-            //   Swal.fire('Saved!', '', 'success')
+                //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
-            //   Swal.fire('Changes are not saved', '', 'info')
+                //   Swal.fire('Changes are not saved', '', 'info')
             }
-          })
+        })
     }
 
-    const handleChangeReceiveDate = (data) =>{
+    const handleChangeReceiveDate = (data) => {
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
-        if(data !== null){
-            let datetrans = moment(data, formatdate).toDate(); 
+        if (data !== null) {
+            let datetrans = moment(data, formatdate).toDate();
             setReceiveDate(datetrans)
-        }else{
+        } else {
             setReceiveDate(null)
         }
     }
- 
 
-    const handleInputChangeItems = (e, index,type) => {
+
+    const handleInputChangeItems = (e, index, type) => {
         const { name, value } = e.target;
         let flag = true;
         let subtotal = 0;
-        if(name == 'qty' || name == 'qtybonus' || name == 'qtymati' || name == 'itemsprice'){
-            let valPriceTemp = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'0';
-            if(isNaN(valPriceTemp) && valPriceTemp !== ''){
+        if (name == 'qty' || name == 'qtybonus' || name == 'qtymati' || name == 'itemsprice') {
+            let valPriceTemp = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
+            if (isNaN(valPriceTemp) && valPriceTemp !== '') {
                 flag = false;
-            }else{
-                if(name == 'qty' ){
+            } else {
+                if (name == 'qty') {
                     const listTemp = [...ListItemsPurchaseReceive];
-                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.','') !== ''?new String(listTemp[index]['itemsprice']).replaceAll('.',''):'0';
+                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
 
-                    let qtybonustemp = new String(listTemp[index]['qtybonus']).replaceAll('.','') !== ''?new String(listTemp[index]['qtybonus']).replaceAll('.',''):'0';
+                    let qtybonustemp = new String(listTemp[index]['qtybonus']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qtybonus']).replaceAll('.', '') : '0';
                     let qtyTemp = parseInt(valPriceTemp) + parseInt(qtybonustemp);
                     subtotal = parseInt(qtyTemp) * parseFloat(pricetemp);
-                }else if(name == 'qtybonus' ){
+                } else if (name == 'qtybonus') {
                     const listTemp = [...ListItemsPurchaseReceive];
-                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.','') !== ''?new String(listTemp[index]['itemsprice']).replaceAll('.',''):'0';
+                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
 
-                    let qtytemp = new String(listTemp[index]['qty']).replaceAll('.','') !== ''?new String(listTemp[index]['qty']).replaceAll('.',''):'0';
+                    let qtytemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
                     let qtyBonusTemp = parseInt(valPriceTemp) + parseInt(qtytemp);
                     subtotal = parseInt(qtyBonusTemp) * parseFloat(pricetemp);
-                }else if(name == 'qtymati' ){
+                } else if (name == 'qtymati') {
                     const listTemp = [...ListItemsPurchaseReceiveMati];
-                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.','') !== ''?new String(listTemp[index]['itemsprice']).replaceAll('.',''):'0';
+                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
 
                     subtotal = parseInt(valPriceTemp) * parseFloat(pricetemp);
-                }else if(name == 'itemsprice' ){
+                } else if (name == 'itemsprice') {
                     let listTemp = [];
                     let qtytemp = 0;
-                    if(type == 'H'){
+                    if (type == 'H') {
                         listTemp = [...ListItemsPurchaseReceive];
-                        qtytemp = new String(listTemp[index]['qty']).replaceAll('.','') !== ''?new String(listTemp[index]['qty']).replaceAll('.',''):'0';
-                    }else{
+                        qtytemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
+                    } else {
                         listTemp = [...ListItemsPurchaseReceiveMati];
-                        qtytemp = new String(listTemp[index]['qtymati']).replaceAll('.','') !== ''?new String(listTemp[index]['qtymati']).replaceAll('.',''):'0';
+                        qtytemp = new String(listTemp[index]['qtymati']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qtymati']).replaceAll('.', '') : '0';
                     }
-                    
-                    let qtybonustemp = new String(listTemp[index]['qtybonus']).replaceAll('.','') !== ''?new String(listTemp[index]['qtybonus']).replaceAll('.',''):'0';
+
+                    let qtybonustemp = new String(listTemp[index]['qtybonus']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qtybonus']).replaceAll('.', '') : '0';
                     let totalQty = parseInt(qtytemp) + parseInt(qtybonustemp);
-                    
+
                     subtotal = parseInt(valPriceTemp) * parseFloat(totalQty);
                 }
                 //
             }
-            
+
         }
-        if(flag){
-            if(type == 'H'){
+        if (flag) {
+            if (type == 'H') {
                 const list = [...ListItemsPurchaseReceive];
-                let valPrice = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'';
+                let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
                 list[index][name] = valPrice;
                 list[index]['subtotalprice'] = subtotal;
                 setListItemsPurchaseReceive(list);
-                let totalPrice = calculateTotalPrice(list,ListItemsPurchaseReceiveBiaya,ListItemsInventori);
+                let totalPrice = calculateTotalPrice(list, ListItemsPurchaseReceiveBiaya, ListItemsInventori);
                 setInputTotalPrice(totalPrice);
                 // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
-                setorValue(totalPrice,IsDefaultSetorTotalPrice);
-            }else if(type == 'M'){
+                setorValue(totalPrice, IsDefaultSetorTotalPrice);
+            } else if (type == 'M') {
                 const list = [...ListItemsPurchaseReceiveMati];
-                let valPrice = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'';
+                let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
                 list[index][name] = valPrice;
                 list[index]['subtotalprice'] = subtotal;
                 setListItemsPurchaseReceiveMati(list);
             }
-            
+
         }
     }
 
@@ -443,104 +443,104 @@ export default function AddPurchaseReceive(props) {
         const { name, value } = e.target;
         let flag = true;
         let subtotal = 0;
-        if(name == 'qty' || name == 'price'){
-            let valPriceTemp = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'0';
-            
-            if(isNaN(valPriceTemp) && valPriceTemp !== ''){
+        if (name == 'qty' || name == 'price') {
+            let valPriceTemp = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
+
+            if (isNaN(valPriceTemp) && valPriceTemp !== '') {
                 flag = false;
-            }else{
+            } else {
                 const listTemp = [...ListItemsPurchaseReceiveBiaya];
-            
-                if(name == 'qty' ){
+
+                if (name == 'qty') {
                     let namaBiaya = listTemp[index]['namabiaya'];
-                    if(namaBiaya == 'SETOR' && valPriceTemp !== ''){
-                        if(parseInt(valPriceTemp) > 1){
+                    if (namaBiaya == 'SETOR' && valPriceTemp !== '') {
+                        if (parseInt(valPriceTemp) > 1) {
                             flag = false;
                         }
                     }
-                    if(flag){
-                        let pricetemp = new String(listTemp[index]['price']).replaceAll('.','') !== ''?new String(listTemp[index]['price']).replaceAll('.',''):'0';
+                    if (flag) {
+                        let pricetemp = new String(listTemp[index]['price']).replaceAll('.', '') !== '' ? new String(listTemp[index]['price']).replaceAll('.', '') : '0';
                         subtotal = parseInt(valPriceTemp) * parseFloat(pricetemp);
                     }
-                }else if(name == 'price' ){
-                    let qtyemp = new String(listTemp[index]['qty']).replaceAll('.','') !== ''?new String(listTemp[index]['qty']).replaceAll('.',''):'0';
+                } else if (name == 'price') {
+                    let qtyemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
                     subtotal = parseInt(qtyemp) * parseFloat(valPriceTemp);
                 }
             }
-            
-            
+
+
         }
-        if(flag){
+        if (flag) {
             const list = [...ListItemsPurchaseReceiveBiaya];
-            let valPrice = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'';
+            let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
             list[index][name] = valPrice;
             list[index]['subtotal'] = subtotal;
             setListItemsPurchaseReceiveBiaya(list);
-            let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive,list,ListItemsInventori);
+            let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive, list, ListItemsInventori);
             setInputTotalPrice(totalPrice);
             // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
-            setorValue(totalPrice,IsDefaultSetorTotalPrice);
+            setorValue(totalPrice, IsDefaultSetorTotalPrice);
         }
-        
+
     }
 
-    const handleInputDropDownChange = (e, index,name,type) => {
-        if(type == 'H'){
+    const handleInputDropDownChange = (e, index, name, type) => {
+        if (type == 'H') {
             const list = [...ListItemsPurchaseReceive];
             list[index][name] = e.value;
             setListItemsPurchaseReceive(list);
-        }else if(type == 'M'){
+        } else if (type == 'M') {
             const list = [...ListItemsPurchaseReceiveMati];
             list[index][name] = e.value;
             setListItemsPurchaseReceiveMati(list);
         }
-        
+
     };
 
     const handleInputChangeInventori = (e, index) => {
         const { name, value } = e.target;
         let flag = true;
         let subtotal = 0;
-        if(name == 'qty' || name == 'price'){
-            let valPriceTemp = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'0';
-            
-            if(isNaN(valPriceTemp) && valPriceTemp !== ''){
+        if (name == 'qty' || name == 'price') {
+            let valPriceTemp = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
+
+            if (isNaN(valPriceTemp) && valPriceTemp !== '') {
                 flag = false;
-            }else{
+            } else {
                 const listTemp = [...ListItemsInventori];
-            
-                if(name == 'qty' ){
-                    let pricetemp = new String(listTemp[index]['price']).replaceAll('.','') !== ''?new String(listTemp[index]['price']).replaceAll('.',''):'0';
+
+                if (name == 'qty') {
+                    let pricetemp = new String(listTemp[index]['price']).replaceAll('.', '') !== '' ? new String(listTemp[index]['price']).replaceAll('.', '') : '0';
                     subtotal = parseInt(valPriceTemp) * parseFloat(pricetemp);
-                }else if(name == 'price' ){
-                    let qtyemp = new String(listTemp[index]['qty']).replaceAll('.','') !== ''?new String(listTemp[index]['qty']).replaceAll('.',''):'0';
+                } else if (name == 'price') {
+                    let qtyemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
                     subtotal = parseInt(qtyemp) * parseFloat(valPriceTemp);
                 }
             }
-            
-            
+
+
         }
-        if(flag){
+        if (flag) {
             const list = [...ListItemsInventori];
-            let valPrice = new String(value).replaceAll('.','') !== ''?new String(value).replaceAll('.',''):'';
+            let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
             list[index][name] = valPrice;
             list[index]['subtotalprice'] = subtotal;
             setListItemsInventori(list);
 
-            let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive,ListItemsPurchaseReceiveBiaya,list);
+            let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive, ListItemsPurchaseReceiveBiaya, list);
             setInputTotalPrice(totalPrice);
-            setorValue(totalPrice,IsDefaultSetorTotalPrice);
+            setorValue(totalPrice, IsDefaultSetorTotalPrice);
         }
-        
+
     }
-    
-    const handleInputDropDownChangeInventori = (e, index,name) => {
+
+    const handleInputDropDownChangeInventori = (e, index, name) => {
         const list = [...ListItemsInventori];
         list[index][name] = e.value;
         setListItemsInventori(list);
     };
 
-    const handleChangeVendor = (data) =>{
+    const handleChangeVendor = (data) => {
         let id = data?.value ? data.value : '';
         setSelVendor(id);
 
@@ -556,29 +556,29 @@ export default function AddPurchaseReceive(props) {
         setInputAccNoBank(valdata.accountnobank);
         setInputAccNameBank(valdata.accountnamebank);
 
-        
+
         setLoading(true);
-        let listCharge = setPriceBoxOngkosByVendor(ListItemsPurchaseReceiveBiaya,valdata.pricebox,valdata.priceongkos);
+        let listCharge = setPriceBoxOngkosByVendor(ListItemsPurchaseReceiveBiaya, valdata.pricebox, valdata.priceongkos);
         setListItemsPurchaseReceiveBiaya(listCharge);
-        let totalPrice = calculateTotalPrice([],listCharge,[]);
+        let totalPrice = calculateTotalPrice([], listCharge, []);
         setInputTotalPrice(totalPrice);
-        if(IsDefaultSetorTotalPrice){
+        if (IsDefaultSetorTotalPrice) {
             setInputSetor(totalPrice);
         }
 
-        dispatch(actions.getPurchaseReceiveData({url:'/searchvendor?idvendor='+id},successHandlerVendor, errorHandler));
+        dispatch(actions.getPurchaseReceiveData({ url: '/searchvendor?idvendor=' + id }, successHandlerVendor, errorHandler));
     }
-    function successHandlerVendor(data,propsdata){
+    function successHandlerVendor(data, propsdata) {
         const theDataProd = data.data.categoryproductOpt.reduce((obj, el) => [
             ...obj,
             {
-                'value':el.id,
+                'value': el.id,
                 'label': el.nama,
-                'data':el
+                'data': el
             }
         ], []);
         setListCategoryProduct(theDataProd);
-        setSisaDeposit(data.data.sisaDeposit?data.data.sisaDeposit:0);
+        setSisaDeposit(data.data.sisaDeposit ? data.data.sisaDeposit : 0);
 
         // setListItems(data.data.categoryproductOpt,ListProduct);
         setLoading(false);
@@ -586,20 +586,20 @@ export default function AddPurchaseReceive(props) {
 
     const handleAddItemsHidup = () => {
         let idproduct = '';
-        if(ListProduct != null && ListProduct.length == 1){
+        if (ListProduct != null && ListProduct.length == 1) {
             idproduct = ListProduct[0].value;
         }
-        setListItemsPurchaseReceive([...ListItemsPurchaseReceive, 
-            { 
-                'idproduct':idproduct,
-                'idcategoryproduct': '',
-                'categoryproductname': '',
-                'qty':0,
-                'qtybonus':0,
-                'qtymati':0,
-                'itemsprice':0,
-                'subtotalprice':0
-            }]);
+        setListItemsPurchaseReceive([...ListItemsPurchaseReceive,
+        {
+            'idproduct': idproduct,
+            'idcategoryproduct': '',
+            'categoryproductname': '',
+            'qty': 0,
+            'qtybonus': 0,
+            'qtymati': 0,
+            'itemsprice': 0,
+            'subtotalprice': 0
+        }]);
     };
 
 
@@ -607,10 +607,10 @@ export default function AddPurchaseReceive(props) {
         const list = [...ListItemsPurchaseReceive];
         list.splice(index, 1);
         setListItemsPurchaseReceive(list);
-        let totalPrice = calculateTotalPrice(list,ListItemsPurchaseReceiveBiaya,ListItemsInventori);
+        let totalPrice = calculateTotalPrice(list, ListItemsPurchaseReceiveBiaya, ListItemsInventori);
         setInputTotalPrice(totalPrice);
         // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
-        setorValue(totalPrice,IsDefaultSetorTotalPrice);
+        setorValue(totalPrice, IsDefaultSetorTotalPrice);
     };
 
     const handleRemoveItemsMati = index => {
@@ -621,20 +621,20 @@ export default function AddPurchaseReceive(props) {
 
     const handleAddItemsMati = () => {
         let idproduct = '';
-        if(ListProduct != null && ListProduct.length == 1){
+        if (ListProduct != null && ListProduct.length == 1) {
             idproduct = ListProduct[0].value;
         }
-        setListItemsPurchaseReceiveMati([...ListItemsPurchaseReceiveMati, 
-            { 
-                'idproduct':idproduct,
-                'idcategoryproduct': '',
-                'categoryproductname': '',
-                'qty':0,
-                'qtybonus':0,
-                'qtymati':0,
-                'itemsprice':0,
-                'subtotalprice':0
-            }]);
+        setListItemsPurchaseReceiveMati([...ListItemsPurchaseReceiveMati,
+        {
+            'idproduct': idproduct,
+            'idcategoryproduct': '',
+            'categoryproductname': '',
+            'qty': 0,
+            'qtybonus': 0,
+            'qtymati': 0,
+            'itemsprice': 0,
+            'subtotalprice': 0
+        }]);
     };
 
     const handleRemoveInventori = index => {
@@ -642,21 +642,21 @@ export default function AddPurchaseReceive(props) {
         list.splice(index, 1);
         setListItemsInventori(list);
 
-        let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive,ListItemsPurchaseReceiveBiaya,list);
+        let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive, ListItemsPurchaseReceiveBiaya, list);
         setInputTotalPrice(totalPrice);
         // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
-        setorValue(totalPrice,IsDefaultSetorTotalPrice);
+        setorValue(totalPrice, IsDefaultSetorTotalPrice);
     };
 
     const handleAddItemsInventori = () => {
-        setListItemsInventori([...ListItemsInventori, 
-            { 
-                'idinventori':'',
-                'inventoriname':'',
-                'qty':0,
-                'price':0,
-                'subtotalprice':0
-            }]);
+        setListItemsInventori([...ListItemsInventori,
+        {
+            'idinventori': '',
+            'inventoriname': '',
+            'qty': 0,
+            'price': 0,
+            'subtotalprice': 0
+        }]);
     };
 
     // const handleAddBiaya = () => {
@@ -667,55 +667,55 @@ export default function AddPurchaseReceive(props) {
         const list = [...ListItemsPurchaseReceiveBiaya];
         list.splice(index, 1);
         setListItemsPurchaseReceiveBiaya(list);
-        let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive,list,ListItemsInventori);
+        let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive, list, ListItemsInventori);
         setInputTotalPrice(totalPrice);
         // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(list,totalPrice));
-        setorValue(totalPrice,IsDefaultSetorTotalPrice);
+        setorValue(totalPrice, IsDefaultSetorTotalPrice);
     };
 
-    const handleChangeIsDefaultSetor = (data) =>{
+    const handleChangeIsDefaultSetor = (data) => {
         let checked = data.target.checked;
         setIsDefaultSetorTotalPrice(checked);
-        if(checked){
-            setorValue(InputTotalPrice,checked);
+        if (checked) {
+            setorValue(InputTotalPrice, checked);
         }
-        
+
     }
 
     return (
         <Formik
-        initialValues={
-            {
-                receivedate:ReceiveDate,
-                vendor:SelVendor,
-                bank:InputBank,
-                accnobank:InputAccNoBank,
-                accnamabank:InputAccNameBank,
-                koli:InputKoli,
-                notes:InputNotes,
-                totalprice:InputTotalPrice,
-                isdefaultsetortotalprice:IsDefaultSetorTotalPrice,
-                setor:InputSetor,
-                sisadeposit:SisaDeposit,
-                istambahdeposit:IsTambahDeposit,
-                tambahdeposit:TambahDeposit
+            initialValues={
+                {
+                    receivedate: ReceiveDate,
+                    vendor: SelVendor,
+                    bank: InputBank,
+                    accnobank: InputAccNoBank,
+                    accnamabank: InputAccNameBank,
+                    koli: InputKoli,
+                    notes: InputNotes,
+                    totalprice: InputTotalPrice,
+                    isdefaultsetortotalprice: IsDefaultSetorTotalPrice,
+                    setor: InputSetor,
+                    sisadeposit: SisaDeposit,
+                    istambahdeposit: IsTambahDeposit,
+                    tambahdeposit: TambahDeposit
+                }
             }
-        }
-        validate={values => {
-            const errors = {};
-            setInputBank(values.bank);
-            setInputAccNoBank(values.accnobank);
-            setInputAccNameBank(values.accnamabank)
-            setInputKoli(values.koli);
-            setInputNotes(values.notes);
-            setInputSetor(values.setor);
-            setTambahDeposit(values.tambahdeposit);
-            return errors;
-        }}
-        enableReinitialize="true"
-        onSubmit={(values) => {
-           
-        }}
+            validate={values => {
+                const errors = {};
+                setInputBank(values.bank);
+                setInputAccNoBank(values.accnobank);
+                setInputAccNameBank(values.accnamabank)
+                setInputKoli(values.koli);
+                setInputNotes(values.notes);
+                setInputSetor(values.setor);
+                setTambahDeposit(values.tambahdeposit);
+                return errors;
+            }}
+            enableReinitialize="true"
+            onSubmit={(values) => {
+
+            }}
         >
             {
                 formikProps => {
@@ -730,320 +730,320 @@ export default function AddPurchaseReceive(props) {
                         setFieldValue,
                     } = formikProps;
 
-                    return(
-                        <form className="mb-6" onSubmit={handleSubmit}  name="FormPurchaseReceive">
+                    return (
+                        <form className="mb-6" onSubmit={handleSubmit} name="FormPurchaseReceive">
                             <ContentWrapper>
-                            <ContentHeading history={history} link={pathmenu.addpurchasereceive} label={'Add Purchase Receive'} labeldefault={'Add Purchase Receive'} />
+                                <ContentHeading history={history} link={pathmenu.addpurchasereceive} label={'Add Purchase Receive'} labeldefault={'Add Purchase Receive'} />
 
-                            <div className="row mt-2">
-                            <div className="mt-2 col-lg-6 ft-detail mb-5">
-                            
+                                <div className="row mt-2">
+                                    <div className="mt-2 col-lg-6 ft-detail mb-5">
 
-                            <label className="mt-3 form-label required" htmlFor="vendor">
-                                {i18n.t('Vendor')}
-                            </label>
-                            <span style={{color:'red'}}>*</span>
 
-                            <DropdownList
-                                name="vendor"
-                                filter='contains'
-                                placeholder={i18n.t('select.SELECT_OPTION')}
-                                
-                                onChange={val => handleChangeVendor(val)}
-                                onBlur={val => setFieldTouched("vendor", val?.value ? val.value : '')}
-                                data={ListVendor}
-                                textField={'label'}
-                                valueField={'value'}
-                                // style={{width: '25%'}}
-                                // disabled={values.isdisabledcountry}
-                                value={values.vendor}
-                            />
-                            <div className="invalid-feedback-custom">{ErrSelVendor}</div>
+                                        <label className="mt-3 form-label required" htmlFor="vendor">
+                                            {i18n.t('Vendor')}
+                                        </label>
+                                        <span style={{ color: 'red' }}>*</span>
 
-                            <label className="mt-3 form-label required" htmlFor="bank">
-                                {i18n.t('Bank')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <Input
-                                name="bank"
-                                type="text"
-                                id="bank"
-                                maxLength={100}
-                                
-                                onChange={handleChange}
-                                // onChange={val => handleInputNama(val)}
-                                onBlur={handleBlur}
-                                value={values.bank}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputBank}</div>
+                                        <DropdownList
+                                            name="vendor"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
 
-                            <label className="mt-3 form-label required" htmlFor="accnobank">
-                                {i18n.t('label_ACC_NO')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <Input
-                                name="accnobank"
-                                type="text"
-                                id="accnobank"
-                                maxLength={100}
-                                
-                                onChange={handleChange}
-                                // onChange={val => handleInputNama(val)}
-                                onBlur={handleBlur}
-                                value={values.accnobank}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputAccNoBank}</div>
+                                            onChange={val => handleChangeVendor(val)}
+                                            onBlur={val => setFieldTouched("vendor", val?.value ? val.value : '')}
+                                            data={ListVendor}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.vendor}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrSelVendor}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="accnobank">
-                                {i18n.t('label_ACC_NAME')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <Input
-                                name="accnamabank"
-                                type="text"
-                                id="accnamabank"
-                                maxLength={100}
-                                
-                                onChange={handleChange}
-                                // onChange={val => handleInputNama(val)}
-                                onBlur={handleBlur}
-                                value={values.accnamabank}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputAccNameBank}</div>
-
-                            </div>
-
-                            <div className="mt-2 col-lg-6 ft-detail mb-5">
-                            <label className="mt-3 form-label required" htmlFor="receivedate">
-                                {i18n.t('Receive Date')}
-                            </label>
-                            <span style={{color:'red'}}>*</span>
-
-                            <DatePicker
-                            name="receivedate"
-                            onChange={val => handleChangeReceiveDate(val)}
-                            format={formatdate}
-                            value={values.receivedate}
-                            />
-                            <div className="invalid-feedback-custom">{ErrReceiveDate}</div>
-
-                            <label className="mt-3 form-label required" htmlFor="koli">
-                                {i18n.t('Koli')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <Input
-                                name="koli"
-                                type="text"
-                                id="koli"
-                                maxLength={100}
-                                
-                                onChange={handleChange}
-                                // onChange={val => handleInputNama(val)}
-                                onBlur={handleBlur}
-                                value={values.koli}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputKoli}</div>
-                            
-                            <label className="mt-3 form-label required" htmlFor="notes">
-                                {i18n.t('Notes')}
-                            </label>
-                            <Input
-                                
-                                name="notes"
-                                type="text"
-                                id="notes"
-                                maxLength={100}
-                                
-                                onChange={handleChange}
-                                // onChange={val => handleInputNama(val)}
-                                onBlur={handleBlur}
-                                value={values.notes}
-                            />
-                            {
-                                values.istambahdeposit?
-                                <table width={'100%'}>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                            <label className="mt-3 form-label required" htmlFor="sisadeposit">
-                                                {i18n.t('Sisa Deposit')}
-                                            </label>
-                                            <Input
-                                                name="sisadeposit"
-                                                type="text"
-                                                id="sisadeposit"
-                                                maxLength={100}
-                                                
-                                                onChange={handleChange}
-                                                // onChange={val => handleInputNama(val)}
-                                                onBlur={handleBlur}
-                                                value={values.sisadeposit !== ''?numToMoney(values.sisadeposit):''}
-                                                disabled={true}
-                                            />
-                                            </td>
-                                            <td>
-                                            <label className="mt-3 form-label required" htmlFor="tambahdeposit">
-                                                {i18n.t('Tambah Deposit')}
-                                            </label>
-                                            <Input
-                                                name="tambahdeposit"
-                                                type="text"
-                                                id="tambahdeposit"
-                                                maxLength={100}
-                                                
-                                                onChange={handleChange}
-                                                // onChange={val => handleInputNama(val)}
-                                                onBlur={handleBlur}
-                                                value={new String(values.tambahdeposit).replaceAll(".","") !== ''?numToMoney(parseFloat(new String(values.tambahdeposit).replaceAll(".",""))):''}
-                                                disabled={false}
-                                                style={{borderColor:'red'}}
-                                            />
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                :
-                                <div>
-                                    <label className="mt-3 form-label required" htmlFor="sisadeposit">
-                                        {i18n.t('Sisa Deposit')}
-                                    </label>
-                                    <Input
-                                        
-                                        name="sisadeposit"
-                                        type="text"
-                                        id="sisadeposit"
-                                        maxLength={100}
-                                        
-                                        onChange={handleChange}
-                                        // onChange={val => handleInputNama(val)}
-                                        onBlur={handleBlur}
-                                        value={values.sisadeposit !== ''?numToMoney(values.sisadeposit):''}
-                                        disabled={true}
-                                    />
-                                </div>   
-                            }
-                            
-
-                            <label className="mt-3 form-label required" htmlFor="totalprice">
-                                {i18n.t('Total Nota')}
-                            </label>
-                            <Input
-                                name="totalprice"
-                                type="text"
-                                id="totalprice"
-                                maxLength={100}
-                                
-                                onChange={handleChange}
-                                // onChange={val => handleInputNama(val)}
-                                onBlur={handleBlur}
-                                value={values.totalprice !== ''?numToMoney(values.totalprice):''}
-                                disabled={true}
-                            />
-
-                            <label className="mt-3 form-label required" htmlFor="totalprice">
-                                {i18n.t('Setor')}
-                            </label>
-                            <table width={'100%'}>
-                                <tbody>
-                                    <tr>
-                                        <td>
+                                        <label className="mt-3 form-label required" htmlFor="bank">
+                                            {i18n.t('Bank')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
                                         <Input
-                                            name="setor"
+                                            name="bank"
                                             type="text"
-                                            id="setor"
+                                            id="bank"
                                             maxLength={100}
-                                            
+
                                             onChange={handleChange}
                                             // onChange={val => handleInputNama(val)}
                                             onBlur={handleBlur}
-                                            value={new String(values.setor).replaceAll(".","") !== ''?numToMoney(parseFloat(new String(values.setor).replaceAll(".",""))):''}
-                                            disabled={values.isdefaultsetortotalprice}
+                                            value={values.bank}
                                         />
-                                        </td>
-                                        <td style={{paddingLeft:'10px'}}>
-                                        <FormGroup check >
-                                        <Input type="checkbox" name="check" 
-                                        id="isdefaultsetortotalprice" 
-                                        onChange={val => handleChangeIsDefaultSetor(val)}
-                                        defaultChecked={values.isdefaultsetortotalprice}
-                                        checked={values.isdefaultsetortotalprice}
-                                        style={{transform:'scale(1.5)'}}
+                                        <div className="invalid-feedback-custom">{ErrInputBank}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="accnobank">
+                                            {i18n.t('label_ACC_NO')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <Input
+                                            name="accnobank"
+                                            type="text"
+                                            id="accnobank"
+                                            maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.accnobank}
                                         />
-                                        <Label for="isdefaultsetortotalprice" check style={{transform:'scale(1.5)',marginLeft:'30px'}}>{i18n.t('Default Total Nota?')}</Label>
-                                        </FormGroup>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            </div>
-                            
-                            </div>
-                            
-                            <div className="invalid-feedback-custom" style={{fontSize:'larger'}}>{ErrItemsHidup}</div>
-                            {
-                                // ListItemsPurchaseReceive.length == 0?'':
-                                
-                                <div className="row justify-content-center">
-                                    <h4>{'Input Item Hidup'}</h4>
-                                    <table id="tablegrid">
-                                        <tbody>
-                                        <tr>
-                                            <th style={{width:'50px'}}>
-                                            <IconButton 
-                                            style={{color:'white'}}
-                                                onClick={() => handleAddItemsHidup()}
-                                                hidden={values.vendor == ''}
-                                            >
-                                                <AddIcon style={{ fontSize: 25 }}/>
-                                            </IconButton>
-                                            </th>
-                                            <th >{i18n.t('Product')}</th>
-                                            <th >{i18n.t('Category Product')}</th>
-                                            <th >{i18n.t('Qty')}</th>
-                                            <th >{i18n.t('Qty Bonus')}</th>
-                                            <th >{i18n.t('Price')}</th>
-                                            <th >{i18n.t('Subtotal Price')}</th>
-                                        </tr>
-                                            {
-                                                ListItemsPurchaseReceive.map((x, i) => {
-                                                    return (
+                                        <div className="invalid-feedback-custom">{ErrInputAccNoBank}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="accnobank">
+                                            {i18n.t('label_ACC_NAME')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <Input
+                                            name="accnamabank"
+                                            type="text"
+                                            id="accnamabank"
+                                            maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.accnamabank}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputAccNameBank}</div>
+
+                                    </div>
+
+                                    <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                        <label className="mt-3 form-label required" htmlFor="receivedate">
+                                            {i18n.t('Receive Date')}
+                                        </label>
+                                        <span style={{ color: 'red' }}>*</span>
+
+                                        <DatePicker
+                                            name="receivedate"
+                                            onChange={val => handleChangeReceiveDate(val)}
+                                            format={formatdate}
+                                            value={values.receivedate}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrReceiveDate}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="koli">
+                                            {i18n.t('Koli')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <Input
+                                            name="koli"
+                                            type="text"
+                                            id="koli"
+                                            maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.koli}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputKoli}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="notes">
+                                            {i18n.t('Notes')}
+                                        </label>
+                                        <Input
+
+                                            name="notes"
+                                            type="text"
+                                            id="notes"
+                                            maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.notes}
+                                        />
+                                        {
+                                            values.istambahdeposit ?
+                                                <table width={'100%'}>
+                                                    <tbody>
                                                         <tr>
-                                                            <td >
-                                                            <IconButton 
-                                                            color={'primary'}
-                                                            // style={{color:'white'}}
-                                                                onClick={() => handleRemoveItemsHidup(i)}
-                                                            // hidden={showplusdebit}
-                                                            >
-                                                                <DeleteIcon style={{ fontSize: 18 }}/>
-                                                            </IconButton>
+                                                            <td>
+                                                                <label className="mt-3 form-label required" htmlFor="sisadeposit">
+                                                                    {i18n.t('Sisa Deposit')}
+                                                                </label>
+                                                                <Input
+                                                                    name="sisadeposit"
+                                                                    type="text"
+                                                                    id="sisadeposit"
+                                                                    maxLength={100}
+
+                                                                    onChange={handleChange}
+                                                                    // onChange={val => handleInputNama(val)}
+                                                                    onBlur={handleBlur}
+                                                                    value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
+                                                                    disabled={true}
+                                                                />
                                                             </td>
-                                                            <td style={{width:'20%'}}>
-                                                            <DropdownList
-                                                                name="idproduct"
-                                                                filter='contains'
-                                                                placeholder={i18n.t('select.SELECT_OPTION')}
-                                                                onChange={val => handleInputDropDownChange(val,i,'idproduct','H')}
-                                                                data={ListProduct}
-                                                                textField={'label'}
-                                                                valueField={'value'}
-                                                                value={x.idproduct}
-                                                                
-                                                            />
+                                                            <td>
+                                                                <label className="mt-3 form-label required" htmlFor="tambahdeposit">
+                                                                    {i18n.t('Tambah Deposit')}
+                                                                </label>
+                                                                <Input
+                                                                    name="tambahdeposit"
+                                                                    type="text"
+                                                                    id="tambahdeposit"
+                                                                    maxLength={100}
+
+                                                                    onChange={handleChange}
+                                                                    // onChange={val => handleInputNama(val)}
+                                                                    onBlur={handleBlur}
+                                                                    value={new String(values.tambahdeposit).replaceAll(".", "") !== '' ? numToMoney(parseFloat(new String(values.tambahdeposit).replaceAll(".", ""))) : ''}
+                                                                    disabled={false}
+                                                                    style={{ borderColor: 'red' }}
+                                                                />
                                                             </td>
-                                                            <td style={{width:'20%'}}>
-                                                            <DropdownList
-                                                                name="idcategoryproduct"
-                                                                filter='contains'
-                                                                placeholder={i18n.t('select.SELECT_OPTION')}
-                                                                onChange={val => handleInputDropDownChange(val,i,'idcategoryproduct','H')}
-                                                                data={ListCategoryProduct}
-                                                                textField={'label'}
-                                                                valueField={'value'}
-                                                                value={x.idcategoryproduct}
-                                                                
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                :
+                                                <div>
+                                                    <label className="mt-3 form-label required" htmlFor="sisadeposit">
+                                                        {i18n.t('Sisa Deposit')}
+                                                    </label>
+                                                    <Input
+
+                                                        name="sisadeposit"
+                                                        type="text"
+                                                        id="sisadeposit"
+                                                        maxLength={100}
+
+                                                        onChange={handleChange}
+                                                        // onChange={val => handleInputNama(val)}
+                                                        onBlur={handleBlur}
+                                                        value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
+                                                        disabled={true}
+                                                    />
+                                                </div>
+                                        }
+
+
+                                        <label className="mt-3 form-label required" htmlFor="totalprice">
+                                            {i18n.t('Total Nota')}
+                                        </label>
+                                        <Input
+                                            name="totalprice"
+                                            type="text"
+                                            id="totalprice"
+                                            maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.totalprice !== '' ? numToMoney(values.totalprice) : ''}
+                                            disabled={true}
+                                        />
+
+                                        <label className="mt-3 form-label required" htmlFor="totalprice">
+                                            {i18n.t('Setor')}
+                                        </label>
+                                        <table width={'100%'}>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <Input
+                                                            name="setor"
+                                                            type="text"
+                                                            id="setor"
+                                                            maxLength={100}
+
+                                                            onChange={handleChange}
+                                                            // onChange={val => handleInputNama(val)}
+                                                            onBlur={handleBlur}
+                                                            value={new String(values.setor).replaceAll(".", "") !== '' ? numToMoney(parseFloat(new String(values.setor).replaceAll(".", ""))) : ''}
+                                                            disabled={values.isdefaultsetortotalprice}
+                                                        />
+                                                    </td>
+                                                    <td style={{ paddingLeft: '10px' }}>
+                                                        <FormGroup check >
+                                                            <Input type="checkbox" name="check"
+                                                                id="isdefaultsetortotalprice"
+                                                                onChange={val => handleChangeIsDefaultSetor(val)}
+                                                                defaultChecked={values.isdefaultsetortotalprice}
+                                                                checked={values.isdefaultsetortotalprice}
+                                                                style={{ transform: 'scale(1.5)' }}
                                                             />
-                                                                {/* <Input
+                                                            <Label for="isdefaultsetortotalprice" check style={{ transform: 'scale(1.5)', marginLeft: '30px' }}>{i18n.t('Default Total Nota?')}</Label>
+                                                        </FormGroup>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                                <div className="invalid-feedback-custom" style={{ fontSize: 'larger' }}>{ErrItemsHidup}</div>
+                                {
+                                    // ListItemsPurchaseReceive.length == 0?'':
+
+                                    <div className="row justify-content-center">
+                                        <h4>{'Input Item Hidup'}</h4>
+                                        <table id="tablegrid">
+                                            <tbody>
+                                                <tr>
+                                                    <th style={{ width: '50px' }}>
+                                                        <IconButton
+                                                            style={{ color: 'white' }}
+                                                            onClick={() => handleAddItemsHidup()}
+                                                            hidden={values.vendor == ''}
+                                                        >
+                                                            <AddIcon style={{ fontSize: 25 }} />
+                                                        </IconButton>
+                                                    </th>
+                                                    <th >{i18n.t('Product')}</th>
+                                                    <th >{i18n.t('Category Product')}</th>
+                                                    <th >{i18n.t('Qty')}</th>
+                                                    <th >{i18n.t('Qty Bonus')}</th>
+                                                    <th >{i18n.t('Price')}</th>
+                                                    <th >{i18n.t('Subtotal Price')}</th>
+                                                </tr>
+                                                {
+                                                    ListItemsPurchaseReceive.map((x, i) => {
+                                                        return (
+                                                            <tr>
+                                                                <td >
+                                                                    <IconButton
+                                                                        color={'primary'}
+                                                                        // style={{color:'white'}}
+                                                                        onClick={() => handleRemoveItemsHidup(i)}
+                                                                    // hidden={showplusdebit}
+                                                                    >
+                                                                        <DeleteIcon style={{ fontSize: 18 }} />
+                                                                    </IconButton>
+                                                                </td>
+                                                                <td style={{ width: '20%' }}>
+                                                                    <DropdownList
+                                                                        name="idproduct"
+                                                                        filter='contains'
+                                                                        placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                        onChange={val => handleInputDropDownChange(val, i, 'idproduct', 'H')}
+                                                                        data={ListProduct}
+                                                                        textField={'label'}
+                                                                        valueField={'value'}
+                                                                        value={x.idproduct}
+
+                                                                    />
+                                                                </td>
+                                                                <td style={{ width: '20%' }}>
+                                                                    <DropdownList
+                                                                        name="idcategoryproduct"
+                                                                        filter='contains'
+                                                                        placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                        onChange={val => handleInputDropDownChange(val, i, 'idcategoryproduct', 'H')}
+                                                                        data={ListCategoryProduct}
+                                                                        textField={'label'}
+                                                                        valueField={'value'}
+                                                                        value={x.idcategoryproduct}
+
+                                                                    />
+                                                                    {/* <Input
                                                                 name="categoryproductname"
                                                                 type="text"
                                                                 id="categoryproductname"
@@ -1053,118 +1053,118 @@ export default function AddPurchaseReceive(props) {
                                                                 disabled={true}
                                                                 /> */}
                                                                 </td>
-                                                            <td><Input
-                                                                name="qty"
-                                                                type="text"
-                                                                id="qty"
-                                                                onChange={val => handleInputChangeItems(val,i,'H')}
-                                                                // onBlur={handleBlur}
-                                                                value={x.qty}
+                                                                <td><Input
+                                                                    name="qty"
+                                                                    type="text"
+                                                                    id="qty"
+                                                                    onChange={val => handleInputChangeItems(val, i, 'H')}
+                                                                    // onBlur={handleBlur}
+                                                                    value={x.qty}
                                                                 /></td>
-                                                            <td><Input
-                                                                name="qtybonus"
-                                                                type="text"
-                                                                id="qtybonus"
-                                                                onChange={val => handleInputChangeItems(val,i,'H')}
-                                                                // onBlur={handleBlur}
-                                                                value={x.qtybonus}
-                                                                /></td>
-
-                                                                <td style={{width:'15%'}}>
-                                                                <Input
-                                                                name="itemsprice"
-                                                                type="text"
-                                                                id="itemsprice"
-                                                                onChange={val => handleInputChangeItems(val,i,'H')}
-                                                                // onBlur={handleBlur}
-                                                                value={x.itemsprice !== ''?numToMoney(parseFloat(x.itemsprice)):''}
-                                                                disabled={false}
+                                                                <td><Input
+                                                                    name="qtybonus"
+                                                                    type="text"
+                                                                    id="qtybonus"
+                                                                    onChange={val => handleInputChangeItems(val, i, 'H')}
+                                                                    // onBlur={handleBlur}
+                                                                    value={x.qtybonus}
                                                                 /></td>
 
-                                                                <td style={{width:'15%'}}>
-                                                                <Input
-                                                                name="subtotalprice"
-                                                                type="text"
-                                                                id="subtotalprice"
-                                                                // onChange={val => handleInputChangePrice(val,i)}
-                                                                // onBlur={handleBlur}
-                                                                // value={x.subtotalprice}
-                                                                value={x.subtotalprice !== ''?numToMoney(parseFloat(x.subtotalprice)):''}
-                                                                disabled={true}
-                                                                /></td>
-                                                                
-                                                        </tr>
-                                                    )
-                                                })
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            }
+                                                                <td style={{ width: '15%' }}>
+                                                                    <Input
+                                                                        name="itemsprice"
+                                                                        type="text"
+                                                                        id="itemsprice"
+                                                                        onChange={val => handleInputChangeItems(val, i, 'H')}
+                                                                        // onBlur={handleBlur}
+                                                                        value={x.itemsprice !== '' ? numToMoney(parseFloat(x.itemsprice)) : ''}
+                                                                        disabled={false}
+                                                                    /></td>
 
-                            
-                            {
-                                // ListItemsPurchaseReceiveMati.length == 0?'':
-                                <div className="row justify-content-center">
-                                    <h4>{'Input Item Mati'}</h4>
-                                    <table id="tablegrid">
-                                        <tbody>
-                                        <tr>
-                                        <th style={{width:'50px'}}>
-                                            <IconButton 
-                                            style={{color:'white'}}
-                                                onClick={() => handleAddItemsMati()}
-                                                hidden={values.vendor == ''}
-                                            >
-                                                <AddIcon style={{ fontSize: 25 }}/>
-                                            </IconButton>
-                                            </th>
-                                            <th >{i18n.t('Product')}</th>
-                                            <th >{i18n.t('Category Product')}</th>
-                                            <th >{i18n.t('Qty')}</th>
-                                            <th >{i18n.t('Price')}</th>
-                                            <th >{i18n.t('Subtotal Price')}</th>
-                                        </tr>
-                                            {
-                                                ListItemsPurchaseReceiveMati.map((x, i) => {
-                                                    return (
-                                                        <tr>
-                                                            <td >
-                                                            <IconButton 
-                                                            color={'primary'}
-                                                            // style={{color:'white'}}
-                                                                onClick={() => handleRemoveItemsMati(i)}
-                                                            // hidden={showplusdebit}
-                                                            >
-                                                                <DeleteIcon style={{ fontSize: 18 }}/>
-                                                            </IconButton>
-                                                            </td>
-                                                            <td style={{width:'20%'}}>
-                                                            <DropdownList
-                                                                name="idproduct"
-                                                                filter='contains'
-                                                                placeholder={i18n.t('select.SELECT_OPTION')}
-                                                                onChange={val => handleInputDropDownChange(val,i,'idproduct','M')}
-                                                                data={ListProduct}
-                                                                textField={'label'}
-                                                                valueField={'value'}
-                                                                value={x.idproduct}
-                                                                
-                                                            />
-                                                            </td>
-                                                            <td style={{width:'20%'}}>
-                                                            <DropdownList
-                                                                name="idcategoryproduct"
-                                                                filter='contains'
-                                                                placeholder={i18n.t('select.SELECT_OPTION')}
-                                                                onChange={val => handleInputDropDownChange(val,i,'idcategoryproduct','M')}
-                                                                data={ListCategoryProduct}
-                                                                textField={'label'}
-                                                                valueField={'value'}
-                                                                value={x.idcategoryproduct}
-                                                                
-                                                            />
-                                                                {/* <Input
+                                                                <td style={{ width: '15%' }}>
+                                                                    <Input
+                                                                        name="subtotalprice"
+                                                                        type="text"
+                                                                        id="subtotalprice"
+                                                                        // onChange={val => handleInputChangePrice(val,i)}
+                                                                        // onBlur={handleBlur}
+                                                                        // value={x.subtotalprice}
+                                                                        value={x.subtotalprice !== '' ? numToMoney(parseFloat(x.subtotalprice)) : ''}
+                                                                        disabled={true}
+                                                                    /></td>
+
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+
+
+                                {
+                                    // ListItemsPurchaseReceiveMati.length == 0?'':
+                                    <div className="row justify-content-center">
+                                        <h4>{'Input Item Mati'}</h4>
+                                        <table id="tablegrid">
+                                            <tbody>
+                                                <tr>
+                                                    <th style={{ width: '50px' }}>
+                                                        <IconButton
+                                                            style={{ color: 'white' }}
+                                                            onClick={() => handleAddItemsMati()}
+                                                            hidden={values.vendor == ''}
+                                                        >
+                                                            <AddIcon style={{ fontSize: 25 }} />
+                                                        </IconButton>
+                                                    </th>
+                                                    <th >{i18n.t('Product')}</th>
+                                                    <th >{i18n.t('Category Product')}</th>
+                                                    <th >{i18n.t('Qty')}</th>
+                                                    <th >{i18n.t('Price')}</th>
+                                                    <th >{i18n.t('Subtotal Price')}</th>
+                                                </tr>
+                                                {
+                                                    ListItemsPurchaseReceiveMati.map((x, i) => {
+                                                        return (
+                                                            <tr>
+                                                                <td >
+                                                                    <IconButton
+                                                                        color={'primary'}
+                                                                        // style={{color:'white'}}
+                                                                        onClick={() => handleRemoveItemsMati(i)}
+                                                                    // hidden={showplusdebit}
+                                                                    >
+                                                                        <DeleteIcon style={{ fontSize: 18 }} />
+                                                                    </IconButton>
+                                                                </td>
+                                                                <td style={{ width: '20%' }}>
+                                                                    <DropdownList
+                                                                        name="idproduct"
+                                                                        filter='contains'
+                                                                        placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                        onChange={val => handleInputDropDownChange(val, i, 'idproduct', 'M')}
+                                                                        data={ListProduct}
+                                                                        textField={'label'}
+                                                                        valueField={'value'}
+                                                                        value={x.idproduct}
+
+                                                                    />
+                                                                </td>
+                                                                <td style={{ width: '20%' }}>
+                                                                    <DropdownList
+                                                                        name="idcategoryproduct"
+                                                                        filter='contains'
+                                                                        placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                        onChange={val => handleInputDropDownChange(val, i, 'idcategoryproduct', 'M')}
+                                                                        data={ListCategoryProduct}
+                                                                        textField={'label'}
+                                                                        valueField={'value'}
+                                                                        value={x.idcategoryproduct}
+
+                                                                    />
+                                                                    {/* <Input
                                                                 name="categoryproductname"
                                                                 type="text"
                                                                 id="categoryproductname"
@@ -1174,239 +1174,239 @@ export default function AddPurchaseReceive(props) {
                                                                 disabled={true}
                                                                 /> */}
                                                                 </td>
-                                                            <td><Input
-                                                                name="qtymati"
-                                                                type="text"
-                                                                id="qtymati"
-                                                                onChange={val => handleInputChangeItems(val,i,'M')}
-                                                                // onBlur={handleBlur}
-                                                                value={x.qtymati}
+                                                                <td><Input
+                                                                    name="qtymati"
+                                                                    type="text"
+                                                                    id="qtymati"
+                                                                    onChange={val => handleInputChangeItems(val, i, 'M')}
+                                                                    // onBlur={handleBlur}
+                                                                    value={x.qtymati}
                                                                 /></td>
 
-                                                                <td style={{width:'15%'}}>
-                                                                <Input
-                                                                name="itemsprice"
-                                                                type="text"
-                                                                id="itemsprice"
-                                                                onChange={val => handleInputChangeItems(val,i,'M')}
-                                                                // onBlur={handleBlur}
-                                                                value={x.itemsprice !== ''?numToMoney(parseFloat(x.itemsprice)):''}
-                                                                disabled={false}
-                                                                /></td>
+                                                                <td style={{ width: '15%' }}>
+                                                                    <Input
+                                                                        name="itemsprice"
+                                                                        type="text"
+                                                                        id="itemsprice"
+                                                                        onChange={val => handleInputChangeItems(val, i, 'M')}
+                                                                        // onBlur={handleBlur}
+                                                                        value={x.itemsprice !== '' ? numToMoney(parseFloat(x.itemsprice)) : ''}
+                                                                        disabled={false}
+                                                                    /></td>
 
-                                                                <td style={{width:'15%'}}>
-                                                                <Input
-                                                                name="subtotalprice"
-                                                                type="text"
-                                                                id="subtotalprice"
-                                                                // onChange={val => handleInputChangePrice(val,i)}
-                                                                // onBlur={handleBlur}
-                                                                value={x.subtotalprice !== ''?numToMoney(parseFloat(x.subtotalprice)):''}
-                                                                disabled={true}
-                                                                /></td>
-                                                                
-                                                        </tr>
-                                                    )
-                                                })
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            }
+                                                                <td style={{ width: '15%' }}>
+                                                                    <Input
+                                                                        name="subtotalprice"
+                                                                        type="text"
+                                                                        id="subtotalprice"
+                                                                        // onChange={val => handleInputChangePrice(val,i)}
+                                                                        // onBlur={handleBlur}
+                                                                        value={x.subtotalprice !== '' ? numToMoney(parseFloat(x.subtotalprice)) : ''}
+                                                                        disabled={true}
+                                                                    /></td>
 
-                            
-                            
-                            {
-                                // ListItemsPurchaseReceiveBiaya.length == 0?'':
-                                <div className="row justify-content-center">
-                                    <h4>{'Input Biaya'}</h4>
-                                    <table id="tablegrid">
-                                        <tbody>
-                                        <tr>
-                                            <th>
-                                            {/* <IconButton 
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+
+
+
+                                {
+                                    // ListItemsPurchaseReceiveBiaya.length == 0?'':
+                                    <div className="row justify-content-center">
+                                        <h4>{'Input Biaya'}</h4>
+                                        <table id="tablegrid">
+                                            <tbody>
+                                                <tr>
+                                                    <th>
+                                                        {/* <IconButton 
                                             style={{color:'white'}}
                                                 onClick={() => handleAddBiaya()}
                                             >
                                                 <AddIcon style={{ fontSize: 25 }}/>
                                             </IconButton> */}
-                                            </th>
-                                            <th >{i18n.t('Nama')}</th>
-                                            <th >{i18n.t('Qty')}</th>
-                                            <th >{i18n.t('Price')}</th>
-                                            <th >{i18n.t('Subtotal Price')}</th>
-                                        </tr>
-                                            {
-                                                ListItemsPurchaseReceiveBiaya.map((x, i) => {
-                                                    return (
-                                                        <tr>
-                                                            <td >
-                                                            <IconButton 
-                                                            color={'primary'}
-                                                            // style={{color:'white'}}
-                                                                onClick={() => handleRemoveBiaya(i)}
-                                                            // hidden={showplusdebit}
-                                                            >
-                                                                <DeleteIcon style={{ fontSize: 18 }}/>
-                                                            </IconButton>
-                                                            </td>
-                                                            <td><Input
-                                                                name="namabiaya"
-                                                                type="text"
-                                                                id="namabiaya"
-                                                                // onChange={val => handleInputChangeBiaya(val,i)}
-                                                                // onBlur={handleBlur}
-                                                                value={x.namabiaya}
-                                                                disabled={true}
+                                                    </th>
+                                                    <th >{i18n.t('Nama')}</th>
+                                                    <th >{i18n.t('Qty')}</th>
+                                                    <th >{i18n.t('Price')}</th>
+                                                    <th >{i18n.t('Subtotal Price')}</th>
+                                                </tr>
+                                                {
+                                                    ListItemsPurchaseReceiveBiaya.map((x, i) => {
+                                                        return (
+                                                            <tr>
+                                                                <td >
+                                                                    <IconButton
+                                                                        color={'primary'}
+                                                                        // style={{color:'white'}}
+                                                                        onClick={() => handleRemoveBiaya(i)}
+                                                                    // hidden={showplusdebit}
+                                                                    >
+                                                                        <DeleteIcon style={{ fontSize: 18 }} />
+                                                                    </IconButton>
+                                                                </td>
+                                                                <td><Input
+                                                                    name="namabiaya"
+                                                                    type="text"
+                                                                    id="namabiaya"
+                                                                    // onChange={val => handleInputChangeBiaya(val,i)}
+                                                                    // onBlur={handleBlur}
+                                                                    value={x.namabiaya}
+                                                                    disabled={true}
                                                                 /></td>
-                                                            <td><Input
-                                                                name="qty"
-                                                                type="text"
-                                                                id="qty"
-                                                                onChange={val => handleInputChangeBiaya(val,i)}
-                                                                onBlur={handleBlur}
-                                                                value={x.qty}
-                                                                /></td>
-
-                                                                <td style={{width:'15%'}}>
-                                                                <Input
-                                                                name="price"
-                                                                type="text"
-                                                                id="price"
-                                                                onChange={val => handleInputChangeBiaya(val,i)}
-                                                                onBlur={handleBlur}
-                                                                value={x.price !== ''?numToMoney(parseFloat(x.price)):''}
-                                                                disabled={x.namabiaya == 'BOX' || x.namabiaya == 'ONGKOS'}
+                                                                <td><Input
+                                                                    name="qty"
+                                                                    type="text"
+                                                                    id="qty"
+                                                                    onChange={val => handleInputChangeBiaya(val, i)}
+                                                                    onBlur={handleBlur}
+                                                                    value={x.qty}
                                                                 /></td>
 
-                                                                <td style={{width:'15%'}}>
-                                                                <Input
-                                                                name="subtotal"
-                                                                type="text"
-                                                                id="subtotal"
-                                                                // onChange={val => handleInputChangePrice(val,i)}
-                                                                onBlur={handleBlur}
-                                                                value={x.subtotal !== ''?numToMoney(parseFloat(x.subtotal)):''}
-                                                                disabled={true}
-                                                                /></td>
-                                                                
-                                                        </tr>
-                                                    )
-                                                })
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            }
+                                                                <td style={{ width: '15%' }}>
+                                                                    <Input
+                                                                        name="price"
+                                                                        type="text"
+                                                                        id="price"
+                                                                        onChange={val => handleInputChangeBiaya(val, i)}
+                                                                        onBlur={handleBlur}
+                                                                        value={x.price !== '' ? numToMoney(parseFloat(x.price)) : ''}
+                                                                        disabled={x.namabiaya == 'BOX' || x.namabiaya == 'ONGKOS'}
+                                                                    /></td>
 
-                            
-{
-                                // ListItemsPurchaseReceiveMati.length == 0?'':
-                                <div className="row justify-content-center">
-                                    <h4>{'Input Item Inventori'}</h4>
-                                    <table id="tablegrid">
-                                        <tbody>
-                                        <tr>
-                                        <th style={{width:'50px'}}>
-                                            <IconButton 
-                                            style={{color:'white'}}
-                                                onClick={() => handleAddItemsInventori()}
-                                                hidden={values.vendor == ''}
-                                            >
-                                                <AddIcon style={{ fontSize: 25 }}/>
-                                            </IconButton>
-                                            </th>
-                                            <th >{i18n.t('Nama')}</th>
-                                            <th >{i18n.t('Qty')}</th>
-                                            <th >{i18n.t('Price')}</th>
-                                            <th >{i18n.t('Subtotal Price')}</th>
-                                        </tr>
-                                            {
-                                                ListItemsInventori.map((x, i) => {
-                                                    return (
-                                                        <tr>
-                                                            <td >
-                                                            <IconButton 
-                                                            color={'primary'}
-                                                            // style={{color:'white'}}
-                                                                onClick={() => handleRemoveInventori(i)}
-                                                            // hidden={showplusdebit}
-                                                            >
-                                                                <DeleteIcon style={{ fontSize: 18 }}/>
-                                                            </IconButton>
-                                                            </td>
-                                                            <td style={{width:'20%'}}>
-                                                            <DropdownList
-                                                                name="idinventori"
-                                                                filter='contains'
-                                                                placeholder={i18n.t('select.SELECT_OPTION')}
-                                                                onChange={val => handleInputDropDownChangeInventori(val,i,'idinventori')}
-                                                                data={ListInventori}
-                                                                textField={'label'}
-                                                                valueField={'value'}
-                                                                value={x.idinventori}
-                                                                
-                                                            />
-                                                            </td>
-                                                            <td><Input
-                                                                name="qty"
-                                                                type="text"
-                                                                id="qty"
-                                                                onChange={val => handleInputChangeInventori(val,i)}
-                                                                // onBlur={handleBlur}
-                                                                value={x.qty}
+                                                                <td style={{ width: '15%' }}>
+                                                                    <Input
+                                                                        name="subtotal"
+                                                                        type="text"
+                                                                        id="subtotal"
+                                                                        // onChange={val => handleInputChangePrice(val,i)}
+                                                                        onBlur={handleBlur}
+                                                                        value={x.subtotal !== '' ? numToMoney(parseFloat(x.subtotal)) : ''}
+                                                                        disabled={true}
+                                                                    /></td>
+
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+
+
+                                {
+                                    // ListItemsPurchaseReceiveMati.length == 0?'':
+                                    <div className="row justify-content-center">
+                                        <h4>{'Input Item Inventori'}</h4>
+                                        <table id="tablegrid">
+                                            <tbody>
+                                                <tr>
+                                                    <th style={{ width: '50px' }}>
+                                                        <IconButton
+                                                            style={{ color: 'white' }}
+                                                            onClick={() => handleAddItemsInventori()}
+                                                            hidden={values.vendor == ''}
+                                                        >
+                                                            <AddIcon style={{ fontSize: 25 }} />
+                                                        </IconButton>
+                                                    </th>
+                                                    <th >{i18n.t('Nama')}</th>
+                                                    <th >{i18n.t('Qty')}</th>
+                                                    <th >{i18n.t('Price')}</th>
+                                                    <th >{i18n.t('Subtotal Price')}</th>
+                                                </tr>
+                                                {
+                                                    ListItemsInventori.map((x, i) => {
+                                                        return (
+                                                            <tr>
+                                                                <td >
+                                                                    <IconButton
+                                                                        color={'primary'}
+                                                                        // style={{color:'white'}}
+                                                                        onClick={() => handleRemoveInventori(i)}
+                                                                    // hidden={showplusdebit}
+                                                                    >
+                                                                        <DeleteIcon style={{ fontSize: 18 }} />
+                                                                    </IconButton>
+                                                                </td>
+                                                                <td style={{ width: '20%' }}>
+                                                                    <DropdownList
+                                                                        name="idinventori"
+                                                                        filter='contains'
+                                                                        placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                        onChange={val => handleInputDropDownChangeInventori(val, i, 'idinventori')}
+                                                                        data={ListInventori}
+                                                                        textField={'label'}
+                                                                        valueField={'value'}
+                                                                        value={x.idinventori}
+
+                                                                    />
+                                                                </td>
+                                                                <td><Input
+                                                                    name="qty"
+                                                                    type="text"
+                                                                    id="qty"
+                                                                    onChange={val => handleInputChangeInventori(val, i)}
+                                                                    // onBlur={handleBlur}
+                                                                    value={x.qty}
                                                                 /></td>
 
-                                                                <td style={{width:'15%'}}>
-                                                                <Input
-                                                                name="price"
-                                                                type="text"
-                                                                id="price"
-                                                                onChange={val => handleInputChangeInventori(val,i)}
-                                                                // onBlur={handleBlur}
-                                                                value={x.price !== ''?numToMoney(parseFloat(x.price)):''}
-                                                                disabled={false}
-                                                                /></td>
+                                                                <td style={{ width: '15%' }}>
+                                                                    <Input
+                                                                        name="price"
+                                                                        type="text"
+                                                                        id="price"
+                                                                        onChange={val => handleInputChangeInventori(val, i)}
+                                                                        // onBlur={handleBlur}
+                                                                        value={x.price !== '' ? numToMoney(parseFloat(x.price)) : ''}
+                                                                        disabled={false}
+                                                                    /></td>
 
-                                                                <td style={{width:'15%'}}>
-                                                                <Input
-                                                                name="subtotalprice"
-                                                                type="text"
-                                                                id="subtotalprice"
-                                                                // onChange={val => handleInputChangePrice(val,i)}
-                                                                // onBlur={handleBlur}
-                                                                value={x.subtotalprice !== ''?numToMoney(parseFloat(x.subtotalprice)):''}
-                                                                disabled={true}
-                                                                /></td>
-                                                                
-                                                        </tr>
-                                                    )
-                                                })
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            }
-                        
+                                                                <td style={{ width: '15%' }}>
+                                                                    <Input
+                                                                        name="subtotalprice"
+                                                                        type="text"
+                                                                        id="subtotalprice"
+                                                                        // onChange={val => handleInputChangePrice(val,i)}
+                                                                        // onBlur={handleBlur}
+                                                                        value={x.subtotalprice !== '' ? numToMoney(parseFloat(x.subtotalprice)) : ''}
+                                                                        disabled={true}
+                                                                    /></td>
+
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+
                             </ContentWrapper>
-                            {loading && <Loading/>}
-                            <div className="row justify-content-center" style={{marginTop:'-30px',marginBottom:'20px'}}>
-                            <Button
-                            // disabled={props.activeStep === 0}
-                                // style={{marginLeft:"20%"}}
-                                onClick={() => history.goBack()}
-                            >
-                            {/* {i18n.t('common.BACK')} */}
-                            {'Cancel'}
-                            </Button>
+                            {loading && <Loading />}
+                            <div className="row justify-content-center" style={{ marginTop: '-30px', marginBottom: '20px' }}>
+                                <Button
+                                    // disabled={props.activeStep === 0}
+                                    // style={{marginLeft:"20%"}}
+                                    onClick={() => history.goBack()}
+                                >
+                                    {/* {i18n.t('common.BACK')} */}
+                                    {'Cancel'}
+                                </Button>
 
-                            <Button
-                                // style={{marginLeft:"1%"}}
-                                color={'primary'}
-                                onClick={() => submitHandler(values)}
-                            >
-                            {'Submit'}
-                            </Button>
+                                <Button
+                                    // style={{marginLeft:"1%"}}
+                                    color={'primary'}
+                                    onClick={() => submitHandler(values)}
+                                >
+                                    {'Submit'}
+                                </Button>
                             </div>
                         </form>
                     )

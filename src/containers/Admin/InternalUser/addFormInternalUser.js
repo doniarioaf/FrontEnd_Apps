@@ -1,26 +1,26 @@
-import React, {useState, useEffect}    from 'react';
-import {Formik}                        from 'formik';
-import {useTranslation}                from 'react-i18next';
-import ContentWrapper               from '../../../components/Layout/ContentWrapper';
-import {Input,Button,FormGroup,Label,Card, CardBody} from 'reactstrap';
-import * as actions                 from '../../../store/actions';
-import {useDispatch}   from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { Formik } from 'formik';
+import { useTranslation } from 'react-i18next';
+import ContentWrapper from '../../../components/Layout/ContentWrapper';
+import { Input, Button, FormGroup, Label, Card, CardBody } from 'reactstrap';
+import * as actions from '../../../store/actions';
+import { useDispatch } from 'react-redux';
 // import { reloadToHomeNotAuthorize } from '../../../../shared/maskFunc';
 import { Loading } from '../../../components/Common/Loading';
-import Swal             from "sweetalert2";
-import {useHistory}                 from 'react-router-dom';
+import Swal from "sweetalert2";
+import { useHistory } from 'react-router-dom';
 import Select from 'react-select';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { addInternalUser_Permission } from '../../shared/permissionMenu';
-import Grid                         from '../Company/gridBranch';
-import {DropdownList}      from 'react-widgets';
+import Grid from '../Company/gridBranch';
+import { DropdownList } from 'react-widgets';
 import { IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import "react-widgets/dist/css/react-widgets.css";
 
 export default function AddFormInternalUser(props) {
-    reloadToHomeNotAuthorize(addInternalUser_Permission,'TRANSACTION');
-    const {i18n} = useTranslation('translations');
+    reloadToHomeNotAuthorize(addInternalUser_Permission, 'TRANSACTION');
+    const { i18n } = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
@@ -55,21 +55,21 @@ export default function AddFormInternalUser(props) {
     const [hiddenColumns] = useState(['id']);
     const [RowsBranch, setRowsBranch] = useState([]);
     const [columns] = useState([
-        {name: 'id', title: 'id'},
-        {name: 'name', title: i18n.t('label_NAME')},
+        { name: 'id', title: 'id' },
+        { name: 'name', title: i18n.t('label_NAME') },
     ]);
     const [StartdefaultHeight] = useState(150);
-    const [defaultHeight, setdefaultHeight] = useState(StartdefaultHeight+'px');
+    const [defaultHeight, setdefaultHeight] = useState(StartdefaultHeight + 'px');
 
     const [IsAllBranch, setIsAllBranch] = useState(false);
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getUserAppsData('/template',successHandler, errorHandler));
+        dispatch(actions.getUserAppsData('/template', successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
-        if(data.data){
+        if (data.data) {
             setListRoles(data.data.roleoptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
@@ -88,30 +88,30 @@ export default function AddFormInternalUser(props) {
 
     }
 
-    const handleChangeBranche = (data) =>{
+    const handleChangeBranche = (data) => {
         let idbranch = data?.value ? data.value : '';
         setSelBranch(idbranch);
     }
-    const setHeightGridListCharges = (dataval) =>{
-        if(dataval.length > 2){
-            let height = ( 50 * (dataval.length - 2) ) + StartdefaultHeight;
-            if(height > 600){
+    const setHeightGridListCharges = (dataval) => {
+        if (dataval.length > 2) {
+            let height = (50 * (dataval.length - 2)) + StartdefaultHeight;
+            if (height > 600) {
                 height = 600;
             }
-            setdefaultHeight(height+'px');
+            setdefaultHeight(height + 'px');
         }
     }
     const handleAddListBranch = () => {
         let dataval = [];
         let filterid = RowsBranch.filter(output => output.id == SelBranch);
-        if(filterid.length == 0){
+        if (filterid.length == 0) {
             let listfilteroutput = ListBranch.filter(output => output.value == SelBranch);
-            if(listfilteroutput.length > 0){
+            if (listfilteroutput.length > 0) {
                 dataval = [...RowsBranch];
                 let filter = listfilteroutput[0];
                 let obj = {
-                    'id':filter.value,
-                    'name':filter.label
+                    'id': filter.value,
+                    'name': filter.label
                 };
                 dataval.push(obj);
                 setRowsBranch(dataval);
@@ -119,59 +119,59 @@ export default function AddFormInternalUser(props) {
             }
         }
     }
-    const handleSubstractListDetailTrans = (id) =>{
+    const handleSubstractListDetailTrans = (id) => {
         let listfilter = RowsBranch.filter(output => output.id !== id);
         let dataval = [...listfilter];
         setRowsBranch(dataval);
         setHeightGridListCharges(dataval);
     }
 
-    const handleInputUsername = (data) =>{
+    const handleInputUsername = (data) => {
         let val = data.target.value;
         setInputUsername(val);
     }
 
-    const handleInputNama = (data) =>{
+    const handleInputNama = (data) => {
         let val = data.target.value;
         setInputNama(val);
     }
 
-    const handleInputPassword = (data) =>{
+    const handleInputPassword = (data) => {
         let val = data.target.value;
         setInputPassword(val);
     }
 
-    const handleInputConfirmPassword = (data) =>{
+    const handleInputConfirmPassword = (data) => {
         let val = data.target.value;
         setInputConfirmPassword(val);
     }
 
-    const handleInputEmail = (data) =>{
+    const handleInputEmail = (data) => {
         let val = data.target.value;
         setInputEmail(val);
     }
 
-    const handleInputNoTlp = (data) =>{
+    const handleInputNoTlp = (data) => {
         let val = data.target.value;
         setInputNoTlp(val);
     }
 
-    const handleInputAddress = (data) =>{
+    const handleInputAddress = (data) => {
         let val = data.target.value;
         setInputAddress(val);
     }
 
-    const handleRolesChange = (data) =>{
-        let temp = [];        
-        if(data !== null && data.length > 0){
-          for(var i=0; i < data.length ; i++){
-            temp.push(data[i].value);
-          }
+    const handleRolesChange = (data) => {
+        let temp = [];
+        if (data !== null && data.length > 0) {
+            for (var i = 0; i < data.length; i++) {
+                temp.push(data[i].value);
+            }
         }
         setRoles(temp);
     }
 
-    const handleChangeIsAllBranch = (data) =>{
+    const handleChangeIsAllBranch = (data) => {
         setIsAllBranch(data.target.checked);
     }
 
@@ -186,38 +186,38 @@ export default function AddFormInternalUser(props) {
         setErrRoles('');
         setErrSelBranch('');
 
-        if(InputUsername == ''){
+        if (InputUsername == '') {
             setErrInputUsername(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(InputNama == ''){
+        if (InputNama == '') {
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(InputPassword == ''){
+        if (InputPassword == '') {
             setErrInputPassword(i18n.t('label_REQUIRED'));
             flag = false;
-        }else if(InputPassword !== InputConfirmPassword){
+        } else if (InputPassword !== InputConfirmPassword) {
             setErrInputPassword(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(InputEmail == ''){
+        if (InputEmail == '') {
             setErrInputEmail(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(InputNoTlp == ''){
+        if (InputNoTlp == '') {
             setErrInputNoTlp(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(InputAddress == ''){
+        if (InputAddress == '') {
             setErrInputAddress(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(roles.length == 0){
+        if (roles.length == 0) {
             setErrRoles(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(!IsAllBranch && RowsBranch.length == 0){
+        if (!IsAllBranch && RowsBranch.length == 0) {
             setErrSelBranch(i18n.t('label_REQUIRED'));
             flag = false;
         }
@@ -231,20 +231,20 @@ export default function AddFormInternalUser(props) {
             showCancelButton: true,
             confirmButtonText: `Confirm`,
             denyButtonText: `Don't save`,
-          }).then((result) => {
+        }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
                 executeSubmit();
-            //   Swal.fire('Saved!', '', 'success')
+                //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
-            //   Swal.fire('Changes are not saved', '', 'info')
+                //   Swal.fire('Changes are not saved', '', 'info')
             }
-          })
+        })
     }
 
     const executeSubmit = () => {
         let flag = checkColumnMandatory();
-        if(flag){
+        if (flag) {
             setLoading(true);
             let obj = new Object();
             obj.username = InputUsername;
@@ -255,16 +255,16 @@ export default function AddFormInternalUser(props) {
             obj.email = InputAddress;
             obj.roles = roles;
             obj.isallbranch = IsAllBranch;
-            if(IsAllBranch){
+            if (IsAllBranch) {
                 obj.branchs = [];
-            }else{
-                let temp = [];        
-                for(var i=0; i < RowsBranch.length ; i++){
+            } else {
+                let temp = [];
+                for (var i = 0; i < RowsBranch.length; i++) {
                     temp.push(RowsBranch[i].id);
                 }
                 obj.branchs = temp;
             }
-            dispatch(actions.submitAddUserApps(obj,succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitAddUserApps(obj, succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -293,27 +293,27 @@ export default function AddFormInternalUser(props) {
 
     return (
         <Formik
-        initialValues={
-            {
-                nama:InputNama,
-                username:InputUsername,
-                password:InputPassword,
-                confirmpassword:InputConfirmPassword,
-                notlp:InputNoTlp,
-                email:InputEmail,
-                address:InputAddress,
-                isallbranch:IsAllBranch,
-                branch:SelBranch
+            initialValues={
+                {
+                    nama: InputNama,
+                    username: InputUsername,
+                    password: InputPassword,
+                    confirmpassword: InputConfirmPassword,
+                    notlp: InputNoTlp,
+                    email: InputEmail,
+                    address: InputAddress,
+                    isallbranch: IsAllBranch,
+                    branch: SelBranch
+                }
             }
-        }
-        validate={values => {
-            const errors = {};
-            return errors;
-        }}
-        enableReinitialize="true"
-        onSubmit={(values) => {
-           
-        }}
+            validate={values => {
+                const errors = {};
+                return errors;
+            }}
+            enableReinitialize="true"
+            onSubmit={(values) => {
+
+            }}
         >
             {
                 formikProps => {
@@ -328,246 +328,246 @@ export default function AddFormInternalUser(props) {
                         setFieldValue,
                     } = formikProps;
 
-                    return(
-                        <form className="mb-6" onSubmit={handleSubmit}  name="FormAddUser">
+                    return (
+                        <form className="mb-6" onSubmit={handleSubmit} name="FormAddUser">
                             <ContentWrapper>
-                            <div className="content-heading"  >
-                            <span>{i18n.t('label_INTERNAL_USER')}</span>
-                            </div>
+                                <div className="content-heading"  >
+                                    <span>{i18n.t('label_INTERNAL_USER')}</span>
+                                </div>
 
-                            <div className="row mt-2">
-                            <div className="mt-2 col-lg-6 ft-detail mb-5">
-                            <label className="mt-3 form-label required" htmlFor="nama">
-                                {i18n.t('label_NAME')}
-                            </label>
-                            <Input
-                                name="nama"
-                                // className={
-                                //     touched.nama && errors.nama
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="nama"
-                                onChange={val => handleInputNama(val)}
-                                onBlur={handleBlur}
-                                value={values.nama}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputNama}</div>
+                                <div className="row mt-2">
+                                    <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                        <label className="mt-3 form-label required" htmlFor="nama">
+                                            {i18n.t('label_NAME')}
+                                        </label>
+                                        <Input
+                                            name="nama"
+                                            // className={
+                                            //     touched.nama && errors.nama
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="nama"
+                                            onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.nama}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputNama}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="username">
-                                {i18n.t('label_USERNAME')}
-                            </label>
-                            <Input
-                                name="username"
-                                // className={
-                                //     touched.nama && errors.nama
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="username"
-                                onChange={val => handleInputUsername(val)}
-                                onBlur={handleBlur}
-                                value={values.username}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputUsername}</div>
+                                        <label className="mt-3 form-label required" htmlFor="username">
+                                            {i18n.t('label_USERNAME')}
+                                        </label>
+                                        <Input
+                                            name="username"
+                                            // className={
+                                            //     touched.nama && errors.nama
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="username"
+                                            onChange={val => handleInputUsername(val)}
+                                            onBlur={handleBlur}
+                                            value={values.username}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputUsername}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="password">
-                                {i18n.t('label_PASSWORD')}
-                            </label>
-                            <Input
-                                name="password"
-                                // className={
-                                //     touched.nama && errors.nama
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="password"
-                                id="password"
-                                onChange={val => handleInputPassword(val)}
-                                onBlur={handleBlur}
-                                value={values.password}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputPassword}</div>
+                                        <label className="mt-3 form-label required" htmlFor="password">
+                                            {i18n.t('label_PASSWORD')}
+                                        </label>
+                                        <Input
+                                            name="password"
+                                            // className={
+                                            //     touched.nama && errors.nama
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="password"
+                                            id="password"
+                                            onChange={val => handleInputPassword(val)}
+                                            onBlur={handleBlur}
+                                            value={values.password}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputPassword}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="confirmpassword">
-                                {i18n.t('label_CONFIRM_PASSWORD')}
-                            </label>
-                            <Input
-                                name="confirmpassword"
-                                // className={
-                                //     touched.nama && errors.nama
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="password"
-                                id="confirmpassword"
-                                onChange={val => handleInputConfirmPassword(val)}
-                                onBlur={handleBlur}
-                                value={values.confirmpassword}
-                            />
+                                        <label className="mt-3 form-label required" htmlFor="confirmpassword">
+                                            {i18n.t('label_CONFIRM_PASSWORD')}
+                                        </label>
+                                        <Input
+                                            name="confirmpassword"
+                                            // className={
+                                            //     touched.nama && errors.nama
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="password"
+                                            id="confirmpassword"
+                                            onChange={val => handleInputConfirmPassword(val)}
+                                            onBlur={handleBlur}
+                                            value={values.confirmpassword}
+                                        />
 
-                            <div className="row mt-0" hidden={values.isallbranch}>
-                            <div className="mt-0 col-lg-11 ft-detail mb-5" style={{paddingRight:'0px'}}>
-                            <label className="mt-3 form-label required" htmlFor="branch">
-                                {i18n.t('label_BRANCH')}
-                            </label>
+                                        <div className="row mt-0" hidden={values.isallbranch}>
+                                            <div className="mt-0 col-lg-11 ft-detail mb-5" style={{ paddingRight: '0px' }}>
+                                                <label className="mt-3 form-label required" htmlFor="branch">
+                                                    {i18n.t('label_BRANCH')}
+                                                </label>
 
-                            <DropdownList
-                                // className={
-                                //     touched.branch && errors.branch
-                                //         ? "input-error" : ""
-                                // }
-                                name="branch"
-                                filter='contains'
-                                placeholder={i18n.t('select.SELECT_OPTION')}
-                                
-                                onChange={val => handleChangeBranche(val)}
-                                onBlur={val => setFieldTouched("branch", val?.value ? val.value : '')}
-                                data={ListBranch}
-                                textField={'label'}
-                                valueField={'value'}
-                                // style={{width: '25%'}}
-                                // disabled={values.isdisabledcountry}
-                                value={values.branch}
-                            />
-                            </div>
+                                                <DropdownList
+                                                    // className={
+                                                    //     touched.branch && errors.branch
+                                                    //         ? "input-error" : ""
+                                                    // }
+                                                    name="branch"
+                                                    filter='contains'
+                                                    placeholder={i18n.t('select.SELECT_OPTION')}
 
-                            <div className="mt-0 col-lg-1 ft-detail mb-5" style={{paddingLeft:'0px',paddingTop:'35px'}}>
-                            <IconButton color={'primary'}
-                                onClick={() => handleAddListBranch()}
-                            >
-                                <AddIcon style={{ fontSize: 30 }}/>
-                            </IconButton>
-                            </div>
+                                                    onChange={val => handleChangeBranche(val)}
+                                                    onBlur={val => setFieldTouched("branch", val?.value ? val.value : '')}
+                                                    data={ListBranch}
+                                                    textField={'label'}
+                                                    valueField={'value'}
+                                                    // style={{width: '25%'}}
+                                                    // disabled={values.isdisabledcountry}
+                                                    value={values.branch}
+                                                />
+                                            </div>
 
-                            </div>
+                                            <div className="mt-0 col-lg-1 ft-detail mb-5" style={{ paddingLeft: '0px', paddingTop: '35px' }}>
+                                                <IconButton color={'primary'}
+                                                    onClick={() => handleAddListBranch()}
+                                                >
+                                                    <AddIcon style={{ fontSize: 30 }} />
+                                                </IconButton>
+                                            </div>
 
-                            
-                            </div>
+                                        </div>
 
-                            <div className="mt-2 col-lg-6 ft-detail mb-5">
-                           
-                            <label className="mt-3 form-label required" htmlFor="notlp">
-                                {i18n.t('label_CONTACT_NUMBER')}
-                            </label>
-                            <Input
-                                name="notlp"
-                                // className={
-                                //     touched.nama && errors.nama
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="notlp"
-                                onChange={val => handleInputNoTlp(val)}
-                                onBlur={handleBlur}
-                                value={values.notlp}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputNoTlp}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="email">
-                                {i18n.t('Email')}
-                            </label>
-                            <Input
-                                name="email"
-                                // className={
-                                //     touched.nama && errors.nama
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="email"
-                                onChange={val => handleInputEmail(val)}
-                                onBlur={handleBlur}
-                                value={values.email}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputEmail}</div>
+                                    </div>
 
-                            <label className="mt-3 form-label required" htmlFor="address">
-                                {i18n.t('label_ADDRESS')}
-                            </label>
-                            <Input
-                                name="address"
-                                // className={
-                                //     touched.nama && errors.nama
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="address"
-                                onChange={val => handleInputAddress(val)}
-                                onBlur={handleBlur}
-                                value={values.address}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputAddress}</div>
+                                    <div className="mt-2 col-lg-6 ft-detail mb-5">
 
-                            <label className="mt-3 form-label required" htmlFor="role">
-                                {i18n.t('Role')}
-                            </label>
-                            <Select
-                                // defaultValue={[options[0], options[1]]}
-                                defaultValue={selectedRoles}
-                                isMulti
-                                name="colors"
-                                options={ListRoles}
-                                onChange={val => handleRolesChange(val)}
-                                className="basic-multi-select"
-                                classNamePrefix="select"
-                                // placeholder={i18n.t('select.SELECT_OPTION')}
-                            />
+                                        <label className="mt-3 form-label required" htmlFor="notlp">
+                                            {i18n.t('label_CONTACT_NUMBER')}
+                                        </label>
+                                        <Input
+                                            name="notlp"
+                                            // className={
+                                            //     touched.nama && errors.nama
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="notlp"
+                                            onChange={val => handleInputNoTlp(val)}
+                                            onBlur={handleBlur}
+                                            value={values.notlp}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputNoTlp}</div>
 
-                            <FormGroup check style={{marginTop:'20px'}}>
-                            <Input type="checkbox" name="check" 
-                            id="isallbranch" 
-                            onChange={val => handleChangeIsAllBranch(val)}
-                            defaultChecked={values.isallbranch}
-                            checked={values.isallbranch}
-                            style={{transform:'scale(1.5)'}}
-                            />
-                            <Label for="isallbranch" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('All Branch?')}</Label>
-                            </FormGroup>
-                            
+                                        <label className="mt-3 form-label required" htmlFor="email">
+                                            {i18n.t('Email')}
+                                        </label>
+                                        <Input
+                                            name="email"
+                                            // className={
+                                            //     touched.nama && errors.nama
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="email"
+                                            onChange={val => handleInputEmail(val)}
+                                            onBlur={handleBlur}
+                                            value={values.email}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputEmail}</div>
 
-                            </div>
+                                        <label className="mt-3 form-label required" htmlFor="address">
+                                            {i18n.t('label_ADDRESS')}
+                                        </label>
+                                        <Input
+                                            name="address"
+                                            // className={
+                                            //     touched.nama && errors.nama
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="address"
+                                            onChange={val => handleInputAddress(val)}
+                                            onBlur={handleBlur}
+                                            value={values.address}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputAddress}</div>
 
-                            </div>
+                                        <label className="mt-3 form-label required" htmlFor="role">
+                                            {i18n.t('Role')}
+                                        </label>
+                                        <Select
+                                            // defaultValue={[options[0], options[1]]}
+                                            defaultValue={selectedRoles}
+                                            isMulti
+                                            name="colors"
+                                            options={ListRoles}
+                                            onChange={val => handleRolesChange(val)}
+                                            className="basic-multi-select"
+                                            classNamePrefix="select"
+                                        // placeholder={i18n.t('select.SELECT_OPTION')}
+                                        />
 
-                            <Button
-                            // disabled={props.activeStep === 0}
-                                style={{marginLeft:"20%"}}
-                                onClick={() => history.goBack()}
-                            >
-                            {/* {i18n.t('common.BACK')} */}
-                            {'Cancel'}
-                            </Button>
+                                        <FormGroup check style={{ marginTop: '20px' }}>
+                                            <Input type="checkbox" name="check"
+                                                id="isallbranch"
+                                                onChange={val => handleChangeIsAllBranch(val)}
+                                                defaultChecked={values.isallbranch}
+                                                checked={values.isallbranch}
+                                                style={{ transform: 'scale(1.5)' }}
+                                            />
+                                            <Label for="isallbranch" check style={{ transform: 'scale(1.5)', marginLeft: '20px' }}>{i18n.t('All Branch?')}</Label>
+                                        </FormGroup>
 
-                            <Button
-                                style={{marginLeft:"1%"}}
-                                onClick={() => submitHandler()}
-                            >
-                            {'Submit'}
-                            </Button>
 
-                            <Card hidden={values.isallbranch}>
-                            <div className="invalid-feedback-custom">{ErrSelBranch}</div>
-                            <CardBody>
-                            <div className="table-responsive" style={{height:defaultHeight}}>
-                                <Grid
-                                    rows={RowsBranch}
-                                    columns={columns}
-                                    totalCounts={RowsBranch.length}
-                                    loading={loading}
-                                    columnextension={[]}
-                                    handleSubstractList={handleSubstractListDetailTrans}
-                                />
-                            </div>
-                            </CardBody>
-                            </Card>
+                                    </div>
+
+                                </div>
+
+                                <Button
+                                    // disabled={props.activeStep === 0}
+                                    style={{ marginLeft: "20%" }}
+                                    onClick={() => history.goBack()}
+                                >
+                                    {/* {i18n.t('common.BACK')} */}
+                                    {'Cancel'}
+                                </Button>
+
+                                <Button
+                                    style={{ marginLeft: "1%" }}
+                                    onClick={() => submitHandler()}
+                                >
+                                    {'Submit'}
+                                </Button>
+
+                                <Card hidden={values.isallbranch}>
+                                    <div className="invalid-feedback-custom">{ErrSelBranch}</div>
+                                    <CardBody>
+                                        <div className="table-responsive" style={{ height: defaultHeight }}>
+                                            <Grid
+                                                rows={RowsBranch}
+                                                columns={columns}
+                                                totalCounts={RowsBranch.length}
+                                                loading={loading}
+                                                columnextension={[]}
+                                                handleSubstractList={handleSubstractListDetailTrans}
+                                            />
+                                        </div>
+                                    </CardBody>
+                                </Card>
                             </ContentWrapper>
-                            {loading && <Loading/>}
-                            
+                            {loading && <Loading />}
+
                         </form>
 
                     )

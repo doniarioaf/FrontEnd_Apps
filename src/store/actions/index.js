@@ -60,5 +60,7 @@ export {
     getDepositData,
     submitDeposit,
     getAreaData,
-    submitArea
+    submitArea,
+    getDraftPurchaseReceiveData,
+    submitDraftPurchaseReceive
 } from './admin';

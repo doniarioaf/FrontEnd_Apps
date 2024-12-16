@@ -196,6 +196,9 @@ const addArea = lazy(() => import('./containers/Master/Area/add'));
 const detailArea = lazy(() => import('./containers/Master/Area/detail'));
 const editArea = lazy(() => import('./containers/Master/Area/edit'));
 
+const menuDraftPurchaseReceive = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive'));
+const addDraftPurchaseReceive = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive/add'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -401,6 +404,9 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addarea} component={waitFor(addArea)}/>
                             <Route path={pathmenu.detailarea+'/:id'} component={waitFor(detailArea)}/>
                             <Route path={pathmenu.editarea+'/:id'} component={waitFor(editArea)}/>
+
+                            <Route path={pathmenu.menudraftpurchasereceive} component={waitFor(menuDraftPurchaseReceive)}/>
+                            <Route path={pathmenu.adddraftpurchasereceive} component={waitFor(addDraftPurchaseReceive)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

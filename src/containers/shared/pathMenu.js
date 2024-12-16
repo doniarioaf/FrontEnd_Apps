@@ -64,3 +64,5 @@ export const menuarea = `/area`;
 export const addarea = `/form/add/area`;
 export const detailarea = `/form/detail/area`;
 export const editarea = `/form/edit/area`;
+export const menudraftpurchasereceive = `/draftpurchasereceive`;
+export const adddraftpurchasereceive = `/form/add/draftpurchasereceive`;

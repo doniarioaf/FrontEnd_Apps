@@ -1,23 +1,23 @@
-import React, {useState,useEffect}    from 'react';
-import {Formik}                        from 'formik';
-import {useTranslation}                from 'react-i18next';
-import ContentWrapper               from '../../../components/Layout/ContentWrapper';
-import ContentHeading               from '../../../components/Layout/ContentHeading';
-import {Input,Button} from 'reactstrap';
-import * as actions                 from '../../../store/actions';
-import {useDispatch}   from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { Formik } from 'formik';
+import { useTranslation } from 'react-i18next';
+import ContentWrapper from '../../../components/Layout/ContentWrapper';
+import ContentHeading from '../../../components/Layout/ContentHeading';
+import { Input, Button } from 'reactstrap';
+import * as actions from '../../../store/actions';
+import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
-import Swal             from "sweetalert2";
-import {useHistory}                 from 'react-router-dom';
+import Swal from "sweetalert2";
+import { useHistory } from 'react-router-dom';
 import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { editProduct_Permission } from '../../shared/permissionMenu';
-import * as pathmenu           from '../../shared/pathMenu';
-import momentLocalizer                 from 'react-widgets-moment';
+import * as pathmenu from '../../shared/pathMenu';
+import momentLocalizer from 'react-widgets-moment';
 import "react-widgets/dist/css/react-widgets.css";
 
 export default function EditProduct(props) {
-    reloadToHomeNotAuthorize(editProduct_Permission,'TRANSACTION');
-    const {i18n} = useTranslation('translations');
+    reloadToHomeNotAuthorize(editProduct_Permission, 'TRANSACTION');
+    const { i18n } = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
     momentLocalizer();
@@ -34,11 +34,11 @@ export default function EditProduct(props) {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getProductData( {url:'/'+id},successHandler, errorHandler));
+        dispatch(actions.getProductData({ url: '/' + id }, successHandler, errorHandler));
     }, []);
 
-    function successHandler(data,propsdata) {
-        let val = data.data; 
+    function successHandler(data, propsdata) {
+        let val = data.data;
         setInputNama(val.nama);
         setInputSKU(val.sku);
         setLoading(false);
@@ -48,18 +48,18 @@ export default function EditProduct(props) {
         let flag = true;
         setErrInputNama('');
         setErrInputSKU('');
-        if(values.nama == ''){
+        if (values.nama == '') {
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(values.sku == ''){
+        if (values.sku == '') {
             setErrInputSKU(i18n.t('label_REQUIRED'));
             flag = false;
         }
         return flag;
     }
 
-    const succesHandlerSubmit = (data,propsdata) => {
+    const succesHandlerSubmit = (data, propsdata) => {
         setLoading(false);
         Swal.fire({
             icon: 'success',
@@ -74,12 +74,12 @@ export default function EditProduct(props) {
 
     const executeSubmit = (values) => {
         let flag = checkColumnMandatory(values);
-        if(flag){
+        if (flag) {
             setLoading(true);
             let obj = new Object();
             obj.nama = values.nama;
             obj.sku = values.sku;
-            dispatch(actions.submitProductData({url:'/'+id,payload:obj,type:'EDIT'},succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitProductData({ url: '/' + id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -90,20 +90,20 @@ export default function EditProduct(props) {
             showCancelButton: true,
             confirmButtonText: `Confirm`,
             denyButtonText: `Don't save`,
-          }).then((result) => {
+        }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
                 executeSubmit(values);
-            //   Swal.fire('Saved!', '', 'success')
+                //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
-            //   Swal.fire('Changes are not saved', '', 'info')
+                //   Swal.fire('Changes are not saved', '', 'info')
             }
-          })
+        })
     }
 
-    const errorHandler = (data,propsdata) => {
+    const errorHandler = (data, propsdata) => {
         setLoading(false);
-          Swal.fire({
+        Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: data.msg
@@ -112,22 +112,22 @@ export default function EditProduct(props) {
 
     return (
         <Formik
-        initialValues={
-            {
-                nama:InputNama,
-                sku:InputSKU,
+            initialValues={
+                {
+                    nama: InputNama,
+                    sku: InputSKU,
+                }
             }
-        }
-        validate={values => {
-            const errors = {};
-            setInputNama(values.nama);
-            setInputSKU(values.sku);
-            return errors;
-        }}
-        enableReinitialize="true"
-        onSubmit={(values) => {
-           
-        }}
+            validate={values => {
+                const errors = {};
+                setInputNama(values.nama);
+                setInputSKU(values.sku);
+                return errors;
+            }}
+            enableReinitialize="true"
+            onSubmit={(values) => {
+
+            }}
         >
             {
                 formikProps => {
@@ -142,81 +142,81 @@ export default function EditProduct(props) {
                         setFieldValue,
                     } = formikProps;
 
-                    return(
-                        <form className="mb-6" onSubmit={handleSubmit}  name="FormProduct">
+                    return (
+                        <form className="mb-6" onSubmit={handleSubmit} name="FormProduct">
                             <ContentWrapper>
-                            <ContentHeading history={history} link={pathmenu.editProduct+'/'+id} label={'Edit Product'} labeldefault={'Edit Product'} />
+                                <ContentHeading history={history} link={pathmenu.editProduct + '/' + id} label={'Edit Product'} labeldefault={'Edit Product'} />
 
-                            <div className="row mt-2">
-                            <div className="mt-2 col-lg-6 ft-detail mb-5">
-                           
-                            <label className="mt-3 form-label required" htmlFor="nama">
-                                {i18n.t('label_NAME')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <Input
-                                name="nama"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="nama"
-                                maxLength={150}
-                                
-                                onChange={handleChange}
-                                // onChange={val => handleInputNama(val)}
-                                onBlur={handleBlur}
-                                value={values.nama}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputNama}</div>
+                                <div className="row mt-2">
+                                    <div className="mt-2 col-lg-6 ft-detail mb-5">
 
-                            <label className="mt-3 form-label required" htmlFor="sku">
-                                {i18n.t('SKU')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <Input
-                                name="sku"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="sku"
-                                maxLength={100}
-                                
-                                onChange={handleChange}
-                                // onChange={val => handleInputNama(val)}
-                                onBlur={handleBlur}
-                                value={values.sku}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputSKU}</div>
+                                        <label className="mt-3 form-label required" htmlFor="nama">
+                                            {i18n.t('label_NAME')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <Input
+                                            name="nama"
+                                            // className={
+                                            //     touched.namebranch && errors.namebranch
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="nama"
+                                            maxLength={150}
 
-                            </div>
-                            
-                            </div>
-                            
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.nama}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputNama}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="sku">
+                                            {i18n.t('SKU')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <Input
+                                            name="sku"
+                                            // className={
+                                            //     touched.namebranch && errors.namebranch
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="sku"
+                                            maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.sku}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputSKU}</div>
+
+                                    </div>
+
+                                </div>
+
                             </ContentWrapper>
-                            {loading && <Loading/>}
-                            <div className="row justify-content-center" style={{marginTop:'-30px',marginBottom:'20px'}}>
-                            <Button
-                            // disabled={props.activeStep === 0}
-                                // style={{marginLeft:"20%"}}
-                                onClick={() => history.goBack()}
-                            >
-                            {/* {i18n.t('common.BACK')} */}
-                            {'Cancel'}
-                            </Button>
+                            {loading && <Loading />}
+                            <div className="row justify-content-center" style={{ marginTop: '-30px', marginBottom: '20px' }}>
+                                <Button
+                                    // disabled={props.activeStep === 0}
+                                    // style={{marginLeft:"20%"}}
+                                    onClick={() => history.goBack()}
+                                >
+                                    {/* {i18n.t('common.BACK')} */}
+                                    {'Cancel'}
+                                </Button>
 
-                            <Button
-                                // style={{marginLeft:"1%"}}
-                                color={'primary'}
-                                onClick={() => submitHandler(values)}
-                            >
-                            {'Submit'}
-                            </Button>
+                                <Button
+                                    // style={{marginLeft:"1%"}}
+                                    color={'primary'}
+                                    onClick={() => submitHandler(values)}
+                                >
+                                    {'Submit'}
+                                </Button>
                             </div>
                         </form>
                     )

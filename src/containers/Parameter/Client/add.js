@@ -1,27 +1,27 @@
-import React, {useState,useEffect}    from 'react';
-import {Formik}                        from 'formik';
-import {useTranslation}                from 'react-i18next';
-import ContentWrapper               from '../../../components/Layout/ContentWrapper';
-import ContentHeading               from '../../../components/Layout/ContentHeading';
-import {Input,Button} from 'reactstrap';
-import * as actions                 from '../../../store/actions';
-import {useDispatch}   from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { Formik } from 'formik';
+import { useTranslation } from 'react-i18next';
+import ContentWrapper from '../../../components/Layout/ContentWrapper';
+import ContentHeading from '../../../components/Layout/ContentHeading';
+import { Input, Button } from 'reactstrap';
+import * as actions from '../../../store/actions';
+import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
-import Swal             from "sweetalert2";
-import {useHistory}                 from 'react-router-dom';
-import { reloadToHomeNotAuthorize,formatMoney, inputJustNumberAndCommaDot } from '../../shared/globalFunc';
+import Swal from "sweetalert2";
+import { useHistory } from 'react-router-dom';
+import { reloadToHomeNotAuthorize, formatMoney, inputJustNumberAndCommaDot } from '../../shared/globalFunc';
 import { addParameterClient_Permission } from '../../shared/permissionMenu';
 import { formatdate } from '../../shared/constantValue';
-import * as pathmenu           from '../../shared/pathMenu';
-import {DropdownList}      from 'react-widgets';
-import { DatePicker}      from 'react-widgets';
-import moment                          from 'moment';
-import momentLocalizer                 from 'react-widgets-moment';
+import * as pathmenu from '../../shared/pathMenu';
+import { DropdownList } from 'react-widgets';
+import { DatePicker } from 'react-widgets';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets-moment';
 import "react-widgets/dist/css/react-widgets.css";
 
 export default function AddParameterClient(props) {
-    reloadToHomeNotAuthorize(addParameterClient_Permission,'TRANSACTION');
-    const {i18n} = useTranslation('translations');
+    reloadToHomeNotAuthorize(addParameterClient_Permission, 'TRANSACTION');
+    const { i18n } = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
     momentLocalizer();
@@ -42,11 +42,11 @@ export default function AddParameterClient(props) {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getParameterClientData('/template',successHandler, errorHandler));
+        dispatch(actions.getParameterClientData('/template', successHandler, errorHandler));
     }, []);
 
     function successHandler(data) {
-        if(data.data){
+        if (data.data) {
             setListParamType(data.data.parameterTypeOptions.reduce((obj, el) => (
                 [...obj, {
                     value: el.code,
@@ -57,45 +57,45 @@ export default function AddParameterClient(props) {
         setLoading(false);
     }
 
-    const handleInputNama = (data) =>{
+    const handleInputNama = (data) => {
         let val = data.target.value;
         setInputNama(val);
     }
 
-    const handleInputValue = (data) =>{
+    const handleInputValue = (data) => {
         let val = data.target.value;
-        if(SelParamType == 'NUMBER'){
+        if (SelParamType == 'NUMBER') {
             let flagReg = inputJustNumberAndCommaDot(val);
-            if(flagReg){
+            if (flagReg) {
                 setInputvalue(formatMoney(val));
             }
-        }else{
+        } else {
             setInputvalue(val);
         }
-        
+
     }
 
-    const handleChangeParamType = (data) =>{
+    const handleChangeParamType = (data) => {
         let id = data?.value ? data.value : '';
         setSelParamType(id);
         setParamDate(null);
         setInputvalue('');
     }
 
-    const handleParamDate = (data) =>{
-        if(data !== null){
+    const handleParamDate = (data) => {
+        if (data !== null) {
             setParamDate(moment(data, formatdate).toDate());
-        }else{
+        } else {
             setParamDate(null)
         }
     }
-    
 
-    const handleChangeIsActive = (data) =>{
+
+    const handleChangeIsActive = (data) => {
         setInputIsActive(data.target.checked);
     }
 
-    
+
 
     const checkColumnMandatory = () => {
         let flag = true;
@@ -103,35 +103,35 @@ export default function AddParameterClient(props) {
         setErrInputvalue('');
         setErrSelParamType('');
         setErrParamDate('');
-        if(InputNama == ''){
+        if (InputNama == '') {
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
-        if(SelParamType == ''){
+        if (SelParamType == '') {
             setErrSelParamType(i18n.t('label_REQUIRED'));
             flag = false;
-        }else{
-            if(SelParamType == 'DATE'){
-                if(ParamDate == null || ParamDate == ''){
+        } else {
+            if (SelParamType == 'DATE') {
+                if (ParamDate == null || ParamDate == '') {
                     setErrParamDate(i18n.t('label_REQUIRED'));
                     flag = false;
                 }
-            }else if(SelParamType == 'NUMBER'){
-                let temp = new String(Inputvalue).replaceAll('.','').replaceAll(',','.');
-                if(Inputvalue == '' || isNaN(temp)){
+            } else if (SelParamType == 'NUMBER') {
+                let temp = new String(Inputvalue).replaceAll('.', '').replaceAll(',', '.');
+                if (Inputvalue == '' || isNaN(temp)) {
                     setErrInputvalue(i18n.t('label_REQUIRED'));
                     flag = false;
                 }
-            }else{
-                if(Inputvalue == ''){
+            } else {
+                if (Inputvalue == '') {
                     setErrInputvalue(i18n.t('label_REQUIRED'));
                     flag = false;
                 }
             }
         }
 
-        
+
 
         return flag;
     }
@@ -151,25 +151,25 @@ export default function AddParameterClient(props) {
 
     const executeSubmit = (values) => {
         let flag = checkColumnMandatory();
-        if(flag){
+        if (flag) {
             setLoading(true);
             let obj = new Object();
             // obj.code = InputCode;
             obj.paramname = values.nama;
             obj.paramtype = SelParamType;
-            if(SelParamType == 'DATE'){
+            if (SelParamType == 'DATE') {
                 obj.paramdate = moment(ParamDate).toDate().getTime();
                 obj.paramvalue = '';
-            }else if(SelParamType == 'NUMBER'){
+            } else if (SelParamType == 'NUMBER') {
                 obj.paramdate = null;
-                obj.paramvalue = new String(Inputvalue).replaceAll('.','').replaceAll(',','.');
-            }else{
+                obj.paramvalue = new String(Inputvalue).replaceAll('.', '').replaceAll(',', '.');
+            } else {
                 obj.paramdate = null;
                 obj.paramvalue = Inputvalue;
             }
-            
+
             obj.isactive = InputIsActive;
-            dispatch(actions.submitAddParameterClient('',obj,succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitAddParameterClient('', obj, succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -180,20 +180,20 @@ export default function AddParameterClient(props) {
             showCancelButton: true,
             confirmButtonText: `Confirm`,
             denyButtonText: `Don't save`,
-          }).then((result) => {
+        }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
                 executeSubmit(values);
-            //   Swal.fire('Saved!', '', 'success')
+                //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
-            //   Swal.fire('Changes are not saved', '', 'info')
+                //   Swal.fire('Changes are not saved', '', 'info')
             }
-          })
+        })
     }
 
     const errorHandler = (data) => {
         setLoading(false);
-          Swal.fire({
+        Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: data.msg
@@ -202,23 +202,23 @@ export default function AddParameterClient(props) {
 
     return (
         <Formik
-        initialValues={
-            {
-                nama:new String(InputNama).toUpperCase().replaceAll(" ",""),
-                value:Inputvalue,
-                paramtype:SelParamType,
-                paramdate:ParamDate,
-                isactive:InputIsActive
+            initialValues={
+                {
+                    nama: new String(InputNama).toUpperCase().replaceAll(" ", ""),
+                    value: Inputvalue,
+                    paramtype: SelParamType,
+                    paramdate: ParamDate,
+                    isactive: InputIsActive
+                }
             }
-        }
-        validate={values => {
-            const errors = {};
-            return errors;
-        }}
-        enableReinitialize="true"
-        onSubmit={(values) => {
-           
-        }}
+            validate={values => {
+                const errors = {};
+                return errors;
+            }}
+            enableReinitialize="true"
+            onSubmit={(values) => {
+
+            }}
         >
             {
                 formikProps => {
@@ -233,105 +233,105 @@ export default function AddParameterClient(props) {
                         setFieldValue,
                     } = formikProps;
 
-                    return(
-                        <form className="mb-6" onSubmit={handleSubmit}  name="FormParameter">
+                    return (
+                        <form className="mb-6" onSubmit={handleSubmit} name="FormParameter">
                             <ContentWrapper>
-                            <ContentHeading history={history} link={pathmenu.addparameter} label={'Add Parameter'} labeldefault={'Add Parameter'} />
+                                <ContentHeading history={history} link={pathmenu.addparameter} label={'Add Parameter'} labeldefault={'Add Parameter'} />
 
-                            <div className="row mt-2">
-                            <div className="mt-2 col-lg-6 ft-detail mb-5">
-                           
-                            <label className="mt-3 form-label required" htmlFor="nama">
-                                {i18n.t('label_NAME')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <Input
-                                name="nama"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="nama"
-                                maxLength={100}
-                                
-                                // onChange={handleChange}
-                                onChange={val => handleInputNama(val)}
-                                onBlur={handleBlur}
-                                value={values.nama}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputNama}</div>
+                                <div className="row mt-2">
+                                    <div className="mt-2 col-lg-6 ft-detail mb-5">
 
-                            <label className="mt-3 form-label required" htmlFor="paramtype">
-                                {i18n.t('Type')}
-                            <span style={{color:'red'}}>*</span>
-                            </label>
+                                        <label className="mt-3 form-label required" htmlFor="nama">
+                                            {i18n.t('label_NAME')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <Input
+                                            name="nama"
+                                            // className={
+                                            //     touched.namebranch && errors.namebranch
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="nama"
+                                            maxLength={100}
 
-                            <DropdownList
-                                // className={
-                                //     touched.branch && errors.branch
-                                //         ? "input-error" : ""
-                                // }
-                                name="paramtype"
-                                filter='contains'
-                                placeholder={i18n.t('select.SELECT_OPTION')}
-                                
-                                onChange={val => handleChangeParamType(val)}
-                                onBlur={val => setFieldTouched("paramtype", val?.value ? val.value : '')}
-                                data={ListParamType}
-                                textField={'label'}
-                                valueField={'value'}
-                                // style={{width: '25%'}}
-                                // disabled={values.isdisabledcountry}
-                                value={values.paramtype}
-                            />
-                            <div className="invalid-feedback-custom">{ErrSelParamType}</div>
+                                            // onChange={handleChange}
+                                            onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.nama}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputNama}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="value">
-                                {i18n.t('Value')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
+                                        <label className="mt-3 form-label required" htmlFor="paramtype">
+                                            {i18n.t('Type')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
 
-                            <div hidden={values.paramtype == 'NUMBER' || values.paramtype == 'TEXT'}>
-                            <DatePicker
-                                    name="paramdate"
-                                    // onChange={(val) => {
-                                    //         setFieldValue("startdate", val);
-                                    //     }
-                                    // }
-                                    onChange={val => handleParamDate(val)}
-                                    onBlur={handleBlur}
-                                    // defaultValue={Date(moment([]))}
-                                    format={formatdate}
-                                    value={values.paramdate}
-                                    
-                                    // style={{width: '25%'}}
-                                    // disabled={ values.allmember}                                    
-                            />
-                            <div className="invalid-feedback-custom">{ErrParamDate}</div>
-                            </div>
+                                        <DropdownList
+                                            // className={
+                                            //     touched.branch && errors.branch
+                                            //         ? "input-error" : ""
+                                            // }
+                                            name="paramtype"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
 
-                            <div hidden={values.paramtype == 'DATE'}>
-                            
-                            <Input
-                                name="value"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="value"
-                                maxLength={100}
-                                onChange={val => handleInputValue(val)}
-                                onBlur={handleBlur}
-                                value={values.value}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputvalue}</div>
-                            </div>
+                                            onChange={val => handleChangeParamType(val)}
+                                            onBlur={val => setFieldTouched("paramtype", val?.value ? val.value : '')}
+                                            data={ListParamType}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.paramtype}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrSelParamType}</div>
 
-                            {/* <FormGroup check style={{marginTop:'20px'}}>
+                                        <label className="mt-3 form-label required" htmlFor="value">
+                                            {i18n.t('Value')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+
+                                        <div hidden={values.paramtype == 'NUMBER' || values.paramtype == 'TEXT'}>
+                                            <DatePicker
+                                                name="paramdate"
+                                                // onChange={(val) => {
+                                                //         setFieldValue("startdate", val);
+                                                //     }
+                                                // }
+                                                onChange={val => handleParamDate(val)}
+                                                onBlur={handleBlur}
+                                                // defaultValue={Date(moment([]))}
+                                                format={formatdate}
+                                                value={values.paramdate}
+
+                                            // style={{width: '25%'}}
+                                            // disabled={ values.allmember}                                    
+                                            />
+                                            <div className="invalid-feedback-custom">{ErrParamDate}</div>
+                                        </div>
+
+                                        <div hidden={values.paramtype == 'DATE'}>
+
+                                            <Input
+                                                name="value"
+                                                // className={
+                                                //     touched.namebranch && errors.namebranch
+                                                //         ? "w-50 input-error"
+                                                //         : "w-50"
+                                                // }
+                                                type="text"
+                                                id="value"
+                                                maxLength={100}
+                                                onChange={val => handleInputValue(val)}
+                                                onBlur={handleBlur}
+                                                value={values.value}
+                                            />
+                                            <div className="invalid-feedback-custom">{ErrInputvalue}</div>
+                                        </div>
+
+                                        {/* <FormGroup check style={{marginTop:'20px'}}>
                             <Input type="checkbox" name="check" 
                             id="isactived" 
                             onChange={val => handleChangeIsActive(val)}
@@ -341,29 +341,29 @@ export default function AddParameterClient(props) {
                             />
                             <Label for="isactived" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('label_IS_ACTIVE')}</Label>
                             </FormGroup> */}
-                            
-                            </div>
-                            
-                            </div>
-                            
-                            </ContentWrapper>
-                            {loading && <Loading/>}
-                            <div className="row justify-content-center" style={{marginTop:'-30px',marginBottom:'20px'}}>
-                            <Button
-                            // disabled={props.activeStep === 0}
-                                // style={{marginLeft:"20%"}}
-                                onClick={() => history.goBack()}
-                            >
-                            {/* {i18n.t('common.BACK')} */}
-                            {'Cancel'}
-                            </Button>
 
-                            <Button
-                                // style={{marginLeft:"1%"}}
-                                onClick={() => submitHandler(values)}
-                            >
-                            {'Submit'}
-                            </Button>
+                                    </div>
+
+                                </div>
+
+                            </ContentWrapper>
+                            {loading && <Loading />}
+                            <div className="row justify-content-center" style={{ marginTop: '-30px', marginBottom: '20px' }}>
+                                <Button
+                                    // disabled={props.activeStep === 0}
+                                    // style={{marginLeft:"20%"}}
+                                    onClick={() => history.goBack()}
+                                >
+                                    {/* {i18n.t('common.BACK')} */}
+                                    {'Cancel'}
+                                </Button>
+
+                                <Button
+                                    // style={{marginLeft:"1%"}}
+                                    onClick={() => submitHandler(values)}
+                                >
+                                    {'Submit'}
+                                </Button>
                             </div>
                         </form>
                     )

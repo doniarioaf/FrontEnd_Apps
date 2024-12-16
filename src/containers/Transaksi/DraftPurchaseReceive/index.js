@@ -19,7 +19,7 @@ import "react-widgets/dist/css/react-widgets.css";
 import SearchIcon from '@material-ui/icons/Search';
 import { IconButton } from '@material-ui/core';
 
-const PurchaseReceiveIndex = () => {
+const DraftPurchaseReceiveIndex = () => {
     reloadToHomeNotAuthorize(MenuPurchaseReceive, 'READ');
     momentLocalizer();
     const history = useHistory();
@@ -28,6 +28,7 @@ const PurchaseReceiveIndex = () => {
     const [columns] = useState([
         { name: 'id', title: 'id' },
         { name: 'nodoc', title: i18n.t('No Document') },
+        { name: 'smu', title: i18n.t('SMU') },
         { name: 'vendor', title: i18n.t('Vendor') },
         { name: 'transdate', title: i18n.t('Date') },
     ]);
@@ -40,7 +41,10 @@ const PurchaseReceiveIndex = () => {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getPurchaseReceiveData({ url: '?from=' + from.getTime() + '&to=' + to.getTime() }, successHandler, errorHandler));
+        let obj = new Object();
+        obj.from = from.getTime();
+        obj.to = to.getTime();
+        dispatch(actions.getDraftPurchaseReceiveData({ url: '/list', type: 'POST', payload: obj }, successHandler, errorHandler));
     }, []);
 
     function successHandler(data, propsdata) {
@@ -50,8 +54,9 @@ const PurchaseReceiveIndex = () => {
                 {
                     'id': el.id,
                     'nodoc': el.nodocument,
-                    'vendor': el.vendorAlias,
-                    'transdate': el.transactiondate ? moment(el.transactiondate).format(formatdate) : '',
+                    'smu': el.smu,
+                    'vendor': el.vendorName,
+                    'transdate': el.date ? moment(el.date).format(formatdate) : '',
                 }
             ], []);
             setRows(theData);
@@ -69,7 +74,7 @@ const PurchaseReceiveIndex = () => {
     }
 
     function onClickAdd() {
-        history.push(pathmenu.addpurchasereceive);
+        history.push(pathmenu.adddraftpurchasereceive);
     }
     function onClickView(id) {
         history.push(pathmenu.detailpurchasereceive + '/' + id);
@@ -96,21 +101,25 @@ const PurchaseReceiveIndex = () => {
     function onClickSearch() {
         if (from != null && to != null) {
             setLoading(true);
-            dispatch(actions.getPurchaseReceiveData({ url: '?from=' + from.getTime() + '&to=' + to.getTime() }, successHandler, errorHandler));
+            let obj = new Object();
+            obj.from = from.getTime();
+            obj.to = to.getTime();
+            dispatch(actions.getDraftPurchaseReceiveData({ url: '/list', type: 'POST', payload: obj }, successHandler, errorHandler));
         }
 
     }
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menupurchasereceive} label={'Purchase Receive'} labeldefault={'Purchase Receive'} />
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menudraftpurchasereceive} label={'Draft Purchase Receive'} labeldefault={'Draft Purchase Receive'} />
             <Container fluid>
                 <table>
                     <th>{'From'}</th>
                     <th style={{ paddingLeft: '10px' }}>{'To'}</th>
                     <tbody>
                         <tr>
-                            <td><DatePicker
+                             <td>
+                                <DatePicker
                                 name="from"
                                 // onChange={(val) => {
                                 //         setFieldValue("startdate", val);
@@ -139,7 +148,7 @@ const PurchaseReceiveIndex = () => {
                                 // max={new Date()}
                                 // style={{width: '25%'}}
                                 />
-                            </td>
+                            </td> 
                             <td>
                                 <IconButton color={'primary'}
                                     onClick={() => onClickSearch()}
@@ -178,4 +187,4 @@ const PurchaseReceiveIndex = () => {
 
     );
 };
-export default PurchaseReceiveIndex;
+export default DraftPurchaseReceiveIndex;

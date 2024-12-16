@@ -105,6 +105,12 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuProduct,
                 },
                 {
+                    name: 'Draft Purchase Receive',
+                    path: pathmenu.menudraftpurchasereceive,
+                    translate: 'Draft Purchase Receive',
+                    permission:permissionmenu.MenuPurchaseReceive,
+                },
+                {
                     name: 'Purchase Receive',
                     path: pathmenu.menupurchasereceive,
                     translate: 'Purchase Receive',
