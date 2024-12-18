@@ -307,7 +307,7 @@ export default function AddDraftPurchaseReceive(props) {
     }
     const handleAddItems = () => {
         let idproduct = '';
-        if (ListProduct != null && ListProduct.length > 1) {
+        if (ListProduct != null && ListProduct.length > 0) {
             idproduct = ListProduct[0].value;
         }
         let listitems = [...ListItems];

@@ -69,6 +69,9 @@ export default function AddPurchaseReceive(props) {
 
     const [ErrItemsHidup, setErrItemsHidup] = useState("");
 
+    const [ListDraftPurchaseReceive, setListDraftPurchaseReceive] = useState([{'value':'nodata','label':'No Data'}]);
+    const [SelDraftPurchaseReceive, setSelDraftPurchaseReceive] = useState('nodata');
+
 
     useEffect(() => {
         setLoading(true);
@@ -539,7 +542,106 @@ export default function AddPurchaseReceive(props) {
         list[index][name] = e.value;
         setListItemsInventori(list);
     };
+    const handleChangeDraftPR = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelDraftPurchaseReceive(id);
 
+        setListItemsPurchaseReceive([]);
+        setListItemsPurchaseReceiveMati([]);
+
+        
+        let totalPrice = calculateTotalPrice([], ListItemsPurchaseReceiveBiaya, ListItemsInventori);
+        setInputTotalPrice(totalPrice);
+        if (IsDefaultSetorTotalPrice) {
+            setInputSetor(totalPrice);
+        }
+
+        if(id !== 'nodata'){
+            setLoading(true);
+            dispatch(actions.getPurchaseReceiveData({ url: '/getitemdraft/' + id }, successHandlerItemDraft, errorHandler));
+        }
+        
+    }
+    function successHandlerItemDraft(data, propsdata) {
+        let listItems = data.data;
+        let listfilteroutputHidup = listItems.filter(output => output.type == 'H');
+        let listfilteroutputMati = listItems.filter(output => output.type == 'M');
+
+        let arrDistinctCP = [];
+        let listitemhidup = [];
+        for(let i =0; i < listfilteroutputHidup.length; i++){
+            let el = listfilteroutputHidup[i];
+            let idcategoryproduct = el.idcategoryproduct;
+            if(arrDistinctCP.indexOf(idcategoryproduct) == -1){
+                let listfilteroutput = listfilteroutputHidup.filter(output => output.idcategoryproduct == idcategoryproduct);
+                let totalekor = 0;
+                let totalkg = 0;
+                for(let x =0; x < listfilteroutput.length; x++){
+                    let det = listfilteroutput[x];
+                    let jumlahekor = det.ekor?parseInt(det.ekor):0;
+                    let jumlahkilo = det.kilo?parseInt(det.kilo):0;
+
+                    totalekor += jumlahekor;
+                    totalkg += jumlahkilo;
+                }
+                listitemhidup.push(
+                    {
+                        'idproduct': el.idproduct,
+                        'idcategoryproduct': idcategoryproduct,
+                        'categoryproductname': el.namacategoryproduct,
+                        'qty': totalekor,
+                        'qtybonus': 0,
+                        'qtymati': 0,
+                        'itemsprice': 0,
+                        'subtotalprice': 0
+                    }
+                );
+                arrDistinctCP.push(idcategoryproduct);
+            }
+        }
+        setListItemsPurchaseReceive(listitemhidup);
+        let totalPrice = calculateTotalPrice(listitemhidup, ListItemsPurchaseReceiveBiaya, ListItemsInventori);
+        setInputTotalPrice(totalPrice);
+        if (IsDefaultSetorTotalPrice) {
+            setInputSetor(totalPrice);
+        }
+
+        arrDistinctCP = [];
+        let listitemmati = [];
+        for(let i =0; i < listfilteroutputMati.length; i++){
+            let el = listfilteroutputMati[i];
+            let idcategoryproduct = el.idcategoryproduct;
+            if(arrDistinctCP.indexOf(idcategoryproduct) == -1){
+                let listfilteroutput = listfilteroutputMati.filter(output => output.idcategoryproduct == idcategoryproduct);
+                let totalekor = 0;
+                let totalkg = 0;
+                for(let x =0; x < listfilteroutput.length; x++){
+                    let det = listfilteroutput[x];
+                    let jumlahekor = det.ekor?parseInt(det.ekor):0;
+                    let jumlahkilo = det.kilo?parseInt(det.kilo):0;
+
+                    totalekor += jumlahekor;
+                    totalkg += jumlahkilo;
+                }
+                listitemmati.push(
+                    {
+                        'idproduct': el.idproduct,
+                        'idcategoryproduct': idcategoryproduct,
+                        'categoryproductname': el.namacategoryproduct,
+                        'qty': 0,
+                        'qtybonus': 0,
+                        'qtymati': totalekor,
+                        'itemsprice': 0,
+                        'subtotalprice': 0
+                    }
+                );
+                arrDistinctCP.push(idcategoryproduct);
+            }
+        }
+        setListItemsPurchaseReceiveMati(listitemmati);
+
+        setLoading(false);
+    }
     const handleChangeVendor = (data) => {
         let id = data?.value ? data.value : '';
         setSelVendor(id);
@@ -555,7 +657,8 @@ export default function AddPurchaseReceive(props) {
         setInputBank(valdata.bank);
         setInputAccNoBank(valdata.accountnobank);
         setInputAccNameBank(valdata.accountnamebank);
-
+        setSelDraftPurchaseReceive('');
+        setListDraftPurchaseReceive([]);
 
         setLoading(true);
         let listCharge = setPriceBoxOngkosByVendor(ListItemsPurchaseReceiveBiaya, valdata.pricebox, valdata.priceongkos);
@@ -580,7 +683,19 @@ export default function AddPurchaseReceive(props) {
         setListCategoryProduct(theDataProd);
         setSisaDeposit(data.data.sisaDeposit ? data.data.sisaDeposit : 0);
 
-        // setListItems(data.data.categoryproductOpt,ListProduct);
+        const theDataDraftPR = data.data.draftPurchaseReceiveOpt.reduce((obj, el) => [
+            ...obj,
+            {
+                'value': el.id,
+                'label': el.nodocument+''+(el.smu && el.smu !== ''?' - '+el.smu:''),
+            }
+        ], []);
+        theDataDraftPR.push({
+            'value': 'nodata',
+            'label': 'No Data',
+        });
+        setListDraftPurchaseReceive(theDataDraftPR);
+
         setLoading(false);
     }
 
@@ -698,7 +813,8 @@ export default function AddPurchaseReceive(props) {
                     setor: InputSetor,
                     sisadeposit: SisaDeposit,
                     istambahdeposit: IsTambahDeposit,
-                    tambahdeposit: TambahDeposit
+                    tambahdeposit: TambahDeposit,
+                    draftpurchasereceive: SelDraftPurchaseReceive,
                 }
             }
             validate={values => {
@@ -810,6 +926,25 @@ export default function AddPurchaseReceive(props) {
                                             value={values.accnamabank}
                                         />
                                         <div className="invalid-feedback-custom">{ErrInputAccNameBank}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="draftpurchasereceive">
+                                            {i18n.t('Draft')}
+                                        </label>
+
+                                        <DropdownList
+                                            name="draftpurchasereceive"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeDraftPR(val)}
+                                            onBlur={val => setFieldTouched("draftpurchasereceive", val?.value ? val.value : '')}
+                                            data={ListDraftPurchaseReceive}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.draftpurchasereceive}
+                                        />
 
                                     </div>
 
@@ -992,7 +1127,7 @@ export default function AddPurchaseReceive(props) {
                                                         <IconButton
                                                             style={{ color: 'white' }}
                                                             onClick={() => handleAddItemsHidup()}
-                                                            hidden={values.vendor == ''}
+                                                            hidden={values.vendor == '' || (values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== '')}
                                                         >
                                                             <AddIcon style={{ fontSize: 25 }} />
                                                         </IconButton>
@@ -1013,7 +1148,7 @@ export default function AddPurchaseReceive(props) {
                                                                         color={'primary'}
                                                                         // style={{color:'white'}}
                                                                         onClick={() => handleRemoveItemsHidup(i)}
-                                                                    // hidden={showplusdebit}
+                                                                        hidden={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
                                                                     >
                                                                         <DeleteIcon style={{ fontSize: 18 }} />
                                                                     </IconButton>
@@ -1028,6 +1163,7 @@ export default function AddPurchaseReceive(props) {
                                                                         textField={'label'}
                                                                         valueField={'value'}
                                                                         value={x.idproduct}
+                                                                        disabled={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
 
                                                                     />
                                                                 </td>
@@ -1041,6 +1177,7 @@ export default function AddPurchaseReceive(props) {
                                                                         textField={'label'}
                                                                         valueField={'value'}
                                                                         value={x.idcategoryproduct}
+                                                                        disabled={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
 
                                                                     />
                                                                     {/* <Input
@@ -1060,6 +1197,7 @@ export default function AddPurchaseReceive(props) {
                                                                     onChange={val => handleInputChangeItems(val, i, 'H')}
                                                                     // onBlur={handleBlur}
                                                                     value={x.qty}
+                                                                    // disabled={values.draftpurchasereceive !== 'nodata'}
                                                                 /></td>
                                                                 <td><Input
                                                                     name="qtybonus"
@@ -1114,7 +1252,7 @@ export default function AddPurchaseReceive(props) {
                                                         <IconButton
                                                             style={{ color: 'white' }}
                                                             onClick={() => handleAddItemsMati()}
-                                                            hidden={values.vendor == ''}
+                                                            hidden={values.vendor == '' || (values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== '')}
                                                         >
                                                             <AddIcon style={{ fontSize: 25 }} />
                                                         </IconButton>
@@ -1134,7 +1272,7 @@ export default function AddPurchaseReceive(props) {
                                                                         color={'primary'}
                                                                         // style={{color:'white'}}
                                                                         onClick={() => handleRemoveItemsMati(i)}
-                                                                    // hidden={showplusdebit}
+                                                                    hidden={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
                                                                     >
                                                                         <DeleteIcon style={{ fontSize: 18 }} />
                                                                     </IconButton>
@@ -1149,6 +1287,7 @@ export default function AddPurchaseReceive(props) {
                                                                         textField={'label'}
                                                                         valueField={'value'}
                                                                         value={x.idproduct}
+                                                                        disabled={values.draftpurchasereceive !== 'nodata' || values.draftpurchasereceive !== ''}
 
                                                                     />
                                                                 </td>
@@ -1162,6 +1301,7 @@ export default function AddPurchaseReceive(props) {
                                                                         textField={'label'}
                                                                         valueField={'value'}
                                                                         value={x.idcategoryproduct}
+                                                                        disabled={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
 
                                                                     />
                                                                     {/* <Input
