@@ -62,6 +62,9 @@ export const addArea_Permission = ['CREATE_AREA'];
 export const editArea_Permission = ['READ_AREA','EDIT_AREA'];
 export const deleteArea_Permission = ['DELETE_AREA'];
 
+export const addDraftPurchaseReceive_Permission = ['READ_DRAFTPURCHASERECEIVE','CREATE_DRAFTPURCHASERECEIVE'];
+export const editDraftPurchaseReceive_Permission = ['READ_DRAFTPURCHASERECEIVE','EDIT_DRAFTPURCHASERECEIVE'];
+export const deleteDraftPurchaseReceive_Permission = ['DELETE_DRAFTPURCHASERECEIVE'];
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
@@ -80,3 +83,4 @@ export const MenuPriceList = ['READ_PRICELIST'];
 export const MenuPurchaseReceive = ['READ_PURCHASERECEIVE'];
 export const MenuDeposit = ['READ_DEPOSIT'];
 export const MenuArea = ['READ_AREA'];
+export const MenuDraftPurchaseReceive = ['READ_DRAFTPURCHASERECEIVE'];

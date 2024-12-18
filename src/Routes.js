@@ -198,6 +198,8 @@ const editArea = lazy(() => import('./containers/Master/Area/edit'));
 
 const menuDraftPurchaseReceive = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive'));
 const addDraftPurchaseReceive = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive/add'));
+const detailDraftPurchaseReceive = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive/detail'));
+const editDraftPurchaseReceive = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive/edit'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -407,6 +409,8 @@ const Routes = ({ location, ...props }) => {
 
                             <Route path={pathmenu.menudraftpurchasereceive} component={waitFor(menuDraftPurchaseReceive)}/>
                             <Route path={pathmenu.adddraftpurchasereceive} component={waitFor(addDraftPurchaseReceive)}/>
+                            <Route path={pathmenu.detaildraftpurchasereceive+'/:id'} component={waitFor(detailDraftPurchaseReceive)}/>
+                            <Route path={pathmenu.editdraftpurchasereceive+'/:id'} component={waitFor(editDraftPurchaseReceive)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

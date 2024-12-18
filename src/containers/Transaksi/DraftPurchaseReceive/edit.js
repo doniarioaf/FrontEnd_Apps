@@ -10,7 +10,7 @@ import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
 import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { addDraftPurchaseReceive_Permission } from '../../shared/permissionMenu';
+import { editDraftPurchaseReceive_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -23,8 +23,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
 // import { calculateTotalPrice, setPriceBoxOngkosByVendor } from './utilityPurchaseReceive';
 
-export default function AddDraftPurchaseReceive(props) {
-    reloadToHomeNotAuthorize(addDraftPurchaseReceive_Permission, 'TRANSACTION');
+export default function EditDraftPurchaseReceive(props) {
+    reloadToHomeNotAuthorize(editDraftPurchaseReceive_Permission, 'TRANSACTION');
     const { i18n } = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -61,6 +61,10 @@ export default function AddDraftPurchaseReceive(props) {
 
     const [ListProduct, setListProduct] = useState([]);
 
+    const [Data, setData] = useState([]);
+
+    const id = props.match.params.id;
+
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getDraftPurchaseReceiveData({ url: '/template' }, successHandler, errorHandler));
@@ -89,7 +93,33 @@ export default function AddDraftPurchaseReceive(props) {
 
         }
 
-        setLoading(false);
+        dispatch(actions.getDraftPurchaseReceiveData( {url:'/'+id},successHandlerDetail, errorHandler));
+
+        // setLoading(false);
+    }
+
+    function successHandlerDetail(data, propsdata) {
+        const theData = data.data;
+        const idvendor = theData.idvendor;
+        const propsdetail = {detail:theData,idvendor:idvendor};
+        setData(theData);
+
+        setSelVendor(theData.idvendor);
+        setDraftReceiveDate(theData.date ? new Date(theData.date) : null);
+        let arrivalTime = theData.arriveltime?new String(theData.arriveltime).split(":"):["",""];
+        setInputArrivalHours(arrivalTime[0]);
+        setInputArrivalMinute(arrivalTime[1]);
+
+        let receivetime = theData.receivetime?new String(theData.receivetime).split(":"):["",""];
+        setInputReceiveHours(receivetime[0]);
+        setInputReceiveMinute(receivetime[1]);
+
+        setInputSMU(theData.smu);
+        setInputGrandTotalEkor(theData.totalekor);
+        setInputGrandTotalKilo(theData.totalkg);
+        setInputPersentase(theData.persentase);
+
+        dispatch(actions.getDraftPurchaseReceiveData({ url: '/searchvendor?idvendor=' + idvendor,propsdata:propsdetail }, successHandlerVendor, errorHandler));
     }
 
     const checkColumnMandatory = (values) => {
@@ -202,7 +232,7 @@ export default function AddDraftPurchaseReceive(props) {
                 }
             }
             obj.items = items;
-            dispatch(actions.submitDraftPurchaseReceive({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitDraftPurchaseReceive({ url: '/'+id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -249,41 +279,201 @@ export default function AddDraftPurchaseReceive(props) {
         setListItems([]);
         setListCategory([]);
 
+        const propsdetail = {detail:Data,idvendor:id};
         setLoading(true);
-        dispatch(actions.getDraftPurchaseReceiveData({ url: '/searchvendor?idvendor=' + id }, successHandlerVendor, errorHandler));
+        dispatch(actions.getDraftPurchaseReceiveData({ url: '/searchvendor?idvendor=' + id, propsdata:propsdetail }, successHandlerVendor, errorHandler));
     }
 
     function successHandlerVendor(data, propsdata) {
-        const theDataCategoryProd = data.data.categoryproductOpt.reduce((obj, el) => [
-            ...obj,
-            {
-                'idcategoryproduct': el.id,
-                'size': el.size,
-                'weight': el.weightfromingram+'-'+el.weighttoingram+' Gram',
-                'listtotal':[{label:'Total Ekor',code:'totalekor',total:0},{label:'Total Kg',code:'totalkg',total:0}]
+        let detail = propsdata.detail;
+        const idvendor = detail.idvendor;
+        const currIdVendor = propsdata.idvendor;
+        let idproduct = '';
+        if (ListProduct != null && ListProduct.length > 1) {
+            idproduct = ListProduct[0].value;
+        }
+        if(idvendor == currIdVendor){
+            let detailData = detail;
+            let listItems = detailData.items?detailData.items:[];
+            let listfilteroutputHidup = listItems.filter(output => output.type == 'H');
+            let listfilteroutputMati = listItems.filter(output => output.type == 'M');
+
+            let listCP = [];
+            let listNo = [];
+            let arrDistinctCP = [];
+            for(let i =0; i < listfilteroutputHidup.length; i++){
+                let el = listfilteroutputHidup[i];
+                let idcategoryproduct = el.idcategoryproduct;
+                let boxsequence = el.boxsequence;
+                if(listNo.indexOf(boxsequence) == -1){
+                    listNo.push(boxsequence);
+                }
+                if(arrDistinctCP.indexOf(idcategoryproduct) == -1){
+                    let listfilteroutput = listfilteroutputHidup.filter(output => output.idcategoryproduct == idcategoryproduct);
+                    let totalekor = 0;
+                    let totalkg = 0;
+                    for(let x =0; x < listfilteroutput.length; x++){
+                        let det = listfilteroutput[x];
+                        let jumlahekor = det.ekor?parseInt(det.ekor):0;
+                        let jumlahkilo = det.kilo?parseInt(det.kilo):0;
+    
+                        totalekor += jumlahekor;
+                        totalkg += jumlahkilo;
+                    }
+                    listCP.push(
+                        {
+                            'idcategoryproduct': el.idcategoryproduct,
+                            'size': el.sizecategoryproduct,
+                            'weight': el.weightfromingramcategoryproduct+'-'+el.weighttoingramcategoryproduct+' Gram',
+                            'listtotal':[{label:'Total Ekor',code:'totalekor',total:totalekor},{label:'Total Kg',code:'totalkg',total:totalkg}]
+                        }
+                    );
+                    arrDistinctCP.push(idcategoryproduct);
+                }
             }
-        ], []);
-        setListCategory(theDataCategoryProd);
-        // let list = [];
-        // for(let i=0;i < 3; i++){
-        //     for(let y=0;y < data.data.categoryproductOpt.length; y++){
-        //         let el = data.data.categoryproductOpt[y];
-        //         list.push(
-        //             {
-        //                 'idcategoryproduct': el.id,
-        //                 'size': el.size,
-        //                 'weight': el.weightfromingram+'-'+el.weighttoingram+' Gram',
-        //                 'listtotal':[{label:'Total Ekor',code:'totalekor',total:0},{label:'Total Kg',code:'totalkg',total:0}]
-        //             }
-        //         );
-        //     }
-        // }
-        // setListCategory(list);
+
+            
+
+            let listitemshidup = [];
+            for(let i =0; i < listNo.length; i++){
+                let boxseq = listNo[i];
+                let temp = [];
+                let listfilteroutput = listfilteroutputHidup.filter(output => output.boxsequence == boxseq);
+                for(let x =0; x < listfilteroutput.length; x++){
+                    let det = listfilteroutput[x];
+                    temp.push(
+                        {
+                            'idproduct': det.idproduct,
+                            'idcategoryproduct': det.idcategoryproduct,
+                            'jumlah':det.ekor?det.ekor:0,
+                            'jumlahtype':'EKOR'
+                        }
+                    );
+        
+                    temp.push(
+                        {
+                            'idproduct': det.idproduct,
+                            'idcategoryproduct': det.idcategoryproduct,
+                            'jumlah':det.kilo?det.kilo:0,
+                            'jumlahtype':'KG'
+                        }
+                    );
+                }
+                for(let i =0; i < data.data.categoryproductOpt.length; i++){
+                    let el = data.data.categoryproductOpt[i];
+                    let idcategoryproduct = el.id;
+                    let listfilter = listfilteroutput.filter(output => output.idcategoryproduct == idcategoryproduct);
+                    if(arrDistinctCP.indexOf(idcategoryproduct) == -1 && listfilter.length == 0){
+                        temp.push(
+                            {
+                                'idproduct': idproduct,
+                                'idcategoryproduct': idcategoryproduct,
+                                'jumlah':0,
+                                'jumlahtype':'EKOR'
+                            }
+                        );
+            
+                        temp.push(
+                            {
+                                'idproduct': idproduct,
+                                'idcategoryproduct': idcategoryproduct,
+                                'jumlah':0,
+                                'jumlahtype':'KG'
+                            }
+                        );
+                    }
+                }
+                listitemshidup.push(
+                    {
+                        'no':boxseq,
+                        'items':temp
+                    }
+                )
+            }
+            setListItems(listitemshidup);
+
+            let listNoMati = [];
+            let listitemsMati = [];
+            for(let i =0; i < listfilteroutputMati.length; i++){
+                let el = listfilteroutputMati[i];
+                let boxsequence = el.boxsequence;
+                if(listNoMati.indexOf(boxsequence) == -1){
+                    listNoMati.push(boxsequence);
+                }
+            }
+            for(let i =0; i < listNoMati.length; i++){
+                let boxseq = listNoMati[i];
+                let temp = [];
+                let listfilteroutput = listfilteroutputMati.filter(output => output.boxsequence == boxseq);
+                for(let x =0; x < listfilteroutput.length; x++){
+                    let det = listfilteroutput[x];
+                    let idcategoryproduct = det.idcategoryproduct;
+                    temp.push(
+                        {
+                            'idproduct': det.idproduct,
+                            'idcategoryproduct': idcategoryproduct,
+                            'jumlah':det.ekor?det.ekor:0,
+                        }
+                    );
+
+                    for(let i =0; i < data.data.categoryproductOpt.length; i++){
+                        let el = data.data.categoryproductOpt[i];
+                        let idcategoryproduct = el.id;
+                        let listfilter = listfilteroutput.filter(output => output.idcategoryproduct == idcategoryproduct);
+                        if(arrDistinctCP.indexOf(idcategoryproduct) == -1 && listfilter.length == 0){
+                            temp.push(
+                                {
+                                    'idproduct': idproduct,
+                                    'idcategoryproduct': idcategoryproduct,
+                                    'jumlah':0,
+                                }
+                            );
+                        }
+                    }
+                }
+                listitemsMati.push(
+                    {
+                        'items':temp
+                    }
+                )
+            }
+            setListItemsMati(listitemsMati);
+
+            for(let i =0; i < data.data.categoryproductOpt.length; i++){
+                let el = data.data.categoryproductOpt[i];
+                let idcategoryproduct = el.id;
+                if(arrDistinctCP.indexOf(idcategoryproduct) == -1){
+                    listCP.push(
+                        {
+                            'idcategoryproduct': el.id,
+                            'size': el.size,
+                            'weight': el.weightfromingram+'-'+el.weighttoingram+' Gram',
+                            'listtotal':[{label:'Total Ekor',code:'totalekor',total:0},{label:'Total Kg',code:'totalkg',total:0}]
+                        }
+                    );
+                }
+
+            }
+            setListCategory(listCP);
+
+        }else{
+            const theDataCategoryProd = data.data.categoryproductOpt.reduce((obj, el) => [
+                ...obj,
+                {
+                    'idcategoryproduct': el.id,
+                    'size': el.size,
+                    'weight': el.weightfromingram+'-'+el.weighttoingram+' Gram',
+                    'listtotal':[{label:'Total Ekor',code:'totalekor',total:0},{label:'Total Kg',code:'totalkg',total:0}]
+                }
+            ], []);
+            setListCategory(theDataCategoryProd);
+        }
+        
         setLoading(false);
     }
     const handleAddItemsMati = () => {
         let idproduct = '';
-        if (ListProduct != null && ListProduct.length > 0) {
+        if (ListProduct != null && ListProduct.length == 1) {
             idproduct = ListProduct[0].value;
         }
         let listitems = [...ListItemsMati];
@@ -307,7 +497,7 @@ export default function AddDraftPurchaseReceive(props) {
     }
     const handleAddItems = () => {
         let idproduct = '';
-        if (ListProduct != null && ListProduct.length > 1) {
+        if (ListProduct != null && ListProduct.length == 1) {
             idproduct = ListProduct[0].value;
         }
         let listitems = [...ListItems];
@@ -529,7 +719,7 @@ export default function AddDraftPurchaseReceive(props) {
                     return (
                         <form className="mb-6" onSubmit={handleSubmit} name="FormDraftPurchaseReceive">
                             <ContentWrapper>
-                                <ContentHeading history={history} link={pathmenu.addpurchasereceive} label={'Add Draft Purchase Receive'} labeldefault={'Add Draft Purchase Receive'} />
+                                <ContentHeading history={history} link={pathmenu.editdraftpurchasereceive+'/'+id} label={'Edit Draft Purchase Receive'} labeldefault={'Edit Draft Purchase Receive'} />
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
                                         <label className="mt-3 form-label required" htmlFor="vendor">

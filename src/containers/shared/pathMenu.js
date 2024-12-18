@@ -66,3 +66,5 @@ export const detailarea = `/form/detail/area`;
 export const editarea = `/form/edit/area`;
 export const menudraftpurchasereceive = `/draftpurchasereceive`;
 export const adddraftpurchasereceive = `/form/add/draftpurchasereceive`;
+export const detaildraftpurchasereceive = `/form/detail/draftpurchasereceive`;
+export const editdraftpurchasereceive = `/form/edit/draftpurchasereceive`;
