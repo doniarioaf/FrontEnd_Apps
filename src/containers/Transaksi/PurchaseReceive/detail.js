@@ -205,9 +205,23 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('No Document Draft')}</span>
+                            <strong className="col-md-7">
+                                {value.nodocumentDraft?value.nodocumentDraft+(value.noSmuDraft !== ''?' ('+value.noSmuDraft+')':''):''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Vendor')}</span>
                                 <strong className="col-md-7">
                                 {value.vendorname ?value.vendorname:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Area')}</span>
+                                <strong className="col-md-7">
+                                {value.namaArea ?value.namaArea:''}
                                 </strong>
                             </div>
 
@@ -236,13 +250,6 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('Tanggal')}</span>
                                 <strong className="col-md-7">
                                 {value.transactiondate ?moment (new Date(value.transactiondate)).format(formatdate):''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Koli')}</span>
-                                <strong className="col-md-7">
-                                {value.koli ?value.koli:''}
                                 </strong>
                             </div>
 

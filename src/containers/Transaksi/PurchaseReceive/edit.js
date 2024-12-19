@@ -69,6 +69,13 @@ export default function EditPurchaseReceive(props) {
 
     const [ErrItemsHidup, setErrItemsHidup] = useState("");
 
+    const [ListDraftPurchaseReceive, setListDraftPurchaseReceive] = useState([]);
+    const [SelDraftPurchaseReceive, setSelDraftPurchaseReceive] = useState('');
+
+    const [ListArea, setListArea] = useState([]);
+    const [SelArea, setSelArea] = useState('');
+    const [ErrSelArea, setErrSelArea] = useState('');
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -119,6 +126,16 @@ export default function EditPurchaseReceive(props) {
                 }
             ], []);
             setListInventori(theDataInventori);
+
+            const theDataArea = data.data.areaOpt.reduce((obj, el) => [
+                ...obj,
+                {
+                    'value': el.id,
+                    'label': el.nama,
+                    'data': el
+                }
+            ], []);
+            setListArea(theDataArea);
         }
         dispatch(actions.getPurchaseReceiveData({ url: '/' + id }, successHandlerDetail, errorHandler));
         // setLoading(false);
@@ -133,6 +150,7 @@ export default function EditPurchaseReceive(props) {
         setReceiveDate(det.transactiondate ? new Date(det.transactiondate) : null);
         setInputKoli(det.koli);
         setInputNotes(det.notes);
+        setSelArea(det.idarea);
         let sisaDeposit = det.sisaDeposit ? det.sisaDeposit : 0;
         let setor = det.setor ? det.setor : 0;
         let totalSisaDeposit = parseFloat(sisaDeposit) + parseFloat(setor);
@@ -194,8 +212,8 @@ export default function EditPurchaseReceive(props) {
             }
         ], []);
         setListItemsInventori(theDataInventori);
-
-        dispatch(actions.getPurchaseReceiveData({ url: '/searchvendor?idvendor=' + idvendor }, successHandlerVendor, errorHandler));
+        let propsdataDetail = {detail:det};
+        dispatch(actions.getPurchaseReceiveData({ url: '/searchvendor?idvendor=' + idvendor,propsdata:propsdataDetail }, successHandlerVendor, errorHandler));
 
         // setLoading(false);
     }
@@ -210,11 +228,11 @@ export default function EditPurchaseReceive(props) {
         let flag = true;
         setErrReceiveDate('');
         setErrSelVendor('');
-        setErrInputKoli('');
         setErrInputBank('');
         setErrInputAccNoBank('');
         setErrInputAccNameBank('');
         setErrItemsHidup('');
+        setErrSelArea('');
 
         if (ListItemsPurchaseReceive.length > 0) {
             for (let i = 0; i < ListItemsPurchaseReceive.length; i++) {
@@ -247,11 +265,11 @@ export default function EditPurchaseReceive(props) {
             setErrSelVendor(i18n.t('label_REQUIRED'));
             flag = false;
         }
-
-        if (InputKoli == '') {
-            setErrInputKoli(i18n.t('label_REQUIRED'));
+        if (SelArea == '') {
+            setErrSelArea(i18n.t('label_REQUIRED'));
             flag = false;
         }
+
         if (InputBank == '') {
             setErrInputBank(i18n.t('label_REQUIRED'));
             flag = false;
@@ -297,12 +315,18 @@ export default function EditPurchaseReceive(props) {
                 let tambahdp = parseFloat(totalprice) - totaldeposit;
                 setIsTambahDeposit(true);
                 flag = false;
-                msgInfo("Deposit Kurang " + numToMoney(tambahdp) + ", Silahkan tambah deposit terlebih dahulu");
+                msgInfo("Deposit Kurang " + numToMoney(tambahdp) + ",  Apakah kamu yakin?",values);
                 // window.scrollTo(0, 0);
             }
-        }
-        if (flag) {
 
+            submitPayload(flag,values);
+        }
+        
+
+    }
+
+    function submitPayload(flag,values){
+        if (flag) {
             setLoading(true);
             let obj = new Object();
             obj.idvendor = SelVendor;
@@ -380,10 +404,10 @@ export default function EditPurchaseReceive(props) {
                 }
             }
             obj.inventori = inventori;
-
+            obj.iddraftpurchasereceive = SelDraftPurchaseReceive == 'nodata' || SelDraftPurchaseReceive == ''?null:SelDraftPurchaseReceive;
+            obj.idarea = SelArea;
             dispatch(actions.submitPurchaseReceiveData({ url: '/' + id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
-
     }
 
     const submitHandler = (values) => {
@@ -413,20 +437,20 @@ export default function EditPurchaseReceive(props) {
         })
     }
 
-    const msgInfo = (text) => {
+    const msgInfo = (text,values) => {
 
         Swal.fire({
             icon: 'info',
             title: 'Information',
             text: text,
-            showDenyButton: false,
+            showDenyButton: true,
             showCancelButton: false,
             confirmButtonText: `Ok`,
-            denyButtonText: `Don't save`,
+            denyButtonText: `Cancel`,
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                history.go
+                submitPayload(true,values)
                 //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
                 //   Swal.fire('Changes are not saved', '', 'info')
@@ -645,6 +669,7 @@ export default function EditPurchaseReceive(props) {
         dispatch(actions.getPurchaseReceiveData({ url: '/searchvendor?idvendor=' + id }, successHandlerVendor, errorHandler));
     }
     function successHandlerVendor(data, propsdata) {
+
         const theDataProd = data.data.categoryproductOpt.reduce((obj, el) => [
             ...obj,
             {
@@ -655,6 +680,28 @@ export default function EditPurchaseReceive(props) {
         ], []);
         setListCategoryProduct(theDataProd);
         setSisaDeposit(data.data.sisaDeposit ? data.data.sisaDeposit : 0);
+
+        const theDataDraftPR = data.data.draftPurchaseReceiveOpt.reduce((obj, el) => [
+            ...obj,
+            {
+                'value': el.id,
+                'label': el.nodocument+''+(el.smu && el.smu !== ''?' - '+el.smu:''),
+            }
+        ], []);
+        if(propsdata.detail){
+            let det = propsdata.detail;
+            theDataDraftPR.push({
+                'value': det.iddraftpurchasereceive,
+                'label': det.nodocumentDraft+''+(det.noSmuDraft && det.noSmuDraft !== ''?' - '+det.noSmuDraft:''),
+            });
+            setSelDraftPurchaseReceive(det.iddraftpurchasereceive);
+        }
+        theDataDraftPR.push({
+            'value': 'nodata',
+            'label': 'No Data',
+        });
+        setListDraftPurchaseReceive(theDataDraftPR);
+
 
         // setListItems(data.data.categoryproductOpt,ListProduct);
         setLoading(false);
@@ -758,6 +805,10 @@ export default function EditPurchaseReceive(props) {
 
     }
 
+    const handleChangeArea = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelArea(id);
+    }
     return (
         <Formik
             initialValues={
@@ -774,7 +825,9 @@ export default function EditPurchaseReceive(props) {
                     setor: InputSetor,
                     sisadeposit: SisaDeposit,
                     istambahdeposit: IsTambahDeposit,
-                    tambahdeposit: TambahDeposit
+                    tambahdeposit: TambahDeposit,
+                    draftpurchasereceive: SelDraftPurchaseReceive,
+                    area:SelArea
                 }
             }
             validate={values => {
@@ -835,6 +888,27 @@ export default function EditPurchaseReceive(props) {
                                         />
                                         <div className="invalid-feedback-custom">{ErrSelVendor}</div>
 
+                                        <label className="mt-3 form-label required" htmlFor="area">
+                                            {i18n.t('Area')}
+                                        </label>
+                                        <span style={{ color: 'red' }}>*</span>
+
+                                        <DropdownList
+                                            name="area"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeArea(val)}
+                                            onBlur={val => setFieldTouched("area", val?.value ? val.value : '')}
+                                            data={ListArea}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.area}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrSelArea}</div>
+
                                         <label className="mt-3 form-label required" htmlFor="bank">
                                             {i18n.t('Bank')}
                                             <span style={{ color: 'red' }}>*</span>
@@ -886,6 +960,26 @@ export default function EditPurchaseReceive(props) {
                                         />
                                         <div className="invalid-feedback-custom">{ErrInputAccNameBank}</div>
 
+                                        <label className="mt-3 form-label required" htmlFor="draftpurchasereceive">
+                                            {i18n.t('Draft')}
+                                        </label>
+
+                                        <DropdownList
+                                            name="draftpurchasereceive"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            // onChange={val => handleChangeDraftPR(val)}
+                                            // onBlur={val => setFieldTouched("draftpurchasereceive", val?.value ? val.value : '')}
+                                            data={ListDraftPurchaseReceive}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.draftpurchasereceive}
+                                            disabled={true}
+                                        />
+
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
@@ -901,23 +995,6 @@ export default function EditPurchaseReceive(props) {
                                             value={values.receivedate}
                                         />
                                         <div className="invalid-feedback-custom">{ErrReceiveDate}</div>
-
-                                        <label className="mt-3 form-label required" htmlFor="koli">
-                                            {i18n.t('Koli')}
-                                            <span style={{ color: 'red' }}>*</span>
-                                        </label>
-                                        <Input
-                                            name="koli"
-                                            type="text"
-                                            id="koli"
-                                            maxLength={100}
-
-                                            onChange={handleChange}
-                                            // onChange={val => handleInputNama(val)}
-                                            onBlur={handleBlur}
-                                            value={values.koli}
-                                        />
-                                        <div className="invalid-feedback-custom">{ErrInputKoli}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="notes">
                                             {i18n.t('Notes')}
@@ -1066,7 +1143,7 @@ export default function EditPurchaseReceive(props) {
                                                         <IconButton
                                                             style={{ color: 'white' }}
                                                             onClick={() => handleAddItemsHidup()}
-                                                            hidden={values.vendor == ''}
+                                                            hidden={values.vendor == '' || (values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== '')}
                                                         >
                                                             <AddIcon style={{ fontSize: 25 }} />
                                                         </IconButton>
@@ -1087,6 +1164,7 @@ export default function EditPurchaseReceive(props) {
                                                                         color={'primary'}
                                                                         // style={{color:'white'}}
                                                                         onClick={() => handleRemoveItemsHidup(i)}
+                                                                        hidden={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
                                                                     // hidden={showplusdebit}
                                                                     >
                                                                         <DeleteIcon style={{ fontSize: 18 }} />
@@ -1102,6 +1180,7 @@ export default function EditPurchaseReceive(props) {
                                                                         textField={'label'}
                                                                         valueField={'value'}
                                                                         value={x.idproduct}
+                                                                        disabled={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
 
                                                                     />
                                                                 </td>
@@ -1115,6 +1194,7 @@ export default function EditPurchaseReceive(props) {
                                                                         textField={'label'}
                                                                         valueField={'value'}
                                                                         value={x.idcategoryproduct}
+                                                                        disabled={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
 
                                                                     />
                                                                     {/* <Input
@@ -1188,7 +1268,7 @@ export default function EditPurchaseReceive(props) {
                                                         <IconButton
                                                             style={{ color: 'white' }}
                                                             onClick={() => handleAddItemsMati()}
-                                                            hidden={values.vendor == ''}
+                                                            hidden={values.vendor == '' || (values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== '')}
                                                         >
                                                             <AddIcon style={{ fontSize: 25 }} />
                                                         </IconButton>
@@ -1208,7 +1288,7 @@ export default function EditPurchaseReceive(props) {
                                                                         color={'primary'}
                                                                         // style={{color:'white'}}
                                                                         onClick={() => handleRemoveItemsMati(i)}
-                                                                    // hidden={showplusdebit}
+                                                                        hidden={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
                                                                     >
                                                                         <DeleteIcon style={{ fontSize: 18 }} />
                                                                     </IconButton>
@@ -1223,6 +1303,7 @@ export default function EditPurchaseReceive(props) {
                                                                         textField={'label'}
                                                                         valueField={'value'}
                                                                         value={x.idproduct}
+                                                                        disabled={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
 
                                                                     />
                                                                 </td>
@@ -1236,6 +1317,7 @@ export default function EditPurchaseReceive(props) {
                                                                         textField={'label'}
                                                                         valueField={'value'}
                                                                         value={x.idcategoryproduct}
+                                                                        disabled={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
 
                                                                     />
                                                                     {/* <Input

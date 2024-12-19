@@ -69,8 +69,12 @@ export default function AddPurchaseReceive(props) {
 
     const [ErrItemsHidup, setErrItemsHidup] = useState("");
 
-    const [ListDraftPurchaseReceive, setListDraftPurchaseReceive] = useState([{'value':'nodata','label':'No Data'}]);
-    const [SelDraftPurchaseReceive, setSelDraftPurchaseReceive] = useState('nodata');
+    const [ListDraftPurchaseReceive, setListDraftPurchaseReceive] = useState([]);
+    const [SelDraftPurchaseReceive, setSelDraftPurchaseReceive] = useState('');
+
+    const [ListArea, setListArea] = useState([]);
+    const [SelArea, setSelArea] = useState('');
+    const [ErrSelArea, setErrSelArea] = useState('');
 
 
     useEffect(() => {
@@ -121,6 +125,16 @@ export default function AddPurchaseReceive(props) {
                 }
             ], []);
             setListInventori(theDataInventori);
+
+            const theDataArea = data.data.areaOpt.reduce((obj, el) => [
+                ...obj,
+                {
+                    'value': el.id,
+                    'label': el.nama,
+                    'data': el
+                }
+            ], []);
+            setListArea(theDataArea);
         }
         setLoading(false);
     }
@@ -142,6 +156,7 @@ export default function AddPurchaseReceive(props) {
         setErrInputAccNoBank('');
         setErrInputAccNameBank('');
         setErrItemsHidup('');
+        setErrSelArea('');
 
         if (ListItemsPurchaseReceive.length > 0) {
             for (let i = 0; i < ListItemsPurchaseReceive.length; i++) {
@@ -175,10 +190,15 @@ export default function AddPurchaseReceive(props) {
             flag = false;
         }
 
-        if (InputKoli == '') {
-            setErrInputKoli(i18n.t('label_REQUIRED'));
+        if (SelArea == '') {
+            setErrSelArea(i18n.t('label_REQUIRED'));
             flag = false;
         }
+
+        // if (InputKoli == '') {
+        //     setErrInputKoli(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
         if (InputBank == '') {
             setErrInputBank(i18n.t('label_REQUIRED'));
             flag = false;
@@ -224,17 +244,23 @@ export default function AddPurchaseReceive(props) {
                 let tambahdp = parseFloat(totalprice) - totaldeposit;
                 setIsTambahDeposit(true);
                 flag = false;
-                msgInfo("Deposit Kurang " + numToMoney(tambahdp) + ", Silahkan tambah deposit terlebih dahulu");
+                msgInfo("Deposit Kurang " + numToMoney(tambahdp) + ", Apakah kamu yakin?",values);
                 // window.scrollTo(0, 0);
             }
-        }
-        if (flag) {
 
+            submitPayload(flag,values);
+        }
+        
+
+    }
+
+    function submitPayload(flag,values){
+        if (flag) {
             setLoading(true);
             let obj = new Object();
             obj.idvendor = SelVendor;
             obj.transactiondate = ReceiveDate.getTime();
-            obj.koli = values.koli;
+            obj.koli = '';//values.koli;
             obj.notes = values.notes;
             obj.bank = values.bank;
             obj.accountnobank = values.accnobank;
@@ -307,10 +333,10 @@ export default function AddPurchaseReceive(props) {
                 }
             }
             obj.inventori = inventori;
-
+            obj.iddraftpurchasereceive = SelDraftPurchaseReceive == 'nodata' || SelDraftPurchaseReceive == ''?null:SelDraftPurchaseReceive;
+            obj.idarea = SelArea;
             dispatch(actions.submitPurchaseReceiveData({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
-
     }
 
     const submitHandler = (values) => {
@@ -340,22 +366,24 @@ export default function AddPurchaseReceive(props) {
         })
     }
 
-    const msgInfo = (text) => {
+    const msgInfo = (text,values) => {
 
         Swal.fire({
             icon: 'info',
             title: 'Information',
             text: text,
-            showDenyButton: false,
+            showDenyButton: true,
             showCancelButton: false,
             confirmButtonText: `Ok`,
-            denyButtonText: `Don't save`,
+            denyButtonText: `Cancel`,
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                history.go
+                submitPayload(true,values)
+                // history.go
                 //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
+                console.log('cancel')
                 //   Swal.fire('Changes are not saved', '', 'info')
             }
         })
@@ -378,9 +406,22 @@ export default function AddPurchaseReceive(props) {
         let subtotal = 0;
         if (name == 'qty' || name == 'qtybonus' || name == 'qtymati' || name == 'itemsprice') {
             let valPriceTemp = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
-            if (isNaN(valPriceTemp) && valPriceTemp !== '') {
+            if (isNaN(valPriceTemp) && valPriceTemp !== '' && name !== 'qtybonus') {
                 flag = false;
-            } else {
+            } 
+            if(name == 'qtybonus'){
+                let strVal  = new String(valPriceTemp);
+                let lg = strVal.split("-").length;
+                if(lg < 3){
+                    let tempReplace = strVal.replaceAll('-','');
+                    if (isNaN(tempReplace) && tempReplace !== '') {
+                        flag = false;
+                    }
+                }else{
+                    flag = false;
+                }
+            }
+            if(flag) {
                 if (name == 'qty') {
                     const listTemp = [...ListItemsPurchaseReceive];
                     let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
@@ -797,6 +838,11 @@ export default function AddPurchaseReceive(props) {
 
     }
 
+    const handleChangeArea = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelArea(id);
+    }
+
     return (
         <Formik
             initialValues={
@@ -815,6 +861,7 @@ export default function AddPurchaseReceive(props) {
                     istambahdeposit: IsTambahDeposit,
                     tambahdeposit: TambahDeposit,
                     draftpurchasereceive: SelDraftPurchaseReceive,
+                    area:SelArea
                 }
             }
             validate={values => {
@@ -875,6 +922,27 @@ export default function AddPurchaseReceive(props) {
                                             value={values.vendor}
                                         />
                                         <div className="invalid-feedback-custom">{ErrSelVendor}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="area">
+                                            {i18n.t('Area')}
+                                        </label>
+                                        <span style={{ color: 'red' }}>*</span>
+
+                                        <DropdownList
+                                            name="area"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeArea(val)}
+                                            onBlur={val => setFieldTouched("area", val?.value ? val.value : '')}
+                                            data={ListArea}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.area}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrSelArea}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="bank">
                                             {i18n.t('Bank')}
@@ -962,7 +1030,7 @@ export default function AddPurchaseReceive(props) {
                                         />
                                         <div className="invalid-feedback-custom">{ErrReceiveDate}</div>
 
-                                        <label className="mt-3 form-label required" htmlFor="koli">
+                                        {/* <label className="mt-3 form-label required" htmlFor="koli">
                                             {i18n.t('Koli')}
                                             <span style={{ color: 'red' }}>*</span>
                                         </label>
@@ -977,7 +1045,7 @@ export default function AddPurchaseReceive(props) {
                                             onBlur={handleBlur}
                                             value={values.koli}
                                         />
-                                        <div className="invalid-feedback-custom">{ErrInputKoli}</div>
+                                        <div className="invalid-feedback-custom">{ErrInputKoli}</div> */}
 
                                         <label className="mt-3 form-label required" htmlFor="notes">
                                             {i18n.t('Notes')}
@@ -1272,7 +1340,7 @@ export default function AddPurchaseReceive(props) {
                                                                         color={'primary'}
                                                                         // style={{color:'white'}}
                                                                         onClick={() => handleRemoveItemsMati(i)}
-                                                                    hidden={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
+                                                                        hidden={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
                                                                     >
                                                                         <DeleteIcon style={{ fontSize: 18 }} />
                                                                     </IconButton>
@@ -1287,7 +1355,7 @@ export default function AddPurchaseReceive(props) {
                                                                         textField={'label'}
                                                                         valueField={'value'}
                                                                         value={x.idproduct}
-                                                                        disabled={values.draftpurchasereceive !== 'nodata' || values.draftpurchasereceive !== ''}
+                                                                        disabled={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
 
                                                                     />
                                                                 </td>
