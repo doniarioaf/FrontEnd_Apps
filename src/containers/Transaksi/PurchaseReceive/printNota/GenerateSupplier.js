@@ -464,7 +464,7 @@ const GenerateSupplier = ({ valuedata }) => {
 
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ flexDirection: 'row-reverse' }}>
-                                <Text style={[{ margin: '0 auto', textAlign: 'right', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{'NOTA SUPPLIER'}</Text>
+                                <Text style={[{ margin: '0 auto', textAlign: 'right', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{'INVOICE PEMBELIAN'}</Text>
                             </View>
 
                             <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>

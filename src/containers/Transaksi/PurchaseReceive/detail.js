@@ -268,16 +268,16 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_CREATED_DATE')}</span>
+                            <span className="col-md-5">{i18n.t('label_CREATED')}</span>
                                 <strong className="col-md-7">
-                                {value.createddate ?moment (new Date(value.createddate)).format(formatdatetime):''}
+                                {value.createdbyName ?value.createdbyName:''}
                                 </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_CREATED')}</span>
+                            <span className="col-md-5">{i18n.t('label_CREATED_DATE')}</span>
                                 <strong className="col-md-7">
-                                {value.createdbyName ?value.createdbyName:''}
+                                {value.createddate ?moment (new Date(value.createddate)).format(formatdatetime):''}
                                 </strong>
                             </div>
 
