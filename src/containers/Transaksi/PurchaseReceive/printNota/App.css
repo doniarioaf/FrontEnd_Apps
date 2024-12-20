@@ -5,3 +5,8 @@
     font-size: large;
     font-weight: bold;
   }
+
+  #end {
+    visibility: hidden !important;
+  }
+  

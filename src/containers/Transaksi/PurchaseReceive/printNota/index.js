@@ -20,7 +20,7 @@ import PdfDocumentSupplier from './PdfDocumentSupplier';
 // import PdfDocumentInternal from './PdfDocumentInternal';
 // import PdfDocumentPajak from './PdfDocumentPajak';
 
-import { formatdate } from '../../../shared/constantValue';
+import { formatdate, formatdatetime } from '../../../shared/constantValue';
 import moment from 'moment';
 import './App.css';
 
@@ -35,6 +35,9 @@ export default function PrintNota(props) {
 
     const [Value, setValue] = useState(null);
     const [IsReady, setIsReady] = useState(false);
+
+    const [visible, setVisible] = useState(false);
+
 
     const id = props.match.params.id;
 
@@ -58,6 +61,7 @@ export default function PrintNota(props) {
             let dettemp = data.data;
             dettemp.notatype = SelPrintType;
             dettemp.transactiondate = det.transactiondate ? moment(new Date(det.transactiondate)).format(formatdate) : '';
+            dettemp.currdatetime = moment(new Date()).format(formatdatetime) ;
             setValue(dettemp);
 
             setTimeout(() => {
@@ -65,6 +69,10 @@ export default function PrintNota(props) {
                 setIsReady(true);
                 // setFile(downloadLink(det));
             }, 1000);
+
+            setTimeout(() => {
+                setVisible(true);
+              }, 950); // timeout 2 detik
         }
         setLoading(false);
     }
@@ -155,6 +163,7 @@ export default function PrintNota(props) {
                                                 {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? 'SuratJalan-' + Value.nodocument : fileName))}>{"Download"}</div> */}
                                                 <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div>
                                             </div>
+                                            <div style={{backgroundColor:'#343439',width:'20%',height:'9%',position:'absolute',right:'15px', display: visible ? 'block' : 'none' }}></div>
 
                                             <PDFViewer style={{
                                                 width: '100%',

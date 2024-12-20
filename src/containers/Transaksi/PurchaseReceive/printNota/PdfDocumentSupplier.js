@@ -1,8 +1,8 @@
 import React from "react";
-import { Page, Document, StyleSheet, Image, Font } from "@react-pdf/renderer";
+import { Page, Document, StyleSheet, Image, Font,Text } from "@react-pdf/renderer";
 // import GenerateSuratJalan from "./GenerateSuratJalan";
 import GenerateSupplier from "./GenerateSupplier";
-
+import './App.css';
 export const styles = StyleSheet.create({
     page: {
         backgroundColor: '#fff',
@@ -13,6 +13,13 @@ export const styles = StyleSheet.create({
         paddingRight: 50,
         lineHeight: 1.5,
         flexDirection: 'column',
+    },
+    footer:{
+        // position:'relative',
+        // paddingTop:300,
+        // // left:0,
+        // // right:0,
+        textAlign:'right',
     },
     logo: {
         width: 84,
@@ -28,14 +35,29 @@ const onRenderDocument = ({ blob, filename }) => {
     // saveDocument(blobUrl, filename);
 };
 
+const options = {
+    showToolbar: false,
+  };
+
+  const handlePrint = () => {
+    // Kode cetak kustom
+    // window.print();
+    console.log('handlePrint');
+  };
 const PdfDocument = ({ data }) => {
 
     return (
-        <Document onRender={(blob) => onRenderDocument(blob, "")} title={(data != null ? data.nodocument : '')}>
+        <Document onPrint={handlePrint}  onRender={(blob) => onRenderDocument(blob, "")} title={(data != null ? data.nodocument : '')}>
             {/* <Page size="A5"   style={styles.page} > */}
-            <Page size="letter" orientation="portrait" style={styles.page} >
+            <Page size="letter" orientation="portrait" style={styles.page} wrap>
                 <GenerateSupplier valuedata={data} />
-
+                {/* <Text style={styles.footer} render={({ pageNumber, totalPages }) => (
+                    `${pageNumber} / ${totalPages}`
+                )} fixed /> */}
+                <Text style={styles.footer} render={({ pageNumber, totalPages }) => (
+                    // `${pageNumber} / ${totalPages}`
+                    `Edit : ${(data != null?data.countEdit:'')} Print : 2 Dicetak Oleh: ${(data != null?data.namaUser+' ,'+data.currdatetime:'')}`
+                )} fixed />
             </Page>
         </Document>
     )

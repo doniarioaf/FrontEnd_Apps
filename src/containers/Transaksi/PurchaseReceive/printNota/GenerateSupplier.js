@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 // import roboto from '../../../../components/';
 import roboto from '../../../../components/Fonts/Roboto/Roboto-Bold.ttf';
-import { numToMoney } from '../../../shared/globalFunc';
+import { numToMoney, terbilang } from '../../../shared/globalFunc';
 import { addKurungBukaPadaValue } from '../utilityPurchaseReceive';
 
 const fontSizeBig = 10;
@@ -10,6 +10,13 @@ const fontSizeMedium = 8;
 const fontSizeSmall = 0;
 
 const styles = StyleSheet.create({
+    footer:{
+        position:'relative',
+        paddingTop:300,
+        // left:0,
+        // right:0,
+        textAlign:'right',
+    },
     width:{
         no:'5%',
         product:'20%',
@@ -67,6 +74,16 @@ const styles = StyleSheet.create({
     },
     title: { fontFamily: 'roboto', fontWeight: 600 },
 });
+const getValueChargesBox = (items) =>{
+    if(items !== null && items !== undefined){
+        let listfilteroutput = items.filter(output => output.chargename  == 'BOX');
+        if(listfilteroutput.length > 0){
+            return listfilteroutput[0].qty;
+        }
+    }
+    
+    return 0
+}
 const setCharges = (items) =>{
     if(items != undefined && items != null){
         let listRow = [];
@@ -305,6 +322,10 @@ const setInformasiNilaiUang = (items) =>{
     let tambahDP = items.depositAmount?parseFloat(items.depositAmount):0;
     let saldoDepositBeforeNotaSubmit = items.saldoDepositBeforeNotaSubmit?parseFloat(items.saldoDepositBeforeNotaSubmit):0;
     let row = [];
+    let transfer = 0;
+    if(totalprice > setor){
+        transfer = totalprice - setor;
+    }
 
     let list = ['SALDO','SETOR','TAMBAHDP','SISADP'];
     let listDone = [];
@@ -324,7 +345,7 @@ const setInformasiNilaiUang = (items) =>{
             value = numToMoney(saldoDepositBeforeNotaSubmit);
             break;
         }else if(val == 'SETOR' && setor !== totalprice){
-            label = 'Setor :';
+            label = 'Setor DP:';
             value = numToMoney(setor);
             break;
         }else if(val == 'TAMBAHDP' && tambahDP > 0){
@@ -332,7 +353,7 @@ const setInformasiNilaiUang = (items) =>{
             value = numToMoney(tambahDP);
             break;
         }else if(val == 'SISADP' && sisaDeposit > 0){
-            label = 'Sisa Deposit :';
+            label = 'Sisa DP :';
             value = numToMoney(sisaDeposit);
             break;
         }
@@ -343,10 +364,12 @@ const setInformasiNilaiUang = (items) =>{
                     <View style={{ flexDirection: 'row-reverse' }}>
                         <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{label}{value}</Text>
                     </View>
-        
+
                     <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                        <Text style={{ fontSize: fontSizeBig }}>{'Bank :  '}{items.bank}</Text>
+                        <Text style={{ fontSize: fontSizeBig }}>{'Setor :  '}{numToMoney(setor)}</Text>
                     </View>
+
+                    
                 </View>
             );
             no = 2;
@@ -359,10 +382,12 @@ const setInformasiNilaiUang = (items) =>{
                     <View style={{ flexDirection: 'row-reverse' }}>
                         <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{label}{value}</Text>
                     </View>
-        
+
                     <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                        <Text style={{ fontSize: fontSizeBig }}>{'Nama :  '}{items.accountnamebank}</Text>
+                        <Text style={{ fontSize: fontSizeBig }}>{'Transfer :  '}{numToMoney(transfer)}</Text>
                     </View>
+        
+                    
                 </View>
             );
             no = 3;
@@ -375,10 +400,11 @@ const setInformasiNilaiUang = (items) =>{
                     <View style={{ flexDirection: 'row-reverse' }}>
                         <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{label}{value}</Text>
                     </View>
-        
+
                     <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                        <Text style={{ fontSize: fontSizeBig }}>{'No Rekening :  '}{items.accountnobank}</Text>
+                        <Text style={{ fontSize: fontSizeBig }}>{'Bank :  '}{items.bank}</Text>
                     </View>
+
                 </View>
             );
             no = 4;
@@ -389,7 +415,23 @@ const setInformasiNilaiUang = (items) =>{
             row.push(
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flexDirection: 'row-reverse', }}>
-                        <Text style={{ fontSize: fontSizeBig }}>{label}{value}</Text>
+                        <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{label}{value}</Text>
+                    </View>
+
+                    <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                        <Text style={{ fontSize: fontSizeBig }}>{'Nama :  '}{items.accountnamebank}</Text>
+                    </View>
+                </View>
+            );
+
+            row.push(
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'row-reverse' }}>
+                        <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{''}</Text>
+                    </View>
+        
+                    <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                        <Text style={{ fontSize: fontSizeBig }}>{'No Rekening :  '}{items.accountnobank}</Text>
                     </View>
                 </View>
             );
@@ -448,7 +490,7 @@ const GenerateSupplier = ({ valuedata }) => {
                             </View>
 
                             <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                                <Text style={{ fontSize: fontSizeBig }}>{"Kepada  : "}{valuedata != null ? valuedata.vendorNama : ''}</Text>
+                                <Text style={{ fontSize: fontSizeBig }}>{"Kepada  : "}{valuedata != null ? valuedata.vendorAlias+' / '+valuedata.aliasArea : ''}</Text>
                             </View>
                         </View>
 
@@ -458,7 +500,17 @@ const GenerateSupplier = ({ valuedata }) => {
                             </View>
 
                             <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                                <Text style={{ fontSize: fontSizeBig }}>{'Koli        : '}{valuedata != null ? valuedata.koli : ''}</Text>
+                                <Text style={{ fontSize: fontSizeBig }}>{'Koli         : '}{valuedata != null ? getValueChargesBox(valuedata.charges) : ''}</Text>
+                            </View>
+                        </View>
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'row-reverse' }}>
+                                <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{''}</Text>
+                            </View>
+
+                            <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                                <Text style={{ fontSize: fontSizeBig }}>{'No.SMU : '}{valuedata != null ? valuedata.noSMU : ''}</Text>
                             </View>
                         </View>
 
@@ -468,8 +520,18 @@ const GenerateSupplier = ({ valuedata }) => {
                             </View>
 
                             <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                                <Text style={{ fontSize: fontSizeBig }}>{'Tanggal : '}{valuedata != null ? valuedata.transactiondate : ''}</Text>
+                                <Text style={{ fontSize: fontSizeBig }}>{'Tanggal  : '}{valuedata != null ? valuedata.transactiondate : ''}</Text>
                             </View>
+                        </View>
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'row-reverse' }}>
+                                <Text style={[{ margin: '0 auto', textAlign: 'center',marginLeft: '10%', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{valuedata != null ? valuedata.nodocument : ''}</Text>
+                            </View>
+
+                            {/* <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                                <Text style={{ fontSize: fontSizeBig }}>{'Tanggal : '}{valuedata != null ? valuedata.transactiondate : ''}</Text>
+                            </View> */}
                         </View>
 
                         <View style={styles.table}>
@@ -539,6 +601,9 @@ const GenerateSupplier = ({ valuedata }) => {
                                 <View style={{ flexDirection: 'row-reverse', }}>
                                     <Text style={{ fontSize: fontSizeBig }}>{'NB'}</Text>
                                 </View>
+                                <View style={{ flexDirection: 'row-reverse', marginLeft: '7%' }}>
+                                    <Text style={{ fontSize: fontSizeBig, width:'350px', maxWidth:'350px' }}> {valuedata != null ?  (valuedata.totalprice?'Terbilang: '+terbilang(valuedata.totalprice):'' ):''}</Text>
+                                </View>
                             </View>
 
                             {/* List udang Mati */}
@@ -547,9 +612,9 @@ const GenerateSupplier = ({ valuedata }) => {
                             {setNotes(valuedata != null ? valuedata.notes : "")}
 
                             {setInformasiNilaiUang(valuedata != null ? valuedata : [])}
-
                     </View>
-
+                    
+                    
                     :<View style={{ marginTop: '20px' }}>
                     <Text>{" "}</Text>
                     </View>
