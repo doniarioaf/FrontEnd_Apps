@@ -17,7 +17,7 @@ import "react-widgets/dist/css/react-widgets.css";
 
 import { PDFViewer } from '@react-pdf/renderer';
 import PdfDocumentSupplier from './PdfDocumentSupplier';
-// import PdfDocumentInternal from './PdfDocumentInternal';
+import PdfDocumentInternal from './PdfDocumentInternal';
 // import PdfDocumentPajak from './PdfDocumentPajak';
 
 import { formatdate, formatdatetime } from '../../../shared/constantValue';
@@ -45,18 +45,26 @@ export default function PrintNota(props) {
 
     const handleChangePrintType = (data) => {
         let id = data?.value ? data.value : '';
+        setIsReady(false);
         setSelPrintType(id);
     }
 
     function generatePDF() {
         setLoading(true);
         setIsReady(false);
-        dispatch(actions.getPurchaseReceiveData({ url: '/printnota/' + id }, successHandler, errorHandler));
+        setVisible(false);
+        dispatch(actions.getPurchaseReceiveData({ url: '/printnota/' + id+'/'+SelPrintType }, successHandler, errorHandler));
     }
 
     function successHandler(data, propsdata) {
         if (data.data) {
-            let det = data.data;
+            getData(data);
+        }
+        setLoading(false);
+    }
+
+    function getData(data){
+        let det = data.data;
 
             let dettemp = data.data;
             dettemp.notatype = SelPrintType;
@@ -73,8 +81,6 @@ export default function PrintNota(props) {
             setTimeout(() => {
                 setVisible(true);
               }, 950); // timeout 2 detik
-        }
-        setLoading(false);
     }
 
     const errorHandler = (data, propsdata) => {
@@ -88,15 +94,16 @@ export default function PrintNota(props) {
 
     const viewPdfDocument = (printType, value) => {
 
-        return <PdfDocumentSupplier data={value} />
-        // if(printType == 'SUPPLIER'){
-        //     return <PdfDocumentSupplier data={value} />
-        // }else if(printType == 'INTERNAL'){
-        //     return <PdfDocumentInternal data={value} />
-        // }else if(printType == 'PAJAK'){
+        // return <PdfDocumentSupplier data={value} />
+        if(printType == 'SUPPLIER'){
+            return <PdfDocumentSupplier data={value} />
+        }else if(printType == 'INTERNAL' || printType == 'PAJAK'){
+            return <PdfDocumentInternal data={value} />
+        }
+        // else if(printType == 'PAJAK'){
         //     return <PdfDocumentPajak data={value} />
         // }
-        // return '';
+        return '';
     }
 
     const handleSuccesPDF = (dataUrl, namaFile) => {
@@ -108,6 +115,33 @@ export default function PrintNota(props) {
         fileLink.click();
         fileLink.remove();
 
+    }
+
+    function handleDownloadPDF() {
+        // generatePDF();
+    // const handleDownloadPDF = () => {
+        setLoading(true);
+        setIsReady(false);
+        setVisible(false);
+        localStorage.removeItem('PdfDocument');
+        // dispatch(actions.getPurchaseReceiveData({ url: '/printnota/' + id+'/'+SelPrintType }, successHandlerAfterDownload, errorHandler));
+        dispatch(actions.getPurchaseReceiveData({ url: '/catatdownload/' + id }, successHandlerDownload, errorHandler));
+    }
+    function successHandlerDownload(data, propsdata){
+        dispatch(actions.getPurchaseReceiveData({ url: '/printnota/' + id+'/'+SelPrintType }, successHandlerAfterDownload, errorHandler));
+    }
+
+    function successHandlerAfterDownload(data, propsdata) {
+        if (data.data) {
+            getData(data);
+        }
+        
+        setTimeout(() => {
+            // generatePDF(det);
+            handleSuccesPDF(localStorage.getItem("PdfDocument"), (data.data != null ? data.data.nodocument : fileName));
+            setLoading(false);
+            // setFile(downloadLink(det));
+        }, 2000);
     }
 
     return (
@@ -150,6 +184,14 @@ export default function PrintNota(props) {
                     >
                         {'Generate'}
                     </Button>
+
+                    {/* <Button
+                        // style={{marginLeft:"1%"}}
+                        color={'primary'}
+                        onClick={() => handleDownloadPDF()}
+                    >
+                        {'Download'}
+                    </Button> */}
                 </div>
 
                 <Container fluid>
@@ -161,7 +203,8 @@ export default function PrintNota(props) {
                                         <div className="App">
                                             <div className='download-link'>
                                                 {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? 'SuratJalan-' + Value.nodocument : fileName))}>{"Download"}</div> */}
-                                                <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div>
+                                                {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div> */}
+                                                <div onClick={() => handleDownloadPDF()}>{"Download"}</div>
                                             </div>
                                             <div style={{backgroundColor:'#343439',width:'20%',height:'9%',position:'absolute',right:'15px', display: visible ? 'block' : 'none' }}></div>
 

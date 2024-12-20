@@ -56,7 +56,7 @@ const PdfDocument = ({ data }) => {
                 )} fixed /> */}
                 <Text style={styles.footer} render={({ pageNumber, totalPages }) => (
                     // `${pageNumber} / ${totalPages}`
-                    `Edit : ${(data != null?data.countEdit:'')} Print : 2 Dicetak Oleh: ${(data != null?data.namaUser+' ,'+data.currdatetime:'')}`
+                    `Edit : ${(data != null?data.countEdit:'')} Print : ${(data != null?(data.countPrint?data.countPrint+1:1):'')} Dicetak Oleh: ${(data != null?data.namaUser+' ,'+data.currdatetime:'')}`
                 )} fixed />
             </Page>
         </Document>

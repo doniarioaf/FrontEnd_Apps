@@ -475,9 +475,22 @@ export default function EditPurchaseReceive(props) {
         let subtotal = 0;
         if (name == 'qty' || name == 'qtybonus' || name == 'qtymati' || name == 'itemsprice') {
             let valPriceTemp = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
-            if (isNaN(valPriceTemp) && valPriceTemp !== '') {
+            if (isNaN(valPriceTemp) && valPriceTemp !== '' && name !== 'qtybonus') {
                 flag = false;
-            } else {
+            }
+            if(name == 'qtybonus'){
+                let strVal  = new String(valPriceTemp);
+                let lg = strVal.split("-").length;
+                if(lg < 3){
+                    let tempReplace = strVal.replaceAll('-','');
+                    if (isNaN(tempReplace) && tempReplace !== '') {
+                        flag = false;
+                    }
+                }else{
+                    flag = false;
+                }
+            }
+            if(flag){
                 if (name == 'qty') {
                     const listTemp = [...ListItemsPurchaseReceive];
                     let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
@@ -694,7 +707,7 @@ export default function EditPurchaseReceive(props) {
                 'value': det.iddraftpurchasereceive,
                 'label': det.nodocumentDraft+''+(det.noSmuDraft && det.noSmuDraft !== ''?' - '+det.noSmuDraft:''),
             });
-            setSelDraftPurchaseReceive(det.iddraftpurchasereceive);
+            setSelDraftPurchaseReceive(det.iddraftpurchasereceive?det.iddraftpurchasereceive:'');
         }
         theDataDraftPR.push({
             'value': 'nodata',
