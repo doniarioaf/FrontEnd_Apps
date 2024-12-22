@@ -454,3 +454,21 @@ export const submitDraftPurchaseReceive = (param, successHandler, errorHandler) 
         errorHandler,
     }
 }
+
+export const getStockAdjusmentData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_STOCKADJUSMENT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitStockAdjusment = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_STOCKADJUSMENT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

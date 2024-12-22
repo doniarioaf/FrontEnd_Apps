@@ -25,9 +25,9 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
   import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { editPriceList_Permission,deletePriceList_Permission,MenuPriceList } from '../../shared/permissionMenu';
+  import { MenuStockAdjusment, deleteStockAdjusment_Permission, editStockAdjusment_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
-  import { colourPrimaryInHexa, formatdate, formatdatetime } from '../../shared/constantValue';
+  import { formatdate, formatdatetime } from '../../shared/constantValue';
   import '../../CSS/table.css';
 
   const useStyles = makeStyles((theme) => ({
@@ -41,7 +41,7 @@ import React, {useState,
 
 
   function Detail(props) {
-    reloadToHomeNotAuthorize(MenuPriceList,'READ');
+    reloadToHomeNotAuthorize(MenuStockAdjusment,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
@@ -53,6 +53,8 @@ import React, {useState,
     const [isprint, setIsPrint] = useState(false);
 
     const id = props.match.params.id;
+
+    const [ListItem, setListItem] = useState([]);
 
     const handleToggle = (flag) => {
         setOpen((prevOpen) => !prevOpen);
@@ -86,11 +88,15 @@ import React, {useState,
 
       useEffect(() => {
         setLoading(true);
-        dispatch(actions.getPriceListData( {url:'/'+id},successHandler, errorHandler));
+        dispatch(actions.getStockAdjusmentData( {url:'/'+id},successHandler, errorHandler));
     }, []);
 
     function successHandler(data,propsdata) {
-        setValue(data.data);
+        let det = data.data;
+        setValue(det);
+
+        let listItems = det.items?det.items:[];
+        setListItem(listItems);
         setLoading(false);
     }
 
@@ -106,7 +112,7 @@ import React, {useState,
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
                 setLoading(true);
-                dispatch(actions.submitPriceListData( {url:'/'+id,type:'DELETE'} ,succesHandlerSubmit, errorHandler));
+                dispatch(actions.submitStockAdjusment( {url:'/'+id,type:'DELETE'} ,succesHandlerSubmit, errorHandler));
             //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
             //   Swal.fire('Changes are not saved', '', 'info')
@@ -122,7 +128,7 @@ import React, {useState,
             text: i18n.t('label_SUCCESS')
         }).then((result) => {
             if (result.isConfirmed) {
-                history.push(pathmenu.menupricelist);
+                history.push(pathmenu.menustockadjusment);
             }
         })
     }
@@ -138,7 +144,7 @@ import React, {useState,
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} link={pathmenu.detailpricelist+'/'+id} label={'Detail'} labeldefault={'Detail'} />
+            <ContentHeading history={history} link={pathmenu.detailstockadjusment+'/'+id} label={'Detail'} labeldefault={'Detail'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -167,7 +173,7 @@ import React, {useState,
                 <h2>
                     {
                         !loading  ?
-                            value.categoryproductnama :
+                            value.nodocument :
                             <Skeleton style={{maxWidth: 300}}/>
                     }
                 </h2>
@@ -175,31 +181,39 @@ import React, {useState,
 
             <div className="row mt-2">
             <div className="mt-2 col-lg-4 ft-detail mb-3">
-            <Card outline color="primary" className="mb-3" style={{width:"100%"}}>
+            <Card outline color="primary" className="mb-3" style={{width:"125%"}}>
             <CardHeader className="text-white bg-primary" tag="h4" >{loading ? <Skeleton/> : 'Details'}</CardHeader>
             <CardBody>
                 {
                     loading ?<Skeleton count={7} height={21} style={{marginTop: '1rem'}}/> :
                     (
                         <section>
+
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Dari Tanggal')}</span>
+                            <span className="col-md-5">{i18n.t('No Document')}</span>
                             <strong className="col-md-7">
-                                {value.pricedate ?moment(value.pricedate).format(formatdate):''}
+                                {value.nodocument?value.nodocument:''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Sampai Tanggal')}</span>
-                            <strong className="col-md-7">
-                                {value.pricedatethru ?moment(value.pricedatethru).format(formatdate):''}
-                            </strong>
+                            <span className="col-md-5">{i18n.t('Tanggal')}</span>
+                                <strong className="col-md-7">
+                                {value.date ?moment (new Date(value.date)).format(formatdate):''}
+                                </strong>
                             </div>
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Note')}</span>
                                 <strong className="col-md-7">
-                                {value.notes ?value.notes:''}
+                                {value.note ?value.note:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Type')}</span>
+                                <strong className="col-md-7">
+                                {value.type ?(value.type == 'H'?'Hidup':'Mati'):''}
                                 </strong>
                             </div>
 
@@ -237,50 +251,37 @@ import React, {useState,
             </CardBody>
             </Card>
             </div>
-
-            
             </div>
 
-            <div>
-                {
-                    value.items?
-                    
-                    (
-                        value.items.length !== 0?
-                        <div className="row justify-content-center" style={{width:"100%"}}>
-                            <table id="tablegrid" >
-                            <tbody>
-                            <tr>
-                            <th  style={{width:'30%',textAlign:'center',fontSize:'larger'}}>{i18n.t('Product')}</th>
-                            <th  style={{width:'30%',textAlign:'center',fontSize:'larger'}}>{i18n.t('Category Product')}</th>
-                            <th style={{width:'20%',textAlign:'center',fontSize:'larger'}}>Price</th>
-                            <th style={{width:'20%',textAlign:'center',fontSize:'larger'}}>Allowance</th>
-                            </tr>
-                            {
-                                value.items.map((x, i) => {
-                                    return (
-                                        <tr style={{fontSize:'larger'}}>
-                                            <td>{x.productName}</td>
-                                            <td>{x.categoryproductidName}</td>
-                                            <td>{x.amount != undefined && x.amount != null?numToMoney(x.amount):''}</td>
-                                            <td>{x.allowance != undefined && x.allowance != null?numToMoney(x.allowance):''}</td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                            </tbody>
-                            </table>
-                        </div>
-
-                        
-                        :''
-
-
-                    )
-                    
-                    :''
-                }
-            </div>
+            {
+                <div className="row justify-content-center">
+                    <h4>{'Item'}</h4>
+                    <table id="tablegrid">
+                    <tbody>
+                        <tr>
+                        <th >{i18n.t('Product')}</th>
+                        <th >{i18n.t('Category Product')}</th>
+                        <th >{i18n.t('Qty')}</th>
+                        <th >{i18n.t('Price')}</th>
+                        <th >{i18n.t('Subtotal Price')}</th>
+                        </tr>
+                        {
+                            ListItem.map((x, i) => {
+                                return (
+                                    <tr>
+                                        <td>{x.productName}</td>
+                                        <td>{x.categoryProductName}</td>
+                                        <td>{x.qty}</td>
+                                        <td>{x.price?numToMoney(x.price):0}</td>
+                                        <td>{x.subtotalprice?numToMoney(x.subtotalprice):0}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                    </table>
+                </div>
+            }
             </CardBody>
             </Card>
             </Container>
@@ -302,8 +303,9 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editPriceList_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpricelist+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deletePriceList_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editStockAdjusment_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editstockadjusment+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteStockAdjusment_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            {/* <MenuItem hidden={!isGetPermissions(MenuPurchaseReceive,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Nota')}</MenuItem> */}
                             
                         </div>)
                         

@@ -14,7 +14,7 @@ import { editPriceList_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-import { DatePicker } from 'react-widgets';
+import { DatePicker ,DropdownList} from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import { formatdate } from '../../shared/constantValue';
 import '../../CSS/table.css';
@@ -28,9 +28,15 @@ export default function EditPriceList(props) {
 
     const [loading, setLoading] = useState(false);
     const [PriceDate, setPriceDate] = useState(null);
+    const [PriceThruDate, setPriceThruDate] = useState(null);
     const [ErrPriceDate, setErrPriceDate] = useState("");
+    const [ErrPriceThruDate, setErrPriceThruDate] = useState("");
     const [ListCategoryProduct, setListCategoryProduct] = useState([]);
-    const [AlreadyGeneratePrice, setAlreadyGeneratePrice] = useState(true);
+    const [AlreadyGeneratePrice, setAlreadyGeneratePrice] = useState(false);
+
+    const [ListProduct, setListProduct] = useState([]);
+        
+    const [InputNotes, setInputNotes] = useState("");
 
     const id = props.match.params.id;
 
@@ -47,6 +53,16 @@ export default function EditPriceList(props) {
     function successHandlerTemplate(data, propsdata) {
         let template = data.data;
         let det = propsdata;
+        const theDataProduct = template.productOpt.reduce((obj, el) => [
+            ...obj,
+            {
+                    
+                'value': el.id,
+                'label': el.nama,
+            }
+        ], []);
+        setListProduct(theDataProduct);
+
         let theData = [];
         if (det.items && template.categoryProductOpt) {
             for (let i = 0; i < template.categoryProductOpt.length; i++) {
@@ -56,9 +72,11 @@ export default function EditPriceList(props) {
                     let el = listfilteroutput[0];
                     theData.push(
                         {
+                            'idproduct':el.idproduct,
                             'categoryproductid': el.categoryproductid,
                             'categoryproduct': valCategoryProductOpt.nama + ' (' + valCategoryProductOpt.size + ')',
                             'price': el.amount,
+                            'allowance':el.allowance
                         }
                     );
                 }
@@ -66,27 +84,24 @@ export default function EditPriceList(props) {
         }
         setListCategoryProduct(theData);
         setPriceDate(det.pricedate ? new Date(det.pricedate) : null);
+        setPriceThruDate(det.pricedatethru ? new Date(det.pricedatethru) : null);
+        setInputNotes(det.notes);
         setLoading(false);
     }
 
     const checkColumnMandatory = (values) => {
         let flag = true;
         setErrPriceDate('');
-        // setErrSelCategoryProductMapping('');
+        setErrPriceThruDate('');
         if (PriceDate == null) {
             setErrPriceDate(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        // if(SelCategoryProductMapping == ''){
-        //     setErrSelCategoryProductMapping(i18n.t('label_REQUIRED'));
-        //     flag = false;
-        // }
-        // if(SelCategoryProduct !== '' && SelCategoryProductMapping !== ''){
-        //     if(SelCategoryProduct ==  SelCategoryProductMapping){
-        //         setErrSelCategoryProductMapping(i18n.t('Product Tidak Bisa Sama'));
-        //         flag = false;
-        //     }
-        // }
+        if (PriceThruDate == null) {
+            setErrPriceThruDate(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+        
         return flag;
     }
 
@@ -109,13 +124,17 @@ export default function EditPriceList(props) {
             setLoading(true);
             let obj = new Object();
             obj.pricedate = PriceDate.getTime();
+            obj.pricedatethru = PriceThruDate.getTime();
+            obj.notes = values.notes;
             let items = [];
             if (ListCategoryProduct.length > 0) {
                 items = ListCategoryProduct.reduce((obj, el) => [
                     ...obj,
                     {
+                        'idproduct':el.idproduct,
                         'categoryproductid': el.categoryproductid,
                         'amount': new String(el.price).replaceAll('.', '') !== '' ? new String(el.price).replaceAll('.', '') : '0',
+                        'allowance': new String(el.allowance).replaceAll('.', '') !== '' ? new String(el.allowance).replaceAll('.', '') : '0',
                     }
                 ], []);
             }
@@ -195,11 +214,14 @@ export default function EditPriceList(props) {
             initialValues={
                 {
                     listCategoryProduct: ListCategoryProduct,
-                    pricedate: PriceDate
+                    pricedate: PriceDate,
+                    pricethrudate: PriceThruDate,
+                    notes:InputNotes
                 }
             }
             validate={values => {
                 const errors = {};
+                setInputNotes(values.notes);
                 return errors;
             }}
             enableReinitialize="true"
@@ -228,7 +250,7 @@ export default function EditPriceList(props) {
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
                                         <label className="mt-3 form-label required" htmlFor="pricedate">
-                                            {i18n.t('Price Date')}
+                                            {i18n.t('Dari Tanggal')}
                                         </label>
                                         <span style={{ color: 'red' }}>*</span>
 
@@ -241,23 +263,72 @@ export default function EditPriceList(props) {
 
                                         />
                                         <div className="invalid-feedback-custom">{ErrPriceDate}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="pricethrudate">
+                                            {i18n.t('Sampai Tanggal')}
+                                        </label>
+                                        <span style={{ color: 'red' }}>*</span>
+
+                                        <DatePicker
+                                            name="pricethrudate"
+                                            // onChange={val => handleChangePriceDate(val)}
+                                            format={formatdate}
+                                            value={values.pricethrudate}
+                                            disabled={true}
+
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrPriceThruDate}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="notes">
+                                            {i18n.t('Notes')}
+                                        </label>
+                                        <Input
+
+                                            name="notes"
+                                            type="text"
+                                            id="notes"
+                                            // maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.notes}
+                                        />
                                     </div>
 
-                                    <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                </div>
+
+                                <div >
                                         {
                                             values.listCategoryProduct.length == 0 ? '' :
                                                 <div className="row justify-content-center">
                                                     <table id="tablegrid">
                                                         <tbody>
                                                             <tr>
-                                                                <th style={{ width: '60%', textAlign: 'center' }}>{i18n.t('Category Product')}</th>
-                                                                <th style={{ width: '40%', textAlign: 'center' }}>Price</th>
+                                                            <th style={{ width: '30%', textAlign: 'center' }}>{i18n.t('Product')}</th>
+                                                            <th style={{ width: '30%', textAlign: 'center' }}>{i18n.t('Category Product')}</th>
+                                                            <th style={{ width: '20%', textAlign: 'center' }}>Price</th>
+                                                            <th style={{ width: '20%', textAlign: 'center' }}>Allowance</th>
                                                             </tr>
                                                             {/* categoryproduct */}
                                                             {
                                                                 values.listCategoryProduct.map((x, i) => {
                                                                     return (
                                                                         <tr>
+                                                                            <td>
+                                                                            <DropdownList
+                                                                                name="idproduct"
+                                                                                filter='contains'
+                                                                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                                // onChange={val => handleInputDropDownChange(val, i, 'idproduct')}
+                                                                                data={ListProduct}
+                                                                                textField={'label'}
+                                                                                valueField={'value'}
+                                                                                value={x.idproduct}
+                                                                                disabled={true}
+                                                                            
+                                                                            />
+                                                                            </td>
                                                                             <td>{x.categoryproduct}</td>
                                                                             <td>
 
@@ -271,7 +342,19 @@ export default function EditPriceList(props) {
                                                                                 />
 
                                                                             </td>
+                                                                            <td>
+                                                                                <Input
+                                                                                    name="allowance"
+                                                                                    type="text"
+                                                                                    id="allowance"
+                                                                                    onChange={val => handleInputChangePrice(val, i)}
+                                                                                    onBlur={handleBlur}
+                                                                                    value={x.allowance !== '' ? numToMoney(parseFloat(x.allowance)) : ''}
+                                                                                />
+
+                                                                            </td>
                                                                         </tr>
+
                                                                     )
                                                                 })
                                                             }
@@ -280,8 +363,6 @@ export default function EditPriceList(props) {
                                                 </div>
                                         }
                                     </div>
-
-                                </div>
 
                             </ContentWrapper>
                             {loading && <Loading />}

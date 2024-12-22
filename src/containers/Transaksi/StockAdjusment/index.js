@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import * as actions from '../../../store/actions';
 import * as pathmenu from '../../shared/pathMenu';
 import { reloadToHomeNotAuthorize, isGetPermissions, firstAndLastDateInMonth } from '../../shared/globalFunc';
-import { MenuPriceList, addPriceList_Permission } from '../../shared/permissionMenu';
+import { MenuStockAdjusment, addStockAdjusment_Permission } from '../../shared/permissionMenu';
 import { useHistory } from 'react-router-dom';
 import { DatePicker } from 'react-widgets';
 import { formatdate } from '../../shared/constantValue';
@@ -19,17 +19,17 @@ import "react-widgets/dist/css/react-widgets.css";
 import SearchIcon from '@material-ui/icons/Search';
 import { IconButton } from '@material-ui/core';
 
-const PriceListIndex = () => {
-    reloadToHomeNotAuthorize(MenuPriceList, 'READ');
+const StockAdjusmentIndex = () => {
+    reloadToHomeNotAuthorize(MenuStockAdjusment, 'READ');
     momentLocalizer();
     const history = useHistory();
     const [rows, setRows] = useState([]);
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
         { name: 'id', title: 'id' },
-        // {name: 'code', title: i18n.t('Code')},
-        { name: 'pricedate', title: i18n.t('Date From') },
-        { name: 'pricedatethru', title: i18n.t('Date Thru') },
+        { name: 'nodoc', title: i18n.t('No Document') },
+        { name: 'type', title: i18n.t('Type') },
+        { name: 'transdate', title: i18n.t('Date') },
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ const PriceListIndex = () => {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getPriceListData({ url: '?from=' + from.getTime() + '&to=' + to.getTime() }, successHandler, errorHandler));
+        dispatch(actions.getStockAdjusmentData({ url: '?from=' + from.getTime() + '&to=' + to.getTime() }, successHandler, errorHandler));
     }, []);
 
     function successHandler(data, propsdata) {
@@ -49,8 +49,9 @@ const PriceListIndex = () => {
                 ...obj,
                 {
                     'id': el.id,
-                    'pricedate': el.pricedate ? moment(el.pricedate).format(formatdate) : '',
-                    'pricedatethru': el.pricedatethru ? moment(el.pricedatethru).format(formatdate) : '',
+                    'nodoc': el.nodocument,
+                    'type': el.type == 'H'?'Hidup' :'Mati',
+                    'transdate': el.date ? moment(el.date).format(formatdate) : '',
                 }
             ], []);
             setRows(theData);
@@ -68,10 +69,10 @@ const PriceListIndex = () => {
     }
 
     function onClickAdd() {
-        history.push(pathmenu.addpricelist);
+        history.push(pathmenu.addstockadjusment);
     }
     function onClickView(id) {
-        history.push(pathmenu.detailpricelist + '/' + id);
+        history.push(pathmenu.detailstockadjusment + '/' + id);
     }
 
     const handleChangeFrom = (data) => {
@@ -95,14 +96,13 @@ const PriceListIndex = () => {
     function onClickSearch() {
         if (from != null && to != null) {
             setLoading(true);
-            dispatch(actions.getPriceListData({ url: '?from=' + from.getTime() + '&to=' + to.getTime() }, successHandler, errorHandler));
+            dispatch(actions.getStockAdjusmentData({ url: '?from=' + from.getTime() + '&to=' + to.getTime() }, successHandler, errorHandler));
         }
-
     }
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menupricelist} label={'Price List'} labeldefault={'Price List'} />
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menustockadjusment} label={'Stock Adjusment'} labeldefault={'Stock Adjusment'} />
             <Container fluid>
                 <table>
                     <th>{'From'}</th>
@@ -162,11 +162,11 @@ const PriceListIndex = () => {
                                     totalCounts={rows.length}
                                     loading={loading}
                                     columnextension={tableColumnExtensions}
-                                    permissionadd={!isGetPermissions(addPriceList_Permission, 'TRANSACTION')}
+                                    permissionadd={!isGetPermissions(addStockAdjusment_Permission, 'TRANSACTION')}
                                     onclickadd={onClickAdd}
-                                    permissionview={!isGetPermissions(MenuPriceList, 'READ')}
+                                    permissionview={!isGetPermissions(MenuStockAdjusment, 'READ')}
                                     onclickview={onClickView}
-                                    listfilterdisabled={['pricedate','pricedatethru']}
+                                    listfilterdisabled={['transdate']}
                                 />
                             </div>
                         </Container>
@@ -177,4 +177,4 @@ const PriceListIndex = () => {
 
     );
 };
-export default PriceListIndex;
+export default StockAdjusmentIndex;

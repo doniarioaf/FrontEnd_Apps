@@ -14,7 +14,7 @@ import { addPriceList_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-import { DatePicker } from 'react-widgets';
+import { DatePicker,DropdownList } from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import { formatdate } from '../../shared/constantValue';
 import '../../CSS/table.css';
@@ -28,14 +28,15 @@ export default function AddPriceList(props) {
 
     const [loading, setLoading] = useState(false);
     const [PriceDate, setPriceDate] = useState(new Date());
+    const [PriceThruDate, setPriceThruDate] = useState(new Date());
     const [ErrPriceDate, setErrPriceDate] = useState("");
+    const [ErrPriceThruDate, setErrPriceThruDate] = useState("");
     const [ListCategoryProduct, setListCategoryProduct] = useState([]);
-    const [AlreadyGeneratePrice, setAlreadyGeneratePrice] = useState(true);
+    const [AlreadyGeneratePrice, setAlreadyGeneratePrice] = useState(false);
 
-    // const [SelCategoryProduct, setSelCategoryProduct] = useState('');
-    // const [ErrSelCategoryProduct, setErrSelCategoryProduct] = useState('');
-    // const [SelCategoryProductMapping, setSelCategoryProductMapping] = useState('');
-    // const [ErrSelCategoryProductMapping, setErrSelCategoryProductMapping] = useState('');
+    const [ListProduct, setListProduct] = useState([]);
+    
+    const [InputNotes, setInputNotes] = useState("");
 
     useEffect(() => {
         setLoading(true);
@@ -44,38 +45,72 @@ export default function AddPriceList(props) {
 
     function successHandler(data, propsdata) {
         if (data.data) {
-            const theData = data.data.categoryProductOpt.reduce((obj, el) => [
+            const items = data.data.items;
+            const theDataProduct = data.data.productOpt.reduce((obj, el) => [
                 ...obj,
                 {
-                    'categoryproductid': el.id,
-                    'categoryproduct': el.nama + ' (' + el.size + ')',
-                    'price': 0,
+                        
+                    'value': el.id,
+                    'label': el.nama,
                 }
             ], []);
+            setListProduct(theDataProduct);
+
+            // const theData = data.data.categoryProductOpt.reduce((obj, el) => [
+            //     ...obj,
+            //     {
+                        
+            //         'categoryproductid': el.id,
+            //         'categoryproduct': el.nama + ' (' + el.size + ')',
+            //         'price': 0,
+            //         'allowance':0
+            //     }
+            // ], []);
+            let idproduct = '';
+            if (theDataProduct != null && theDataProduct.length == 1) {
+                idproduct = theDataProduct[0].value;
+            }
+
+            let theData = [];
+            for(let i=0; i < data.data.categoryProductOpt.length; i++){
+                let el = data.data.categoryProductOpt[i];
+                let listfilteroutput = items.filter(output => output.categoryproductid == el.id);
+                let amount = 0;
+                let allowance = 0;
+                if(listfilteroutput.length > 0){
+                    let out = listfilteroutput[0];
+                    amount = out.amount;
+                    allowance = out.allowance;
+                }
+                theData.push(
+                    {    
+                        'idproduct':idproduct,
+                        'categoryproductid': el.id,
+                        'categoryproduct': el.nama + ' (' + el.size + ')',
+                        'price': amount,
+                        'allowance':allowance
+                    }
+                );
+            }
             setListCategoryProduct(theData);
         }
-        dispatch(actions.getPriceListData({ url: '?from=' + PriceDate.getTime() + '&to=' + PriceDate.getTime() }, successCheckData, errorHandler));
-        // setLoading(false);
+        // dispatch(actions.getPriceListData({ url: '?from=' + PriceDate.getTime() + '&to=' + PriceDate.getTime() }, successCheckData, errorHandler));
+        setLoading(false);
     }
 
     const checkColumnMandatory = (values) => {
         let flag = true;
         setErrPriceDate('');
-        // setErrSelCategoryProductMapping('');
+        setErrPriceThruDate('');
         if (PriceDate == null) {
             setErrPriceDate(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        // if(SelCategoryProductMapping == ''){
-        //     setErrSelCategoryProductMapping(i18n.t('label_REQUIRED'));
-        //     flag = false;
-        // }
-        // if(SelCategoryProduct !== '' && SelCategoryProductMapping !== ''){
-        //     if(SelCategoryProduct ==  SelCategoryProductMapping){
-        //         setErrSelCategoryProductMapping(i18n.t('Product Tidak Bisa Sama'));
-        //         flag = false;
-        //     }
-        // }
+        if (PriceThruDate == null) {
+            setErrPriceThruDate(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+        
         return flag;
     }
 
@@ -101,13 +136,17 @@ export default function AddPriceList(props) {
                 setLoading(true);
                 let obj = new Object();
                 obj.pricedate = PriceDate.getTime();
+                obj.pricedatethru = PriceThruDate.getTime();
+                obj.notes = values.notes;
                 let items = [];
                 if (ListCategoryProduct.length > 0) {
                     items = ListCategoryProduct.reduce((obj, el) => [
                         ...obj,
                         {
+                            'idproduct':el.idproduct,
                             'categoryproductid': el.categoryproductid,
                             'amount': new String(el.price).replaceAll('.', '') !== '' ? new String(el.price).replaceAll('.', '') : '0',
+                            'allowance': new String(el.allowance).replaceAll('.', '') !== '' ? new String(el.allowance).replaceAll('.', '') : '0',
                         }
                     ], []);
                 }
@@ -149,10 +188,19 @@ export default function AddPriceList(props) {
         if (data !== null) {
             let dateprice = moment(data, formatdate).toDate();
             setPriceDate(dateprice)
-            setLoading(true);
-            dispatch(actions.getPriceListData({ url: '?from=' + dateprice.getTime() + '&to=' + dateprice.getTime() }, successCheckData, errorHandler));
+            // setLoading(true);
+            // dispatch(actions.getPriceListData({ url: '?from=' + dateprice.getTime() + '&to=' + dateprice.getTime() }, successCheckData, errorHandler));
         } else {
             setPriceDate(null)
+        }
+    }
+
+    const handleChangePriceThruDate = (data) => {
+        if (data !== null) {
+            let dateprice = moment(data, formatdate).toDate();
+            setPriceThruDate(dateprice)
+        } else {
+            setPriceThruDate(null)
         }
     }
 
@@ -183,16 +231,25 @@ export default function AddPriceList(props) {
         setListCategoryProduct(list);
     }
 
+    const handleInputDropDownChange = (e, index, name) => {
+        const list = [...ListCategoryProduct];
+        list[index][name] = e.value;
+        setListCategoryProduct(list);
+    };
+
     return (
         <Formik
             initialValues={
                 {
                     listCategoryProduct: ListCategoryProduct,
-                    pricedate: PriceDate
+                    pricedate: PriceDate,
+                    pricethrudate: PriceThruDate,
+                    notes:InputNotes
                 }
             }
             validate={values => {
                 const errors = {};
+                setInputNotes(values.notes);
                 return errors;
             }}
             enableReinitialize="true"
@@ -221,7 +278,7 @@ export default function AddPriceList(props) {
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
                                         <label className="mt-3 form-label required" htmlFor="pricedate">
-                                            {i18n.t('Price Date')}
+                                            {i18n.t('Dari Tanggal')}
                                         </label>
                                         <span style={{ color: 'red' }}>*</span>
 
@@ -230,25 +287,75 @@ export default function AddPriceList(props) {
                                             onChange={val => handleChangePriceDate(val)}
                                             format={formatdate}
                                             value={values.pricedate}
+                                            max={values.pricethrudate}
                                         />
                                         <div className="invalid-feedback-custom">{ErrPriceDate}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="pricethrudate">
+                                            {i18n.t('Sampai Tanggal')}
+                                        </label>
+                                        <span style={{ color: 'red' }}>*</span>
+
+                                        <DatePicker
+                                            name="pricethrudate"
+                                            onChange={val => handleChangePriceThruDate(val)}
+                                            format={formatdate}
+                                            value={values.pricethrudate}
+                                            min={values.pricedate}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrPriceThruDate}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="notes">
+                                            {i18n.t('Notes')}
+                                        </label>
+                                        <Input
+
+                                            name="notes"
+                                            type="text"
+                                            id="notes"
+                                            // maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.notes}
+                                        />
                                     </div>
 
-                                    <div hidden={AlreadyGeneratePrice} className="mt-2 col-lg-6 ft-detail mb-5">
+                                    
+
+                                </div>
+
+                                <div hidden={AlreadyGeneratePrice}>
                                         {
                                             values.listCategoryProduct.length == 0 ? '' :
                                                 <div className="row justify-content-center">
                                                     <table id="tablegrid">
                                                         <tbody>
                                                             <tr>
-                                                                <th style={{ width: '60%', textAlign: 'center' }}>{i18n.t('Category Product')}</th>
-                                                                <th style={{ width: '40%', textAlign: 'center' }}>Price</th>
+                                                                <th style={{ width: '30%', textAlign: 'center' }}>{i18n.t('Product')}</th>
+                                                                <th style={{ width: '30%', textAlign: 'center' }}>{i18n.t('Category Product')}</th>
+                                                                <th style={{ width: '20%', textAlign: 'center' }}>Price</th>
+                                                                <th style={{ width: '20%', textAlign: 'center' }}>Allowance</th>
                                                             </tr>
                                                             {/* categoryproduct */}
                                                             {
                                                                 values.listCategoryProduct.map((x, i) => {
                                                                     return (
                                                                         <tr>
+                                                                            <td>
+                                                                            <DropdownList
+                                                                                name="idproduct"
+                                                                                filter='contains'
+                                                                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                                onChange={val => handleInputDropDownChange(val, i, 'idproduct')}
+                                                                                data={ListProduct}
+                                                                                textField={'label'}
+                                                                                valueField={'value'}
+                                                                                value={x.idproduct}
+                                                                            
+                                                                            />
+                                                                            </td>
                                                                             <td>{x.categoryproduct}</td>
                                                                             <td>
 
@@ -262,6 +369,18 @@ export default function AddPriceList(props) {
                                                                                 />
 
                                                                             </td>
+                                                                            <td>
+
+                                                                                <Input
+                                                                                    name="allowance"
+                                                                                    type="text"
+                                                                                    id="allowance"
+                                                                                    onChange={val => handleInputChangePrice(val, i)}
+                                                                                    onBlur={handleBlur}
+                                                                                    value={x.allowance !== '' ? numToMoney(parseFloat(x.allowance)) : ''}
+                                                                                />
+
+                                                                            </td>
                                                                         </tr>
                                                                     )
                                                                 })
@@ -271,8 +390,6 @@ export default function AddPriceList(props) {
                                                 </div>
                                         }
                                     </div>
-
-                                </div>
 
                             </ContentWrapper>
                             {loading && <Loading />}

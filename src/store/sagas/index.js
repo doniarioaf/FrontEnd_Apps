@@ -57,7 +57,9 @@ import {
     getAreaSaga,
     submitAreaSaga,
     getDraftPurchaseReceiveSaga,
-    submitDraftPurchaseReceiveSaga
+    submitDraftPurchaseReceiveSaga,
+    getStockAdjusmentSaga,
+    submitStockAdjusmentSaga
 } from './admin';
 
 
@@ -118,5 +120,7 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_AREA, submitAreaSaga),
         takeEvery(actions.GET_DRAFTPURCHASERECEIVE_DATA, getDraftPurchaseReceiveSaga),
         takeEvery(actions.SUBMIT_DRAFTPURCHASERECEIVE, submitDraftPurchaseReceiveSaga),
+        takeEvery(actions.GET_STOCKADJUSMENT_DATA, getStockAdjusmentSaga),
+        takeEvery(actions.SUBMIT_STOCKADJUSMENT, submitStockAdjusmentSaga),
     ]);
 }

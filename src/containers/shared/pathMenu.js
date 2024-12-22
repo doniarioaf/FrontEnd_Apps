@@ -68,3 +68,7 @@ export const menudraftpurchasereceive = `/draftpurchasereceive`;
 export const adddraftpurchasereceive = `/form/add/draftpurchasereceive`;
 export const detaildraftpurchasereceive = `/form/detail/draftpurchasereceive`;
 export const editdraftpurchasereceive = `/form/edit/draftpurchasereceive`;
+export const menustockadjusment = `/stockadjusment`;
+export const addstockadjusment = `/form/add/stockadjusment`;
+export const detailstockadjusment = `/form/detail/stockadjusment`;
+export const editstockadjusment = `/form/edit/stockadjusment`;

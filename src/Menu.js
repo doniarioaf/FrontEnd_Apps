@@ -116,6 +116,12 @@ const handleMenu = () => {
                     translate: 'Purchase Receive',
                     permission:permissionmenu.MenuPurchaseReceive,
                 },
+                {
+                    name: 'Stock Adjusment',
+                    path: pathmenu.menustockadjusment,
+                    translate: 'Stock Adjusment',
+                    permission:permissionmenu.MenuStockAdjusment,
+                },
             ]
         },
         {

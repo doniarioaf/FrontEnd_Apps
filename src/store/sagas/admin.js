@@ -8,7 +8,7 @@ import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileU
     basePurchaseReceiveURL,
     baseDepositURL,
     baseAreaURL,
-    baseDraftPurchaseReceiveURL} from '../../containers/shared/apiURL';
+    baseDraftPurchaseReceiveURL,baseStockAdjusmentURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -628,6 +628,47 @@ export function* submitDraftPurchaseReceiveSaga(action) {
             action.successHandler(response,propsdata);
         }else if(type == 'DELETE'){
             const response = yield axios.delete(baseDraftPurchaseReceiveURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getStockAdjusmentSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'GET';
+    let propsdata = action.param.propsdata?action.param.propsdata:'';
+    try {
+        if(type == 'GET'){
+            const response = yield axios.get(baseStockAdjusmentURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'POST'){
+            const response = yield axios.post(baseStockAdjusmentURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error),propsdata);
+    }
+}
+
+export function* submitStockAdjusmentSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:[];
+    try {
+        if(type == 'ADD'){
+            const response = yield axios.post(baseStockAdjusmentURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'EDIT'){
+            const response = yield axios.put(baseStockAdjusmentURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'DELETE'){
+            const response = yield axios.delete(baseStockAdjusmentURL(url)).then(response => response.data);
             action.successHandler(response,propsdata);
         }
         

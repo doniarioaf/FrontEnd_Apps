@@ -201,6 +201,11 @@ const addDraftPurchaseReceive = lazy(() => import('./containers/Transaksi/DraftP
 const detailDraftPurchaseReceive = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive/detail'));
 const editDraftPurchaseReceive = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive/edit'));
 
+const menuStockAdjusment = lazy(() => import('./containers/Transaksi/StockAdjusment'));
+const addStockAdjusment = lazy(() => import('./containers/Transaksi/StockAdjusment/add'));
+const detailStockAdjusment = lazy(() => import('./containers/Transaksi/StockAdjusment/detail'));
+const editStockAdjusment = lazy(() => import('./containers/Transaksi/StockAdjusment/edit'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -411,6 +416,11 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.adddraftpurchasereceive} component={waitFor(addDraftPurchaseReceive)}/>
                             <Route path={pathmenu.detaildraftpurchasereceive+'/:id'} component={waitFor(detailDraftPurchaseReceive)}/>
                             <Route path={pathmenu.editdraftpurchasereceive+'/:id'} component={waitFor(editDraftPurchaseReceive)}/>
+
+                            <Route path={pathmenu.menustockadjusment} component={waitFor(menuStockAdjusment)}/>
+                            <Route path={pathmenu.addstockadjusment} component={waitFor(addStockAdjusment)}/>
+                            <Route path={pathmenu.detailstockadjusment+'/:id'} component={waitFor(detailStockAdjusment)}/>
+                            <Route path={pathmenu.editstockadjusment+'/:id'} component={waitFor(editStockAdjusment)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

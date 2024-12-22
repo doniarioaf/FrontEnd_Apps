@@ -66,6 +66,10 @@ export const addDraftPurchaseReceive_Permission = ['READ_DRAFTPURCHASERECEIVE','
 export const editDraftPurchaseReceive_Permission = ['READ_DRAFTPURCHASERECEIVE','EDIT_DRAFTPURCHASERECEIVE'];
 export const deleteDraftPurchaseReceive_Permission = ['DELETE_DRAFTPURCHASERECEIVE'];
 
+export const addStockAdjusment_Permission = ['READ_STOCKADJUSMENT','CREATE_STOCKADJUSMENT'];
+export const editStockAdjusment_Permission = ['READ_STOCKADJUSMENT','EDIT_STOCKADJUSMENT'];
+export const deleteStockAdjusment_Permission = ['DELETE_STOCKADJUSMENT'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -84,3 +88,4 @@ export const MenuPurchaseReceive = ['READ_PURCHASERECEIVE'];
 export const MenuDeposit = ['READ_DEPOSIT'];
 export const MenuArea = ['READ_AREA'];
 export const MenuDraftPurchaseReceive = ['READ_DRAFTPURCHASERECEIVE'];
+export const MenuStockAdjusment = ['READ_STOCKADJUSMENT'];
