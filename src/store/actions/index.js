@@ -64,5 +64,7 @@ export {
     getDraftPurchaseReceiveData,
     submitDraftPurchaseReceive,
     getStockAdjusmentData,
-    submitStockAdjusment
+    submitStockAdjusment,
+    getPackingListData,
+    submitPackingList
 } from './admin';

@@ -472,3 +472,21 @@ export const submitStockAdjusment = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getPackingListData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PACKINGLIST_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitPackingList = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PACKINGLIST,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

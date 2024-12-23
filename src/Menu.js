@@ -99,6 +99,12 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuDeposit,
                 },
                 {
+                    name: 'Packing List',
+                    path: pathmenu.menupackinglist,
+                    translate: 'Packing List',
+                    permission:permissionmenu.MenuPackingList,
+                },
+                {
                     name: 'Price List',
                     path: pathmenu.menupricelist,
                     translate: 'Price List',

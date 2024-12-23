@@ -70,6 +70,10 @@ export const addStockAdjusment_Permission = ['READ_STOCKADJUSMENT','CREATE_STOCK
 export const editStockAdjusment_Permission = ['READ_STOCKADJUSMENT','EDIT_STOCKADJUSMENT'];
 export const deleteStockAdjusment_Permission = ['DELETE_STOCKADJUSMENT'];
 
+export const addPackingList_Permission = ['READ_PACKINGLIST','CREATE_PACKINGLIST'];
+export const editPackingList_Permission = ['READ_PACKINGLIST','EDIT_PACKINGLIST'];
+export const deletePackingList_Permission = ['DELETE_PACKINGLIST'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -89,3 +93,4 @@ export const MenuDeposit = ['READ_DEPOSIT'];
 export const MenuArea = ['READ_AREA'];
 export const MenuDraftPurchaseReceive = ['READ_DRAFTPURCHASERECEIVE'];
 export const MenuStockAdjusment = ['READ_STOCKADJUSMENT'];
+export const MenuPackingList = ['READ_PACKINGLIST'];

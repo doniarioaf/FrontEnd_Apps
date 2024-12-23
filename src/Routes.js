@@ -206,6 +206,11 @@ const addStockAdjusment = lazy(() => import('./containers/Transaksi/StockAdjusme
 const detailStockAdjusment = lazy(() => import('./containers/Transaksi/StockAdjusment/detail'));
 const editStockAdjusment = lazy(() => import('./containers/Transaksi/StockAdjusment/edit'));
 
+const menuPackingList = lazy(() => import('./containers/Transaksi/PackingList'));
+const addPackingList = lazy(() => import('./containers/Transaksi/PackingList/add'));
+const detailPackingList = lazy(() => import('./containers/Transaksi/PackingList/detail'));
+const editPackingList = lazy(() => import('./containers/Transaksi/PackingList/edit'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -421,6 +426,11 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addstockadjusment} component={waitFor(addStockAdjusment)}/>
                             <Route path={pathmenu.detailstockadjusment+'/:id'} component={waitFor(detailStockAdjusment)}/>
                             <Route path={pathmenu.editstockadjusment+'/:id'} component={waitFor(editStockAdjusment)}/>
+
+                            <Route path={pathmenu.menupackinglist} component={waitFor(menuPackingList)}/>
+                            <Route path={pathmenu.addpackinglist} component={waitFor(addPackingList)}/>
+                            <Route path={pathmenu.detailpackinglist+'/:id'} component={waitFor(detailPackingList)}/>
+                            <Route path={pathmenu.editpackinglist+'/:id'} component={waitFor(editPackingList)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

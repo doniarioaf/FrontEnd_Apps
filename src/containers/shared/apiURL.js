@@ -26,3 +26,4 @@ export const baseDepositURL = param => `${baseApiURL}/deposit${param}`;
 export const baseAreaURL = param => `${baseApiURL}/area${param}`;
 export const baseDraftPurchaseReceiveURL = param => `${baseApiURL}/draftpurchasereceive${param}`;
 export const baseStockAdjusmentURL = param => `${baseApiURL}/stockadjusment${param}`;
+export const basePackingListURL = param => `${baseApiURL}/packinglist${param}`;

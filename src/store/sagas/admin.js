@@ -8,7 +8,8 @@ import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileU
     basePurchaseReceiveURL,
     baseDepositURL,
     baseAreaURL,
-    baseDraftPurchaseReceiveURL,baseStockAdjusmentURL} from '../../containers/shared/apiURL';
+    baseDraftPurchaseReceiveURL,baseStockAdjusmentURL,
+    basePackingListURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -669,6 +670,47 @@ export function* submitStockAdjusmentSaga(action) {
             action.successHandler(response,propsdata);
         }else if(type == 'DELETE'){
             const response = yield axios.delete(baseStockAdjusmentURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getPackingListSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'GET';
+    let propsdata = action.param.propsdata?action.param.propsdata:'';
+    try {
+        if(type == 'GET'){
+            const response = yield axios.get(basePackingListURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'POST'){
+            const response = yield axios.post(basePackingListURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error),propsdata);
+    }
+}
+
+export function* submitPackingListSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:[];
+    try {
+        if(type == 'ADD'){
+            const response = yield axios.post(basePackingListURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'EDIT'){
+            const response = yield axios.put(basePackingListURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'DELETE'){
+            const response = yield axios.delete(basePackingListURL(url)).then(response => response.data);
             action.successHandler(response,propsdata);
         }
         

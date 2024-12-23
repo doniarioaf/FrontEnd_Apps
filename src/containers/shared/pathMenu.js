@@ -72,3 +72,7 @@ export const menustockadjusment = `/stockadjusment`;
 export const addstockadjusment = `/form/add/stockadjusment`;
 export const detailstockadjusment = `/form/detail/stockadjusment`;
 export const editstockadjusment = `/form/edit/stockadjusment`;
+export const menupackinglist = `/packinglist`;
+export const addpackinglist = `/form/add/packinglist`;
+export const detailpackinglist = `/form/detail/packinglist`;
+export const editpackinglist = `/form/edit/packinglist`;
