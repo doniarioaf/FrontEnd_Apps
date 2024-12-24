@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import * as actions from '../../../store/actions';
 import * as pathmenu from '../../shared/pathMenu';
 import { reloadToHomeNotAuthorize, isGetPermissions, firstAndLastDateInMonth } from '../../shared/globalFunc';
-import { MenuPackingList, addPackingList_Permission } from '../../shared/permissionMenu';
+import { MenuInvoice, addInvoice_Permission } from '../../shared/permissionMenu';
 import { useHistory } from 'react-router-dom';
 import { DatePicker } from 'react-widgets';
 import { formatdate } from '../../shared/constantValue';
@@ -20,7 +20,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import { IconButton } from '@material-ui/core';
 
 const DraftPackingListIndex = () => {
-    reloadToHomeNotAuthorize(MenuPackingList, 'READ');
+    reloadToHomeNotAuthorize(MenuInvoice, 'READ');
     momentLocalizer();
     const history = useHistory();
     const [rows, setRows] = useState([]);
@@ -77,7 +77,7 @@ const DraftPackingListIndex = () => {
         history.push(pathmenu.addinvoice);
     }
     function onClickView(id) {
-        history.push(pathmenu.detailpackinglist + '/' + id);
+        history.push(pathmenu.detailinvoice + '/' + id);
     }
 
     const handleChangeFrom = (data) => {
@@ -172,9 +172,9 @@ const DraftPackingListIndex = () => {
                                     totalCounts={rows.length}
                                     loading={loading}
                                     columnextension={tableColumnExtensions}
-                                    permissionadd={!isGetPermissions(addPackingList_Permission, 'TRANSACTION')}
+                                    permissionadd={!isGetPermissions(addInvoice_Permission, 'TRANSACTION')}
                                     onclickadd={onClickAdd}
-                                    permissionview={!isGetPermissions(MenuPackingList, 'READ')}
+                                    permissionview={!isGetPermissions(MenuInvoice, 'READ')}
                                     onclickview={onClickView}
                                     listfilterdisabled={['transdate']}
                                 />

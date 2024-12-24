@@ -213,6 +213,8 @@ const editPackingList = lazy(() => import('./containers/Transaksi/PackingList/ed
 
 const menuInvoice = lazy(() => import('./containers/Transaksi/invoice'));
 const addInvoice = lazy(() => import('./containers/Transaksi/invoice/add'));
+const detailInvoice = lazy(() => import('./containers/Transaksi/invoice/detail'));
+const editInvoice = lazy(() => import('./containers/Transaksi/invoice/edit'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -437,6 +439,8 @@ const Routes = ({ location, ...props }) => {
 
                             <Route path={pathmenu.menuinvoice} component={waitFor(menuInvoice)}/>
                             <Route path={pathmenu.addinvoice} component={waitFor(addInvoice)}/>
+                            <Route path={pathmenu.detailinvoice+'/:id'} component={waitFor(detailInvoice)}/>
+                            <Route path={pathmenu.editinvoice+'/:id'} component={waitFor(editInvoice)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

@@ -10,7 +10,7 @@ import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
 import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { addInvoice_Permission } from '../../shared/permissionMenu';
+import { editInvoice_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 // import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -19,7 +19,7 @@ import "react-widgets/dist/css/react-widgets.css";
 import { formatdate } from '../../shared/constantValue';
 import '../../CSS/table.css';
 export default function AddPackingList(props) {
-    reloadToHomeNotAuthorize(addInvoice_Permission, 'TRANSACTION');
+    reloadToHomeNotAuthorize(editInvoice_Permission, 'TRANSACTION');
     const { i18n } = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -44,27 +44,48 @@ export default function AddPackingList(props) {
 
     const [ListItems, setListItems] = useState([]);
 
+    const id = props.match.params.id;
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getInvoiceData({ url: '/template' }, successHandler, errorHandler));
+        dispatch(actions.getInvoiceData({ url: '/'+id }, successHandler, errorHandler));
     }, []);
-
     function successHandler(data, propsdata) {
+        let det = data.data;
+        let packinglist = det.packinglist;
+        let listItems = packinglist.items?packinglist.items:[];
+        setListItems(listItems);
+
         let theDataProd = []
-        if (data.data) {
-            theDataProd = data.data.packingListOpt.reduce((obj, el) => [
-                ...obj,
-                {
-                    'value': el.id,
-                    'label': el.nodocument,
-                    'data': el
-                }
-            ], []);
-            setListPackingList(theDataProd);
-        }
+        theDataProd.push({
+            'value':packinglist.id,
+            'label':packinglist.nodocument,
+        });
+        setListPackingList(theDataProd);
+        setSelPackingList(det.idpackinglist);
+        setInputPhone(det.phone);
+        setInputKurs(det.kurs?det.kurs:'');
+        setTransDate(det.date?new Date(det.date):null);
+        setInputCustomer(packinglist.customerName+'/'+packinglist.customerAlias);
+        setInputCustomerAddress(packinglist.customerAddress);
+        setInputAttention(packinglist.attention);
         setLoading(false);
     }
+    // function successHandler(data, propsdata) {
+    //     let theDataProd = []
+    //     if (data.data) {
+    //         theDataProd = data.data.packingListOpt.reduce((obj, el) => [
+    //             ...obj,
+    //             {
+    //                 'value': el.id,
+    //                 'label': el.nodocument,
+    //                 'data': el
+    //             }
+    //         ], []);
+    //         setListPackingList(theDataProd);
+    //     }
+    //     setLoading(false);
+    // }
 
     const checkColumnMandatory = (values) => {
         let flag = true;
@@ -112,7 +133,7 @@ export default function AddPackingList(props) {
             obj.kurs = values.kurs !== ''?new String(values.kurs).replaceAll('.',''):1;
             obj.idpackinglist = SelPackingList;
             obj.phone = values.phone;
-            dispatch(actions.submitInvoice({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitInvoice({ url: '/'+id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -204,9 +225,9 @@ export default function AddPackingList(props) {
                     } = formikProps;
 
                     return (
-                        <form className="mb-6" onSubmit={handleSubmit} name="addinvoice">
+                        <form className="mb-6" onSubmit={handleSubmit} name="editinvoice">
                             <ContentWrapper>
-                                <ContentHeading history={history} link={pathmenu.addinvoice} label={'Add Invoice'} labeldefault={'Add Invoice'} />
+                                <ContentHeading history={history} link={pathmenu.editinvoice+'/'+id} label={'Edit Invoice'} labeldefault={'Edit Invoice'} />
 
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
@@ -220,14 +241,15 @@ export default function AddPackingList(props) {
                                             filter='contains'
                                             placeholder={i18n.t('select.SELECT_OPTION')}
 
-                                            onChange={val => handleChangePackingList(val)}
-                                            onBlur={val => setFieldTouched("packinglist", val?.value ? val.value : '')}
+                                            // onChange={val => handleChangePackingList(val)}
+                                            // onBlur={val => setFieldTouched("packinglist", val?.value ? val.value : '')}
                                             data={ListPackingList}
                                             textField={'label'}
                                             valueField={'value'}
                                             // style={{width: '25%'}}
                                             // disabled={values.isdisabledcountry}
                                             value={values.packinglist}
+                                            disabled={true}
                                         />
                                     <div className="invalid-feedback-custom">{ErrSelPackingList}</div>
 

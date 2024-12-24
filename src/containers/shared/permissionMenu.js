@@ -74,6 +74,10 @@ export const addPackingList_Permission = ['READ_PACKINGLIST','CREATE_PACKINGLIST
 export const editPackingList_Permission = ['READ_PACKINGLIST','EDIT_PACKINGLIST'];
 export const deletePackingList_Permission = ['DELETE_PACKINGLIST'];
 
+export const addInvoice_Permission = ['READ_INVOICE','CREATE_INVOICE'];
+export const editInvoice_Permission = ['READ_INVOICE','EDIT_INVOICE'];
+export const deleteInvoice_Permission = ['DELETE_INVOICE'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -94,3 +98,4 @@ export const MenuArea = ['READ_AREA'];
 export const MenuDraftPurchaseReceive = ['READ_DRAFTPURCHASERECEIVE'];
 export const MenuStockAdjusment = ['READ_STOCKADJUSMENT'];
 export const MenuPackingList = ['READ_PACKINGLIST'];
+export const MenuInvoice = ['READ_INVOICE'];

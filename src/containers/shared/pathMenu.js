@@ -78,3 +78,5 @@ export const detailpackinglist = `/form/detail/packinglist`;
 export const editpackinglist = `/form/edit/packinglist`;
 export const menuinvoice = `/invoice`;
 export const addinvoice = `/form/add/invoice`;
+export const detailinvoice = `/form/detail/invoice`;
+export const editinvoice = `/form/edit/invoice`;
