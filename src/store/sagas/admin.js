@@ -9,7 +9,8 @@ import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileU
     baseDepositURL,
     baseAreaURL,
     baseDraftPurchaseReceiveURL,baseStockAdjusmentURL,
-    basePackingListURL} from '../../containers/shared/apiURL';
+    basePackingListURL,
+    baseInvoiceURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -711,6 +712,47 @@ export function* submitPackingListSaga(action) {
             action.successHandler(response,propsdata);
         }else if(type == 'DELETE'){
             const response = yield axios.delete(basePackingListURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getInvoiceSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'GET';
+    let propsdata = action.param.propsdata?action.param.propsdata:'';
+    try {
+        if(type == 'GET'){
+            const response = yield axios.get(baseInvoiceURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'POST'){
+            const response = yield axios.post(baseInvoiceURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error),propsdata);
+    }
+}
+
+export function* submitInvoiceSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:[];
+    try {
+        if(type == 'ADD'){
+            const response = yield axios.post(baseInvoiceURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'EDIT'){
+            const response = yield axios.put(baseInvoiceURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'DELETE'){
+            const response = yield axios.delete(baseInvoiceURL(url)).then(response => response.data);
             action.successHandler(response,propsdata);
         }
         

@@ -66,5 +66,7 @@ export {
     getStockAdjusmentData,
     submitStockAdjusment,
     getPackingListData,
-    submitPackingList
+    submitPackingList,
+    getInvoiceData,
+    submitInvoice
 } from './admin';

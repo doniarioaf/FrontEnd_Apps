@@ -211,6 +211,9 @@ const addPackingList = lazy(() => import('./containers/Transaksi/PackingList/add
 const detailPackingList = lazy(() => import('./containers/Transaksi/PackingList/detail'));
 const editPackingList = lazy(() => import('./containers/Transaksi/PackingList/edit'));
 
+const menuInvoice = lazy(() => import('./containers/Transaksi/invoice'));
+const addInvoice = lazy(() => import('./containers/Transaksi/invoice/add'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -431,6 +434,9 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.addpackinglist} component={waitFor(addPackingList)}/>
                             <Route path={pathmenu.detailpackinglist+'/:id'} component={waitFor(detailPackingList)}/>
                             <Route path={pathmenu.editpackinglist+'/:id'} component={waitFor(editPackingList)}/>
+
+                            <Route path={pathmenu.menuinvoice} component={waitFor(menuInvoice)}/>
+                            <Route path={pathmenu.addinvoice} component={waitFor(addInvoice)}/>
                             
                             <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
                             

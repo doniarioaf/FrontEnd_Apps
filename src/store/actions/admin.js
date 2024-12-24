@@ -490,3 +490,21 @@ export const submitPackingList = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getInvoiceData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_INVOICE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitInvoice = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_INVOICE,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

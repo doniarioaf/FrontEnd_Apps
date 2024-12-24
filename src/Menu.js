@@ -128,6 +128,12 @@ const handleMenu = () => {
                     translate: 'Stock Adjusment',
                     permission:permissionmenu.MenuStockAdjusment,
                 },
+                {
+                    name: 'Invoice',
+                    path: pathmenu.menuinvoice,
+                    translate: 'Invoice',
+                    permission:permissionmenu.MenuStockAdjusment,
+                },
             ]
         },
         {
