@@ -209,7 +209,7 @@ export default function AddPackingList(props) {
                         'brutoweight': new String(el.brutoweight).replaceAll(',', '.') !== '' ? new String(el.brutoweight).replaceAll(',', '.') : '0',
                         'nettoweight': new String(el.nettoweight).replaceAll(',', '.') !== '' ? new String(el.nettoweight).replaceAll(',', '.') : '0',
                         'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
-                        'totalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
+                        'totalprice': el.subtotalprice,//new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
                         'box': el.box
                     }
                 ], []);
@@ -288,18 +288,22 @@ export default function AddPackingList(props) {
             
             if(flag) {
                 if (name == 'qty') {
-                    const listTemp = [...ListItems];
-                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
+                    // const listTemp = [...ListItems];
+                    // let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
                     
-                    let qtyTemp = parseInt(valPriceTemp)
-                    subtotal = parseInt(qtyTemp) * parseFloat(pricetemp);
-                    list[index]['subtotalprice'] = subtotal;
+                    // let qtyTemp = parseInt(valPriceTemp)
+                    // subtotal = parseInt(qtyTemp) * parseFloat(pricetemp);
+                    // list[index]['subtotalprice'] = subtotal;
                 } else if(name == 'brutoweight'){
                     const listTemp = [...ListItems];
+                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
                     let allowance = parseFloat(listTemp[index]['allowance']); //InPersen
                     allowance = allowance / 100.0;
                     let netto = parseFloat(valPriceTemp) + (parseFloat(valPriceTemp) * allowance);
-                    list[index]['nettoweight'] = netto.toFixed(2);
+                    netto = netto.toFixed(2);
+                    let subtotal = parseFloat(netto) * parseFloat(pricetemp);
+                    list[index]['nettoweight'] = netto;
+                    list[index]['subtotalprice'] = subtotal.toFixed(2);
                 }
                 //
             }
@@ -344,9 +348,10 @@ export default function AddPackingList(props) {
 
         let hasil = allowance / 100.0;
         let netto = parseFloat(brutoweight) + (parseFloat(brutoweight) * hasil);
-        list[index]['nettoweight'] = netto.toFixed(2);
-
-        list[index]['subtotalprice'] = amount * qty;
+        netto = netto.toFixed(2);
+        list[index]['nettoweight'] = netto;
+        let subtotal = parseFloat(netto) * parseFloat(amount);
+        list[index]['subtotalprice'] = subtotal.toFixed(2);
         list[index]['allowance'] = allowance;
         list[index]['itemsprice'] = amount;
         list[index][name] = e.value;

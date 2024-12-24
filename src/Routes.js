@@ -1,6 +1,6 @@
-import React, { Suspense, lazy ,useEffect} from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
-import {withTranslation}                     from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 /* loader component for Suspense*/
@@ -8,18 +8,18 @@ import PageLoader from './components/Common/PageLoader';
 
 import Base from './components/Layout/Base';
 import BasePage from './components/Layout/BasePage';
-import * as pathmenu           from './containers/shared/pathMenu';
+import * as pathmenu from './containers/shared/pathMenu';
 
-import {useSelector, useDispatch} from 'react-redux';
-import {checkUser,authSuccess}           from './store/actions';
-import {put, call}         from 'redux-saga/effects';
-import {useHistory}                 from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { checkUser, authSuccess } from './store/actions';
+import { put, call } from 'redux-saga/effects';
+import { useHistory } from 'react-router-dom';
 import * as key from './containers/shared/constantKey';
-import {deleteSessionAndLocalStorage} from './containers/shared/globalFunc';
+import { deleteSessionAndLocalStorage } from './containers/shared/globalFunc';
 // import BaseHorizontal from './components/Layout/BaseHorizontal';
 
 /* Used to render a lazy component with react-router */
-const waitFor = Tag => props => <Tag {...props}/>;
+const waitFor = Tag => props => <Tag {...props} />;
 
 // const DashboardV1 = lazy(() => import('./components/Dashboard/DashboardV1'));
 // const DashboardV2 = lazy(() => import('./components/Dashboard/DashboardV2'));
@@ -210,6 +210,7 @@ const menuPackingList = lazy(() => import('./containers/Transaksi/PackingList'))
 const addPackingList = lazy(() => import('./containers/Transaksi/PackingList/add'));
 const detailPackingList = lazy(() => import('./containers/Transaksi/PackingList/detail'));
 const editPackingList = lazy(() => import('./containers/Transaksi/PackingList/edit'));
+const printPdfPackingList = lazy(() => import('./containers/Transaksi/PackingList/Print'));
 
 const menuInvoice = lazy(() => import('./containers/Transaksi/invoice'));
 const addInvoice = lazy(() => import('./containers/Transaksi/invoice/add'));
@@ -259,17 +260,17 @@ const Routes = ({ location, ...props }) => {
         //     }else{
         //         isAuthenticated = true;   
         //     }
-            
+
         // }else{
         //     isAuthenticated = true;
         // }
-        
+
         // // if(username !== ''){
         // //     dispatch(checkUser());
         // // }else{
         // //     isAuthenticated = true;
         // // }
-        
+
         // console.log('isAuthenticated ',isAuthenticated)
 
         // if(typeaction == 'check'){
@@ -279,13 +280,13 @@ const Routes = ({ location, ...props }) => {
         // }
         let sessionuser = sessionStorage.getItem(key.sessionuser);
         let flagout = false;
-        if(sessionuser == null || sessionuser == undefined){
+        if (sessionuser == null || sessionuser == undefined) {
             flagout = true;
         }
         if (localStorage.getItem(key.token) === null || localStorage.getItem(key.token) === undefined || localStorage.getItem(key.token) == '') {
             flagout = true;
         }
-        if(flagout){
+        if (flagout) {
             deleteSessionAndLocalStorage();
             history.push('/logout');
         }
@@ -294,165 +295,167 @@ const Routes = ({ location, ...props }) => {
             props.i18n.changeLanguage('en');
         else if (currentLanguage !== 'en')
             props.i18n.changeLanguage(currentLanguage);
-            return () => {
-            };
+        return () => {
+        };
 
     }, []);
-    
 
-    if(isAuthenticated){
-    // if(typeaction == 'login'){
-    //     let obj = new Object();
-    //     obj.username = username;
-    //     obj.permissions = permissions;
-    //     obj.typeaction = 'check';
-    //     dispatch(authSuccess(obj));
-    // }
-    if(listofPages.indexOf(location.pathname) > -1) {
-        return (
-            // Page Layout component wrapper
-            <BasePage>
-                <Suspense fallback={<PageLoader/>}>
-                    <Switch location={location}>
-                        {/* <Route path="/login" component={waitFor(Login)}/> */}
-                        <Route path="/login" component={waitFor(LoginBizz)}/>
-                        {/* <Route path="/loginapps" component={waitFor(LoginBizz)}/> */}
-                        <Route path="/register" component={waitFor(Register)}/>
-                        <Route path="/recover" component={waitFor(Recover)}/>
-                        <Route path="/lock" component={waitFor(Lock)}/>
-                        <Route path="/notfound" component={waitFor(NotFound)}/>
-                        <Route path="/error500" component={waitFor(Error500)}/>
-                        <Route path="/maintenance" component={waitFor(Maintenance)}/>
-                        <Route path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
-                    </Switch>
-                </Suspense>
-            </BasePage>
-        )
-    }
-    else {
-        return (
-            // Layout component wrapper
-            // Use <BaseHorizontal> to change layout
-            <Base>
-              <TransitionGroup>
-                <CSSTransition key={currentKey} timeout={timeout} classNames={animationName} exit={false}>
-                    <div>
-                        <Suspense fallback={<PageLoader/>}>
-                            <Switch location={location}>
-                            <Route path="/home" component={waitFor(Home)}/>
-                            <Route path={pathmenu.menuBranch} component={waitFor(menuBranch)}/>
-                            <Route path={pathmenu.addBranch} component={waitFor(addBranch)}/>
-                            <Route path={pathmenu.detailBranch+'/:id'} component={waitFor(detailBranch)}/>
-                            <Route path={pathmenu.editBranch+'/:id'} component={waitFor(editBranch)}/>
 
-                            <Route path={pathmenu.menucompany} component={waitFor(menuCompany)}/>
-                            <Route path={pathmenu.addcompany} component={waitFor(addFormCompany)}/>
-                            <Route path={pathmenu.editcompany+'/:id'} component={waitFor(editFormCompany)}/>
-                            <Route path={pathmenu.detailcompany+'/:id'} component={waitFor(detailCompany)}/>
+    if (isAuthenticated) {
+        // if(typeaction == 'login'){
+        //     let obj = new Object();
+        //     obj.username = username;
+        //     obj.permissions = permissions;
+        //     obj.typeaction = 'check';
+        //     dispatch(authSuccess(obj));
+        // }
+        if (listofPages.indexOf(location.pathname) > -1) {
+            return (
+                // Page Layout component wrapper
+                <BasePage>
+                    <Suspense fallback={<PageLoader />}>
+                        <Switch location={location}>
+                            {/* <Route path="/login" component={waitFor(Login)}/> */}
+                            <Route path="/login" component={waitFor(LoginBizz)} />
+                            {/* <Route path="/loginapps" component={waitFor(LoginBizz)}/> */}
+                            <Route path="/register" component={waitFor(Register)} />
+                            <Route path="/recover" component={waitFor(Recover)} />
+                            <Route path="/lock" component={waitFor(Lock)} />
+                            <Route path="/notfound" component={waitFor(NotFound)} />
+                            <Route path="/error500" component={waitFor(Error500)} />
+                            <Route path="/maintenance" component={waitFor(Maintenance)} />
+                            <Route path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
+                        </Switch>
+                    </Suspense>
+                </BasePage>
+            )
+        }
+        else {
+            return (
+                // Layout component wrapper
+                // Use <BaseHorizontal> to change layout
+                <Base>
+                    <TransitionGroup>
+                        <CSSTransition key={currentKey} timeout={timeout} classNames={animationName} exit={false}>
+                            <div>
+                                <Suspense fallback={<PageLoader />}>
+                                    <Switch location={location}>
+                                        <Route path="/home" component={waitFor(Home)} />
+                                        <Route path={pathmenu.menuBranch} component={waitFor(menuBranch)} />
+                                        <Route path={pathmenu.addBranch} component={waitFor(addBranch)} />
+                                        <Route path={pathmenu.detailBranch + '/:id'} component={waitFor(detailBranch)} />
+                                        <Route path={pathmenu.editBranch + '/:id'} component={waitFor(editBranch)} />
 
-                            <Route path={pathmenu.menuRole} component={waitFor(menuRole)}/>
-                            <Route path={pathmenu.addrole} component={waitFor(addFormRole)}/>
-                            <Route path={pathmenu.detailrole+'/:id'} component={waitFor(detailRole)}/>
-                            <Route path={pathmenu.editrole+'/:id'} component={waitFor(editFormRole)}/>
+                                        <Route path={pathmenu.menucompany} component={waitFor(menuCompany)} />
+                                        <Route path={pathmenu.addcompany} component={waitFor(addFormCompany)} />
+                                        <Route path={pathmenu.editcompany + '/:id'} component={waitFor(editFormCompany)} />
+                                        <Route path={pathmenu.detailcompany + '/:id'} component={waitFor(detailCompany)} />
 
-                            <Route path={pathmenu.menuInternalUser} component={waitFor(menuInternalUser)}/>
-                            <Route path={pathmenu.addinternaluser} component={waitFor(addInternalUser)}/>
-                            <Route path={pathmenu.detailinternaluser+'/:id'} component={waitFor(detailInternalUser)}/>
-                            <Route path={pathmenu.editinternaluser+'/:id'} component={waitFor(editInternalUser)}/>
+                                        <Route path={pathmenu.menuRole} component={waitFor(menuRole)} />
+                                        <Route path={pathmenu.addrole} component={waitFor(addFormRole)} />
+                                        <Route path={pathmenu.detailrole + '/:id'} component={waitFor(detailRole)} />
+                                        <Route path={pathmenu.editrole + '/:id'} component={waitFor(editFormRole)} />
 
-                            <Route path={pathmenu.menuusermobile} component={waitFor(menuUserMobile)}/>
-                            <Route path={pathmenu.addusermobile} component={waitFor(addUserMobile)}/>
-                            <Route path={pathmenu.editusermobile+'/:id'} component={waitFor(editUserMobile)}/>
-                            <Route path={pathmenu.detailusermobile+'/:id'} component={waitFor(detailUserMobile)}/>
+                                        <Route path={pathmenu.menuInternalUser} component={waitFor(menuInternalUser)} />
+                                        <Route path={pathmenu.addinternaluser} component={waitFor(addInternalUser)} />
+                                        <Route path={pathmenu.detailinternaluser + '/:id'} component={waitFor(detailInternalUser)} />
+                                        <Route path={pathmenu.editinternaluser + '/:id'} component={waitFor(editInternalUser)} />
 
-                            <Route path={pathmenu.menuParameter} component={waitFor(menuParameter)}/>
-                            <Route path={pathmenu.addparameter} component={waitFor(addMenuParameter)}/>
-                            <Route path={pathmenu.editparameter+'/:id'} component={waitFor(editMenuParameter)}/>
-                            <Route path={pathmenu.detailparameter+'/:id'} component={waitFor(detailMenuParameter)}/>
+                                        <Route path={pathmenu.menuusermobile} component={waitFor(menuUserMobile)} />
+                                        <Route path={pathmenu.addusermobile} component={waitFor(addUserMobile)} />
+                                        <Route path={pathmenu.editusermobile + '/:id'} component={waitFor(editUserMobile)} />
+                                        <Route path={pathmenu.detailusermobile + '/:id'} component={waitFor(detailUserMobile)} />
 
-                            <Route path={pathmenu.menuCustomer} component={waitFor(menuCustomer)}/>
-                            <Route path={pathmenu.detailCustomer+'/:id'} component={waitFor(detailcustomer)}/>
-                            <Route path={pathmenu.addCustomer} component={waitFor(addCustomer)}/>
-                            <Route path={pathmenu.editCustomer+'/:id'} component={waitFor(editcustomer)}/>
+                                        <Route path={pathmenu.menuParameter} component={waitFor(menuParameter)} />
+                                        <Route path={pathmenu.addparameter} component={waitFor(addMenuParameter)} />
+                                        <Route path={pathmenu.editparameter + '/:id'} component={waitFor(editMenuParameter)} />
+                                        <Route path={pathmenu.detailparameter + '/:id'} component={waitFor(detailMenuParameter)} />
 
-                            <Route path={pathmenu.menuProduct} component={waitFor(menuProduct)}/>
-                            <Route path={pathmenu.addProduct} component={waitFor(addProduct)}/>
-                            <Route path={pathmenu.detailProduct+'/:id'} component={waitFor(detailProduct)}/>
-                            <Route path={pathmenu.editProduct+'/:id'} component={waitFor(editProduct)}/>
+                                        <Route path={pathmenu.menuCustomer} component={waitFor(menuCustomer)} />
+                                        <Route path={pathmenu.detailCustomer + '/:id'} component={waitFor(detailcustomer)} />
+                                        <Route path={pathmenu.addCustomer} component={waitFor(addCustomer)} />
+                                        <Route path={pathmenu.editCustomer + '/:id'} component={waitFor(editcustomer)} />
 
-                            <Route path={pathmenu.menuVendor} component={waitFor(menuVendor)}/>
-                            <Route path={pathmenu.addVendor} component={waitFor(addVendor)}/>
-                            <Route path={pathmenu.detailVendor+'/:id'} component={waitFor(detailVendor)}/>
-                            <Route path={pathmenu.editVendor+'/:id'} component={waitFor(editVendor)}/>
+                                        <Route path={pathmenu.menuProduct} component={waitFor(menuProduct)} />
+                                        <Route path={pathmenu.addProduct} component={waitFor(addProduct)} />
+                                        <Route path={pathmenu.detailProduct + '/:id'} component={waitFor(detailProduct)} />
+                                        <Route path={pathmenu.editProduct + '/:id'} component={waitFor(editProduct)} />
 
-                            <Route path={pathmenu.menuInventori} component={waitFor(menuInventori)}/>
-                            <Route path={pathmenu.addInventori} component={waitFor(addInventori)}/>
-                            <Route path={pathmenu.detailInventori+'/:id'} component={waitFor(detailInventori)}/>
-                            <Route path={pathmenu.editInventori+'/:id'} component={waitFor(editInventori)}/>
-                            
-                            <Route path={pathmenu.menuCategoryProduct} component={waitFor(menuCategoryProduct)}/>
-                            <Route path={pathmenu.addcategoryproduct} component={waitFor(addCategoryProduct)}/>
-                            <Route path={pathmenu.detailcategoryproduct+'/:id'} component={waitFor(detailCategoryProduct)}/>
-                            <Route path={pathmenu.editcategoryproduct+'/:id'} component={waitFor(editCategoryProduct)}/>
+                                        <Route path={pathmenu.menuVendor} component={waitFor(menuVendor)} />
+                                        <Route path={pathmenu.addVendor} component={waitFor(addVendor)} />
+                                        <Route path={pathmenu.detailVendor + '/:id'} component={waitFor(detailVendor)} />
+                                        <Route path={pathmenu.editVendor + '/:id'} component={waitFor(editVendor)} />
 
-                            
-                            <Route path={pathmenu.menumappingstock} component={waitFor(menuMappingStock)}/>
-                            <Route path={pathmenu.addmappingstock} component={waitFor(addMappingStock)}/>
-                            <Route path={pathmenu.detailmappingstock+'/:id'} component={waitFor(detailMappingStock)}/>
-                            <Route path={pathmenu.editmappingstock+'/:id'} component={waitFor(editMappingStock)}/>
+                                        <Route path={pathmenu.menuInventori} component={waitFor(menuInventori)} />
+                                        <Route path={pathmenu.addInventori} component={waitFor(addInventori)} />
+                                        <Route path={pathmenu.detailInventori + '/:id'} component={waitFor(detailInventori)} />
+                                        <Route path={pathmenu.editInventori + '/:id'} component={waitFor(editInventori)} />
 
-                            <Route path={pathmenu.menupricelist} component={waitFor(menuPriceList)}/>
-                            <Route path={pathmenu.addpricelist} component={waitFor(addPriceList)}/>
-                            <Route path={pathmenu.detailpricelist+'/:id'} component={waitFor(detailPriceList)}/>
-                            <Route path={pathmenu.editpricelist+'/:id'} component={waitFor(editPriceList)}/>
+                                        <Route path={pathmenu.menuCategoryProduct} component={waitFor(menuCategoryProduct)} />
+                                        <Route path={pathmenu.addcategoryproduct} component={waitFor(addCategoryProduct)} />
+                                        <Route path={pathmenu.detailcategoryproduct + '/:id'} component={waitFor(detailCategoryProduct)} />
+                                        <Route path={pathmenu.editcategoryproduct + '/:id'} component={waitFor(editCategoryProduct)} />
 
-                            <Route path={pathmenu.menupurchasereceive} component={waitFor(menuPurchaseReceive)}/>
-                            <Route path={pathmenu.addpurchasereceive} component={waitFor(addPurchaseReceive)}/>
-                            <Route path={pathmenu.printnota+'/:id'} component={waitFor(printNota)}/>
-                            <Route path={pathmenu.detailpurchasereceive+'/:id'} component={waitFor(detailPurchaseReceive)}/>
-                            <Route path={pathmenu.editpurchasereceive+'/:id'} component={waitFor(editPurchaseReceive)}/>
 
-                            <Route path={pathmenu.menudeposit} component={waitFor(menuDeposit)}/>
-                            <Route path={pathmenu.adddeposit} component={waitFor(addDeposit)}/>
-                            <Route path={pathmenu.detaildeposit+'/:id'} component={waitFor(detailDeposit)}/>
-                            <Route path={pathmenu.editdeposit+'/:id'} component={waitFor(editDeposit)}/>
+                                        <Route path={pathmenu.menumappingstock} component={waitFor(menuMappingStock)} />
+                                        <Route path={pathmenu.addmappingstock} component={waitFor(addMappingStock)} />
+                                        <Route path={pathmenu.detailmappingstock + '/:id'} component={waitFor(detailMappingStock)} />
+                                        <Route path={pathmenu.editmappingstock + '/:id'} component={waitFor(editMappingStock)} />
 
-                            <Route path={pathmenu.menuarea} component={waitFor(menuArea)}/>
-                            <Route path={pathmenu.addarea} component={waitFor(addArea)}/>
-                            <Route path={pathmenu.detailarea+'/:id'} component={waitFor(detailArea)}/>
-                            <Route path={pathmenu.editarea+'/:id'} component={waitFor(editArea)}/>
+                                        <Route path={pathmenu.menupricelist} component={waitFor(menuPriceList)} />
+                                        <Route path={pathmenu.addpricelist} component={waitFor(addPriceList)} />
+                                        <Route path={pathmenu.detailpricelist + '/:id'} component={waitFor(detailPriceList)} />
+                                        <Route path={pathmenu.editpricelist + '/:id'} component={waitFor(editPriceList)} />
 
-                            <Route path={pathmenu.menudraftpurchasereceive} component={waitFor(menuDraftPurchaseReceive)}/>
-                            <Route path={pathmenu.adddraftpurchasereceive} component={waitFor(addDraftPurchaseReceive)}/>
-                            <Route path={pathmenu.detaildraftpurchasereceive+'/:id'} component={waitFor(detailDraftPurchaseReceive)}/>
-                            <Route path={pathmenu.editdraftpurchasereceive+'/:id'} component={waitFor(editDraftPurchaseReceive)}/>
+                                        <Route path={pathmenu.menupurchasereceive} component={waitFor(menuPurchaseReceive)} />
+                                        <Route path={pathmenu.addpurchasereceive} component={waitFor(addPurchaseReceive)} />
+                                        <Route path={pathmenu.printnota + '/:id'} component={waitFor(printNota)} />
+                                        <Route path={pathmenu.detailpurchasereceive + '/:id'} component={waitFor(detailPurchaseReceive)} />
+                                        <Route path={pathmenu.editpurchasereceive + '/:id'} component={waitFor(editPurchaseReceive)} />
 
-                            <Route path={pathmenu.menustockadjusment} component={waitFor(menuStockAdjusment)}/>
-                            <Route path={pathmenu.addstockadjusment} component={waitFor(addStockAdjusment)}/>
-                            <Route path={pathmenu.detailstockadjusment+'/:id'} component={waitFor(detailStockAdjusment)}/>
-                            <Route path={pathmenu.editstockadjusment+'/:id'} component={waitFor(editStockAdjusment)}/>
+                                        <Route path={pathmenu.menudeposit} component={waitFor(menuDeposit)} />
+                                        <Route path={pathmenu.adddeposit} component={waitFor(addDeposit)} />
+                                        <Route path={pathmenu.detaildeposit + '/:id'} component={waitFor(detailDeposit)} />
+                                        <Route path={pathmenu.editdeposit + '/:id'} component={waitFor(editDeposit)} />
 
-                            <Route path={pathmenu.menupackinglist} component={waitFor(menuPackingList)}/>
-                            <Route path={pathmenu.addpackinglist} component={waitFor(addPackingList)}/>
-                            <Route path={pathmenu.detailpackinglist+'/:id'} component={waitFor(detailPackingList)}/>
-                            <Route path={pathmenu.editpackinglist+'/:id'} component={waitFor(editPackingList)}/>
+                                        <Route path={pathmenu.menuarea} component={waitFor(menuArea)} />
+                                        <Route path={pathmenu.addarea} component={waitFor(addArea)} />
+                                        <Route path={pathmenu.detailarea + '/:id'} component={waitFor(detailArea)} />
+                                        <Route path={pathmenu.editarea + '/:id'} component={waitFor(editArea)} />
 
-                            <Route path={pathmenu.menuinvoice} component={waitFor(menuInvoice)}/>
-                            <Route path={pathmenu.addinvoice} component={waitFor(addInvoice)}/>
-                            <Route path={pathmenu.detailinvoice+'/:id'} component={waitFor(detailInvoice)}/>
-                            <Route path={pathmenu.editinvoice+'/:id'} component={waitFor(editInvoice)}/>
-                            
-                            <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
-                            
-                                {/*Dashboard*/}
-                                {/* <Route path="/dashboardv1" component={waitFor(DashboardV1)}/>
+                                        <Route path={pathmenu.menudraftpurchasereceive} component={waitFor(menuDraftPurchaseReceive)} />
+                                        <Route path={pathmenu.adddraftpurchasereceive} component={waitFor(addDraftPurchaseReceive)} />
+                                        <Route path={pathmenu.detaildraftpurchasereceive + '/:id'} component={waitFor(detailDraftPurchaseReceive)} />
+                                        <Route path={pathmenu.editdraftpurchasereceive + '/:id'} component={waitFor(editDraftPurchaseReceive)} />
+
+                                        <Route path={pathmenu.menustockadjusment} component={waitFor(menuStockAdjusment)} />
+                                        <Route path={pathmenu.addstockadjusment} component={waitFor(addStockAdjusment)} />
+                                        <Route path={pathmenu.detailstockadjusment + '/:id'} component={waitFor(detailStockAdjusment)} />
+                                        <Route path={pathmenu.editstockadjusment + '/:id'} component={waitFor(editStockAdjusment)} />
+
+                                        <Route path={pathmenu.menupackinglist} component={waitFor(menuPackingList)} />
+                                        <Route path={pathmenu.addpackinglist} component={waitFor(addPackingList)} />
+                                        <Route path={pathmenu.detailpackinglist + '/:id'} component={waitFor(detailPackingList)} />
+                                        <Route path={pathmenu.editpackinglist + '/:id'} component={waitFor(editPackingList)} />
+                                        <Route path={pathmenu.printpdfpackinglist + '/:id'} component={waitFor(printPdfPackingList)} />
+
+                                        <Route path={pathmenu.menuinvoice} component={waitFor(menuInvoice)} />
+                                        <Route path={pathmenu.addinvoice} component={waitFor(addInvoice)} />
+                                        <Route path={pathmenu.detailinvoice + '/:id'} component={waitFor(detailInvoice)} />
+                                        <Route path={pathmenu.editinvoice + '/:id'} component={waitFor(editInvoice)} />
+                                        
+
+                                        <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
+
+                                        {/*Dashboard*/}
+                                        {/* <Route path="/dashboardv1" component={waitFor(DashboardV1)}/>
                                 <Route path="/dashboardv2" component={waitFor(DashboardV2)}/>
                                 <Route path="/dashboardv3" component={waitFor(DashboardV3)}/> */}
 
-                                {/*Widgets*/}
-                                {/* <Route path="/widgets" component={waitFor(Widgets)}/> */}
-                                {/*Elements*/}
-                                {/* <Route path="/buttons" component={waitFor(Buttons)}/>
+                                        {/*Widgets*/}
+                                        {/* <Route path="/widgets" component={waitFor(Widgets)}/> */}
+                                        {/*Elements*/}
+                                        {/* <Route path="/buttons" component={waitFor(Buttons)}/>
                                 <Route path="/notifications" component={waitFor(Notifications)}/>
                                 <Route path="/sweetalert" component={waitFor(SweetAlert)}/>
                                 <Route path="/carousel" component={waitFor(BsCarousel)}/>
@@ -468,33 +471,33 @@ const Routes = ({ location, ...props }) => {
                                 <Route path="/icons-weather" component={waitFor(WeatherIcons)}/>
                                 <Route path="/colors" component={waitFor(Colors)}/> */}
 
-                                {/*Forms*/}
-                                {/* <Route path="/form-standard" component={waitFor(FormStandard)}/>
+                                        {/*Forms*/}
+                                        {/* <Route path="/form-standard" component={waitFor(FormStandard)}/>
                                 <Route path="/form-extended" component={waitFor(FormExtended)}/>
                                 <Route path="/form-validation" component={waitFor(FormValidation)}/>
                                 <Route path="/form-wizard" component={waitFor(FormWizard)}/>
                                 <Route path="/form-upload" component={waitFor(FormUpload)}/>
                                 <Route path="/form-cropper" component={waitFor(FormCropper)}/> */}
 
-                                {/*Charts*/}
-                                {/* <Route path="/chart-flot" component={waitFor(ChartFlot)}/>
+                                        {/*Charts*/}
+                                        {/* <Route path="/chart-flot" component={waitFor(ChartFlot)}/>
                                 <Route path="/chart-radial" component={waitFor(ChartRadial)}/>
                                 <Route path="/chart-chartjs" component={waitFor(ChartChartJS)}/>
                                 <Route path="/chart-morris" component={waitFor(ChartMorris)}/>
                                 <Route path="/chart-chartist" component={waitFor(ChartChartist)}/> */}
 
-                                {/*Table*/}
-                                {/* <Route path="/table-standard" component={waitFor(TableStandard)}/>
+                                        {/*Table*/}
+                                        {/* <Route path="/table-standard" component={waitFor(TableStandard)}/>
                                 <Route path="/table-extended" component={waitFor(TableExtended)}/>
                                 <Route path="/table-datatable" component={waitFor(Datatable)}/>
                                 <Route path="/table-datagrid" component={waitFor(DataGrid)}/> */}
 
-                                {/*Maps*/}
-                                {/* <Route path="/map-google" component={waitFor(MapsGoogle)}/>
+                                        {/*Maps*/}
+                                        {/* <Route path="/map-google" component={waitFor(MapsGoogle)}/>
                                 <Route path="/map-vector" component={waitFor(MapsVector)}/> */}
 
-                                {/*Extras*/}
-                                {/* <Route path="/mailbox" component={waitFor(Mailbox)}/>
+                                        {/*Extras*/}
+                                        {/* <Route path="/mailbox" component={waitFor(Mailbox)}/>
                                 <Route path="/timeline" component={waitFor(Timeline)}/>
                                 <Route path="/calendar" component={waitFor(Calendar)}/>
                                 <Route path="/invoice" component={waitFor(Invoice)}/>
@@ -526,33 +529,33 @@ const Routes = ({ location, ...props }) => {
                                 <Route path="/vote-links" component={waitFor(VoteLinks)}/>
 
                                 <Route path="/forum" component={waitFor(ForumHome)}/> */}
-                                
-                                <Route exact path="/logout" component={waitFor(Logout)}/>
-                                <Route exact path="/login" component={waitFor(LoginBizz)}/>
-                                <Redirect to="/login"/>
-                            </Switch>
-                        </Suspense>
-                    </div>
-                </CSSTransition>
-              </TransitionGroup>
-            </Base>
-        )
-    }
 
-}else{
-    return (
-        <BasePage>
-            <Suspense fallback={<PageLoader/>}>
-                <Switch>
-                    <Route path={pathmenu.unauthorized} component={waitFor(unauthorized)}/>
-                    <Route path={'/notfound'} component={waitFor(NotFound)}/>
-                    <Route exact path={["/login", "/"]} component={waitFor(LoginBizz)}/>
-                    <Redirect from='*' to="/login"/>
-                </Switch>
-            </Suspense>
-        </BasePage>
-    );
-}
+                                        <Route exact path="/logout" component={waitFor(Logout)} />
+                                        <Route exact path="/login" component={waitFor(LoginBizz)} />
+                                        <Redirect to="/login" />
+                                    </Switch>
+                                </Suspense>
+                            </div>
+                        </CSSTransition>
+                    </TransitionGroup>
+                </Base>
+            )
+        }
+
+    } else {
+        return (
+            <BasePage>
+                <Suspense fallback={<PageLoader />}>
+                    <Switch>
+                        <Route path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
+                        <Route path={'/notfound'} component={waitFor(NotFound)} />
+                        <Route exact path={["/login", "/"]} component={waitFor(LoginBizz)} />
+                        <Redirect from='*' to="/login" />
+                    </Switch>
+                </Suspense>
+            </BasePage>
+        );
+    }
 
 }
 
