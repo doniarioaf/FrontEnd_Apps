@@ -216,6 +216,7 @@ const menuInvoice = lazy(() => import('./containers/Transaksi/invoice'));
 const addInvoice = lazy(() => import('./containers/Transaksi/invoice/add'));
 const detailInvoice = lazy(() => import('./containers/Transaksi/invoice/detail'));
 const editInvoice = lazy(() => import('./containers/Transaksi/invoice/edit'));
+const printInvoice = lazy(() => import('./containers/Transaksi/invoice/Print'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -443,6 +444,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.addinvoice} component={waitFor(addInvoice)} />
                                         <Route path={pathmenu.detailinvoice + '/:id'} component={waitFor(detailInvoice)} />
                                         <Route path={pathmenu.editinvoice + '/:id'} component={waitFor(editInvoice)} />
+                                        <Route path={pathmenu.printpdfinvoice + '/:id'} component={waitFor(printInvoice)} />
                                         
 
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />

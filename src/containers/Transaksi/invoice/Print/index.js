@@ -3,27 +3,25 @@ import { Container, Card, CardBody } from 'reactstrap';
 import { useTranslation } from 'react-i18next';
 import ContentWrapper from '../../../../components/Layout/ContentWrapper';
 import ContentHeading from '../../../../components/Layout/ContentHeading';
-import { Button } from 'reactstrap';
 import * as actions from '../../../../store/actions';
 import { useDispatch } from 'react-redux';
 import { Loading } from '../../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
 import { reloadToHomeNotAuthorize } from '../../../shared/globalFunc';
-import { MenuPackingList } from '../../../shared/permissionMenu';
+import { MenuInvoice } from '../../../shared/permissionMenu';
 import * as pathmenu from '../../../shared/pathMenu';
-import { DropdownList } from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 
 import { PDFViewer } from '@react-pdf/renderer';
-import PdfDocumentPackingList from './PdfDocumentPackingList';
+import PdfDocumentInvoice from './PdfDocumentInvoice';
 
-import { formatdate, formatdatetime } from '../../../shared/constantValue';
+import { formatdate } from '../../../shared/constantValue';
 import moment from 'moment';
 import '../../PurchaseReceive/printNota/App.css';
 
-export default function PrintNotaPackingList(props) {
-    reloadToHomeNotAuthorize(MenuPackingList, 'READ');
+export default function PrintNotaInvoice(props) {
+    reloadToHomeNotAuthorize(MenuInvoice, 'READ');
     const { i18n } = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -37,11 +35,11 @@ export default function PrintNotaPackingList(props) {
 
     const id = props.match.params.id;
 
-    const fileName = "PackingList";
+    const fileName = "Invoice";
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getPackingListData( {url:'/print/'+id},successHandler, errorHandler));
+        dispatch(actions.getInvoiceData( {url:'/print/'+id},successHandler, errorHandler));
     }, [dispatch]);
 
     function successHandler(data,propsdata) {
@@ -87,7 +85,7 @@ export default function PrintNotaPackingList(props) {
     return (
             <div>
                 <ContentWrapper>
-                    <ContentHeading history={history} link={pathmenu.printpdfpackinglist + '/' + id} label={'PDF Packing List'} labeldefault={'PDF Packing List'} />
+                    <ContentHeading history={history} link={pathmenu.printpdfinvoice + '/' + id} label={'PDF Invoice'} labeldefault={'PDF Invoice'} />
                     <Container fluid>
                         <Card>
                             <CardBody>
@@ -108,7 +106,7 @@ export default function PrintNotaPackingList(props) {
                                                     border: 'none', // Remove any borders or default styles
                                                 }} fileName={"myPdf.pdf"}
                                                     width={800} height={500} >
-                                                    <PdfDocumentPackingList data={Value} />
+                                                    <PdfDocumentInvoice data={Value} />
     
                                                 </PDFViewer>
     

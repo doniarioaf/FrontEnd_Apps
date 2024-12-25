@@ -77,7 +77,9 @@ const styles = StyleSheet.create({
 const setItems = (items) =>{
     if(items != undefined && items != null){
         let listRow = [];
-        
+        let totalQty = 0;
+        let totalWeight = 0;
+        let totalPrice = 0;
         for(let i=0; i < items.length; i++){
             let det = items[i];
             let rowItem = [];
@@ -117,7 +119,47 @@ const setItems = (items) =>{
                 </View>
             );
             listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
+            totalQty += parseInt(det.qty);
+            totalWeight += parseFloat(det.nettoweight);
+            totalPrice += parseFloat(det.totalprice);
         }
+        let rowItem = [];
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.box, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
+                </View>
+            );
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.size, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
+                </View>
+            );
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.gram, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
+                </View>
+            );
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.qty, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{totalQty}</Text>
+                </View>
+            );
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.weight, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{totalWeight}</Text>
+                </View>
+            );
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.price, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
+                </View>
+            );
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{totalPrice}</Text>
+                </View>
+            );
+            listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
         return listRow;
     }
     return null;
