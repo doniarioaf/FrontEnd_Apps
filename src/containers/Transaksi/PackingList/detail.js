@@ -138,8 +138,26 @@ import React, {useState,
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: '' + error
+            text: error.msg
         })
+    }
+
+    const downloadExcelPL = () => {
+        setLoading(true);
+        dispatch(actions.getPackingListData( {url:'/printexcel/'+id,type:'GETFILE',typefile:'application/vnd.ms-excel'},successHandlerExcel, errorHandler));
+    }
+
+    function successHandlerExcel(data,propsdata) {
+        var blob = new Blob([data],{ type: 'application/vnd.ms-excel'});
+        var dataUrl = URL.createObjectURL(blob);
+        var fileLink = document.createElement('a');
+        fileLink.href = dataUrl;
+
+        // it forces the name of the downloaded file
+        fileLink.download = 'PackingList.xlsx';
+        fileLink.click();
+        fileLink.remove();
+        setLoading(false);
     }
 
     return (
@@ -347,6 +365,7 @@ import React, {useState,
                         </div>)
                         :(<div>
                             <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => history.push(pathmenu.printpdfpackinglist+'/'+id)}>{i18n.t('PDF Packing List')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => downloadExcelPL()}>{i18n.t('Excel Packing List')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editPackingList_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpackinglist+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deletePackingList_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={!isGetPermissions(MenuPurchaseReceive,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Nota')}</MenuItem> */}
