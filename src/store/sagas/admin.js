@@ -738,6 +738,7 @@ export function* getInvoiceSaga(action) {
     let url = action.param.url?action.param.url:'';
     let payload = action.param.payload?action.param.payload:'';
     let type = action.param.type?action.param.type:'GET';
+    let typefile = action.param.typefile?action.param.typefile:'';
     let propsdata = action.param.propsdata?action.param.propsdata:'';
     try {
         if(type == 'GET'){
@@ -745,6 +746,19 @@ export function* getInvoiceSaga(action) {
             action.successHandler(response,propsdata);
         }else if(type == 'POST'){
             const response = yield axios.post(baseInvoiceURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'GETFILE'){
+            let resType = '';
+            if(typefile  === 'application/vnd.ms-powerpoint' || typefile === 'application/pdf' || typefile === 'application/vnd.ms-excel' || typefile === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+                resType = 'arraybuffer'
+            }
+            const response = yield axios.get(baseInvoiceURL(url), {
+                //arraybuffer
+                responseType: resType,
+                headers: {
+                    Accept: typefile,
+                },
+            }).then(response => response.data);
             action.successHandler(response,propsdata);
         }
         
