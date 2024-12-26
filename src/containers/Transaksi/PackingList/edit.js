@@ -171,25 +171,25 @@ export default function EditPackingList(props) {
                     flag = false;
                     break;
                 }
-                if(listCatogry.includes(keyProd)){
-                    setErrItems(i18n.t('Product Category Tidak boleh sama'));
-                    flag = false;
-                    break;
-                }else{
-                    listCatogry.push(keyProd);
-                }
+                // if(listCatogry.includes(keyProd)){
+                //     setErrItems(i18n.t('Product Category Tidak boleh sama'));
+                //     flag = false;
+                //     break;
+                // }else{
+                //     listCatogry.push(keyProd);
+                // }
                 if(det.box == ''){
                     setErrItems(i18n.t('Box Tidak boleh Kosong'));
                     flag = false;
                     break;
                 }
-                if(listBox.includes(det.box)){
-                    setErrItems(i18n.t('Box Tidak boleh sama'));
-                    flag = false;
-                    break;
-                }else{
-                    listBox.push(det.box);
-                }
+                // if(listBox.includes(det.box)){
+                //     setErrItems(i18n.t('Box Tidak boleh sama'));
+                //     flag = false;
+                //     break;
+                // }else{
+                //     listBox.push(det.box);
+                // }
             }
         } else {
             setErrItems(i18n.t('label_REQUIRED'));
