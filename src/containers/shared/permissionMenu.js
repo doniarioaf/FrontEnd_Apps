@@ -99,3 +99,5 @@ export const MenuDraftPurchaseReceive = ['READ_DRAFTPURCHASERECEIVE'];
 export const MenuStockAdjusment = ['READ_STOCKADJUSMENT'];
 export const MenuPackingList = ['READ_PACKINGLIST'];
 export const MenuInvoice = ['READ_INVOICE'];
+export const MenuReportPurchaseReceive = ['READ_REPORT_PURCHASERECEIVE'];
+

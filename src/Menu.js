@@ -170,7 +170,7 @@ const handleMenu = () => {
                     name: 'Laporan Purchase Receive',
                     path: pathmenu.menureportpurchasereceive,
                     translate: 'Laporan Purchase Receive',
-                    permission:permissionmenu.MenuDeposit,
+                    permission:permissionmenu.MenuReportPurchaseReceive,
                 },
             ]
         },

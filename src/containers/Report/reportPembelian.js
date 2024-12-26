@@ -14,13 +14,13 @@ import momentLocalizer                 from 'react-widgets-moment';
 import { DatePicker,DropdownList}      from 'react-widgets';
 // import { listTypeReport } from '../../shared/globalFunc';
 import { reloadToHomeNotAuthorize } from '../shared/globalFunc';
-import { MenuPurchaseReceive } from '../shared/permissionMenu';
+import { MenuReportPurchaseReceive } from '../shared/permissionMenu';
 import { formatdate , months} from '../shared/constantValue';
 import * as pathmenu           from '../shared/pathMenu';
 import "react-widgets/dist/css/react-widgets.css";
 
 export default function ReportPembelian(props) {
-    reloadToHomeNotAuthorize(MenuPurchaseReceive,'READ');
+    reloadToHomeNotAuthorize(MenuReportPurchaseReceive,'READ');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
