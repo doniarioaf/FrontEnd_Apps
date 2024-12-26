@@ -493,9 +493,27 @@ export function* submitPriceListSaga(action) {
 export function* getPurchaseReceiveSaga(action) {
     let url = action.param.url?action.param.url:'';
     let propsdata = action.param.propsdata?action.param.propsdata:'';
+    let typefile = action.param.typefile?action.param.typefile:'';
+    let type = action.param.type?action.param.type:'GET';
     try {
-        const response = yield axios.get(basePurchaseReceiveURL(url)).then(response => response.data);
-        action.successHandler(response,propsdata);
+        if(type == 'GET'){
+            const response = yield axios.get(basePurchaseReceiveURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'GETFILE'){
+            let resType = '';
+            if(typefile  === 'application/vnd.ms-powerpoint' || typefile === 'application/pdf' || typefile === 'application/vnd.ms-excel' || typefile === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+                resType = 'arraybuffer'
+            }
+            const response = yield axios.get(basePurchaseReceiveURL(url), {
+                //arraybuffer
+                responseType: resType,
+                headers: {
+                    Accept: typefile,
+                },
+            }).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
     }catch (error) {
         action.errorHandler(handleMessageError(error),propsdata);
     }

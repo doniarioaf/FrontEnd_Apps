@@ -185,6 +185,7 @@ const addPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseRec
 const printNota = lazy(() => import('./containers/Transaksi/PurchaseReceive/printNota'));
 const detailPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/detail'));
 const editPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/edit'));
+const reportPembelian = lazy(() => import('./containers/Report/reportPembelian'));
 
 const menuDeposit = lazy(() => import('./containers/Transaksi/Deposit'));
 const addDeposit = lazy(() => import('./containers/Transaksi/Deposit/add'));
@@ -200,6 +201,7 @@ const menuDraftPurchaseReceive = lazy(() => import('./containers/Transaksi/Draft
 const addDraftPurchaseReceive = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive/add'));
 const detailDraftPurchaseReceive = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive/detail'));
 const editDraftPurchaseReceive = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive/edit'));
+
 
 const menuStockAdjusment = lazy(() => import('./containers/Transaksi/StockAdjusment'));
 const addStockAdjusment = lazy(() => import('./containers/Transaksi/StockAdjusment/add'));
@@ -413,6 +415,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.printnota + '/:id'} component={waitFor(printNota)} />
                                         <Route path={pathmenu.detailpurchasereceive + '/:id'} component={waitFor(detailPurchaseReceive)} />
                                         <Route path={pathmenu.editpurchasereceive + '/:id'} component={waitFor(editPurchaseReceive)} />
+                                        <Route path={pathmenu.menureportpurchasereceive} component={waitFor(reportPembelian)} />
 
                                         <Route path={pathmenu.menudeposit} component={waitFor(menuDeposit)} />
                                         <Route path={pathmenu.adddeposit} component={waitFor(addDeposit)} />
@@ -428,6 +431,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.adddraftpurchasereceive} component={waitFor(addDraftPurchaseReceive)} />
                                         <Route path={pathmenu.detaildraftpurchasereceive + '/:id'} component={waitFor(detailDraftPurchaseReceive)} />
                                         <Route path={pathmenu.editdraftpurchasereceive + '/:id'} component={waitFor(editDraftPurchaseReceive)} />
+                                        
 
                                         <Route path={pathmenu.menustockadjusment} component={waitFor(menuStockAdjusment)} />
                                         <Route path={pathmenu.addstockadjusment} component={waitFor(addStockAdjusment)} />

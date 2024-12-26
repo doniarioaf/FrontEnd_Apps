@@ -56,6 +56,7 @@ export const addpurchasereceive = `/form/add/purchasereceive`;
 export const printnota = `/form/nota/purchasereceive`;
 export const detailpurchasereceive = `/form/detail/purchasereceive`;
 export const editpurchasereceive = `/form/edit/purchasereceive`;
+export const menureportpurchasereceive = `/form/report/purchasereceive`;
 export const menudeposit = `/deposit`;
 export const adddeposit = `/form/add/deposit`;
 export const detaildeposit = `/form/detail/deposit`;

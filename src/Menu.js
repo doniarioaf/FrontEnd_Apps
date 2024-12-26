@@ -165,7 +165,14 @@ const handleMenu = () => {
             name: 'Laporan',
             icon: 'icon-user',
             translate: 'Laporan',
-            submenu:[]
+            submenu:[
+                {
+                    name: 'Laporan Purchase Receive',
+                    path: pathmenu.menureportpurchasereceive,
+                    translate: 'Laporan Purchase Receive',
+                    permission:permissionmenu.MenuDeposit,
+                },
+            ]
         },
        
         // {
