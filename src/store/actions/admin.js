@@ -508,3 +508,12 @@ export const submitInvoice = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getReport = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_REPORT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

@@ -167,11 +167,18 @@ const handleMenu = () => {
             translate: 'Laporan',
             submenu:[
                 {
-                    name: 'Laporan Purchase Receive',
+                    name: 'Purchase Receive',
                     path: pathmenu.menureportpurchasereceive,
-                    translate: 'Laporan Purchase Receive',
+                    translate: 'Purchase Receive',
                     permission:permissionmenu.MenuReportPurchaseReceive,
                 },
+                {
+                    name: 'Stock Udang Hidup & Mati',
+                    path: pathmenu.menuReportStockUdangHidupMati,
+                    translate: 'Stock Udang Hidup & Mati',
+                    permission:permissionmenu.MenuReportStockUdangHidpuDanMati,
+                },
+                
             ]
         },
        

@@ -14,84 +14,26 @@ import momentLocalizer                 from 'react-widgets-moment';
 import { DatePicker,DropdownList}      from 'react-widgets';
 // import { listTypeReport } from '../../shared/globalFunc';
 import { reloadToHomeNotAuthorize } from '../shared/globalFunc';
-import { MenuReportPurchaseReceive } from '../shared/permissionMenu';
+import { MenuReportStockUdangHidpuDanMati } from '../shared/permissionMenu';
 import { formatdate , months} from '../shared/constantValue';
 import * as pathmenu           from '../shared/pathMenu';
 import "react-widgets/dist/css/react-widgets.css";
 
 export default function ReportPembelian(props) {
-    reloadToHomeNotAuthorize(MenuReportPurchaseReceive,'READ');
+    reloadToHomeNotAuthorize(MenuReportStockUdangHidpuDanMati,'READ');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
     momentLocalizer();
 
-    const [ListVendor, setListVendor] = useState([]);
-    const [SelVendor, setSelVendor] = useState('');
-    const [ErrSelVendor, setErrSelVendor] = useState('');
-
-    const [ListArea, setListArea] = useState([]);
-    const [SelArea, setSelArea] = useState('');
-    const [ErrSelArea, setErrSelArea] = useState('');
-
+    
     const [start, setStart] = useState(new Date());
     const [end, setEnd] = useState(new Date());
     const [output, setOutput] = useState('XLSX');
     const [listoutput, SetListOutPut] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        setLoading(true);
-        dispatch(actions.getPurchaseReceiveData({ url: '/reporttemplate' }, successHandler, errorHandler));
-    }, []);
-    function successHandler(data, propsdata) {
-        if (data.data) {
-            const theData = data.data.vendorOpt.reduce((obj, el) => [
-                ...obj,
-                {
-                    'value': el.id,
-                    'label': el.nama + ' (' + el.alias + ')',
-                    'data': el
-                }
-            ], []);
-            theData.push(
-                {
-                    'value': 'nodata',
-                    'label': 'No Data',
-                    'data': []
-                }
-            );
-            setListVendor(theData);
-
-            const theDataArea = data.data.areaOpt.reduce((obj, el) => [
-                ...obj,
-                {
-                    'value': el.id,
-                    'label': el.nama,
-                    'data': el
-                }
-            ], []);
-            theDataArea.push(
-                {
-                    'value': 'nodata',
-                    'label': 'No Data',
-                    'data': []
-                }
-            );
-            setListArea(theDataArea);
-        }
-        setLoading(false);
-    }
-
-    const handleChangeVendor = (data) =>{
-        let id = data?.value ? data.value : '';
-        setSelVendor(id);
-    }
-
-    const handleChangeArea = (data) =>{
-        let id = data?.value ? data.value : '';
-        setSelArea(id);
-    }
+    
 
     const handleStartDate = (data) =>{
         // setStart(moment(data, "DD MMMM YYYY").toDate())
@@ -106,17 +48,9 @@ export default function ReportPembelian(props) {
 
     const submitHandler = () => {
         if( start != null && end != null){
-            let idvendor = SelVendor;
-            if(SelVendor == '' || SelVendor == 'nodata'){
-                idvendor = 0;
-            }
-
-            let idarea = SelArea;
-            if(SelArea == '' || SelArea == 'nodata'){
-                idarea = 0;
-            }
+           
             setLoading(true);
-            dispatch(actions.getPurchaseReceiveData({ url: '/reportpembelian?from=' + start.getTime() + '&to=' + end.getTime()+'&idvendor='+idvendor+'&idarea='+idarea,type:'GETFILE',typefile:'application/vnd.ms-excel' }, successHandlerReport, errorHandler));
+            dispatch(actions.getReport({ url: '/reportstockudanghidupmati?from=' + start.getTime(),type:'GETFILE',typefile:'application/vnd.ms-excel' }, successHandlerReport, errorHandler));
             // dispatch(actions.submitPurchaseReceiveData({ url: '/reportpembelian', payload: obj, type: 'GETFILE',typefile:'application/vnd.ms-excel' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -128,7 +62,7 @@ export default function ReportPembelian(props) {
         fileLink.href = dataUrl;
 
         // it forces the name of the downloaded file
-        fileLink.download = 'ReportPurchaseReceive.xlsx';
+        fileLink.download = 'ReportStockUdangHidupMati.xlsx';
         fileLink.click();
         fileLink.remove();
         setLoading(false);
@@ -162,8 +96,8 @@ export default function ReportPembelian(props) {
             {
                 startdate:start !== null ? moment(start, formatdate).toDate() : new Date(),
                 enddate:end !== null ? moment(end, formatdate).toDate(): new Date(),
-                vendor:SelVendor,
-                area:SelArea
+                // vendor:SelVendor,
+                // area:SelArea
             }
         }
         validate={values => {
@@ -190,12 +124,12 @@ export default function ReportPembelian(props) {
                     return(
                         <form className="mb-6" onSubmit={handleSubmit}  name="formReportStatusInvoice">
                             <ContentWrapper>
-                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menureportpurchasereceive} label={'Laporan Purchase Receive'} labeldefault={'Laporan Purchase Receive'} />
+                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuReportStockUdangHidupMati} label={'Laporan Stock Udang Hidup & Mati'} labeldefault={'Laporan Stock Udang Hidup & Mati'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             
                             <label className="mt-3 form-label required" htmlFor="startdate">
-                                {i18n.t('label_FROM_DATE')}
+                                {i18n.t('label_DATE')}
                             </label>
                             <DatePicker
                                     name="startdate"
@@ -213,7 +147,7 @@ export default function ReportPembelian(props) {
                                     // disabled={ values.allmember}                                    
                             />
 
-                            <label className="mt-3 form-label required" htmlFor="startdate">
+                            {/* <label className="mt-3 form-label required" htmlFor="startdate">
                                     {i18n.t('label_THRU_DATE')}
                                 
                             </label>
@@ -230,49 +164,7 @@ export default function ReportPembelian(props) {
                                     value={values.enddate}
                                     min={values.startdate}
                                     
-                            />
-                            </div>
-                            <div className="mt-2 col-lg-6 ft-detail mb-5">
-
-                            <label className="mt-3 form-label required" htmlFor="vendor">
-                                {i18n.t('Vendor')}
-                                
-                            </label>
-
-                                <DropdownList
-                                    name="vendor"
-                                    filter='contains'
-                                    placeholder={i18n.t('select.SELECT_OPTION')}
-                                    
-                                    onChange={val => handleChangeVendor(val)}
-                                    onBlur={val => setFieldTouched("vendor", val?.value ? val.value : '')}
-                                    data={ListVendor}
-                                    textField={'label'}
-                                    valueField={'value'}
-                                    // style={{width: '25%'}}
-                                    // disabled={values.isdisabledcountry}
-                                    value={values.vendor}
-                                />
-
-                            <label className="mt-3 form-label required" htmlFor="area">
-                                {i18n.t('Area')}
-                                
-                            </label>
-
-                                <DropdownList
-                                    name="area"
-                                    filter='contains'
-                                    placeholder={i18n.t('select.SELECT_OPTION')}
-                                    
-                                    onChange={val => handleChangeArea(val)}
-                                    onBlur={val => setFieldTouched("area", val?.value ? val.value : '')}
-                                    data={ListArea}
-                                    textField={'label'}
-                                    valueField={'value'}
-                                    // style={{width: '25%'}}
-                                    // disabled={values.isdisabledcountry}
-                                    value={values.area}
-                                />
+                            /> */}
                             </div>
                             </div>
                             </ContentWrapper>

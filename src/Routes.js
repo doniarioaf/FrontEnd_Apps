@@ -220,6 +220,8 @@ const detailInvoice = lazy(() => import('./containers/Transaksi/invoice/detail')
 const editInvoice = lazy(() => import('./containers/Transaksi/invoice/edit'));
 const printInvoice = lazy(() => import('./containers/Transaksi/invoice/Print'));
 
+const reportStockUdangMati = lazy(() => import('./containers/Report/reportStockUdangMati'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -449,6 +451,8 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.detailinvoice + '/:id'} component={waitFor(detailInvoice)} />
                                         <Route path={pathmenu.editinvoice + '/:id'} component={waitFor(editInvoice)} />
                                         <Route path={pathmenu.printpdfinvoice + '/:id'} component={waitFor(printInvoice)} />
+
+                                        <Route path={pathmenu.menuReportStockUdangHidupMati} component={waitFor(reportStockUdangMati)} />
                                         
 
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />

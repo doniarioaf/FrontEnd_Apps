@@ -28,3 +28,4 @@ export const baseDraftPurchaseReceiveURL = param => `${baseApiURL}/draftpurchase
 export const baseStockAdjusmentURL = param => `${baseApiURL}/stockadjusment${param}`;
 export const basePackingListURL = param => `${baseApiURL}/packinglist${param}`;
 export const baseInvoiceURL = param => `${baseApiURL}/invoice${param}`;
+export const baseReportURL = param => `${baseApiURL}/report${param}`;
