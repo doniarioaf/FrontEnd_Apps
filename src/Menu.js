@@ -178,6 +178,12 @@ const handleMenu = () => {
                     translate: 'Stock Udang Hidup & Mati',
                     permission:permissionmenu.MenuReportStockUdangHidpuDanMati,
                 },
+                {
+                    name: 'Rekapan Barang Masuk Harian',
+                    path: pathmenu.menuReportRekapBarangMasuk,
+                    translate: 'Rekapan Barang Masuk Harian',
+                    permission:permissionmenu.MenuReportRekapanBarangMasuk,
+                },
                 
             ]
         },

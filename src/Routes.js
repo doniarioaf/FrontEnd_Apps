@@ -221,6 +221,7 @@ const editInvoice = lazy(() => import('./containers/Transaksi/invoice/edit'));
 const printInvoice = lazy(() => import('./containers/Transaksi/invoice/Print'));
 
 const reportStockUdangMati = lazy(() => import('./containers/Report/reportStockUdangMati'));
+const reportRekapBarangMasuk = lazy(() => import('./containers/Report/reportRekapBarangMasuk'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -453,6 +454,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.printpdfinvoice + '/:id'} component={waitFor(printInvoice)} />
 
                                         <Route path={pathmenu.menuReportStockUdangHidupMati} component={waitFor(reportStockUdangMati)} />
+                                        <Route path={pathmenu.menuReportRekapBarangMasuk} component={waitFor(reportRekapBarangMasuk)} />
                                         
 
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />

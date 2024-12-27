@@ -101,4 +101,6 @@ export const MenuPackingList = ['READ_PACKINGLIST'];
 export const MenuInvoice = ['READ_INVOICE'];
 export const MenuReportPurchaseReceive = ['READ_REPORT_PURCHASERECEIVE'];
 export const MenuReportStockUdangHidpuDanMati = ['READ_REPORT_STOCKUDANGHIDUPMATI'];
+export const MenuReportRekapanBarangMasuk = ['READ_REPORT_REKAPANBARANGMASUK'];
+
 

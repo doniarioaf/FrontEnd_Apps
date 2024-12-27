@@ -84,3 +84,4 @@ export const detailinvoice = `/form/detail/invoice`;
 export const editinvoice = `/form/edit/invoice`;
 export const printpdfinvoice = `/form/printpdf/invoice`;
 export const menuReportStockUdangHidupMati = `/reportStockUdangMati`;
+export const menuReportRekapBarangMasuk = `/reportRekapBarangMasuk`;
