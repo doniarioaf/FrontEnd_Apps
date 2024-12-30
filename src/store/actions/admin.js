@@ -535,3 +535,21 @@ export const submitPelunasanHutang = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getCargoData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_CARGO_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitCargo = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_CARGO,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

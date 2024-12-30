@@ -227,6 +227,11 @@ const menuPelunasanHutang = lazy(() => import('./containers/Transaksi/PelunasanH
 const detailHutangPR = lazy(() => import('./containers/Transaksi/PelunasanHutang/detailHutangPR'));
 const detailpelunasanhutang = lazy(() => import('./containers/Transaksi/PelunasanHutang/detailpelunasanhutang'));
 
+const menuCargo = lazy(() => import('./containers/Transaksi/Cargo'));
+const addCargo = lazy(() => import('./containers/Transaksi/Cargo/add'));
+const detailCargo = lazy(() => import('./containers/Transaksi/Cargo/detail'));
+const editCargo = lazy(() => import('./containers/Transaksi/Cargo/edit'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -463,8 +468,12 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.menupelunasanhutang} component={waitFor(menuPelunasanHutang)} />
                                         <Route path={pathmenu.detailhutangpr+ '/:id'} component={waitFor(detailHutangPR)} />
                                         <Route path={pathmenu.detailpelunasanhutang+ '/:id'} component={waitFor(detailpelunasanhutang)} />
-                                        
 
+                                        <Route path={pathmenu.menucargo} component={waitFor(menuCargo)} />
+                                        <Route path={pathmenu.addcargo} component={waitFor(addCargo)} />
+                                        <Route path={pathmenu.detailcargo+ '/:id'} component={waitFor(detailCargo)} />
+                                        <Route path={pathmenu.editcargo+ '/:id'} component={waitFor(editCargo)} />
+                                        
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
 
                                         {/*Dashboard*/}
