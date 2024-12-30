@@ -69,5 +69,7 @@ export {
     submitPackingList,
     getInvoiceData,
     submitInvoice,
-    getReport
+    getReport,
+    getPelunasanHutangData,
+    submitPelunasanHutang
 } from './admin';

@@ -11,7 +11,8 @@ import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileU
     baseDraftPurchaseReceiveURL,baseStockAdjusmentURL,
     basePackingListURL,
     baseInvoiceURL,
-    baseReportURL} from '../../containers/shared/apiURL';
+    baseReportURL,
+    basePelunasanHutangURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -834,5 +835,46 @@ export function* getReportSaga(action) {
         
     }catch (error) {
         action.errorHandler(handleMessageError(error),propsdata);
+    }
+}
+
+export function* getPelunasanHutangDataSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'GET';
+    let propsdata = action.param.propsdata?action.param.propsdata:'';
+    try {
+        if(type == 'GET'){
+            const response = yield axios.get(basePelunasanHutangURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'POST'){
+            const response = yield axios.post(basePelunasanHutangURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error),propsdata);
+    }
+}
+
+export function* submitPelunasanHutangSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:[];
+    try {
+        if(type == 'ADD'){
+            const response = yield axios.post(basePelunasanHutangURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'EDIT'){
+            const response = yield axios.put(basePelunasanHutangURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'DELETE'){
+            const response = yield axios.delete(basePelunasanHutangURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
     }
 }

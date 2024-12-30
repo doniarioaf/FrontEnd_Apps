@@ -517,3 +517,21 @@ export const getReport = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getPelunasanHutangData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PELUNASANHUTANG_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitPelunasanHutang = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PELUNASANHUTANG,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

@@ -29,3 +29,4 @@ export const baseStockAdjusmentURL = param => `${baseApiURL}/stockadjusment${par
 export const basePackingListURL = param => `${baseApiURL}/packinglist${param}`;
 export const baseInvoiceURL = param => `${baseApiURL}/invoice${param}`;
 export const baseReportURL = param => `${baseApiURL}/report${param}`;
+export const basePelunasanHutangURL = param => `${baseApiURL}/pelusanhutang${param}`;

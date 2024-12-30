@@ -85,3 +85,6 @@ export const editinvoice = `/form/edit/invoice`;
 export const printpdfinvoice = `/form/printpdf/invoice`;
 export const menuReportStockUdangHidupMati = `/reportStockUdangMati`;
 export const menuReportRekapBarangMasuk = `/reportRekapBarangMasuk`;
+export const menupelunasanhutang = `/pelunasanhutang`;
+export const detailhutangpr = `/form/detailhutangpr/pelunasanhutang`;
+export const detailpelunasanhutang = `/form/detailpelunasanhutang/pelunasanhutang`;

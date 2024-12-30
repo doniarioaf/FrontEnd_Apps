@@ -78,6 +78,10 @@ export const addInvoice_Permission = ['READ_INVOICE','CREATE_INVOICE'];
 export const editInvoice_Permission = ['READ_INVOICE','EDIT_INVOICE'];
 export const deleteInvoice_Permission = ['DELETE_INVOICE'];
 
+export const addPelunasanHutang_Permission = ['READ_PELUNASANHUTANG','CREATE_PELUNASANHUTANG'];
+export const editPelunasanHutang_Permission = ['READ_PELUNASANHUTANG','EDIT_PELUNASANHUTANG'];
+export const deletePelunasanHutang_Permission = ['DELETE_PELUNASANHUTANG'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -102,5 +106,6 @@ export const MenuInvoice = ['READ_INVOICE'];
 export const MenuReportPurchaseReceive = ['READ_REPORT_PURCHASERECEIVE'];
 export const MenuReportStockUdangHidpuDanMati = ['READ_REPORT_STOCKUDANGHIDUPMATI'];
 export const MenuReportRekapanBarangMasuk = ['READ_REPORT_REKAPANBARANGMASUK'];
+export const MenuPelunasanHutang = ['READ_PELUNASANHUTANG'];
 
 

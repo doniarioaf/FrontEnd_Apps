@@ -223,6 +223,10 @@ const printInvoice = lazy(() => import('./containers/Transaksi/invoice/Print'));
 const reportStockUdangMati = lazy(() => import('./containers/Report/reportStockUdangMati'));
 const reportRekapBarangMasuk = lazy(() => import('./containers/Report/reportRekapBarangMasuk'));
 
+const menuPelunasanHutang = lazy(() => import('./containers/Transaksi/PelunasanHutang'));
+const detailHutangPR = lazy(() => import('./containers/Transaksi/PelunasanHutang/detailHutangPR'));
+const detailpelunasanhutang = lazy(() => import('./containers/Transaksi/PelunasanHutang/detailpelunasanhutang'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -452,9 +456,13 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.detailinvoice + '/:id'} component={waitFor(detailInvoice)} />
                                         <Route path={pathmenu.editinvoice + '/:id'} component={waitFor(editInvoice)} />
                                         <Route path={pathmenu.printpdfinvoice + '/:id'} component={waitFor(printInvoice)} />
-
+                                        
                                         <Route path={pathmenu.menuReportStockUdangHidupMati} component={waitFor(reportStockUdangMati)} />
                                         <Route path={pathmenu.menuReportRekapBarangMasuk} component={waitFor(reportRekapBarangMasuk)} />
+
+                                        <Route path={pathmenu.menupelunasanhutang} component={waitFor(menuPelunasanHutang)} />
+                                        <Route path={pathmenu.detailhutangpr+ '/:id'} component={waitFor(detailHutangPR)} />
+                                        <Route path={pathmenu.detailpelunasanhutang+ '/:id'} component={waitFor(detailpelunasanhutang)} />
                                         
 
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />

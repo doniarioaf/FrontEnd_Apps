@@ -64,7 +64,9 @@ import {
     submitPackingListSaga,
     getInvoiceSaga,
     submitInvoiceSaga,
-    getReportSaga
+    getReportSaga,
+    getPelunasanHutangDataSaga,
+    submitPelunasanHutangSaga
 } from './admin';
 
 
@@ -132,5 +134,7 @@ export function* watchAdmin() {
         takeEvery(actions.GET_INVOICE_DATA, getInvoiceSaga),
         takeEvery(actions.SUBMIT_INVOICE, submitInvoiceSaga),
         takeEvery(actions.GET_REPORT, getReportSaga),
+        takeEvery(actions.GET_PELUNASANHUTANG_DATA, getPelunasanHutangDataSaga),
+        takeEvery(actions.SUBMIT_PELUNASANHUTANG, submitPelunasanHutangSaga),
     ]);
 }
