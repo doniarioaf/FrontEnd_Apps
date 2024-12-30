@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import ContentWrapper from '../../../components/Layout/ContentWrapper';
 import ContentHeading from '../../../components/Layout/ContentHeading';
 import { Input, Button } from 'reactstrap';
+import { DropdownList } from 'react-widgets';
 import * as actions from '../../../store/actions';
 import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
@@ -31,8 +32,9 @@ export default function AddVendor(props) {
     const [InputAlias, setInputAlias] = useState('');
     const [ErrInputAlias, setErrInputAlias] = useState('');
 
-    const [InputType, setInputType] = useState('');
-    const [ErrInputType, setErrInputType] = useState('');
+    const [ListType, setListType] = useState([{value:'UDANG',label:'Udang'},{value:'CARGO',label:'Cargo'},{value:'UPI',label:'UPI'}]);
+    const [SelType, setSelType] = useState('');
+    const [ErrSelType, setErrSelType] = useState('');
 
     const [InputPricebox, setInputPricebox] = useState('');
     const [InputPriceOngkos, setInputPriceOngkos] = useState('');
@@ -75,7 +77,7 @@ export default function AddVendor(props) {
         let flag = true;
         setErrInputNama('');
         setErrInputAlias('');
-        setErrInputType('');
+        setErrSelType('');
         if (values.nama == '') {
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
@@ -85,8 +87,8 @@ export default function AddVendor(props) {
             flag = false;
         }
 
-        if (values.type == '') {
-            setErrInputType(i18n.t('label_REQUIRED'));
+        if (SelType == '') {
+            setErrSelType(i18n.t('label_REQUIRED'));
             flag = false;
         }
         return flag;
@@ -112,7 +114,7 @@ export default function AddVendor(props) {
             let obj = new Object();
             obj.nama = values.nama;
             obj.alias = values.alias;
-            obj.type = values.type;
+            obj.type = SelType;
             obj.bank = values.bankname;
             obj.accountnobank = values.accnobank;
             obj.accountnamebank = values.accnamebank;
@@ -177,6 +179,11 @@ export default function AddVendor(props) {
         setInputPriceOngkos(ongkos);
 
     }
+
+    const handleChangeType = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelType(id);
+    }
     return (
         <Formik
             initialValues={
@@ -186,7 +193,7 @@ export default function AddVendor(props) {
                     bankname: InputBankName,
                     accnobank: InputNoAkunBank,
                     accnamebank: InputNamaAkunBank,
-                    type: InputType,
+                    type: SelType,
                     priceongkos: InputPriceOngkos,
                     pricebox: InputPricebox,
                     packing: InputPacking,
@@ -203,7 +210,6 @@ export default function AddVendor(props) {
                 setInputBankName(values.bankname);
                 setInputNoAkunBank(values.accnobank);
                 setInputNamaAkunBank(values.accnamebank);
-                setInputType(values.type);
                 setInputPriceOngkos(values.priceongkos);
                 setInputPricebox(values.pricebox);
                 setInputPacking(values.packing);
@@ -282,23 +288,21 @@ export default function AddVendor(props) {
                                             {i18n.t('Type')}
                                             <span style={{ color: 'red' }}>*</span>
                                         </label>
-                                        <Input
+                                        <DropdownList
                                             name="type"
-                                            // className={
-                                            //     touched.namebranch && errors.namebranch
-                                            //         ? "w-50 input-error"
-                                            //         : "w-50"
-                                            // }
-                                            type="text"
-                                            id="type"
-                                            maxLength={100}
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
 
-                                            onChange={handleChange}
-                                            // onChange={val => handleInputNama(val)}
-                                            onBlur={handleBlur}
+                                            onChange={val => handleChangeType(val)}
+                                            onBlur={val => setFieldTouched("type", val?.value ? val.value : '')}
+                                            data={ListType}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
                                             value={values.type}
                                         />
-                                        <div className="invalid-feedback-custom">{ErrInputType}</div>
+                                        <div className="invalid-feedback-custom">{ErrSelType}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="pricebox">
                                             {i18n.t('Price Box')}
