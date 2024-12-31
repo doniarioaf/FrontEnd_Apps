@@ -226,6 +226,7 @@ const reportRekapBarangMasuk = lazy(() => import('./containers/Report/reportReka
 const menuPelunasanHutang = lazy(() => import('./containers/Transaksi/PelunasanHutang'));
 const detailHutangPR = lazy(() => import('./containers/Transaksi/PelunasanHutang/detailHutangPR'));
 const detailpelunasanhutang = lazy(() => import('./containers/Transaksi/PelunasanHutang/detailpelunasanhutang'));
+const detailHutangCargo = lazy(() => import('./containers/Transaksi/PelunasanHutang/detailHutangCargo'));
 
 const menuCargo = lazy(() => import('./containers/Transaksi/Cargo'));
 const addCargo = lazy(() => import('./containers/Transaksi/Cargo/add'));
@@ -468,6 +469,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.menupelunasanhutang} component={waitFor(menuPelunasanHutang)} />
                                         <Route path={pathmenu.detailhutangpr+ '/:id'} component={waitFor(detailHutangPR)} />
                                         <Route path={pathmenu.detailpelunasanhutang+ '/:id'} component={waitFor(detailpelunasanhutang)} />
+                                        <Route path={pathmenu.detailhutangcargo+ '/:id'} component={waitFor(detailHutangCargo)} />
 
                                         <Route path={pathmenu.menucargo} component={waitFor(menuCargo)} />
                                         <Route path={pathmenu.addcargo} component={waitFor(addCargo)} />

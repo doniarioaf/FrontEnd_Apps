@@ -25,9 +25,9 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
   import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { editPelunasanHutang_Permission,deletePelunasanHutang_Permission,MenuPelunasanHutang } from '../../shared/permissionMenu';
+  import { addPelunasanHutang_Permission,MenuPelunasanHutang } from '../../shared/permissionMenu';
   import moment                          from 'moment';
-  import { formatdate, formatdatetime } from '../../shared/constantValue';
+  import { formatdate } from '../../shared/constantValue';
   import { Formik } from 'formik';
   import momentLocalizer from 'react-widgets-moment';
     import {DatePicker } from 'react-widgets';
@@ -51,10 +51,6 @@ import React, {useState,
     momentLocalizer();
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
-    const [ValueDetailPelunasan, setValueDetailPelunasan] = useState([]);
-    const [valueCargo, setValueCargo] = useState([]);
-    const [IsCargo, setIsCargo] = useState(false);
-    const [IsPR, setIsPR] = useState(false);
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
@@ -104,56 +100,18 @@ import React, {useState,
 
       useEffect(() => {
         setLoading(true);
-        dispatch(actions.getPelunasanHutangData( {url:'/'+id},successHandlerPelunasan, errorHandler));
-        
+        dispatch(actions.getPelunasanHutangData( {url:'/detailhutangcargo/'+id},successHandler, errorHandler));
     }, []);
-    function successHandlerPelunasan(data,propsdata) {
+
+    function successHandler(data,propsdata) {
+        setValue(data.data);
         let det = data.data;
-        setValueDetailPelunasan(det);
-        if(det.idpurchasereceive){
-            setIsPR(true);
-            dispatch(actions.getPelunasanHutangData( {url:'/detailhutangpr/'+det.idpurchasereceive},successHandler, errorHandler));
-        }else{
-            setIsCargo(true);
-            dispatch(actions.getPelunasanHutangData( {url:'/detailhutangcargo/'+det.idcargo},successHandlerDetailCargo, errorHandler));
-        }
         
-    }
-    function successHandlerDetailCargo(data,propsdata) {
-        setValueCargo(data.data);
-        let det = data.data;
         let outstanding = det.detailCargo?(parseFloat(det.detailCargo.outstanding) > 1 ? det.detailCargo.outstanding:0) :0
         setInputKurangBayar(outstanding);
         setLoading(false);
     }
-    function successHandler(data,propsdata) {
-        setValue(data.data);
 
-        let det = data.data;
-        let outstanding = det.detailPR?(parseFloat(det.detailPR.outstanding) > 1 ? det.detailPR.outstanding:0) :0
-        setInputKurangBayar(outstanding);
-        setLoading(false);
-    }
-
-
-    const submitHandlerDelete = () => {
-        Swal.fire({
-            title: i18n.t('label_DIALOG_ALERT_SURE'),
-            showDenyButton: false,
-            showCancelButton: true,
-            confirmButtonText: `Confirm`,
-            denyButtonText: `Don't save`,
-          }).then((result) => {
-            /* Read more about isConfirmed, isDenied below */
-            if (result.isConfirmed) {
-                setLoading(true);
-                dispatch(actions.submitPelunasanHutang( {url:'/'+id,type:'DELETE'} ,succesHandlerSubmitDelete, errorHandler));
-            //   Swal.fire('Saved!', '', 'success')
-            } else if (result.isDenied) {
-            //   Swal.fire('Changes are not saved', '', 'info')
-            }
-          })
-    }
 
     const succesHandlerSubmit = (data) => {
         setLoading(false);
@@ -168,19 +126,6 @@ import React, {useState,
         })
     }
 
-    const succesHandlerSubmitDelete = (data) => {
-        setLoading(false);
-        Swal.fire({
-            icon: 'success',
-            title: 'SUCCESS',
-            text: i18n.t('label_SUCCESS')
-        }).then((result) => {
-            if (result.isConfirmed) {
-                history.push(pathmenu.menupelunasanhutang);
-            }
-        })
-    }
-
     function errorHandler(data,propsdata) {
         setLoading(false);
         Swal.fire({
@@ -190,115 +135,36 @@ import React, {useState,
         })
     }
 
-    const getListBiaya = (items) => {
-        let row = [];
-        for(let i=0; i < items.length; i++){
-            let det = items[i];
-            if(det.chargename == 'ONGKOS'){
-                row.push(
-                    <div className="row mt-3">
-                    <span className="col-md-5">{det.chargename}</span>
-                        <strong className="col-md-7">
-                        {det.subtotalprice?'('+numToMoney(det.subtotalprice)+')':0}
-                        </strong>
-                    </div>
-                );
-            }else{
-                row.push(
-                    <div className="row mt-3">
-                    <span className="col-md-5">{det.chargename}</span>
-                        <strong className="col-md-7">
-                        {det.subtotalprice?numToMoney(det.subtotalprice):0}
-                        </strong>
-                    </div>
-                );
-            }
-            
-        }
-        return row;
-    }
 
-    const getTotalUdang = (items) => {
-        let listfilteroutput = items.filter(output => output.type == 'H');
-        let totaludang = 0;
-        for(let i=0; i < listfilteroutput.length; i++){
-            let det = listfilteroutput[i];
-            totaludang += det.subtotalprice;
-        }
-        return numToMoney(totaludang);
-    }
 
-    const getTotalInventori = (items) => {
-        let totalinventori = 0;
-        for(let i=0; i < items.length; i++){
-            let det = items[i];
-            totalinventori += det.subtotalprice;
-        }
-        return totalinventori;
-    }
-
-    
     const getListPembayaran = (items,outstanding) => {
         let row = [];
         let totalbayar = 0;
-        let amountIDCurrent = 0;
         for(let i=0; i < items.length; i++){
             let det = items[i];
-            let idPH = det.id;
             totalbayar += det.amount;
-                if(idPH == id){
-                    amountIDCurrent = det.amount?det.amount:0
-                    row.push(
-                        <div className="row mt-3" hidden={ShowBayar}>
-                        <span className="col-md-5">{'Pembayaran tanggal '+(det.date?moment(det.date).format(formatdate):'')}</span>
-                            <strong className="col-md-7">
-                            {det.amount?'('+numToMoney(det.amount)+')':''}
-                            </strong>
-                        </div>
-                    );    
-                }else{
-                    row.push(
-                        <div className="row mt-3">
-                        <span className="col-md-5">{'Pembayaran tanggal '+(det.date?moment(det.date).format(formatdate):'')}</span>
-                            <strong className="col-md-7">
-                            {det.amount?'('+numToMoney(det.amount)+')':''}
-                            </strong>
-                        </div>
-                    );
-                }
-                
+                row.push(
+                    <div className="row mt-3">
+                    <span className="col-md-5">{'Pembayaran tanggal '+(det.date?moment(det.date).format(formatdate):'')}</span>
+                        <strong className="col-md-7">
+                        {det.amount?'('+numToMoney(det.amount)+')':''}
+                        </strong>
+                    </div>
+                );
             }
         // let kurangbayar = totalnota - totalbayar;
         row.push(
-            <div className="row mt-3" hidden={ShowBayar}>
+            <div className="row mt-3">
             <span className="col-md-5">{'Kurang Bayar'}</span>
                 <strong className="col-md-7">
                 {outstanding > 1?numToMoney(outstanding):'0'}
                 </strong>
             </div>
         );
-
-        row.push(
-            <div className="row mt-3" hidden={!ShowBayar}>
-            <span className="col-md-5">{'Kurang Bayar'}</span>
-                <strong className="col-md-7">
-                {outstanding > 1?numToMoney(outstanding + amountIDCurrent):'0'}
-                </strong>
-            </div>
-        );
             
         return row;
     }
 
-    const getTittleEditPembayaran = (items) => {
-        let listfilteroutput = items.filter(output => output.id == id);
-        if(listfilteroutput.length > 0){
-            let det = listfilteroutput[0];
-            return 'Edit Pembayaran tanggal '+(det.date?moment(det.date).format(formatdate):'');
-        }
-        return '';
-        
-    }
 
     const handleChangeDate = (data) => {
             //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
@@ -315,18 +181,10 @@ import React, {useState,
         setInputDates(new Date());
         setInputNotes('');
         setShowBayar(false);
-        let outstanding = value.detailPR?(parseFloat(value.detailPR.outstanding) > 1 ? value.detailPR.outstanding:0) :0
-        setInputKurangBayar(outstanding);
     }
     function clickBayar() {
         setShowBayar(true);
         setOpen(false);
-        let amountBayar = ValueDetailPelunasan.amount?ValueDetailPelunasan.amount:0;
-        let oustanding = parseFloat(InputKurangBayar) + parseFloat(amountBayar);
-        setInputKurangBayar(oustanding);
-        setInputAmount(amountBayar);
-        setInputDates(ValueDetailPelunasan.date?new Date(ValueDetailPelunasan.date):new Date());
-        setInputNotes(ValueDetailPelunasan.notes);
     }
     const checkColumnMandatory = (values) => {
         let flag = true;
@@ -356,19 +214,13 @@ import React, {useState,
         let flag = checkColumnMandatory(values);
         if (flag) {
             let obj = new Object();
-            if(IsPR){
-                obj.idpurchasereceive = value.detailPR.id;
-                obj.idcargo = null;
-            }else{
-                obj.idpurchasereceive = null;
-                obj.idcargo = valueCargo.detailCargo.id;
-            }
-            
+            obj.idpurchasereceive = null;
+            obj.idcargo = value.detailCargo.id;
             obj.date = InputDates.getTime();
             obj.amount = new String(values.amount).replaceAll('.','');
             obj.notes = values.notes;
             setLoading(true);
-            dispatch(actions.submitPelunasanHutang({ url: '/'+id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitPelunasanHutang({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -392,7 +244,7 @@ import React, {useState,
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} link={pathmenu.detailpelunasanhutang+'/'+id} label={'Detail Pelunasan Hutang'} labeldefault={'Detail Pelunasan Hutang'} />
+            <ContentHeading history={history} link={pathmenu.detailhutangcargo+'/'+id} label={'Detail Hutang Cargo'} labeldefault={'Detail Hutang Cargo'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -421,7 +273,7 @@ import React, {useState,
                 <h2>
                     {
                         !loading  ?
-                            (ValueDetailPelunasan.nodocument?ValueDetailPelunasan.nodocument:'') :
+                            (value.detailCargo?value.detailCargo.invoicenumber:'') :
                             <Skeleton style={{maxWidth: 300}}/>
                     }
                 </h2>
@@ -437,121 +289,24 @@ import React, {useState,
                     (
                         <section>
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('No Document')}</span>
+                            <span className="col-md-5">{i18n.t('No Invoice Cargo')}</span>
                             <strong className="col-md-7">
-                                {ValueDetailPelunasan.nodocument?ValueDetailPelunasan.nodocument:''}
+                                {value.detailCargo?value.detailCargo.invoicenumber:''}
                             </strong>
-                            </div> 
+                            </div>
 
-                            {
-                                IsPR?
-                                    (
-                                        <div>
-                                    <div className="row mt-3">
-                                    <span className="col-md-5">{i18n.t('No Document Supplier')}</span>
-                                    <strong className="col-md-7">
-                                        {value.detailPR?value.detailPR.nodocument:''}
-                                    </strong>
-                                    </div>
-
-                                    <div className="row mt-3">
-                                    <span className="col-md-5">{i18n.t('Total Udang')}</span>
-                                    <strong className="col-md-7">
-                                        {getTotalUdang((value.detailPR?value.detailPR.items:[]))}
-                                    </strong>
-                                    </div>
-
-                                    {getListBiaya((value.detailPR?value.detailPR.charges:[]))}
-
-                                    <div className="row mt-3">
-                                    <span className="col-md-5">{i18n.t('Total Inventori')}</span>
-                                    <strong className="col-md-7">
-                                        {getTotalInventori((value.detailPR?value.detailPR.inventori:[]))}
-                                    </strong>
-                                    </div>
-
-                                    <div className="row mt-3">
-                                    <span className="col-md-5">{i18n.t('Setor')}</span>
-                                        <strong className="col-md-7">
-                                        {value.detailPR ?'('+numToMoney(value.detailPR.setor)+')':''}
-                                        </strong>
-                                    </div>
-
-                                    <div className="row mt-3">
-                                    <span className="col-md-5">{i18n.t('Total Nota')}</span>
-                                        <strong className="col-md-7">
-                                        {value.detailPR ?numToMoney(value.detailPR.totalprice - value.detailPR.setor):''}
-                                        </strong>
-                                    </div>
-
-                                    {getListPembayaran((value.listpembayaran?value.listpembayaran:[]) , (value.detailPR?value.detailPR.outstanding:0))}
-                                    </div>
-                                    )
-                                
-                                :''
-                            }
-
-                            {
-                                IsCargo?
-                                    (
-                                        <div>
-                                    <div className="row mt-3">
-                                    <span className="col-md-5">{i18n.t('No Invoice Cargo')}</span>
-                                    <strong className="col-md-7">
-                                        {valueCargo.detailCargo?valueCargo.detailCargo.invoicenumber:''}
-                                    </strong>
-                                    </div>
-
-                                   
-                                    <div className="row mt-3">
-                                    <span className="col-md-5">{i18n.t('Total Amount')}</span>
-                                        <strong className="col-md-7">
-                                        {valueCargo.detailCargo ?numToMoney(valueCargo.detailCargo.netamount):''}
-                                        </strong>
-                                    </div>
-
-                                    {getListPembayaran((valueCargo.listpembayaran?valueCargo.listpembayaran:[]) , (valueCargo.detailCargo?valueCargo.detailCargo.outstanding:0))}
-                                    </div>
-                                    )
-                                
-                                :''
-                            }
-                            
+                           
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Notes')}</span>
+                            <span className="col-md-5">{i18n.t('Total Amount')}</span>
                                 <strong className="col-md-7">
-                                {ValueDetailPelunasan.notes ?ValueDetailPelunasan.notes:''}
+                                {value.detailCargo ?'('+numToMoney(value.detailCargo.netamount)+')':''}
                                 </strong>
                             </div>
 
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_CREATED')}</span>
-                                <strong className="col-md-7">
-                                {ValueDetailPelunasan.createdbyName ?ValueDetailPelunasan.createdbyName:''}
-                                </strong>
-                            </div>
 
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_CREATED_DATE')}</span>
-                                <strong className="col-md-7">
-                                {ValueDetailPelunasan.createddate ?moment (new Date(ValueDetailPelunasan.createddate)).format(formatdatetime):''}
-                                </strong>
-                            </div>
+                            {getListPembayaran((value.listpembayaran?value.listpembayaran:[]) , (value.detailCargo?value.detailCargo.outstanding:0))}
 
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_MODIFIED')}</span>
-                                <strong className="col-md-7">
-                                {ValueDetailPelunasan.modifiedbyName ?ValueDetailPelunasan.modifiedbyName:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_MODIFIED_DATE')}</span>
-                                <strong className="col-md-7">
-                                {ValueDetailPelunasan.modifieddate ?moment (new Date(ValueDetailPelunasan.modifieddate)).format(formatdatetime):''}
-                                </strong>
-                            </div>
                             
                         </section>
                     )
@@ -562,7 +317,7 @@ import React, {useState,
 
             <div hidden={!ShowBayar} style={{marginLeft:'150px'}} className="mt-2 col-lg-4 ft-detail mb-3">
             <Card outline color="primary" className="mb-3" style={{width:"150%"}}>
-            <CardHeader className="text-white bg-primary" tag="h4" >{loading ? <Skeleton/> : getTittleEditPembayaran((value.listpembayaran?value.listpembayaran:[]))}</CardHeader>
+            <CardHeader className="text-white bg-primary" tag="h4" >{loading ? <Skeleton/> : 'Bayar'}</CardHeader>
             <CardBody>
                 <Formik
                      initialValues={
@@ -691,8 +446,8 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editPelunasanHutang_Permission,'TRANSACTION')?true:InputKurangBayar == 0}  onClick={() => clickBayar()}>{i18n.t('Edit')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deletePelunasanHutang_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(addPelunasanHutang_Permission,'TRANSACTION')?true:InputKurangBayar == 0}  onClick={() => clickBayar()}>{i18n.t('Bayar')}</MenuItem>
+                            {/* <MenuItem hidden={!isGetPermissions(deleteDeposit_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem> */}
                             
                         </div>)
                         

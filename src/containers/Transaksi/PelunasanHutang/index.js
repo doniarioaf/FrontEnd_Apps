@@ -86,6 +86,21 @@ const PelunasanHutangIndex = () => {
                     ], []);
                     
                 }
+                if(data.data.listCargo){
+                    for(let i=0; i < data.data.listCargo.length; i++){
+                        let el = data.data.listCargo[i];
+                        list.push(
+                            {
+                                'id': el.id+'CARGO',
+                                'iddoc':el.id,
+                                'nodoc': el.invoicenumber,
+                                'total': el.netamount?numToMoney(el.netamount):0,
+                                'outstanding': el.outstanding?numToMoney(el.outstanding):0,
+                                'type':'CARGO'
+                            }
+                        );
+                    }
+                }
                
             }
             setRowsHutang(list);
@@ -105,8 +120,8 @@ const PelunasanHutangIndex = () => {
                     {
                         'id': el.id,
                         'nodoc': el.nodocument,
-                        'noinv': el.nodocumentPR,
-                        'vendor': el.namavendorPR,
+                        'noinv': el.nodocumentPR?el.nodocumentPR:el.nodocumentCargo,
+                        'vendor': el.namavendorPR?el.namavendorPR:el.namavendorCargo,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
                         'amount': el.amount?numToMoney(el.amount):0,
                     }
@@ -145,6 +160,8 @@ const PelunasanHutangIndex = () => {
             if(listfilteroutput.length > 0){
                 if(listfilteroutput[0].type == 'PR'){
                     history.push(pathmenu.detailhutangpr + '/' + listfilteroutput[0].iddoc);
+                }else if(listfilteroutput[0].type == 'CARGO'){
+                    history.push(pathmenu.detailhutangcargo + '/' + listfilteroutput[0].iddoc);
                 }
                 
             }

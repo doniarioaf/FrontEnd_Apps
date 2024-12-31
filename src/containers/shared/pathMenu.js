@@ -87,6 +87,7 @@ export const menuReportStockUdangHidupMati = `/reportStockUdangMati`;
 export const menuReportRekapBarangMasuk = `/reportRekapBarangMasuk`;
 export const menupelunasanhutang = `/pelunasanhutang`;
 export const detailhutangpr = `/form/detailhutangpr/pelunasanhutang`;
+export const detailhutangcargo = `/form/detailhutangcargo/pelunasanhutang`;
 export const detailpelunasanhutang = `/form/detailpelunasanhutang/pelunasanhutang`;
 export const menucargo = `/cargo`;
 export const addcargo = `/form/add/cargo`;
