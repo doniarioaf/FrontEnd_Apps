@@ -34,17 +34,26 @@ export default function AddCustomer(props) {
     const [InputNoAkunBank, setInputNoAkunBank] = useState('');
     const [InputNamaAkunBank, setInputNamaAkunBank] = useState('');
     const [InputAddress, setInputAddress] = useState('');
+    const [InputGrup, setInputGrup] = useState('');
+    const [ErrInputGrup, setErrInputGrup] = useState('');
+    const [InputPhoneNumber, setInputPhoneNumber] = useState('');
+    const [InputAttention, setInputAttention] = useState('');
 
     const checkColumnMandatory = (values) => {
         let flag = true;
         setErrInputNama('');
         setErrInputAlias('');
+        setErrInputGrup('');
         if (values.nama == '') {
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
         }
         if (values.alias == '') {
             setErrInputAlias(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+        if (values.grup == '') {
+            setErrInputGrup(i18n.t('label_REQUIRED'));
             flag = false;
         }
         return flag;
@@ -74,6 +83,9 @@ export default function AddCustomer(props) {
             obj.banknumber = values.accnobank;
             obj.accountbankname = values.accnamebank;
             obj.address = values.address;
+            obj.grup = values.grup;
+            obj.phonenumber = values.phonenumber;
+            obj.attention = values.attention;
             dispatch(actions.submitCustomerData({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -114,7 +126,10 @@ export default function AddCustomer(props) {
                     bankname: InputBankName,
                     accnobank: InputNoAkunBank,
                     accnamebank: InputNamaAkunBank,
-                    address: InputAddress
+                    address: InputAddress,
+                    grup:InputGrup,
+                    phonenumber:InputPhoneNumber,
+                    attention:InputAttention
                 }
             }
             validate={values => {
@@ -125,6 +140,9 @@ export default function AddCustomer(props) {
                 setInputNoAkunBank(values.accnobank);
                 setInputNamaAkunBank(values.accnamebank);
                 setInputAddress(values.address);
+                setInputGrup(values.grup);
+                setInputPhoneNumber(values.phonenumber);
+                setInputAttention(values.attention);
                 return errors;
             }}
             enableReinitialize="true"
@@ -197,6 +215,20 @@ export default function AddCustomer(props) {
                                         />
                                         <div className="invalid-feedback-custom">{ErrInputAlias}</div>
 
+                                        <label className="mt-3 form-label required" htmlFor="nama">
+                                            {i18n.t('Grup')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <Input
+                                            name="grup"
+                                            type="text"
+                                            id="grup"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.grup}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputGrup}</div>
+
                                         <label className="mt-3 form-label required" htmlFor="address">
                                             {i18n.t('label_ADDRESS')}
                                             {/* <span style={{color:'red'}}>*</span> */}
@@ -218,9 +250,34 @@ export default function AddCustomer(props) {
                                             value={values.address}
                                         />
 
+                                        
+
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                    <label className="mt-3 form-label required" htmlFor="phonenumber">
+                                            {i18n.t('Phone Number')}
+                                        </label>
+                                        <Input
+                                            name="phonenumber"
+                                            type="text"
+                                            id="phonenumber"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.phonenumber}
+                                        />
+
+                                        <label className="mt-3 form-label required" htmlFor="attention">
+                                            {i18n.t('Attention')}
+                                        </label>
+                                        <Input
+                                            name="attention"
+                                            type="text"
+                                            id="attention"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.attention}
+                                        />
                                         <label className="mt-3 form-label required" htmlFor="bankname">
                                             {i18n.t('Bank')}
                                             {/* <span style={{color:'red'}}>*</span> */}

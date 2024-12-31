@@ -85,7 +85,8 @@ export default function EditPurchaseReceive(props) {
 
     function successHandler(data, propsdata) {
         if (data.data) {
-            const theData = data.data.vendorOpt.reduce((obj, el) => [
+            let listfilteroutput = data.data.vendorOpt.filter(output => output.type == 'UDANG');
+            const theData = listfilteroutput.reduce((obj, el) => [
                 ...obj,
                 {
                     'value': el.id,

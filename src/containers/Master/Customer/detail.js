@@ -181,6 +181,12 @@ import React, {useState,
                     loading ?<Skeleton count={7} height={21} style={{marginTop: '1rem'}}/> :
                     (
                         <section>
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Nama')}</span>
+                            <strong className="col-md-7">
+                                {value.nama?value.nama:''}
+                            </strong>
+                            </div>
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Alias')}</span>
@@ -190,9 +196,30 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Grup')}</span>
+                            <strong className="col-md-7">
+                                {value.grup?value.grup:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_ADDRESS')}</span>
                             <strong className="col-md-7">
                                 {value.address?value.address:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Phone Number')}</span>
+                            <strong className="col-md-7">
+                                {value.phonenumber?value.phonenumber:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Attention')}</span>
+                            <strong className="col-md-7">
+                                {value.attention?value.attention:''}
                             </strong>
                             </div>
 
