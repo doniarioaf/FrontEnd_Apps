@@ -52,6 +52,10 @@ export default function EditCargo(props) {
     const [InputNetAmount, setInputNetAmount] = useState('');
     const [ErrInputNetAmount, setErrInputNetAmount] = useState('');
 
+    const [selectedFile, setSelectedFile] = useState();
+    const [isSelected, setIsSelected] = useState(false);
+    const [FileName, setFileName] = useState();
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -87,6 +91,8 @@ export default function EditCargo(props) {
         setInputPPNAmount(det.ppnamount?det.ppnamount:0);
         setInputPPN23Amount(det.ppn23amount?det.ppn23amount:0);
         setInputNetAmount(det.netamount?det.netamount:0);
+        setFileName(det.fileName ?det.fileName:'');
+
         setLoading(false);
     }
 
@@ -127,6 +133,19 @@ export default function EditCargo(props) {
         })
     }
 
+    const succesHandlerSubmitData = (data, propsdata) => {
+        let iddata = data.data;
+        if(isSelected && selectedFile !== undefined && selectedFile !== null){
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            dispatch(actions.submitCargo({ url: '/file/'+iddata, payload: formData, type: 'ADD' }, succesHandlerSubmit, errorHandler));
+        }else{
+            succesHandlerSubmit(data,propsdata);
+        }
+        
+    }
+
     const executeSubmit = (values) => {
         let flag = checkColumnMandatory(values);
         if (flag) {
@@ -143,7 +162,7 @@ export default function EditCargo(props) {
             obj.ppn23amount = new String(values.ppn23amount).replaceAll(".", "") !== '' ? new String(values.ppn23amount).replaceAll(".", "") : 0;
             obj.netamount = new String(values.netamount).replaceAll(".", "") !== '' ? new String(values.netamount).replaceAll(".", "") : 0;
 
-            dispatch(actions.submitCargo({ url: '/'+id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitCargo({ url: '/'+id, payload: obj, type: 'EDIT' }, succesHandlerSubmitData, errorHandler));
         }
     }
 
@@ -179,6 +198,19 @@ export default function EditCargo(props) {
         let id = data?.value ? data.value : '';
         setSelVendor(id);
 
+    }
+
+    const changeHandlerFIle = (event) => {
+
+		setSelectedFile(event.target.files[0]);
+
+		setIsSelected(true);
+
+	};
+    function cancelFile(){
+        setSelectedFile(null);
+
+		setIsSelected(false);
     }
 
 
@@ -381,6 +413,46 @@ export default function EditCargo(props) {
                                             onBlur={handleBlur}
                                             value={values.netamount !== '' ? numToMoney(parseFloat(new String(values.netamount).replaceAll(".", ""))) : ''}
                                         />
+
+                                        <label className="mt-3 form-label required" htmlFor="FileName">
+                                            {i18n.t('File')}
+                                        </label>
+                                        <Input
+                                            name="FileName"
+                                            type="text"
+                                            id="FileName"
+
+                                            // onChange={handleChange}
+                                            // onBlur={handleBlur}
+                                            value={FileName}
+                                            disabled={true}
+                                        />
+
+                                        <label className="mt-3 form-label required" htmlFor="netamount">
+                                            {i18n.t('Upload File')}
+                                        </label>
+                                        <br/>
+                                        {/* <div style={{backgroundColor:'#343439',width:'20%',height:'5%',position:'absolute',right:'15px' }}></div> */}
+                                        <input type="file" name={"file"}  onChange={changeHandlerFIle} />
+                                        
+                                        {isSelected && selectedFile !== undefined && selectedFile !== null ? 
+                                        <div>
+                                            <p>Nama File: {selectedFile.name || selectedFile.name !== undefined?selectedFile.name:''}</p>
+
+                                            <p>Tipe File: {selectedFile.type || selectedFile.type !== undefined?selectedFile.type:''}</p>
+
+                                            <p>Ukuran Dalam KB: {selectedFile.size || selectedFile.size !== undefined?selectedFile.size / 1024:0}</p>
+                                            <Button
+                                    // style={{marginLeft:"1%"}}
+                                                color={'primary'}
+                                                onClick={() => cancelFile()}
+                                            >
+                                                {'Cancel File'}
+                                            </Button>
+                                        </div>
+
+                                        
+                                        :<p>Silahkan Pilih File</p> }
                                     </div>
 
                                 </div>
