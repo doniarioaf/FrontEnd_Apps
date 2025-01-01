@@ -117,6 +117,12 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuPelunasanHutang,
                 },
                 {
+                    name: 'Pelunasan Piutang',
+                    path: pathmenu.menupelunasanpiutang,
+                    translate: 'Packing List',
+                    permission:permissionmenu.MenuPelunasanHutang,
+                },
+                {
                     name: 'Price List',
                     path: pathmenu.menupricelist,
                     translate: 'Price List',

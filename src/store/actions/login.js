@@ -1,9 +1,9 @@
 import * as actions from './actions';
 
-export const loginUser = (payload, successHandler, errorHandler) => {
+export const loginUser = (param, successHandler, errorHandler) => {
     return {
         type: actions.LOGIN_USER,
-        payload: payload,
+        param: param,
         successHandler,
         errorHandler,
     }
@@ -40,10 +40,10 @@ export const logoutUser = (successHandler, errorHandler) => {
     }
 }
 
-export const preLoginUser = (payload, successHandler, errorHandler) => {
+export const preLoginUser = (param, successHandler, errorHandler) => {
     return {
         type: actions.PRE_LOGIN_USER,
-        payload: payload,
+        param: param,
         successHandler,
         errorHandler,
     }

@@ -6,3 +6,4 @@ export const messageError = 'messageerror';
 export const historylink = 'historylink';
 export const idwo = 'idwo';
 export const branch = 'A8s92jjakiw';
+export const idsinvoice = 'aa2Iokaks';

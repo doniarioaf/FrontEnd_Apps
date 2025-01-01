@@ -51,7 +51,7 @@ export default function FormLogin(props) {
             obj.user = user;
             obj.password = password;
             obj.idbranch = SelBranch;
-            dispatch(actions.loginUser(obj, succesHandlerSubmit, errorHandler));
+            dispatch(actions.loginUser({url:'',payload:obj,propsdata:null}, succesHandlerSubmit, errorHandler));
         } else {
             setErrSelBranch(i18n.t('label_REQUIRED'));
         }
@@ -65,7 +65,7 @@ export default function FormLogin(props) {
         var obj = new Object();
         obj.user = user;
         obj.password = password;
-        dispatch(actions.preLoginUser(obj, succesHandlerPreLogin, errorHandler));
+        dispatch(actions.preLoginUser({url:'',payload:obj}, succesHandlerPreLogin, errorHandler));
 
     }
     const succesHandlerPreLogin = (data) => {
@@ -76,39 +76,59 @@ export default function FormLogin(props) {
                 label: el.displayName
             }]
         ), []));
+        if(data.data.length == 1){
+            setLoading(true);
+            var obj = new Object();
+            obj.user = user;
+            obj.password = password;
+            obj.idbranch = data.data[0].idbranch;
+            dispatch(actions.loginUser({url:'',payload:obj,propsdata:data.data}, succesHandlerSubmit, errorHandler));
+        }else{
+            setLoading(false);
+            setIsPreLoginSuccess(true);
+        }
 
-        setIsPreLoginSuccess(true);
-        setLoading(false);
+        
+        
     }
     const handleChangeBranch = (data) => {
         let idbranch = data?.value ? data.value : '';
         setSelBranch(idbranch);
     }
-    const succesHandlerSubmit = (data) => {
-        // console.log('succesHandlerSubmit ',data);
+    const succesHandlerSubmit = (data,propsdata) => {
         setLoading(false);
+        
+        
         if (data.flag) {
-            let filterid = ListDataBranch.filter(output => output.idbranch == SelBranch);
-            if (filterid.length > 0) {
-                const branch = CryptoJS.AES.encrypt(JSON.stringify(filterid[0]), key.keyEcncrypt).toString();
-                localStorage.setItem(key.branch, branch);
-            }
-
-            if (data.msg !== '') {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Information',
-                    text: data.msg
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        history.push('/home');
-                    }
-                })
-            } else {
-                history.push('/home');
-            }
+            let listbranch = propsdata != null?propsdata:ListDataBranch;
+            let idbranch = propsdata != null?propsdata[0].idbranch:SelBranch;
+            suksesLogin(data,listbranch,idbranch);
         }
         // alert('succesHandlerSubmit '+data);
+    }
+
+    function suksesLogin(data,listBranch, idbranch){
+        
+        let filterid = listBranch.filter(output => output.idbranch == idbranch);
+        
+        if (filterid.length > 0) {
+            const branch = CryptoJS.AES.encrypt(JSON.stringify(filterid[0]), key.keyEcncrypt).toString();
+            localStorage.setItem(key.branch, branch);
+        }
+
+        if (data.msg !== '') {
+            Swal.fire({
+                icon: 'info',
+                title: 'Information',
+                text: data.msg
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    history.push('/home');
+                }
+            })
+        } else {
+            history.push('/home');
+        }
     }
     const errorHandler = (data) => {
         setLoading(false);

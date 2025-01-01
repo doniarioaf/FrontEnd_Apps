@@ -93,3 +93,5 @@ export const menucargo = `/cargo`;
 export const addcargo = `/form/add/cargo`;
 export const detailcargo = `/form/detail/cargo`;
 export const editcargo = `/form/edit/cargo`;
+export const menupelunasanpiutang = `/pelunasanpiutang`;
+export const bayarpelunasanpiutang = `/form/bayar/pelunasanpiutang`;

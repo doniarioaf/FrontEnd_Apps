@@ -284,6 +284,23 @@ export const decryptObject = (keystorage)  =>{
     }
 }
 
+export const decryptObjectNotLocalStorage = (encrypt, isJsonParse)  =>{
+    const objectenc = encrypt;
+    try{
+        const bytes = CryptoJS.AES.decrypt(encrypt, key.keyEcncrypt);
+        if(isJsonParse){
+            const objectdec = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+            // let idx = permissionsuser.indexOf('');
+            return objectdec;
+        }
+        return bytes;
+        
+    }catch(err){
+        // window.location.href = '/';
+        return null;
+    }
+}
+
 export const addDays = (date, days)  =>{
     //const date = new Date(); *Harus new Date*
     return date.setDate(date.getDate() + days);

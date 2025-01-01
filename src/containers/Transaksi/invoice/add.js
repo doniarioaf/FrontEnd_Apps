@@ -42,6 +42,8 @@ export default function AddPackingList(props) {
     const [InputKurs, setInputKurs] = useState(1);
     const [ErrInputKurs, setErrInputKurs] = useState("");
 
+    const [TotalAmount, setTotalAmount] = useState(0);
+
     const [ListItems, setListItems] = useState([]);
 
 
@@ -112,6 +114,7 @@ export default function AddPackingList(props) {
             obj.kurs = values.kurs !== ''?new String(values.kurs).replaceAll('.',''):1;
             obj.idpackinglist = SelPackingList;
             obj.phone = values.phone;
+            obj.totalamount = TotalAmount;
             dispatch(actions.submitInvoice({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -162,6 +165,13 @@ export default function AddPackingList(props) {
     function successHandlerPackingList(data, propsdata) {
         let det = data.data;
         let listItems = det.items?det.items:[];
+        let totalamount = 0;
+        for(let i=0; i < listItems.length; i++){
+            let det = listItems[i];
+            let totalprice = det.totalprice?det.totalprice:0;
+            totalamount += parseFloat(totalprice);
+        }
+        setTotalAmount(totalamount.toFixed(2));
         setListItems(listItems);
         setLoading(false);
     }

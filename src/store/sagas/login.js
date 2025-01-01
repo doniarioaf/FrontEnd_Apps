@@ -8,13 +8,18 @@ import * as key from '../../containers/shared/constantKey';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* loginUserSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:[];
+    let propsdata = action.param.propsdata?action.param.propsdata:null;
+    
     try {
-        const response = yield AxiosLogin.post(loginURL,action.payload,{timeout:10000})
+        const response = yield AxiosLogin.post(loginURL,payload,{timeout:10000})
         .then(response => response.data ?response.data:[] );
         // console.log('loginUserSaga ',response);
         let flag = false;
         let responflag = response.data?.token?true:false;
         let message = '';
+        
         if(response.message == 'SUCCESS' && responflag){
             if(response.validations){
                 if(response.validations.length > 0){
@@ -25,21 +30,23 @@ export function* loginUserSaga(action) {
 
             localStorage.setItem(key.token,response.data.token);
             localStorage.setItem(key.permissions,permissions);
-            sessionStorage.setItem(key.sessionuser,action.payload.user);
+            sessionStorage.setItem(key.sessionuser,payload.user);
             
             let obj = new Object();
-            obj.username = action.payload.user;
+            obj.username = payload.user;
             obj.permissions = response.data.permissions;
             obj.typeaction = 'login';
+            
             yield put(actions.authSuccess(obj));
             flag = true;
         }
         let obj = new Object();
         obj.flag = flag;
         obj.msg = message;
-        action.successHandler(obj);
+        
+        action.successHandler(obj,propsdata);
     }catch (error) {
-        action.errorHandler(handleMessageError(error).msg);
+        action.errorHandler(handleMessageError(error).msg,propsdata);
     }
 }
 
@@ -70,11 +77,14 @@ export function* logoutUserSaga(action) {
 }
 
 export function* preLoginUserSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:null;
     try {
-        const response = yield AxiosLogin.post(preloginURL,action.payload,{timeout:10000})
+        const response = yield AxiosLogin.post(preloginURL,payload,{timeout:10000})
         .then(response => response.data ?response.data:[] );
-        action.successHandler(response);
+        action.successHandler(response,propsdata);
     }catch (error) {
-        action.errorHandler(handleMessageError(error).msg);
+        action.errorHandler(handleMessageError(error).msg,propsdata);
     }
 }

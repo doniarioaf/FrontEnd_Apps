@@ -553,3 +553,21 @@ export const submitCargo = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getPelunasanPiutangData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PELUNASANPIUTANG_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitPelunasanPiutang = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PELUNASANPIUTANG,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
