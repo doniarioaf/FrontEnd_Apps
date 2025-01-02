@@ -86,6 +86,11 @@ export const addCargo_Permission = ['READ_CARGO','CREATE_CARGO'];
 export const editCargo_Permission = ['READ_CARGO','EDIT_CARGO'];
 export const deleteCargo_Permission = ['DELETE_CARGO'];
 
+export const addPelunasanPiutang_Permission = ['READ_PELUNASANPIUTANG','CREATE_PELUNASANPIUTANG'];
+export const editPelunasanPiutang_Permission = ['READ_PELUNASANPIUTANG','EDIT_PELUNASANPIUTANG'];
+export const deletePelunasanPiutang_Permission = ['DELETE_PELUNASANPIUTANG'];
+
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
@@ -112,6 +117,7 @@ export const MenuReportStockUdangHidpuDanMati = ['READ_REPORT_STOCKUDANGHIDUPMAT
 export const MenuReportRekapanBarangMasuk = ['READ_REPORT_REKAPANBARANGMASUK'];
 export const MenuPelunasanHutang = ['READ_PELUNASANHUTANG'];
 export const MenuCargo = ['READ_CARGO'];
+export const MenuPelunasanPiutang = ['READ_PELUNASANPIUTANG'];
 
 
 

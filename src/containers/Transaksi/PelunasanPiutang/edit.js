@@ -3,14 +3,14 @@ import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import ContentWrapper from '../../../components/Layout/ContentWrapper';
 import ContentHeading from '../../../components/Layout/ContentHeading';
-import { Button, Input, FormGroup, Label } from 'reactstrap';
+import { Button, Input} from 'reactstrap';
 import * as actions from '../../../store/actions';
 import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { decryptObjectNotLocalStorage, numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { addPelunasanPiutang_Permission } from '../../shared/permissionMenu';
+import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { editPelunasanPiutang_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -22,8 +22,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
 import { calculateDolarToRupiah } from '.';
 
-export default function AddStockAdjusment(props) {
-    reloadToHomeNotAuthorize(addPelunasanPiutang_Permission, 'TRANSACTION');
+export default function EditStockAdjusment(props) {
+    reloadToHomeNotAuthorize(editPelunasanPiutang_Permission, 'TRANSACTION');
     const { i18n } = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
@@ -43,61 +43,65 @@ export default function AddStockAdjusment(props) {
 
 
     useEffect(() => {
-        let iddec = decryptObjectNotLocalStorage(id,true);
-        if(iddec != null){
-            iddec = iddec.join(',');
-            setLoading(true);
-            dispatch(actions.getPelunasanPiutangData({ url: '/bayar/listinvoice/'+iddec }, successHandler, errorHandler));
-        }
-        
+        setLoading(true);
+        dispatch(actions.getPelunasanPiutangData( {url:'/'+id},successHandler, errorHandler));
         
     }, []);
 
     function successHandler(data, propsdata) {
+        let det = data.data;
+        setTransDate(det.date?new Date(det.date):null);
+        setInputKurs(det.kurs);
+        let listItems = det.items?det.items:[];
         let list = []
-        if (data.data) {
-            let totalAmount =0;
-            let totalAmountRp =0;
-            let totalOutstanding =0;
-            for(let i=0; i < data.data.length; i++){
-                let el = data.data[i];
-                let amountRp = calculateDolarToRupiah(el.amount,el.kurs);
-                totalAmount += el.amount;
-                totalAmountRp += amountRp;
-                totalOutstanding += el.outstanding;
-                list.push(
-                    {
-                        'idinvoice':el.id,
-                        'nodocument': el.nodocument,
-                        'amount': el.amount,
-                        'amountrp': amountRp,
-                        'outstanding': el.outstanding,
-                        'biayabebanudangmati': 0,
-                        'biayabank': 0,
-                        'pembayaran': 0,
-                        'pembayaranrp': 0,
-                        'metodepembayaran': '',
-                    }
-                );
-            }
+        let totalAmount =0;
+        let totalAmountRp =0;
+        let totalOutstanding =0;
+        let totalBiayaBebanUdangMati =0;
+        let totalBiayaBank =0;
+        let totalPembayaran =0;
+        let totalPembayaranRp =0;
+        for(let i=0; i < listItems.length; i++){
+            let el = listItems[i];
+            let amountRp = calculateDolarToRupiah(el.amountInvoice,el.kursInvoice);
+            let pembayaranRp = calculateDolarToRupiah(el.pembayaran,det.kurs);
+            totalAmount += el.amountInvoice;
+            totalAmountRp += amountRp;
+            totalOutstanding += el.outstandingInvoice;
+            totalBiayaBebanUdangMati += el.biayabebanudangmati;
+            totalBiayaBank += el.biayabank;
+            totalPembayaran += el.pembayaran;
+            totalPembayaranRp += pembayaranRp;
             list.push(
                 {
-                    'idinvoice':0,
-                    'nodocument': 'TOTAL',
-                    'amount': parseFloat(totalAmount).toFixed(2),
-                    'amountrp': parseFloat(totalAmountRp).toFixed(2),
-                    'outstanding': parseFloat(totalOutstanding).toFixed(2),
-                    'biayabebanudangmati': 0,
-                    'biayabank': 0,
-                    'pembayaran': 0,
-                    'pembayaranrp': 0,
-                    'metodepembayaran': '',
+                    'idinvoice':el.idinvoice,
+                    'nodocument': el.nodocumentInvoice,
+                    'amount': el.amountInvoice,
+                    'amountrp': parseFloat(amountRp).toFixed(2),
+                    'outstanding': parseFloat(el.outstandingInvoice).toFixed(2),
+                    'biayabebanudangmati': el.biayabebanudangmati,
+                    'biayabank': el.biayabank,
+                    'pembayaran': el.pembayaran,
+                    'pembayaranrp': pembayaranRp,
+                    'metodepembayaran': el.metodepembayaran,
                 }
             );
-            
-        }
+        };
+        list.push(
+            {
+                'idinvoice':0,
+                'nodocument': 'TOTAL',
+                'amount': parseFloat(totalAmount).toFixed(2),
+                'amountrp': parseFloat(totalAmountRp).toFixed(2),
+                'outstanding': parseFloat(totalOutstanding).toFixed(2),
+                'biayabebanudangmati': parseFloat(totalBiayaBebanUdangMati).toFixed(2),
+                'biayabank': parseFloat(totalBiayaBank).toFixed(2),
+                'pembayaran': parseFloat(totalPembayaran).toFixed(2),
+                'pembayaranrp': parseFloat(totalPembayaranRp).toFixed(2),
+                'metodepembayaran': '',
+            }
+        );
         setListItems(list);
-
         setLoading(false);
     }
 
@@ -173,7 +177,7 @@ export default function AddStockAdjusment(props) {
                 ], []);
             }
             obj.items = items;
-            dispatch(actions.submitPelunasanPiutang({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitPelunasanPiutang({ url: '/'+id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -341,7 +345,7 @@ export default function AddStockAdjusment(props) {
                     return (
                         <form className="mb-6" onSubmit={handleSubmit} name="bayarpelunasanpiutang">
                             <ContentWrapper>
-                                <ContentHeading history={history} link={pathmenu.bayarpelunasanpiutang} label={'Bayar Piutang'} labeldefault={'Bayar Piutang'} />
+                                <ContentHeading history={history} link={pathmenu.editpelunasanpiutang+'/'+id} label={'Edit Bayar Piutang'} labeldefault={'Edit Bayar Piutang'} />
 
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">

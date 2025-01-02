@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import * as actions from '../../../store/actions';
 import * as pathmenu from '../../shared/pathMenu';
 import { reloadToHomeNotAuthorize, isGetPermissions, firstAndLastDateInMonth, numToMoney } from '../../shared/globalFunc';
-import { addDraftPurchaseReceive_Permission, MenuPelunasanHutang } from '../../shared/permissionMenu';
+import { MenuPelunasanPiutang,addPelunasanPiutang_Permission } from '../../shared/permissionMenu';
 import { useHistory } from 'react-router-dom';
 import { DropdownList, DatePicker } from 'react-widgets';
 import { formatdate } from '../../shared/constantValue';
@@ -34,7 +34,7 @@ export const calculateDolarToRupiah = (value, valuekurs) => {
     return rp;
 }
 const PelunasanPiutangIndex = () => {
-    reloadToHomeNotAuthorize(MenuPelunasanHutang, 'READ');
+    reloadToHomeNotAuthorize(MenuPelunasanPiutang, 'READ');
         momentLocalizer();
         const history = useHistory();
         const [rowspiutang, setRowsPiutang] = useState([]);
@@ -53,10 +53,10 @@ const PelunasanPiutangIndex = () => {
         const [columns] = useState([
             { name: 'id', title: 'id' },
             { name: 'nodoc', title: i18n.t('No Document') },
-            { name: 'noinv', title: i18n.t('No Invoice') },
-            { name: 'vendor', title: i18n.t('Vendor') },
+            { name: 'customer', title: i18n.t('Customer') },
             { name: 'transdate', title: i18n.t('Tanggal') },
-            { name: 'amount', title: i18n.t('Amount (Rp)') },
+            { name: 'amount', title: i18n.t('Amount($)') },
+            { name: 'amountRp', title: i18n.t('Amount(Rp)') },
         ]);
         const [tableColumnExtensions] = useState([]);
         const [loading, setLoading] = useState(false);
@@ -65,7 +65,11 @@ const PelunasanPiutangIndex = () => {
         const [from, setFrom] = useState(getdate.first);
         const [to, setTo] = useState(getdate.last);
 
+        const [fromPelunasanPiutang, setFromPelunasanPiutang] = useState(getdate.first);
+        const [toPelunasanPiutang, setToPelunasanPiutang] = useState(getdate.last);
+
         const [NamaCustomer, setNamaCustomer] = useState('');
+        const [NamaCustomerPelunasanPiutang, setNamaCustomerPelunasanPiutang] = useState('');
         const [ListCustomerGrup, setListCustomerGrup] = useState([]);
         const [SelCustomerGrup, setSelCustomerGrup] = useState('ALL');
         const [ListStatus, setListStatus] = useState([{value:'ALL',label:'All'},{value:'LUNAS',label:'Lunas'},{value:'BELUMLUNAS',label:'Belum Lunas'}]);
@@ -97,7 +101,7 @@ const PelunasanPiutangIndex = () => {
                         'id': el.id,
                         'nodoc': el.nodocument,
                         'customer': el.customerName,
-                        'transdate': el.date,
+                        'transdate': el.date ? moment(el.date).format(formatdate) : '',
                         'amount': el.amount?el.amount:0,
                         'amountRp': numToMoney(calculateDolarToRupiah(el.amount,el.kurs)),
                         'outstanding': el.outstanding?parseFloat(el.outstanding).toFixed(2):0,
@@ -116,7 +120,7 @@ const PelunasanPiutangIndex = () => {
                         'id': el.id,
                         'nodoc': el.nodocument,
                         'customer': el.customerName,
-                        'transdate': el.date,
+                        'transdate': el.date ? moment(el.date).format(formatdate) : '',
                         'amount': el.amount?el.amount:0,
                         'amountRp': numToMoney(calculateDolarToRupiah(el.amount,el.kurs)),
                         'outstanding': el.outstanding?el.outstanding:0,
@@ -142,9 +146,17 @@ const PelunasanPiutangIndex = () => {
                 label: 'All',
             })
             setListCustomerGrup(list);
-            setLoading(false);
+
+            let obj = new Object();
+            obj.from = fromPelunasanPiutang.getTime();
+            obj.to = toPelunasanPiutang .getTime();
+            obj.namaCust = NamaCustomerPelunasanPiutang;
+            dispatch(actions.getPelunasanPiutangData({ url: '/pelunasanpiutanglist', type: 'POST', payload: obj }, successHandlerPelunasanPiutang, errorHandler));
+
+            // setLoading(false);
         }
-        function successHandlerPelunasanHutang(data, propsdata) {
+
+        function successHandlerPelunasanPiutang(data, propsdata) {
             let list = [];
             if (data.data) {
                 list = data.data.reduce((obj, el) => [
@@ -152,14 +164,14 @@ const PelunasanPiutangIndex = () => {
                     {
                         'id': el.id,
                         'nodoc': el.nodocument,
-                        'noinv': el.nodocumentPR?el.nodocumentPR:el.nodocumentCargo,
-                        'vendor': el.namavendorPR?el.namavendorPR:el.namavendorCargo,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
-                        'amount': el.amount?numToMoney(el.amount):0,
+                        'customer': el.customerName,
+                        'amount': el.amountInvoice?el.amountInvoice:0,
+                        'amountRp': numToMoney(calculateDolarToRupiah(el.amountInvoice,el.kursInvoice)),
                     }
                 ], []);
             }
-            setRows(list);
+            setRows(list)
             setLoading(false);
         }
 
@@ -184,20 +196,28 @@ const PelunasanPiutangIndex = () => {
             history.push(pathmenu.adddraftpurchasereceive);
         }
         function onClickView(id) {
-            history.push(pathmenu.detailpelunasanhutang + '/' + id);
+            history.push(pathmenu.detailpelunasanpiutang + '/' + id);
         }
 
-        function onClickViewHutang(id) {
-            let listfilteroutput = rowshutang.filter(output => output.id == id);
-            if(listfilteroutput.length > 0){
-                if(listfilteroutput[0].type == 'PR'){
-                    history.push(pathmenu.detailhutangpr + '/' + listfilteroutput[0].iddoc);
-                }else if(listfilteroutput[0].type == 'CARGO'){
-                    history.push(pathmenu.detailhutangcargo + '/' + listfilteroutput[0].iddoc);
-                }
+        // function onClickViewHutang(id) {
+        //     let listfilteroutput = rowshutang.filter(output => output.id == id);
+        //     if(listfilteroutput.length > 0){
+        //         if(listfilteroutput[0].type == 'PR'){
+        //             history.push(pathmenu.detailhutangpr + '/' + listfilteroutput[0].iddoc);
+        //         }else if(listfilteroutput[0].type == 'CARGO'){
+        //             history.push(pathmenu.detailhutangcargo + '/' + listfilteroutput[0].iddoc);
+        //         }
                 
-            }
+        //     }
             
+        // }
+        const handleChangeFromPelunasanPiutang = (data) => {
+            //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
+            if (data !== null) {
+                setFromPelunasanPiutang(moment(data, formatdate).toDate())
+            } else {
+                setFromPelunasanPiutang(null)
+            }
         }
 
         const handleChangeFrom = (data) => {
@@ -218,13 +238,23 @@ const PelunasanPiutangIndex = () => {
             }
         }
 
+        const handleChangeTOPelunasanPiutang = (data) => {
+            //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
+            if (data !== null) {
+                setToPelunasanPiutang(moment(data, formatdate).toDate())
+            } else {
+                setToPelunasanPiutang(null);
+            }
+        }
+
         function onClickSearch() {
             if (from != null && to != null) {
                 setLoading(true);
                 let obj = new Object();
-                obj.from = from.getTime();
-                obj.to = to.getTime();
-                dispatch(actions.getPelunasanHutangData({ url: '/list', type: 'POST', payload: obj }, successHandlerPelunasanHutang, errorHandler));
+                obj.from = fromPelunasanPiutang.getTime();
+                obj.to = toPelunasanPiutang .getTime();
+                obj.namaCust = NamaCustomerPelunasanPiutang;
+                dispatch(actions.getPelunasanPiutangData({ url: '/pelunasanpiutanglist', type: 'POST', payload: obj }, successHandlerPelunasanPiutang, errorHandler));
             }
 
         }
@@ -279,7 +309,7 @@ const PelunasanPiutangIndex = () => {
                     variant="fullWidth"
                 >
                     <Tab label={i18n.t('Piutang') }/>
-                    <Tab label={i18n.t('Pelunasan Hutang') }/>
+                    <Tab label={i18n.t('Pelunasan Piutang') }/>
                 </Tabs>
                 </Paper>
                 </div>
@@ -295,7 +325,7 @@ const PelunasanPiutangIndex = () => {
                     onClick={() => onClickBayar()}
                     title={i18n.t('Bayar')}
                     style={{float: 'right',marginRight:'0.2%'}}
-                    hidden={selection.length == 0}
+                    hidden={isGetPermissions(addPelunasanPiutang_Permission,'TRANSACTION') ?selection.length == 0:true}
                 >
                     {i18n.t('Bayar')}
                 </Button>
@@ -431,20 +461,17 @@ const PelunasanPiutangIndex = () => {
                 <table>
                     <th>{'From'}</th>
                     <th style={{ paddingLeft: '10px' }}>{'To'}</th>
+                    <th style={{ paddingLeft: '10px' }}>{'Customer'}</th>
                     <tbody>
                         <tr>
-                             <td>
-                                <DatePicker
-                                name="from"
-                                // onChange={(val) => {
-                                //         setFieldValue("startdate", val);
-                                //     }
-                                // }
-                                onChange={val => handleChangeFrom(val)}
-                                // onBlur={handleBlur}
-                                // defaultValue={Date(moment([]))}
-                                format={formatdate}
-                                value={from}
+                        <td>
+                            <DatePicker
+                            name="from"
+                            onChange={val => handleChangeFromPelunasanPiutang(val)}
+                            // onBlur={handleBlur}
+                            // defaultValue={Date(moment([]))}
+                            format={formatdate}
+                            value={fromPelunasanPiutang}
                             // max={new Date()}
                             // style={{width: '25%'}}
                             /></td>
@@ -455,15 +482,28 @@ const PelunasanPiutangIndex = () => {
                                     //         setFieldValue("startdate", val);
                                     //     }
                                     // }
-                                    onChange={val => handleChangeTO(val)}
+                                    onChange={val => handleChangeTOPelunasanPiutang(val)}
                                     // onBlur={handleBlur}
                                     // defaultValue={Date(moment([]))}
                                     format={formatdate}
-                                    value={to}
+                                    value={toPelunasanPiutang}
                                 // max={new Date()}
                                 // style={{width: '25%'}}
                                 />
                             </td> 
+                             <td width={'200px'}>
+                                <Input
+                                    name="NamaCustomerPelunasanPiutang"
+                                    type="text"
+                                    id="NamaCustomerPelunasanPiutang"
+                                    // maxLength={100}
+
+                                    // onChange={handleChange}
+                                    onChange={val => setNamaCustomerPelunasanPiutang(val.target.value)}
+                                    // onBlur={handleBlur}
+                                    value={NamaCustomerPelunasanPiutang}
+                                />
+                            </td>
                             <td>
                                 <IconButton color={'primary'}
                                     onClick={() => onClickSearch()}
@@ -487,9 +527,9 @@ const PelunasanPiutangIndex = () => {
                                     columnextension={tableColumnExtensions}
                                     // permissionadd={!isGetPermissions(addDraftPurchaseReceive_Permission, 'TRANSACTION')}
                                     // onclickadd={onClickAdd}
-                                    permissionview={!isGetPermissions(MenuPelunasanHutang, 'READ')}
+                                    permissionview={!isGetPermissions(MenuPelunasanPiutang, 'READ')}
                                     onclickview={onClickView}
-                                    listfilterdisabled={['transdate','amount']}
+                                    listfilterdisabled={['transdate','amount','amountRp']}
                                 />
                             </div>
                         </Container>
