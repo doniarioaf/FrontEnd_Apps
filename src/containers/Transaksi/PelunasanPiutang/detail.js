@@ -297,7 +297,7 @@ import { calculateDolarToRupiah } from '.';
 
             {
                 <div className="row justify-content-center">
-                    <h4>{'Item'}</h4>
+                    {/* <h4>{'Item'}</h4> */}
                     <table id="tablegrid">
                     <tbody>
                         <tr>

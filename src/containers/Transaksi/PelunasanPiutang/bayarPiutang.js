@@ -71,7 +71,7 @@ export default function AddStockAdjusment(props) {
                         'nodocument': el.nodocument,
                         'amount': el.amount,
                         'amountrp': amountRp,
-                        'outstanding': el.outstanding,
+                        'outstanding': parseFloat(el.outstanding).toFixed(2),
                         'biayabebanudangmati': 0,
                         'biayabank': 0,
                         'pembayaran': 0,
@@ -287,7 +287,7 @@ export default function AddStockAdjusment(props) {
         const list = [...ListItems];
         for(let i=0; i < list.length; i++){
             let valPrice = list[i]['pembayaran']
-            valPrice = valPrice !== ''?parseFloat(new String(valPrice).replaceAll('.','')):0
+            valPrice = valPrice !== ''?valPrice:0
             list[i]['pembayaranrp'] = parseFloat(valPrice) * parseFloat(valKurs);
         }
         setListItems(list);
@@ -378,7 +378,7 @@ export default function AddStockAdjusment(props) {
                                     // ListItemsPurchaseReceive.length == 0?'':
 
                                     <div className="row justify-content-center">
-                                        <h4>{'Input Item'}</h4>
+                                        {/* <h4>{'Input Item'}</h4> */}
                                         <table id="tablegrid">
                                             <tbody>
                                                 <tr>
