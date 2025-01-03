@@ -238,6 +238,8 @@ const bayarPelunasanPiutang = lazy(() => import('./containers/Transaksi/Pelunasa
 const detailPelunasanPiutang = lazy(() => import('./containers/Transaksi/PelunasanPiutang/detail'));
 const editPelunasanPiutang = lazy(() => import('./containers/Transaksi/PelunasanPiutang/edit'));
 
+const reportStatusTagihanCargo = lazy(() => import('./containers/Report/reportStatusTagihanCargo'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -485,6 +487,8 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.bayarpelunasanpiutang+ '/:id'} component={waitFor(bayarPelunasanPiutang)} />
                                         <Route path={pathmenu.detailpelunasanpiutang+ '/:id'} component={waitFor(detailPelunasanPiutang)} />
                                         <Route path={pathmenu.editpelunasanpiutang+ '/:id'} component={waitFor(editPelunasanPiutang)} />
+
+                                        <Route path={pathmenu.menuReportStatusTagihanCargo} component={waitFor(reportStatusTagihanCargo)} />
                                         
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
 

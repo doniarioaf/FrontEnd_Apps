@@ -202,6 +202,13 @@ const handleMenu = () => {
                     translate: 'Rekapan Barang Masuk Harian',
                     permission:permissionmenu.MenuReportRekapanBarangMasuk,
                 },
+
+                {
+                    name: 'Status Tagihan Cargo',
+                    path: pathmenu.menuReportStatusTagihanCargo,
+                    translate: 'Status Tagihan Cargo',
+                    permission:permissionmenu.MenuReportStatusTagihanCargo,
+                },
                 
             ]
         },
