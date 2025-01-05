@@ -16,6 +16,7 @@ import momentLocalizer from 'react-widgets-moment';
 import { DatePicker, DropdownList } from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import { formatdate } from '../../shared/constantValue';
+import moment from 'moment';
 
 export default function AddDeposit(props) {
     reloadToHomeNotAuthorize(addDeposit_Permission, 'TRANSACTION');
@@ -193,19 +194,19 @@ export default function AddDeposit(props) {
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
 
-                                        {/* sementara deposit date di hilangkan dulu, bisa bikin rancu untuk parameter perhitungan deposit, karena di takutkan admin bisa ubah2 tanggal. bisa beda dengan tanggal pembuatan */}
-                                        {/* <label className="mt-3 form-label required" htmlFor="depositdate">
-                                {i18n.t('Deposit Date')}
-                            </label>
-                            <span style={{color:'red'}}>*</span>
+                                        <label className="mt-3 form-label required" htmlFor="depositdate">
+                                            {i18n.t('Deposit Date')}
+                                        </label>
+                                        <span style={{color:'red'}}>*</span>
 
-                            <DatePicker
-                            name="depositdate"
-                            onChange={val => handleChangeDepositDate(val)}
-                            format={formatdate}
-                            value={values.depositdate}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputDepositDate}</div> */}
+                                        <DatePicker
+                                        name="depositdate"
+                                        onChange={val => handleChangeDepositDate(val)}
+                                        format={formatdate}
+                                        value={values.depositdate}
+                                        max={new Date()}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputDepositDate}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="vendor">
                                             {i18n.t('Vendor')}

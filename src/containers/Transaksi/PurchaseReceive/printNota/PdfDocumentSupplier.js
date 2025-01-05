@@ -54,10 +54,10 @@ const PdfDocument = ({ data }) => {
                 {/* <Text style={styles.footer} render={({ pageNumber, totalPages }) => (
                     `${pageNumber} / ${totalPages}`
                 )} fixed /> */}
-                <Text style={styles.footer} render={({ pageNumber, totalPages }) => (
+                {/* <Text style={styles.footer} render={({ pageNumber, totalPages }) => (
                     // `${pageNumber} / ${totalPages}`
                     `Edit : ${(data != null?data.countEdit:'')} Print : ${(data != null?(data.countPrint?data.countPrint+1:1):'')} Dicetak Oleh: ${(data != null?data.namaUser+' ,'+data.currdatetime:'')}`
-                )} fixed />
+                )} fixed /> */}
             </Page>
         </Document>
     )

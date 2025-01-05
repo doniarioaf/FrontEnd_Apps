@@ -206,7 +206,7 @@ import React, {useState,
             let det = items[i];
             totalinventori += det.subtotalprice;
         }
-        return totalinventori;
+        return numToMoney(totalinventori);
     }
 
     const getListPembayaran = (items,outstanding) => {

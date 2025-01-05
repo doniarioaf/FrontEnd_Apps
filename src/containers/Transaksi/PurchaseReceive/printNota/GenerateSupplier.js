@@ -2,12 +2,13 @@ import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 // import roboto from '../../../../components/';
 import roboto from '../../../../components/Fonts/Roboto/Roboto-Bold.ttf';
-import { numToMoney, terbilang } from '../../../shared/globalFunc';
+import { numToMoney, terbilangRupiah } from '../../../shared/globalFunc';
 import { addKurungBukaPadaValue } from '../utilityPurchaseReceive';
 
 const fontSizeBig = 10;
 const fontSizeMedium = 8;
 const fontSizeSmall = 0;
+
 
 const styles = StyleSheet.create({
     footer:{
@@ -18,6 +19,9 @@ const styles = StyleSheet.create({
         textAlign:'right',
     },
     width:{
+        widthqty:45,
+        widthprice:82,
+        widthtotalprice:87,
         no:'5%',
         product:'20%',
         size:'15%',
@@ -112,19 +116,22 @@ const setCharges = (items) =>{
                     <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
                 </View> 
             );
+            
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.qty, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.qty}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthqty, maxWidth: styles.width.widthqty, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.qty}</Text>
                 </View> 
             );
+            
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.price, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?numToMoney(det.price):''}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthprice, maxWidth: styles.width.widthprice, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?numToMoney(det.price):''}</Text>
                 </View> 
             );
+            
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.subtotalprice?addKurungBukaPadaValue(det.chargename,numToMoney(det.subtotalprice)) :''}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthtotalprice, maxWidth: styles.width.widthtotalprice, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.subtotalprice?addKurungBukaPadaValue(det.chargename,numToMoney(det.subtotalprice)) :''}</Text>
                 </View> 
             );
             listRow.push(<View style={styles.tableRow}>{rowItem}</View>);
@@ -162,19 +169,22 @@ const setInventori= (items) =>{
                     <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
                 </View> 
             );
+            
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.qty, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.qty}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthqty, maxWidth: styles.width.widthqty, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.qty}</Text>
                 </View> 
             );
+            
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.price, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?numToMoney(det.price):''}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthprice, maxWidth: styles.width.widthprice, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?numToMoney(det.price):''}</Text>
                 </View> 
             );
+            
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.subtotalprice?numToMoney(det.subtotalprice) :''}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthtotalprice, maxWidth: styles.width.widthtotalprice, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.subtotalprice?numToMoney(det.subtotalprice) :''}</Text>
                 </View> 
             );
             listRow.push(<View style={styles.tableRow}>{rowItem}</View>);
@@ -221,25 +231,26 @@ const setItems = (items) =>{
                     <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{(det.weightfrom?det.weightfrom+'-':'')}{(det.weightto?det.weightto:'')}</Text>
                 </View> 
             );
+        
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.qty, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{qty}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthqty, maxWidth: styles.width.widthqty, marginTop: '5px', fontSize: fontSizeBig, textAlign:'right' }]}>{qty}</Text>
                 </View> 
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.price, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?numToMoney(det.price):''}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthprice, maxWidth: styles.width.widthprice, marginTop: '5px', fontSize: fontSizeBig, textAlign:'right' }]}>{det.price?numToMoney(det.price):''}</Text>
                 </View> 
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.subtotalprice?numToMoney(det.subtotalprice):''}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthtotalprice, maxWidth: styles.width.widthtotalprice, marginTop: '5px', fontSize: fontSizeBig, textAlign:'right' }]}>{det.subtotalprice?numToMoney(det.subtotalprice):''}</Text>
                 </View> 
             );
             listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
             no++;
         }
-
+        
         /** Total SubtotalItems */
         let rowItem = [];
         rowItem.push(
@@ -262,9 +273,10 @@ const setItems = (items) =>{
                 <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{'Subtotal'}</Text>
             </View> 
         );
+        
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.qty, height: "25px" }]}>
-                <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{totalQtyItems}</Text>
+                <Text style={[styles.tableCell, { width: styles.width.widthqty, maxWidth: styles.width.widthqty,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{totalQtyItems}</Text>
             </View> 
         );
         rowItem.push(
@@ -272,9 +284,10 @@ const setItems = (items) =>{
                 <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
             </View> 
         );
+        
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
-                <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{totalSubtotalPriceItems?numToMoney(totalSubtotalPriceItems):0}</Text>
+                <Text style={[styles.tableCell, { width: styles.width.widthtotalprice, maxWidth: styles.width.widthtotalprice, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{totalSubtotalPriceItems?numToMoney(totalSubtotalPriceItems):0}</Text>
             </View> 
         );
         listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
@@ -306,7 +319,15 @@ const setUdangMati = (items) =>{
     }
     return null;
 }
-
+const getTransfer = (items) =>{
+    let totalprice = items.totalprice?parseFloat(items.totalprice):0;
+    let setor = items.setor?parseFloat(items.setor):0;
+    let transfer = 0;
+    if(totalprice > setor){
+        transfer = totalprice - setor;
+    }
+    return transfer;
+}
 const setInformasiNilaiUang = (items) =>{
     if(items.notatype == 'INTERNAL' || items.notatype == 'PAJAK'){
         return null;
@@ -322,10 +343,10 @@ const setInformasiNilaiUang = (items) =>{
     let tambahDP = items.depositAmount?parseFloat(items.depositAmount):0;
     let saldoDepositBeforeNotaSubmit = items.saldoDepositBeforeNotaSubmit?parseFloat(items.saldoDepositBeforeNotaSubmit):0;
     let row = [];
-    let transfer = 0;
-    if(totalprice > setor){
-        transfer = totalprice - setor;
-    }
+    let transfer = getTransfer(items);
+    // if(totalprice > setor){
+    //     transfer = totalprice - setor;
+    // }
 
     let list = ['SALDO','SETOR','TAMBAHDP','SISADP'];
     let listDone = [];
@@ -341,7 +362,7 @@ const setInformasiNilaiUang = (items) =>{
             listDone.push(val);
         }
         if(val == 'SALDO' && saldoDepositBeforeNotaSubmit > 0){
-            label = 'Saldo :';
+            label = 'Saldo DP :';
             value = numToMoney(saldoDepositBeforeNotaSubmit);
             break;
         }else if(val == 'SETOR' && setor !== totalprice){
@@ -483,8 +504,21 @@ const GenerateSupplier = ({ valuedata }) => {
             <Fragment>
                 {
                     IsReady ?
-                    <View style={{ marginTop: '20px' }}>
+                    
+                    <View style={{ marginTop: '10px' }}>
+
                         <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'row-reverse' }}>
+                                <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 150, maxWidth: 150 }]}>{''}</Text>
+                            </View>
+
+                            <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                                <Text style={{ fontSize: 8 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text>
+                            </View>
+                        </View>    
+
+
+                        <View style={{ flexDirection: 'row',marginTop:'10px' }}>
                             <View style={{ flexDirection: 'row-reverse' }}>
                                 <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{valuedata != null ? valuedata.companyName : ''}</Text>
                             </View>
@@ -541,10 +575,10 @@ const GenerateSupplier = ({ valuedata }) => {
                                     <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"No."}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.product,height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 290, maxWidth: 290, marginTop: '5px', fontSize: fontSizeBig }]}>{"Product"}</Text>
+                                    <Text style={[styles.tableCell, { width: 290, maxWidth: 290, marginTop: '5px', fontSize: fontSizeBig }]}>{"Nama Barang"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.size, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"Size"}</Text>
+                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"Ukuran"}</Text>
                                 </View> 
                                 <View style={[styles.tableColWidth, { width:styles.width.gram, height: "25px" }]}>
                                     <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"Gram"}</Text>
@@ -589,21 +623,27 @@ const GenerateSupplier = ({ valuedata }) => {
                                 <View style={[styles.tableColWidth, { width:styles.width.price, height: "25px" }]}>
                                     <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{""}</Text>
                                 </View> 
+                                
                                 <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null ? (valuedata.totalprice?numToMoney(valuedata.totalprice):'' ): []}</Text>
+                                    <Text style={[styles.tableCell, { width: styles.width.widthtotalprice, maxWidth: styles.width.widthtotalprice, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null ? (valuedata.totalprice?numToMoney(valuedata.totalprice):'' ): []}</Text>
                                 </View> 
                             </View>
                             
                         </View>
+                            <View style={{ flexDirection: 'row', paddingTop:'10px' }}>
+                                <View style={{ flexDirection: 'row-reverse'}}>
+                                    <Text style={{ fontSize: fontSizeBig, width:'400px', maxWidth:'400px' }}> {valuedata != null ?  (valuedata.totalprice?'Terbilang: '+terbilangRupiah(getTransfer(valuedata != null ? valuedata : [])):'' ):''}</Text>
+                                </View>
+                            </View>
 
                             {/* NB */}
-                            <View style={{ flexDirection: 'row', paddingTop:'10px' }}>
+                            <View style={{ flexDirection: 'row'}}>
                                 <View style={{ flexDirection: 'row-reverse', }}>
                                     <Text style={{ fontSize: fontSizeBig }}>{'NB'}</Text>
                                 </View>
-                                <View style={{ flexDirection: 'row-reverse', marginLeft: '7%' }}>
-                                    <Text style={{ fontSize: fontSizeBig, width:'350px', maxWidth:'350px' }}> {valuedata != null ?  (valuedata.totalprice?'Terbilang: '+terbilang(valuedata.totalprice):'' ):''}</Text>
-                                </View>
+                                {/* <View style={{ flexDirection: 'row-reverse', marginLeft: '7%' }}>
+                                    <Text style={{ fontSize: fontSizeBig, width:'350px', maxWidth:'350px' }}> {valuedata != null ?  (valuedata.totalprice?'Terbilang: '+terbilangRupiah(getTransfer(valuedata != null ? valuedata : [])):'' ):''}</Text>
+                                </View> */}
                             </View>
 
                             {/* List udang Mati */}

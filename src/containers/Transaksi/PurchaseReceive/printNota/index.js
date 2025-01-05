@@ -24,6 +24,7 @@ import { formatdate, formatdatetime } from '../../../shared/constantValue';
 import moment from 'moment';
 import './App.css';
 
+
 export default function PrintNota(props) {
     reloadToHomeNotAuthorize(MenuPurchaseReceive, 'READ');
     const { i18n } = useTranslation('translations');

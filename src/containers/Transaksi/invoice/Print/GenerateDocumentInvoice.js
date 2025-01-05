@@ -275,10 +275,10 @@ const GenerateDocument = ({ valuedata }) => {
 
                             <View style={{ flexDirection: 'row',paddingTop:'5px' }}>
                                 <View style={{ flexDirection: 'row-reverse' }}>
-                                    <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{'Customer  : '}{valuedata != null ? (valuedata.packinglist?valuedata.packinglist.customerName:'') : ''}</Text>
+                                    <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 340, maxWidth: 340 }]}>{'Customer  : '}{valuedata != null ? (valuedata.packinglist?valuedata.packinglist.customerName:'') : ''}</Text>
                                 </View>
     
-                                <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                                <View style={{ flexDirection: 'row-reverse', marginLeft: '3%' }}>
                                     <Text style={{ fontSize: fontSizeBig }}>{'Invoice Number : '}{valuedata != null ? valuedata.nodocument : ''}</Text>
                                 </View>
                             </View>

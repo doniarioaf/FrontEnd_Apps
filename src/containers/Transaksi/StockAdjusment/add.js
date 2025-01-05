@@ -92,6 +92,10 @@ export default function AddStockAdjusment(props) {
                 }
             ], []);
             setListItems(list);
+
+            if(items.length == 0){
+                msgInfo("Tidak ada dokumen pricelist pada tanggal tersebut");
+            }
         }
         setLoading(false);
     }
@@ -200,6 +204,29 @@ export default function AddStockAdjusment(props) {
             icon: 'error',
             title: 'Oops...',
             text: data.msg
+        })
+    }
+
+    const msgInfo = (text) => {
+        
+        Swal.fire({
+            icon: 'info',
+            title: 'Information',
+            text: text,
+            showDenyButton: false,
+            showCancelButton: false,
+            confirmButtonText: `Ok`,
+            denyButtonText: `Cancel`,
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                
+                // history.go
+                //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+                
+                //   Swal.fire('Changes are not saved', '', 'info')
+            }
         })
     }
 

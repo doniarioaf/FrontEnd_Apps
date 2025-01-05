@@ -45,7 +45,7 @@ export default function AddPriceList(props) {
 
     function successHandler(data, propsdata) {
         if (data.data) {
-            const items = data.data.items;
+            const items = data.data.items?data.data.items:[];
             const theDataProduct = data.data.productOpt.reduce((obj, el) => [
                 ...obj,
                 {

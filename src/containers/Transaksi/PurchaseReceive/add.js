@@ -160,22 +160,22 @@ export default function AddPurchaseReceive(props) {
         setErrSelArea('');
 
         if (ListItemsPurchaseReceive.length > 0) {
-            for (let i = 0; i < ListItemsPurchaseReceive.length; i++) {
-                let det = ListItemsPurchaseReceive[i];
-                if (parseInt(det.qty) <= 0) {
-                    setErrItemsHidup(i18n.t('Qty Harus diatas 0'));
-                    flag = false;
-                    break;
-                } else if (det.itemsprice == '') {
-                    setErrItemsHidup(i18n.t('Price harus diatas 0'));
-                    flag = false;
-                    break;
-                } else if (parseFloat(det.itemsprice) <= 0) {
-                    setErrItemsHidup(i18n.t('Price harus diatas 0'));
-                    flag = false;
-                    break;
-                }
-            }
+            // for (let i = 0; i < ListItemsPurchaseReceive.length; i++) {
+            //     let det = ListItemsPurchaseReceive[i];
+            //     if (parseInt(det.qty) <= 0) {
+            //         setErrItemsHidup(i18n.t('Qty Harus diatas 0'));
+            //         flag = false;
+            //         break;
+            //     } else if (det.itemsprice == '') {
+            //         setErrItemsHidup(i18n.t('Price harus diatas 0'));
+            //         flag = false;
+            //         break;
+            //     } else if (parseFloat(det.itemsprice) <= 0) {
+            //         setErrItemsHidup(i18n.t('Price harus diatas 0'));
+            //         flag = false;
+            //         break;
+            //     }
+            // }
         } else {
             setErrItemsHidup(i18n.t('label_REQUIRED'));
             flag = false;
@@ -272,32 +272,50 @@ export default function AddPurchaseReceive(props) {
             obj.tambahdeposit = new String(values.tambahdeposit).replaceAll('.', '') !== '' ? new String(values.tambahdeposit).replaceAll('.', '') : 0;
             let items = [];
             if (ListItemsPurchaseReceive.length > 0) {
-                items = ListItemsPurchaseReceive.reduce((obj, el) => [
-                    ...obj,
-                    {
-                        'idproduct': el.idproduct,
-                        'idcategoryproduct': el.idcategoryproduct,
-                        'qty': el.qty,
-                        'qtybonus': el.qtybonus,
-                        'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
-                        'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
-                        'type': 'H'
+                for (let i = 0; i < ListItemsPurchaseReceive.length; i++) {
+                    let el = ListItemsPurchaseReceive[i];
+                    if (parseInt(el.qty) > 0) {
+                        items.push(
+                            {
+                                'idproduct': el.idproduct,
+                                'idcategoryproduct': el.idcategoryproduct,
+                                'qty': el.qty,
+                                'qtybonus': el.qtybonus,
+                                'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
+                                'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
+                                'type': 'H'
+                            }
+                        );
                     }
-                ], []);
+                }
+                // items = ListItemsPurchaseReceive.reduce((obj, el) => [
+                //     ...obj,
+                //     {
+                //         'idproduct': el.idproduct,
+                //         'idcategoryproduct': el.idcategoryproduct,
+                //         'qty': el.qty,
+                //         'qtybonus': el.qtybonus,
+                //         'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
+                //         'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
+                //         'type': 'H'
+                //     }
+                // ], []);
 
                 for (let i = 0; i < ListItemsPurchaseReceiveMati.length; i++) {
                     let el = ListItemsPurchaseReceiveMati[i];
-                    items.push(
-                        {
-                            'idproduct': el.idproduct,
-                            'idcategoryproduct': el.idcategoryproduct,
-                            'qty': el.qtymati,
-                            'qtybonus': el.qtybonus,
-                            'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
-                            'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
-                            'type': 'M'
-                        }
-                    );
+                    if (parseInt(el.qtymati) > 0) {
+                        items.push(
+                            {
+                                'idproduct': el.idproduct,
+                                'idcategoryproduct': el.idcategoryproduct,
+                                'qty': el.qtymati,
+                                'qtybonus': el.qtybonus,
+                                'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
+                                'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
+                                'type': 'M'
+                            }
+                        );
+                    }
                 }
 
             }

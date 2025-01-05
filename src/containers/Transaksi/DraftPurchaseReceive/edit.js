@@ -671,7 +671,7 @@ export default function EditDraftPurchaseReceive(props) {
             persentase = 100;
         }
          
-        setInputPersentase(persentase);
+        setInputPersentase(parseFloat(persentase).toFixed(2));
     }
 
     return (
@@ -942,7 +942,7 @@ export default function EditDraftPurchaseReceive(props) {
                                             {
                                                 ListCategory.map((x, i) => {
                                                     return(
-                                                        <th colSpan={2} style={{textAlign:'center',width:'230px'}}>{i18n.t(x.size)} <br></br>{x.weight} </th>
+                                                        <th colSpan={2} style={{textAlign:'center',width:'210px'}}>{i18n.t(x.size)} <br></br>{x.weight} </th>
                                                     )
                                                 })
                                             }
@@ -1017,7 +1017,7 @@ export default function EditDraftPurchaseReceive(props) {
                                     {
                                         ListCategory.map((x, i) => {
                                             return(
-                                                <th style={{textAlign:'center',width:'230px'}}>{i18n.t(x.size)} <br></br>{x.weight} </th>
+                                                <th style={{textAlign:'center',width:'100px'}}>{i18n.t(x.size)} <br></br>{x.weight} </th>
                                             )
                                         })
                                     }
