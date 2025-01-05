@@ -209,6 +209,12 @@ const handleMenu = () => {
                     translate: 'Status Tagihan Cargo',
                     permission:permissionmenu.MenuReportStatusTagihanCargo,
                 },
+                {
+                    name: 'Hutang',
+                    path: pathmenu.menuReportHutang,
+                    translate: 'Hutang',
+                    permission:permissionmenu.MenuReportHutang,
+                },
                 
             ]
         },

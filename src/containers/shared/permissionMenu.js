@@ -119,6 +119,7 @@ export const MenuPelunasanHutang = ['READ_PELUNASANHUTANG'];
 export const MenuCargo = ['READ_CARGO'];
 export const MenuPelunasanPiutang = ['READ_PELUNASANPIUTANG'];
 export const MenuReportStatusTagihanCargo = ['READ_REPORT_STATUSTAGIHANCARGO'];
+export const MenuReportHutang = ['READ_REPORT_HUTANG'];
 
 
 

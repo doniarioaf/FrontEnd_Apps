@@ -15,22 +15,28 @@ import { DatePicker,DropdownList}      from 'react-widgets';
 import Select from 'react-select';
 // import { listTypeReport } from '../../shared/globalFunc';
 import { reloadToHomeNotAuthorize } from '../shared/globalFunc';
-import { MenuReportStatusTagihanCargo } from '../shared/permissionMenu';
+import { MenuReportHutang } from '../shared/permissionMenu';
 import { formatdate } from '../shared/constantValue';
 import * as pathmenu           from '../shared/pathMenu';
 import "react-widgets/dist/css/react-widgets.css";
 
-export default function ReportStatusTagihanCargo(props) {
-    reloadToHomeNotAuthorize(MenuReportStatusTagihanCargo,'READ');
+export default function ReportHutang(props) {
+    reloadToHomeNotAuthorize(MenuReportHutang,'READ');
     const {i18n} = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
     momentLocalizer();
 
+    const [DataVendor, setDataVendor] = useState([]);
     const [selectedVendor, setSelectedVendor] = useState([]);
     const [ListVendor, setListVendor] = useState([]);
     const [SelVendor, setSelVendor] = useState([]);
     const [ErrSelVendor, setErrSelVendor] = useState('');
+
+    const [selectedVendorType, setSelectedVendorType] = useState([]);
+    const [ListVendorType, setListVendorType] = useState([{value:'ALL',label:'All'},{value:'UDANG',label:'Udang'},{value:'CARGO',label:'Cargo'},{value:'UPI',label:'UPI'}]);
+    const [SelVendorType, setSelVendorType] = useState([]);
+    const [ErrSelVendorType, setErrSelVendorType] = useState('');
 
     const [ListStatus, setListStatus] = useState([{value:'ALL',label:'All'},{value:'LUNAS',label:'Lunas'},{value:'BELUMLUNAS',label:'Belum Lunas'}]);
     const [SelStatus, setSelStatus] = useState('BELUMLUNAS');
@@ -43,18 +49,79 @@ export default function ReportStatusTagihanCargo(props) {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getReport({ url: '/reporstatustagihancargo/template' }, successHandler, errorHandler));
+        dispatch(actions.getReport({ url: '/reporthutang/template' }, successHandler, errorHandler));
     }, []);
     function successHandler(data, propsdata) {
         if (data.data) {
-            const theData = data.data.vendorOpt.reduce((obj, el) => [
-                ...obj,
-                {
-                    'value': el.id,
-                    'label': el.nama + ' (' + el.alias + ')',
-                    'data': el
+            setDataVendor(data.data.vendorOpt);
+        }
+        setLoading(false);
+    }
+    function vendorList(vendortype) {
+        let theData = [];
+        if (vendortype !== null && vendortype.length > 0) {
+            if(vendortype.indexOf("ALL") > -1 ){
+                theData = DataVendor.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        'value': el.id,
+                        'label': el.nama + ' (' + el.alias + ')',
+                        'data': el
+                    }
+                ], []);
+            }else{
+                if(vendortype.indexOf("UDANG") > -1 ){
+                    let filterudang = DataVendor.filter(output => output.type == 'UDANG');
+                    if(filterudang.length > 0){
+                        for(let i=0; i < filterudang.length; i++){
+                            let el = filterudang[i];
+                            theData.push(
+                                {
+                                    'value': el.id,
+                                    'label': el.nama + ' (' + el.alias + ')',
+                                    'data': el
+                                }
+                            );
+                        }
+                    }
                 }
-            ], []);
+
+                if(vendortype.indexOf("CARGO") > -1 ){
+                    let filtercargo = DataVendor.filter(output => output.type == 'CARGO');
+                    if(filtercargo.length > 0){
+                        for(let i=0; i < filtercargo.length; i++){
+                            let el = filtercargo[i];
+                            theData.push(
+                                {
+                                    'value': el.id,
+                                    'label': el.nama + ' (' + el.alias + ')',
+                                    'data': el
+                                }
+                            );
+                        }
+                    }
+                }
+
+                if(vendortype.indexOf("UPI") > -1 ){
+                    let filterUpi = DataVendor.filter(output => output.type == 'UPI');
+                    if(filterUpi.length > 0){
+                        for(let i=0; i < filterUpi.length; i++){
+                            let el = filterUpi[i];
+                            theData.push(
+                                {
+                                    'value': el.id,
+                                    'label': el.nama + ' (' + el.alias + ')',
+                                    'data': el
+                                }
+                            );
+                        }
+                    }
+                }
+            }
+
+        }
+            
+        if(theData.length > 0){
             theData.push(
                 {
                     'value': 'ALL',
@@ -62,19 +129,31 @@ export default function ReportStatusTagihanCargo(props) {
                     'data': []
                 }
             );
-            setListVendor(theData);
         }
-        setLoading(false);
+        
+            setListVendor(theData);
     }
 
     const handleChangeVendor = (data) =>{
         let temp = [];
         if (data !== null && data.length > 0) {
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 temp.push(data[i].value);
             }
         }
         setSelVendor(temp);
+    }
+
+    const handleChangeVendorType = (data) =>{
+        let temp = [];
+        if (data !== null && data.length > 0) {
+            for (let i = 0; i < data.length; i++) {
+                temp.push(data[i].value);
+            }
+        }
+        setSelVendor([]);
+        vendorList(temp);
+        setSelVendorType(temp);
     }
 
     const handleChangeStatus = (data) =>{
@@ -94,16 +173,32 @@ export default function ReportStatusTagihanCargo(props) {
     }
 
     const submitHandler = () => {
-        if( start != null && end != null && SelVendor.length > 0){
+        let flag = true;
+        if(SelVendor.length == 0){
+            setErrSelVendor(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+        if(SelVendorType.length == 0){
+            setErrSelVendorType(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+        if( start != null && end != null && flag){
             let idvendor = 0;
             if(SelVendor.indexOf('ALL') > -1){
                 idvendor = 'ALL'
             }else{
                 idvendor = SelVendor.join(',');
             }
+
+            let idvendortype = 0;
+            if(SelVendorType.indexOf('ALL') > -1){
+                idvendortype = 'ALL'
+            }else{
+                idvendortype = SelVendorType.join(',');
+            }
             
             setLoading(true);
-            dispatch(actions.getReport({ url: '/reporstatustagihancargo?from=' + start.getTime() + '&to=' + end.getTime()+'&idvendors='+idvendor+'&status='+SelStatus,type:'GETFILE',typefile:'application/vnd.ms-excel' }, successHandlerReport, errorHandler));
+            dispatch(actions.getReport({ url: '/reporthutang?from=' + start.getTime() + '&to=' + end.getTime()+'&idvendors='+idvendor+'&vendorttypes='+idvendortype+'&status='+SelStatus,type:'GETFILE',typefile:'application/vnd.ms-excel' }, successHandlerReport, errorHandler));
             // dispatch(actions.submitPurchaseReceiveData({ url: '/reportpembelian', payload: obj, type: 'GETFILE',typefile:'application/vnd.ms-excel' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -115,7 +210,7 @@ export default function ReportStatusTagihanCargo(props) {
         fileLink.href = dataUrl;
 
         // it forces the name of the downloaded file
-        fileLink.download = 'ReportStatusTagihanCargo.xlsx';
+        fileLink.download = 'ReportHutang.xlsx';
         fileLink.click();
         fileLink.remove();
         setLoading(false);
@@ -150,6 +245,7 @@ export default function ReportStatusTagihanCargo(props) {
                 startdate:start !== null ? moment(start, formatdate).toDate() : new Date(),
                 enddate:end !== null ? moment(end, formatdate).toDate(): new Date(),
                 vendor:SelVendor,
+                vendortype:SelVendorType,
                 status:SelStatus
             }
         }
@@ -177,7 +273,7 @@ export default function ReportStatusTagihanCargo(props) {
                     return(
                         <form className="mb-6" onSubmit={handleSubmit}  name="formReportStatusInvoice">
                             <ContentWrapper>
-                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuReportStatusTagihanCargo} label={'Status Tagihan Cargo'} labeldefault={'Status Tagihan Cargo'} />
+                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuReportHutang} label={'Laporan Hutang'} labeldefault={'Laporan Hutang'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             
@@ -220,6 +316,21 @@ export default function ReportStatusTagihanCargo(props) {
                             />
                             </div>
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
+                            
+                            <label className="mt-3 form-label required" htmlFor="vendor">
+                                {i18n.t('Vendor Type')}
+                                
+                            </label>
+                            <Select
+                                defaultValue={selectedVendorType}
+                                isMulti
+                                name="colors"
+                                options={ListVendorType}
+                                onChange={val => handleChangeVendorType(val)}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                            // placeholder={i18n.t('select.SELECT_OPTION')}
+                            />
 
                             <label className="mt-3 form-label required" htmlFor="vendor">
                                 {i18n.t('Vendor')}
