@@ -16,7 +16,7 @@ import "react-widgets/dist/css/react-widgets.css";
 import { PDFViewer } from '@react-pdf/renderer';
 import PdfDocumentInvoice from './PdfDocumentInvoice';
 
-import { formatdate } from '../../../shared/constantValue';
+import { formatdate, formatdatetime } from '../../../shared/constantValue';
 import moment from 'moment';
 import '../../PurchaseReceive/printNota/App.css';
 
@@ -43,9 +43,18 @@ export default function PrintNotaInvoice(props) {
     }, [dispatch]);
 
     function successHandler(data,propsdata) {
+        if (data.data) {
+            getData(data);
+        }
+        setLoading(false);
+        
+    }
+
+    function getData(data){
         let det = data.data;
         let dettemp = data.data;
         dettemp.date = det.date ? moment(new Date(det.date)).format(formatdate) : '';
+        dettemp.currdatetime = moment(new Date()).format(formatdatetime);
         setValue(dettemp);
 
         setTimeout(() => {
@@ -73,6 +82,33 @@ export default function PrintNotaInvoice(props) {
 
     }
 
+    function handleDownloadPDF() {
+            // generatePDF();
+        // const handleDownloadPDF = () => {
+            setLoading(true);
+            setIsReady(false);
+            setVisible(false);
+            localStorage.removeItem('PdfDocument');
+            // dispatch(actions.getPurchaseReceiveData({ url: '/printnota/' + id+'/'+SelPrintType }, successHandlerAfterDownload, errorHandler));
+            dispatch(actions.getInvoiceData({ url: '/catatdownload/' + id }, successHandlerDownload, errorHandler));
+        }
+        function successHandlerDownload(data, propsdata){
+            dispatch(actions.getInvoiceData( {url:'/print/'+id},successHandlerAfterDownload, errorHandler));
+        }
+
+        function successHandlerAfterDownload(data, propsdata) {
+            if (data.data) {
+                getData(data);
+            }
+            
+            setTimeout(() => {
+                // generatePDF(det);
+                handleSuccesPDF(localStorage.getItem("PdfDocument"), (data.data != null ? data.data.nodocument : fileName));
+                setLoading(false);
+                // setFile(downloadLink(det));
+            }, 2000);
+        }
+
     const errorHandler = (data, propsdata) => {
         setLoading(false);
         Swal.fire({
@@ -95,8 +131,8 @@ export default function PrintNotaInvoice(props) {
                                             <div className="App">
                                                 <div className='download-link'>
                                                     {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? 'SuratJalan-' + Value.nodocument : fileName))}>{"Download"}</div> */}
-                                                    <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div>
-                                                    {/* <div onClick={() => handleDownloadPDF()}>{"Download"}</div> */}
+                                                    {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div> */}
+                                                    <div onClick={() => handleDownloadPDF()}>{"Download"}</div>
                                                 </div>
                                                 <div style={{backgroundColor:'#343439',width:'20%',height:'9%',position:'absolute',right:'15px', display: visible ? 'block' : 'none' }}></div>
     

@@ -266,7 +266,7 @@ const PelunasanPiutangIndex = () => {
                     let val = rowspiutang[i];
                     list.push(val.id);
                 }
-                console.log('onClickBayar ',list); //jangan dihapus
+                localStorage.setItem('meo!kmadmasku',list.join(','));
                 const idsenc = CryptoJS.AES.encrypt(JSON.stringify(list),key.keyEcncrypt).toString();
                 history.push(pathmenu.bayarpelunasanpiutang + '/' + idsenc);
             }

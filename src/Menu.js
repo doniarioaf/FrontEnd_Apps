@@ -88,9 +88,9 @@ const handleMenu = () => {
             ]
         },
         {
-            name: 'Transaksi',
+            name: 'Cargo',
             icon: 'icon-user',
-            translate: 'Transaksi',
+            translate: 'Cargo',
             submenu:[
                 {
                     name: 'Cargo',
@@ -99,34 +99,47 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuDeposit,
                 },
                 {
+                    name: 'Lprn Tagihan Cargo',
+                    path: pathmenu.menuReportStatusTagihanCargo,
+                    translate: 'Lprn Tagihan Cargo',
+                    permission:permissionmenu.MenuReportStatusTagihanCargo,
+                },
+            ]
+        },
+        {
+            name: 'Stock',
+            icon: 'icon-user',
+            translate: 'Stock',
+            submenu:[
+                {
+                    name: 'Stock Adjusment',
+                    path: pathmenu.menustockadjusment,
+                    translate: 'Stock Adjusment',
+                    permission:permissionmenu.MenuStockAdjusment,
+                },{
+                    name: 'Lprn Stock H&M',
+                    path: pathmenu.menuReportStockUdangHidupMati,
+                    translate: 'Lprn Stock H&M',
+                    permission:permissionmenu.MenuReportStockUdangHidpuDanMati,
+                },
+                {
+                    name: 'Rekap Brg Masuk',
+                    path: pathmenu.menuReportRekapBarangMasuk,
+                    translate: 'Rekapan Barang Masuk Harian',
+                    permission:permissionmenu.MenuReportRekapanBarangMasuk,
+                },
+            ]
+        },
+        {
+            name: 'Pembelian',
+            icon: 'icon-user',
+            translate: 'Pembelian',
+            submenu:[
+                {
                     name: 'Deposit',
                     path: pathmenu.menudeposit,
                     translate: 'Deposit',
                     permission:permissionmenu.MenuDeposit,
-                },
-                {
-                    name: 'Packing List',
-                    path: pathmenu.menupackinglist,
-                    translate: 'Packing List',
-                    permission:permissionmenu.MenuPackingList,
-                },
-                {
-                    name: 'Pelunasan Hutang',
-                    path: pathmenu.menupelunasanhutang,
-                    translate: 'Packing List',
-                    permission:permissionmenu.MenuPelunasanHutang,
-                },
-                {
-                    name: 'Pelunasan Piutang',
-                    path: pathmenu.menupelunasanpiutang,
-                    translate: 'Packing List',
-                    permission:permissionmenu.MenuPelunasanPiutang,
-                },
-                {
-                    name: 'Price List',
-                    path: pathmenu.menupricelist,
-                    translate: 'Price List',
-                    permission:permissionmenu.MenuProduct,
                 },
                 {
                     name: 'Draft Purchase Receive',
@@ -141,10 +154,48 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuPurchaseReceive,
                 },
                 {
-                    name: 'Stock Adjusment',
-                    path: pathmenu.menustockadjusment,
-                    translate: 'Stock Adjusment',
-                    permission:permissionmenu.MenuStockAdjusment,
+                    name: 'Lprn Pembelian',
+                    path: pathmenu.menureportpurchasereceive,
+                    translate: 'Lprn Pembelian',
+                    permission:permissionmenu.MenuReportPurchaseReceive,
+                },
+            ]
+        },
+        {
+            name: 'Hutang',
+            icon: 'icon-user',
+            translate: 'Hutang',
+            submenu:[
+                {
+                    name: 'Pelunasan Hutang',
+                    path: pathmenu.menupelunasanhutang,
+                    translate: 'Packing List',
+                    permission:permissionmenu.MenuPelunasanHutang,
+                },
+                {
+                    name: 'Lprn Hutang',
+                    path: pathmenu.menuReportHutang,
+                    translate: 'Hutang',
+                    permission:permissionmenu.MenuReportHutang,
+                },
+            ]
+        },
+        {
+            name: 'Penjualan',
+            icon: 'icon-user',
+            translate: 'Penjualan',
+            submenu:[
+                {
+                    name: 'PriceList Harian',
+                    path: pathmenu.menupricelist,
+                    translate: 'PriceList Harian',
+                    permission:permissionmenu.MenuProduct,
+                },
+                {
+                    name: 'Packing List',
+                    path: pathmenu.menupackinglist,
+                    translate: 'Packing List',
+                    permission:permissionmenu.MenuPackingList,
                 },
                 {
                     name: 'Invoice',
@@ -154,6 +205,25 @@ const handleMenu = () => {
                 },
             ]
         },
+        {
+            name: 'Piutang',
+            icon: 'icon-user',
+            translate: 'Piutang',
+            submenu:[
+                {
+                    name: 'Pelunasan Piutang',
+                    path: pathmenu.menupelunasanpiutang,
+                    translate: 'Packing List',
+                    permission:permissionmenu.MenuPelunasanPiutang,
+                },
+            ]
+        },
+        // {
+        //     name: 'Transaksi',
+        //     icon: 'icon-user',
+        //     translate: 'Transaksi',
+        //     submenu:[]
+        // },
         {
             name: 'User',
             icon: 'icon-user',
@@ -179,45 +249,12 @@ const handleMenu = () => {
         //     translate: 'Transaksi',
         //     submenu:[]
         // },
-        {
-            name: 'Laporan',
-            icon: 'icon-user',
-            translate: 'Laporan',
-            submenu:[
-                {
-                    name: 'Purchase Receive',
-                    path: pathmenu.menureportpurchasereceive,
-                    translate: 'Purchase Receive',
-                    permission:permissionmenu.MenuReportPurchaseReceive,
-                },
-                {
-                    name: 'Stock Udang Hidup & Mati',
-                    path: pathmenu.menuReportStockUdangHidupMati,
-                    translate: 'Stock Udang Hidup & Mati',
-                    permission:permissionmenu.MenuReportStockUdangHidpuDanMati,
-                },
-                {
-                    name: 'Rekapan Barang Masuk Harian',
-                    path: pathmenu.menuReportRekapBarangMasuk,
-                    translate: 'Rekapan Barang Masuk Harian',
-                    permission:permissionmenu.MenuReportRekapanBarangMasuk,
-                },
-
-                {
-                    name: 'Status Tagihan Cargo',
-                    path: pathmenu.menuReportStatusTagihanCargo,
-                    translate: 'Status Tagihan Cargo',
-                    permission:permissionmenu.MenuReportStatusTagihanCargo,
-                },
-                {
-                    name: 'Hutang',
-                    path: pathmenu.menuReportHutang,
-                    translate: 'Hutang',
-                    permission:permissionmenu.MenuReportHutang,
-                },
-                
-            ]
-        },
+        // {
+        //     name: 'Laporan',
+        //     icon: 'icon-user',
+        //     translate: 'Laporan',
+        //     submenu:[]
+        // },
        
         // {
         //     name: 'Mobile',

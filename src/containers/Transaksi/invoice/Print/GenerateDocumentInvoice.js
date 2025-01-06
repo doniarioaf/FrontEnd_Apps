@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 // import roboto from '../../../../components/';
 import roboto from '../../../../components/Fonts/Roboto/Roboto-Bold.ttf';
-import { numToMoney, terbilang } from '../../../shared/globalFunc';
+import { desimal00, numToMoney, terbilang } from '../../../shared/globalFunc';
 
 const fontSizeBig = 10;
 const fontSizeMedium = 8;
@@ -17,6 +17,10 @@ const styles = StyleSheet.create({
         textAlign:'right',
     },
     width:{
+        widthqty:50,
+        widthweight:45,
+        widthprice:70,
+        widthsubprice:95,
         box:'4%',
         desc:'15%',
         size:'13%',
@@ -111,7 +115,7 @@ const setItemstotal = (valuedata) =>{
         );
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
-                <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"$ "}{numToMoney(totalPriceInUSD)}</Text>
+                <Text style={[styles.tableCell, { width: styles.width.widthsubprice, maxWidth: styles.width.widthsubprice, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{"$ "}{desimal00(numToMoney(totalPriceInUSD))}</Text>
             </View>
         );
         listRow.push(<View style={styles.tableRow}>{rowItem}</View>);
@@ -129,7 +133,7 @@ const setItemstotal = (valuedata) =>{
         );
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
-                <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{'Rp '}{valuedata.kurs?numToMoney(valuedata.kurs):''}</Text>
+                <Text style={[styles.tableCell, { width: styles.width.widthsubprice, maxWidth: styles.width.widthsubprice, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{'Rp '}{valuedata.kurs?desimal00(numToMoney(valuedata.kurs)):''}</Text>
             </View>
         );
         listRow.push(<View style={styles.tableRow}>{rowItem}</View>);
@@ -147,7 +151,7 @@ const setItemstotal = (valuedata) =>{
         );
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
-                <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"Rp "}{numToMoney(totalPriceInUSD * parseFloat(valuedata.kurs?valuedata.kurs:1))}</Text>
+                <Text style={[styles.tableCell, { width: styles.width.widthsubprice, maxWidth: styles.width.widthsubprice, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{"Rp "}{desimal00(numToMoney(totalPriceInUSD * parseFloat(valuedata.kurs?valuedata.kurs:1)))}</Text>
             </View>
         );
         listRow.push(<View style={styles.tableRow}>{rowItem}</View>);
@@ -210,22 +214,22 @@ const setItems = (items) =>{
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.qty, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.qty}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthqty, maxWidth: styles.width.widthqty,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.qty}</Text>
                 </View>
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.weight, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.nettoweight}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthweight, maxWidth: styles.width.widthweight, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{parseFloat(det.nettoweight).toFixed(2)}</Text>
                 </View>
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.price, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{'$ '}{det.price?numToMoney(det.price):0}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthprice, maxWidth: styles.width.widthprice,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{'$ '}{det.price?desimal00(numToMoney(parseFloat(det.price))):0}</Text>
                 </View>
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{'$ '}{det.totalprice?numToMoney(det.totalprice):0}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthsubprice, maxWidth: styles.width.widthsubprice,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{'$ '}{det.totalprice?desimal00(numToMoney(det.totalprice)):0}</Text>
                 </View>
             );
             listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
@@ -252,8 +256,18 @@ const GenerateDocument = ({ valuedata }) => {
             <Fragment>
                 {
                     IsReady ?
-                        <View style={{ marginTop: '20px' }}>
+                        <View style={{ marginTop: '10px' }}>
                             <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: 'row-reverse' }}>
+                                    <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 150, maxWidth: 150 }]}>{''}</Text>
+                                </View>
+
+                                <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                                    <Text style={{ fontSize: 8 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text>
+                                </View>
+                            </View>    
+
+                            <View style={{ flexDirection: 'row',marginTop:'10px' }}>
                                 <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%' }]}>{valuedata != null ? valuedata.companyName : ''}</Text>
                             </View>
                             <View style={{ flexDirection: 'row' }}>
@@ -268,12 +282,12 @@ const GenerateDocument = ({ valuedata }) => {
                                 <Text style={[{ fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{valuedata != null ? valuedata.address3 : ''}</Text>
                             </View>
                             <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                            <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig }]}>{'SALES INVOICE'}</Text>
+                            <Text style={[{ fontFamily: 'roboto', fontSize: 14 }]}>{'SALES INVOICE'}</Text>
                             </View>
 
                             </View>
 
-                            <View style={{ flexDirection: 'row',paddingTop:'5px' }}>
+                            <View style={{ flexDirection: 'row',paddingTop:'10px' }}>
                                 <View style={{ flexDirection: 'row-reverse' }}>
                                     <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 340, maxWidth: 340 }]}>{'Customer  : '}{valuedata != null ? (valuedata.packinglist?valuedata.packinglist.customerName:'') : ''}</Text>
                                 </View>
@@ -329,25 +343,25 @@ const GenerateDocument = ({ valuedata }) => {
                                     <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"No"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.desc, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"Description"}</Text>
+                                    <Text style={[styles.tableCell, { width: 70, maxWidth: 70, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Description"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.size, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"Size"}</Text>
+                                    <Text style={[styles.tableCell, { width: 65, maxWidth: 65, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Size"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.gram, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"Gram"}</Text>
+                                    <Text style={[styles.tableCell, { width: 55, maxWidth: 55, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Gram"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.qty, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"Qty(Pcs)"}</Text>
+                                    <Text style={[styles.tableCell, { width: styles.width.widthqty, maxWidth: styles.width.widthqty,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Qty(Pcs)"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.weight, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"Weight"}</Text>
+                                    <Text style={[styles.tableCell, { width: styles.width.widthweight, maxWidth: styles.width.widthweight, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Weight"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.price, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"Unit Price"}</Text>
+                                    <Text style={[styles.tableCell, { width: styles.width.widthprice, maxWidth: styles.width.widthprice,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Unit Price"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"Total"}</Text>
+                                    <Text style={[styles.tableCell, { width: styles.width.widthsubprice, maxWidth: styles.width.widthsubprice,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Total"}</Text>
                                 </View>
                                 </View>
 

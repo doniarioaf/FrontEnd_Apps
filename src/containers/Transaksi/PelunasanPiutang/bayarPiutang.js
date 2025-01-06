@@ -3,13 +3,13 @@ import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import ContentWrapper from '../../../components/Layout/ContentWrapper';
 import ContentHeading from '../../../components/Layout/ContentHeading';
-import { Button, Input, FormGroup, Label } from 'reactstrap';
+import { Button, Input } from 'reactstrap';
 import * as actions from '../../../store/actions';
 import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { decryptObjectNotLocalStorage, numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { decryptObjectNotLocalStorage, formatRupiah, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addPelunasanPiutang_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -44,11 +44,17 @@ export default function AddStockAdjusment(props) {
 
     useEffect(() => {
         let iddec = decryptObjectNotLocalStorage(id,true);
+
         if(iddec != null){
             iddec = iddec.join(',');
             setLoading(true);
             dispatch(actions.getPelunasanPiutangData({ url: '/bayar/listinvoice/'+iddec }, successHandler, errorHandler));
+        }else{
+            iddec = localStorage.getItem('meo!kmadmasku');
+            setLoading(true);
+            dispatch(actions.getPelunasanPiutangData({ url: '/bayar/listinvoice/'+iddec }, successHandler, errorHandler));
         }
+        
         
         
     }, []);
@@ -110,8 +116,21 @@ export default function AddStockAdjusment(props) {
         if (ListItems.length > 0) {
             for (let i = 0; i < ListItems.length; i++) {
                 let det = ListItems[i];
-                if (parseInt(det.pembayaranrp) <= 0) {
+                if(det.nodocument == 'TOTAL'){
+                    continue;
+                }
+                let biayabebanudangmati = parseFloat(removeFormatRupiah(det.biayabebanudangmati));
+                let biayabank = parseFloat(removeFormatRupiah(det.biayabank));
+                let pembayaran = parseFloat(removeFormatRupiah(det.pembayaran));
+                let outstanding = parseFloat(det.outstanding);
+                let totalPembayaran = biayabebanudangmati + biayabank + pembayaran;
+                if (parseFloat(removeFormatRupiah(det.pembayaranrp)) <= 0) {
                     setErrItems(i18n.t('Pembayaran Harus diatas 0'));
+                    flag = false;
+                    break;
+                }
+                if (totalPembayaran > outstanding) {
+                    setErrItems(i18n.t('Pembayaran '+det.nodocument+' Lebih besar dari nilai outstanding'));
                     flag = false;
                     break;
                 }
@@ -165,9 +184,9 @@ export default function AddStockAdjusment(props) {
                     ...obj,
                     {
                         'idinvoice': el.idinvoice,
-                        'biayabebanudangmati': new String(el.biayabebanudangmati).replaceAll('.', '') !== '' ? new String(el.biayabebanudangmati).replaceAll('.', '') : '0',
-                        'biayabank': new String(el.biayabank).replaceAll('.', '') !== '' ? new String(el.biayabank).replaceAll('.', '') : '0',
-                        'pembayaran': new String(el.pembayaran).replaceAll('.', '') !== '' ? new String(el.pembayaran).replaceAll('.', '') : '0',
+                        'biayabebanudangmati': removeFormatRupiah(el.biayabebanudangmati) !== '' ? removeFormatRupiah(el.biayabebanudangmati): '0',
+                        'biayabank': removeFormatRupiah(el.biayabank) !== '' ? removeFormatRupiah(el.biayabank) : '0',
+                        'pembayaran': removeFormatRupiah(el.pembayaran) !== '' ? removeFormatRupiah(el.pembayaran) : '0',
                         'metodepembayaran': el.metodepembayaran,
                     }
                 ], []);
@@ -219,29 +238,34 @@ export default function AddStockAdjusment(props) {
         let kurs = InputKurs !== ''?parseFloat(new String(InputKurs).replaceAll('.','')):0;
         let flag = true;
         let subtotal = 0;
-        if (name == 'biayabebanudangmati' || name == 'biayabank' || name == 'pembayaran' || name == 'pembayaranrp') {
-            
-            let valPriceTemp = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
-            if (isNaN(valPriceTemp) && valPriceTemp !== '' ) {
+        if(name == 'biayabebanudangmati' || name == 'biayabank' || name == 'pembayaran'){
+            let valPriceTemp = removeFormatRupiah(value);
+            if (isNaN(valPriceTemp) && valPriceTemp !== '') {
                 flag = false;
-            } 
-            
-
+                if(new String(value).split(',').length >= 3){
+                    flag = false;
+                }
+            }
         }
         if (flag) {
             
             const list = [...ListItems];
-            let indexTotal = list.findIndex(obj => obj.nodocument == 'TOTAL');
-            let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
-            list[index][name] = valPrice;
-            if(name == 'pembayaran'){
-                list[index]['pembayaranrp'] = parseFloat(valPrice !== ''?valPrice:0) * parseFloat(kurs);
-            }
-            let calc = calculateTotal(list);
-            list[indexTotal]['biayabebanudangmati'] = calc.totalbiayaudangmati;
-            list[indexTotal]['biayabank'] = calc.totalbiayabank;
-            list[indexTotal]['pembayaran'] = calc.totalpembayaran;
-            list[indexTotal]['pembayaranrp'] = calc.totalpembayaranrp;
+            if(name == 'metodepembayaran'){
+                list[index][name] = value;
+            }else{
+                let indexTotal = list.findIndex(obj => obj.nodocument == 'TOTAL');
+
+                list[index][name] = formatRupiah(value);
+                
+                if(name == 'pembayaran'){
+                    list[index]['pembayaranrp'] = removeFormatRupiah(value) !== ''?numToMoney(parseFloat(removeFormatRupiah(value))* parseFloat(kurs)):'';
+                }
+                let calc = calculateTotal(list);
+                list[indexTotal]['biayabebanudangmati'] = calc.totalbiayaudangmati;
+                list[indexTotal]['biayabank'] = calc.totalbiayabank;
+                list[indexTotal]['pembayaran'] = calc.totalpembayaran;
+                list[indexTotal]['pembayaranrp'] = calc.totalpembayaranrp;
+            }   
             setListItems(list);
         }
         //let indexBox = listBiaya.findIndex(obj => obj.namabiaya == 'BOX');
@@ -257,23 +281,23 @@ export default function AddStockAdjusment(props) {
             if(det.nodocument == 'TOTAL'){
                 continue;
             }
-            let biayabebanudangmati = det.biayabebanudangmati !== ''? parseFloat(new String(det.biayabebanudangmati).replaceAll('.','')):0;
+            let biayabebanudangmati = det.biayabebanudangmati !== ''? parseFloat( removeFormatRupiah(det.biayabebanudangmati)):0;
             totalBebanBiayaUdangMati += biayabebanudangmati;
 
-            let biayabank = det.biayabank !== ''? parseFloat(new String(det.biayabank).replaceAll('.','')):0;
+            let biayabank = det.biayabank !== ''? parseFloat(removeFormatRupiah(det.biayabank)):0;
             totalBiayaBank += biayabank;
 
-            let pembayaran = det.pembayaran !== ''? parseFloat(new String(det.pembayaran).replaceAll('.','')):0;
+            let pembayaran = det.pembayaran !== ''? parseFloat(removeFormatRupiah(det.pembayaran)):0;
             totalPembayaran += pembayaran;
 
-            let pembayaranrp = det.pembayaranrp !== ''? parseFloat(new String(det.pembayaranrp).replaceAll('.','')):0;
+            let pembayaranrp = det.pembayaranrp !== ''? parseFloat(removeFormatRupiah(det.pembayaranrp)):0;
             totalPembayaranrp += pembayaranrp;
         }
         let obj = new Object();
-        obj.totalbiayaudangmati = totalBebanBiayaUdangMati;
-        obj.totalbiayabank = totalBiayaBank;
-        obj.totalpembayaran = totalPembayaran;
-        obj.totalpembayaranrp = totalPembayaranrp;
+        obj.totalbiayaudangmati = numToMoney(totalBebanBiayaUdangMati);
+        obj.totalbiayabank = numToMoney(totalBiayaBank);
+        obj.totalpembayaran = numToMoney(totalPembayaran);
+        obj.totalpembayaranrp = numToMoney(totalPembayaranrp);
         return obj;
     }
     const changeValueKurs = (value) => {
@@ -286,9 +310,9 @@ export default function AddStockAdjusment(props) {
         let valKurs = val !== ''?parseFloat(new String(val).replaceAll('.','')):0;
         const list = [...ListItems];
         for(let i=0; i < list.length; i++){
-            let valPrice = list[i]['pembayaran']
-            valPrice = valPrice !== ''?valPrice:0
-            list[i]['pembayaranrp'] = parseFloat(valPrice) * parseFloat(valKurs);
+            let valPrice = list[i]['pembayaran'];
+            valPrice = removeFormatRupiah(valPrice) !== ''?removeFormatRupiah(valPrice):0
+            list[i]['pembayaranrp'] = numToMoney(parseFloat(valPrice) * parseFloat(valKurs));
         }
         setListItems(list);
 
@@ -457,7 +481,7 @@ export default function AddStockAdjusment(props) {
                                                                     onChange={val => handleInputChangeItems(val, i)}
                                                                     // onBlur={handleBlur}
                                                                     // value={x.pembayaranrp}
-                                                                    value={x.pembayaranrp !== ''?numToMoney(parseFloat(x.pembayaranrp)):'' }
+                                                                    value={x.pembayaranrp }
                                                                     disabled={true}
                                                                 /></td>
                                                                 <td>

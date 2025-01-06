@@ -177,7 +177,7 @@ export default function ReportStatusTagihanCargo(props) {
                     return(
                         <form className="mb-6" onSubmit={handleSubmit}  name="formReportStatusInvoice">
                             <ContentWrapper>
-                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuReportStatusTagihanCargo} label={'Status Tagihan Cargo'} labeldefault={'Status Tagihan Cargo'} />
+                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuReportStatusTagihanCargo} label={'Lprn Tagihan Cargo'} labeldefault={'Lprn Tagihan Cargo'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             

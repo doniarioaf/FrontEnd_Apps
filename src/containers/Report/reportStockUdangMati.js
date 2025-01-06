@@ -124,7 +124,7 @@ export default function ReportPembelian(props) {
                     return(
                         <form className="mb-6" onSubmit={handleSubmit}  name="formReportStatusInvoice">
                             <ContentWrapper>
-                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuReportStockUdangHidupMati} label={'Laporan Stock Udang Hidup & Mati'} labeldefault={'Laporan Stock Udang Hidup & Mati'} />
+                            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuReportStockUdangHidupMati} label={'Lprn Stock Hidup & Mati'} labeldefault={'Lprn Stock Hidup & Mati'} />
                             <div className="row mt-2">
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             
