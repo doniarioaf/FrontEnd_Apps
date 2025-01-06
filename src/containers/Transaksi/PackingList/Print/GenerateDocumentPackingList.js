@@ -17,6 +17,13 @@ const styles = StyleSheet.create({
         textAlign:'right',
     },
     width:{
+        widthbox:20,
+        widthsize:70,
+        widthgram:70,
+        widthqty:50,
+        widthweight:70,
+        widthprice:100,
+        widthsubprice:100,
         box:'5%',
         size:'15%',
         gram:'15%',
@@ -85,37 +92,37 @@ const setItems = (items) =>{
             let rowItem = [];
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.box, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.box}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthbox, maxWidth: styles.width.widthbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.box}</Text>
                 </View>
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.size, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.categoryProductSize}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthsize, maxWidth: styles.width.widthsize, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.categoryProductSize}</Text>
                 </View>
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.gram, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.categoryProductFromGr+'-'+det.categoryProductThruGr}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthgram, maxWidth: styles.width.widthgram, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.categoryProductFromGr+'-'+det.categoryProductThruGr}</Text>
                 </View>
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.qty, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.qty}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthqty, maxWidth: styles.width.widthqty, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.qty}</Text>
                 </View>
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.weight, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.nettoweight}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthweight, maxWidth: styles.width.widthweight, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.nettoweight}</Text>
                 </View>
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.price, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.price}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthprice, maxWidth: styles.width.widthprice, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.price}</Text>
                 </View>
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{det.totalprice}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthsubprice, maxWidth: styles.width.widthsubprice, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.totalprice}</Text>
                 </View>
             );
             listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
@@ -141,12 +148,12 @@ const setItems = (items) =>{
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.qty, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{totalQty}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthqty, maxWidth: styles.width.widthqty,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{totalQty}</Text>
                 </View>
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.weight, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{totalWeight}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthweight, maxWidth: styles.width.widthweight, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{totalWeight}</Text>
                 </View>
             );
             rowItem.push(
@@ -156,7 +163,7 @@ const setItems = (items) =>{
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{totalPrice}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthsubprice, maxWidth: styles.width.widthsubprice, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{totalPrice}</Text>
                 </View>
             );
             listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
@@ -204,10 +211,10 @@ const GenerateDocument = ({ valuedata }) => {
                             </View>
                             <View style={{ flexDirection: 'row'}}>
                                 <View style={{ flexDirection: 'row-reverse' }}>
-                                    <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{'To  : '}{valuedata != null ? valuedata.customerName : ''}</Text>
+                                    <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 340, maxWidth: 340 }]}>{'To  : '}{valuedata != null ? valuedata.customerName : ''}</Text>
                                 </View>
     
-                                <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                                <View style={{ flexDirection: 'row-reverse', marginLeft: '3%' }}>
                                     <Text style={{ fontSize: fontSizeBig }}>{'AWB : '}{valuedata != null ? valuedata.awbnumber : ''}</Text>
                                 </View>
                             </View>
@@ -243,25 +250,25 @@ const GenerateDocument = ({ valuedata }) => {
                             <View style={styles.table}>
                                 <View style={styles.tableRow}>
                                 <View style={[styles.tableColWidth, { width:styles.width.box, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"BOX"}</Text>
+                                    <Text style={[styles.tableCell, { width: styles.width.widthbox, maxWidth: styles.width.widthbox, marginTop: '5px', fontSize: fontSizeBig }]}>{"BOX"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.size, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"SIZE"}</Text>
+                                    <Text style={[styles.tableCell, { width: styles.width.widthsize, maxWidth: styles.width.widthsize, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"SIZE"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.gram, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"GRAM"}</Text>
+                                    <Text style={[styles.tableCell, { width: styles.width.widthgram, maxWidth: styles.width.widthgram,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"GRAM"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.qty, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"PIECES"}</Text>
+                                    <Text style={[styles.tableCell, { width: styles.width.widthqty, maxWidth: styles.width.widthqty, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"PIECES"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.weight, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"WEIGHT(KG)"}</Text>
+                                    <Text style={[styles.tableCell, { width: styles.width.widthweight, maxWidth: styles.width.widthweight,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"WEIGHT(KG)"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.price, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"PRICE"}</Text>
+                                    <Text style={[styles.tableCell, { width: styles.width.widthprice, maxWidth: styles.width.widthprice,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"PRICE"}</Text>
                                 </View>
                                 <View style={[styles.tableColWidth, { width:styles.width.subprice, height: "25px" }]}>
-                                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{"TOTAL"}</Text>
+                                    <Text style={[styles.tableCell, { width: styles.width.widthsubprice, maxWidth: styles.width.widthsubprice,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"TOTAL"}</Text>
                                 </View>
                                 </View>
 
