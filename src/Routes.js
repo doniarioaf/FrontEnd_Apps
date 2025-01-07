@@ -242,6 +242,7 @@ const reportStatusTagihanCargo = lazy(() => import('./containers/Report/reportSt
 const reportHutang = lazy(() => import('./containers/Report/reportHutang'));
 const reportPiutang = lazy(() => import('./containers/Report/reportPiutang'));
 const reportPenjualan = lazy(() => import('./containers/Report/reportPenjualan'));
+const reportPelunasanPiutang = lazy(() => import('./containers/Report/reportPelunasanPiutang'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -495,6 +496,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.menuReportHutang} component={waitFor(reportHutang)} />
                                         <Route path={pathmenu.menuReportPiutang} component={waitFor(reportPiutang)} />
                                         <Route path={pathmenu.menuReportPenjualan} component={waitFor(reportPenjualan)} />
+                                        <Route path={pathmenu.menuReportPelunasanPiutang} component={waitFor(reportPelunasanPiutang)} />
                                         
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
 

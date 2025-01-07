@@ -229,6 +229,12 @@ const handleMenu = () => {
                     translate: 'Lprn Piutang',
                     permission:permissionmenu.MenuReportPiutang,
                 },
+                {
+                    name: 'Lprn Pelunasan Piutang',
+                    path: pathmenu.menuReportPelunasanPiutang,
+                    translate: 'Lprn Pelunasan Piutang',
+                    permission:permissionmenu.MenuReportPelunasanPiutang,
+                },
             ]
         },
         // {
