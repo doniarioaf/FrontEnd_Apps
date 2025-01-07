@@ -203,6 +203,12 @@ const handleMenu = () => {
                     translate: 'Invoice',
                     permission:permissionmenu.MenuStockAdjusment,
                 },
+                {
+                    name: 'Lprn Penjualan',
+                    path: pathmenu.menuReportPenjualan,
+                    translate: 'Lprn Penjualan',
+                    permission:permissionmenu.MenuReportPenjualan,
+                },
             ]
         },
         {
