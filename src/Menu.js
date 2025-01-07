@@ -216,6 +216,13 @@ const handleMenu = () => {
                     translate: 'Packing List',
                     permission:permissionmenu.MenuPelunasanPiutang,
                 },
+
+                {
+                    name: 'Lprn Piutang',
+                    path: pathmenu.menuReportPiutang,
+                    translate: 'Lprn Piutang',
+                    permission:permissionmenu.MenuReportPiutang,
+                },
             ]
         },
         // {

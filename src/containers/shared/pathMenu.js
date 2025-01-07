@@ -99,3 +99,4 @@ export const detailpelunasanpiutang = `/form/detail/pelunasanpiutang`;
 export const editpelunasanpiutang = `/form/edit/pelunasanpiutang`;
 export const menuReportStatusTagihanCargo = `/reportStatusTagihanCargo`;
 export const menuReportHutang = `/reportHutang`;
+export const menuReportPiutang = `/reportPiutang`;
