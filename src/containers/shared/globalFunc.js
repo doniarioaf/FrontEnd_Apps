@@ -377,7 +377,7 @@ export const terbilang = (nilai) =>{
     let result = new String(text.substring(1, 2)).toUpperCase();
     let result1 = text.substring(2, text.length);
     if(text.replaceAll(' ','') !== ''){
-        return result+result1+'rupiah';
+        return result+result1+' rupiah';
     }
     return '';
   }

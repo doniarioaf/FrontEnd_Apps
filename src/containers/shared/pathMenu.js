@@ -102,3 +102,4 @@ export const menuReportHutang = `/reportHutang`;
 export const menuReportPiutang = `/reportPiutang`;
 export const menuReportPenjualan = `/reportPenjualan`;
 export const menuReportPelunasanPiutang = `/reportPelunasanPiutang`;
+export const menuReportKartuDeposit = `/reportKartuDeposit`;

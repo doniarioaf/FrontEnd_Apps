@@ -214,10 +214,9 @@ export default function EditDeposit(props) {
 
                                     <DatePicker
                                     name="depositdate"
-                                    // onChange={val => handleChangeDepositDate(val)}
+                                    onChange={val => handleChangeDepositDate(val)}
                                     format={formatdate}
                                     value={values.depositdate}
-                                    disabled={true}
                                     />
                                     <div className="invalid-feedback-custom">{ErrInputDepositDate}</div>
 

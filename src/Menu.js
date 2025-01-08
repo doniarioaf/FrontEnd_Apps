@@ -159,6 +159,13 @@ const handleMenu = () => {
                     translate: 'Lprn Pembelian',
                     permission:permissionmenu.MenuReportPurchaseReceive,
                 },
+
+                {
+                    name: 'Lprn Kartu Deposit',
+                    path: pathmenu.menuReportKartuDeposit,
+                    translate: 'Lprn Kartu Deposit',
+                    permission:permissionmenu.MenuReportKartuDeposit,
+                },
             ]
         },
         {

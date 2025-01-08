@@ -27,6 +27,7 @@ const DepositIndex = () => {
     const [t, i18n] = useTranslation('translations');
     const [columns] = useState([
         { name: 'id', title: 'id' },
+        {name:'nodocument', title: 'No Document'},
         { name: 'vendor', title: i18n.t('Vendor') },
         { name: 'transdate', title: i18n.t('Date') },
     ]);
@@ -52,6 +53,7 @@ const DepositIndex = () => {
                 ...obj,
                 {
                     'id': el.id,
+                    'nodocument':el.nodocument,
                     'vendor': el.vendorName,
                     'transdate': el.depositdate ? moment(el.depositdate).format(formatdate) : '',
                 }

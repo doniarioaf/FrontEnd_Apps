@@ -167,7 +167,7 @@ import React, {useState,
                 <h2>
                     {
                         !loading  ?
-                            value.vendorName :
+                            value.nodocument :
                             <Skeleton style={{maxWidth: 300}}/>
                     }
                 </h2>
@@ -182,6 +182,13 @@ import React, {useState,
                     loading ?<Skeleton count={7} height={21} style={{marginTop: '1rem'}}/> :
                     (
                         <section>
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('No Document')}</span>
+                            <strong className="col-md-7">
+                                {value.nodocument?value.nodocument:''}
+                            </strong>
+                            </div>
+
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Vendor')}</span>
                             <strong className="col-md-7">

@@ -91,7 +91,8 @@ export default function EditPackingList(props) {
     }
     function successHandlerDetail(data, propsdata) {
         let det = data.data;
-        setTransDate(det.date?new Date(det.date):null);
+        let transDate = det.date?new Date(det.date):null;
+        setTransDate(transDate);
         setSelCustomer(det.idcustomer);
         setInputCity(det.city);
         setInputAttention(det.attention);
@@ -126,8 +127,12 @@ export default function EditPackingList(props) {
             }
         ], []);
         setListCategoryProduct(theDataProd);
+        if(transDate !== null){
+            dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + transDate.getTime() }, successHandlerPriceList, errorHandler));
+        }
+        
 
-        setLoading(false);
+        // setLoading(false);
     }
     function successHandlerPriceList(data, propsdata) {
         if(data.data){
@@ -721,7 +726,7 @@ export default function EditPackingList(props) {
                                                                         textField={'label'}
                                                                         valueField={'value'}
                                                                         value={x.idproduct}
-                                                                        disabled={true}
+                                                                        disabled={false}
                                                                         
                                                                     />
                                                                 </td>
@@ -735,7 +740,7 @@ export default function EditPackingList(props) {
                                                                         textField={'label'}
                                                                         valueField={'value'}
                                                                         value={x.idcategoryproduct}
-                                                                        disabled={true}
+                                                                        disabled={false}
 
                                                                     />
                                                                 </td>

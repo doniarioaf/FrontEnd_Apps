@@ -228,7 +228,7 @@ const setItems = (items) =>{
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.gram, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{(det.weightfrom?det.weightfrom+'-':'')}{(det.weightto?det.weightto:'')}</Text>
+                    <Text style={[styles.tableCell, { width: 440, maxWidth: 440, marginTop: '5px', fontSize: fontSizeBig }]}>{ det.weightfrom+'-'+det.weightto}</Text>
                 </View> 
             );
         

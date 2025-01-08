@@ -287,7 +287,8 @@ const setItems = (items) =>{
     return null;
 }
 
-const setUdangMati = (items) =>{
+const setUdangMati = (valuedata) =>{
+    let items = valuedata.items;
     if(items != undefined && items != null){
         let listfilteroutput = items.filter(output => output.type == 'M' && output.qty > 0);
         let list = [];
@@ -300,7 +301,10 @@ const setUdangMati = (items) =>{
             return [
                 <View style={{ flexDirection: 'row'}}>
                 <View style={{ flexDirection: 'row-reverse', }}>
-                        <Text style={{ fontSize: fontSizeBig }}>{'Udang Mati '+list.join()}</Text>
+                        <Text style={{ fontSize: fontSizeBig,width: 350, maxWidth: 350  }}>{'Udang Mati '+list.join()}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row-reverse', marginLeft: '1%' }}>
+                        <Text style={{ fontSize: fontSizeBig }}>{'Nama :  '}{valuedata.accountnamebank}</Text>
                     </View>
                 </View>
             ]
@@ -375,9 +379,9 @@ const setInformasiNilaiUang = (items) =>{
                         <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{label}{value}</Text>
                     </View>
 
-                    <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                    {/* <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
                         <Text style={{ fontSize: fontSizeBig }}>{'Setor :  '}{numToMoney(setor)}</Text>
-                    </View>
+                    </View> */}
 
                     
                 </View>
@@ -393,9 +397,9 @@ const setInformasiNilaiUang = (items) =>{
                         <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{label}{value}</Text>
                     </View>
 
-                    <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                    {/* <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
                         <Text style={{ fontSize: fontSizeBig }}>{'Transfer :  '}{numToMoney(transfer)}</Text>
-                    </View>
+                    </View> */}
         
                     
                 </View>
@@ -411,9 +415,6 @@ const setInformasiNilaiUang = (items) =>{
                         <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{label}{value}</Text>
                     </View>
 
-                    <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                        <Text style={{ fontSize: fontSizeBig }}>{'Bank :  '}{items.bank}</Text>
-                    </View>
 
                 </View>
             );
@@ -428,9 +429,7 @@ const setInformasiNilaiUang = (items) =>{
                         <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{label}{value}</Text>
                     </View>
 
-                    <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                        <Text style={{ fontSize: fontSizeBig }}>{'Nama :  '}{items.accountnamebank}</Text>
-                    </View>
+                    
                 </View>
             );
 
@@ -440,9 +439,7 @@ const setInformasiNilaiUang = (items) =>{
                         <Text style={[{ margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{''}</Text>
                     </View>
         
-                    <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                        <Text style={{ fontSize: fontSizeBig }}>{'No Rekening :  '}{items.accountnobank}</Text>
-                    </View>
+                    
                 </View>
             );
         }
@@ -451,27 +448,47 @@ const setInformasiNilaiUang = (items) =>{
 
 }
 
-const setNotes = (items) =>{
+const setNotes = (valuedate) =>{
+    let items = valuedate.notes;
     if(items != undefined && items != null && items != ""){
         if(new String(items).includes("|")){
             let arrNotes = new String(items).split("|");
             let listRow = [];
             for(let i=0; i < arrNotes.length; i++){
                 let note = arrNotes[i];
-                listRow.push(
-                    <View style={{ flexDirection: 'row'}}>
-                    <View style={{ flexDirection: 'row-reverse', }}>
-                            <Text style={{ fontSize: fontSizeBig }}>{note}</Text>
+                if(i == 0){
+                    listRow.push(
+                        <View style={{ flexDirection: 'row'}}>
+                        <View style={{ flexDirection: 'row-reverse', }}>
+                                <Text style={{ fontSize: fontSizeBig,width:'350',maxWidth:'350' }}>{note}</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row-reverse', marginLeft: '1%' }}>
+                                <Text style={{ fontSize: fontSizeBig }}>{'No Rekening :  '}{valuedate.accountnobank}</Text>
+                            </View>
                         </View>
-                    </View>
-                );
+                    );    
+                }else{
+                    listRow.push(
+                        <View style={{ flexDirection: 'row'}}>
+                        <View style={{ flexDirection: 'row-reverse', }}>
+                                <Text style={{ fontSize: fontSizeBig,width:'350',maxWidth:'350' }}>{note}</Text>
+                            </View>
+                        </View>
+                    );
+                }
+                
             }
             return listRow;
         }else{
             return [
                 <View style={{ flexDirection: 'row'}}>
                 <View style={{ flexDirection: 'row-reverse', }}>
-                        <Text style={{ fontSize: fontSizeBig }}>{items}</Text>
+                        <Text style={{ fontSize: fontSizeBig,width:'350',maxWidth:'350' }}>{items}</Text>
+                    </View>
+
+                    
+                    <View style={{ flexDirection: 'row-reverse', marginLeft: '1%' }}>
+                        <Text style={{ fontSize: fontSizeBig }}>{'No Rekening :  '}{valuedate.accountnobank}</Text>
                     </View>
                 </View>
             ];        
@@ -617,14 +634,17 @@ const GenerateInternal = ({ valuedata }) => {
                         </View>
                             <View style={{ flexDirection: 'row', paddingTop:'10px' }}>
                                 <View style={{ flexDirection: 'row-reverse'}}>
-                                    <Text style={{ fontSize: fontSizeBig, width:'400px', maxWidth:'400px' }}> {valuedata != null ?  (valuedata.totalprice?'Terbilang: '+terbilangRupiah(getTransfer(valuedata != null ? valuedata : [])):'' ):''}</Text>
+                                    <Text style={{ fontSize: fontSizeBig, width:'400px', maxWidth:'400px' }}> {valuedata != null ?  (valuedata.totalprice?'Terbilang: '+terbilangRupiah(valuedata.totalprice?valuedata.totalprice:''):'' ):''}</Text>
                                 </View>
                             </View>
 
                             {/* NB */}
                             <View style={{ flexDirection: 'row'}}>
                                 <View style={{ flexDirection: 'row-reverse', }}>
-                                    <Text style={{ fontSize: fontSizeBig }}>{'NB'}</Text>
+                                    <Text style={{ fontSize: fontSizeBig,width: 250, maxWidth: 250 }}>{'NB'}</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
+                                    <Text style={{ fontSize: fontSizeBig }}>{'Bank :  '}{valuedata != null ?valuedata.bank:''}</Text>
                                 </View>
                                 {/* <View style={{ flexDirection: 'row-reverse', marginLeft: '7%' }}>
                                     <Text style={{ fontSize: fontSizeBig, width:'350px', maxWidth:'350px' }}> {valuedata != null ?  (valuedata.totalprice?'Terbilang: '+terbilangRupiah(getTransfer(valuedata != null ? valuedata : [])):'' ):''}</Text>
@@ -632,9 +652,9 @@ const GenerateInternal = ({ valuedata }) => {
                             </View>
 
                             {/* List udang Mati */}
-                            {setUdangMati(valuedata != null ? valuedata.items : [])}
+                            {setUdangMati(valuedata != null ? valuedata : [])}
 
-                            {setNotes(valuedata != null ? valuedata.notes : "")}
+                            {setNotes(valuedata != null ? valuedata : "")}
 
                             {setInformasiNilaiUang(valuedata != null ? valuedata : [])}
                     </View>
