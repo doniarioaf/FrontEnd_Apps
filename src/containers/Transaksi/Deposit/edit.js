@@ -37,6 +37,10 @@ export default function EditDeposit(props) {
     const [InputDepositDate, setInputDepositDate] = useState(null);
     const [ErrInputDepositDate, setErrInputDepositDate] = useState("");
 
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [isSelected, setIsSelected] = useState(false);
+    const [ErrUploadFile, setErrUploadFile] = useState("");
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -96,6 +100,19 @@ export default function EditDeposit(props) {
         return flag;
     }
 
+    const succesHandlerSubmitData = (data, propsdata) => {
+        let iddata = data.data;
+        if(isSelected && selectedFile !== undefined && selectedFile !== null){
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            dispatch(actions.submitDeposit({ url: '/file/'+iddata, payload: formData, type: 'ADD' }, succesHandlerSubmit, errorHandlerFile));
+        }else{
+            succesHandlerSubmit(data,propsdata);
+        }
+        
+    }
+
     const succesHandlerSubmit = (data, propsdata) => {
         setLoading(false);
         Swal.fire({
@@ -117,7 +134,7 @@ export default function EditDeposit(props) {
             obj.depositdate = new Date(values.depositdate).getTime();
             obj.idvendor = SelVendor;
             obj.amount = new String(values.amount).replaceAll(".", "") !== '' ? new String(values.amount).replaceAll(".", "") : 0;
-            dispatch(actions.submitDeposit({ url: '/' + id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitDeposit({ url: '/' + id, payload: obj, type: 'EDIT' }, succesHandlerSubmitData, errorHandler));
         }
     }
 
@@ -153,6 +170,32 @@ export default function EditDeposit(props) {
         let id = data?.value ? data.value : '';
         setSelVendor(id);
 
+    }
+
+    const changeHandlerFIle = (event) => {
+    
+        setSelectedFile(event.target.files[0]);
+
+        setIsSelected(true);
+
+    };
+    function cancelFile(){
+        setSelectedFile(null);
+
+        setIsSelected(false);
+    }
+
+    const errorHandlerFile = (data, propsdata) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops Gagal Upload File...',
+            text: data.msg
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.goBack();
+            }
+        })
     }
 
 
@@ -255,6 +298,35 @@ export default function EditDeposit(props) {
                                             value={values.amount !== '' ? numToMoney(parseFloat(new String(values.amount).replaceAll(".", ""))) : ''}
                                         />
                                         <div className="invalid-feedback-custom">{ErrInputAmount}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="netamount">
+                                            {i18n.t('Upload Bukti Setor')}
+                                        </label>
+                                        <br/>
+                                        {/* <div style={{backgroundColor:'#343439',width:'20%',height:'5%',position:'absolute',right:'15px' }}></div> */}
+                                        <input type="file" name={"file"} 
+                                        accept='.pdf, .jpg, .png, .jpeg' 
+                                        onChange={changeHandlerFIle} />
+                                        
+                                        {isSelected && selectedFile !== undefined && selectedFile !== null ? 
+                                        <div>
+                                            <p>Nama File: {selectedFile.name || selectedFile.name !== undefined?selectedFile.name:''}</p>
+
+                                            <p>Tipe File: {selectedFile.type || selectedFile.type !== undefined?selectedFile.type:''}</p>
+
+                                            <p>Ukuran Dalam KB: {selectedFile.size || selectedFile.size !== undefined?selectedFile.size / 1024:0}</p>
+                                            <Button
+                                    // style={{marginLeft:"1%"}}
+                                                color={'primary'}
+                                                onClick={() => cancelFile()}
+                                            >
+                                                {'Cancel File'}
+                                            </Button>
+                                        </div>
+
+                                        
+                                        :<p>Silahkan Pilih File</p> }
+                                        <div className="invalid-feedback-custom">{ErrUploadFile}</div>
                                     </div>
 
                                 </div>

@@ -412,3 +412,9 @@ export const terbilang = (nilai) =>{
     }
     return nilai+',00';
   }
+
+  export const getFormatFile = (filename) => {
+    let split = new String(filename).split('.');
+    let splitlength = new String(filename).split('.').length;
+    return split[splitlength - 1];
+  }

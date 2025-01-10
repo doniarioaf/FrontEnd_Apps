@@ -127,6 +127,42 @@ import React, {useState,
         })
     }
 
+    function downloadFile(){
+        setLoading(true);
+        dispatch(actions.getDepositData( {url:'/downloadfile/'+id},successHandlerDownload, errorHandler));
+    }
+    function successHandlerDownload(data,propsdata) {
+        let det = data.data;
+
+        let contenttype = det.filecontenttype;
+        if(contenttype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+            contenttype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,';
+        }
+        var base64str = det.filedocument;
+
+        // decode base64 string, remove space for IE compatibility
+        var binary = window.atob(base64str.replace(/\s/g, ''));
+        var len = binary.length;
+        var buffer = new ArrayBuffer(len);
+        var view = new Uint8Array(buffer);
+        for (var i = 0; i < len; i++) {
+            view[i] = binary.charCodeAt(i);
+        }
+        var blob = new Blob([view,{ type: contenttype }]);
+        var dataUrl = URL.createObjectURL(blob);
+
+        var fileLink = document.createElement('a');
+        fileLink.href = dataUrl;
+
+        // it forces the name of the downloaded file
+        fileLink.download = det.filename;
+        fileLink.click();
+        fileLink.remove();
+
+        setLoading(false);
+
+    }
+
     function errorHandler(data,propsdata) {
         setLoading(false);
         Swal.fire({
@@ -207,6 +243,13 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('Amount')}</span>
                                 <strong className="col-md-7">
                                 {value.amount ?numToMoney(value.amount):''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('File')}</span>
+                                <strong className="col-md-7" onClick={() => downloadFile()} style={{cursor:'pointer',color:'blue'}} >
+                                {value.fileName ?value.fileName:''}
                                 </strong>
                             </div>
 
