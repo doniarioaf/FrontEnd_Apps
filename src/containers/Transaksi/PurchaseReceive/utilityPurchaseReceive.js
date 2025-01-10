@@ -1,10 +1,53 @@
+export const calculateSetor = (totalnota, sisadeposit)  =>{
+    let setor = 0;
+    let tempTotalNota  = 0;
+    let tempSisaDeposit  = 0;
+    if(totalnota != null && totalnota != undefined && totalnota !== ''){
+        tempTotalNota = totalnota;
+    }
+    if(sisadeposit != null && sisadeposit != undefined && sisadeposit !== ''){
+        tempSisaDeposit = sisadeposit;
+    }
+    if(tempSisaDeposit < 1){
+        setor = 0;
+    }else if(tempSisaDeposit >= tempTotalNota){
+        setor = tempTotalNota;
+    }else if(tempTotalNota > tempSisaDeposit){
+        setor = tempSisaDeposit;
+    }
+    return setor;
+}
+
+export const calculateTransfer = (totalnota, sisadeposit)  =>{
+    let transfer = 0;
+    let tempTotalNota  = 0;
+    let tempSisaDeposit  = 0;
+    if(totalnota != null && totalnota != undefined && totalnota !== ''){
+        tempTotalNota = totalnota;
+    }
+    if(sisadeposit != null && sisadeposit != undefined && sisadeposit !== ''){
+        tempSisaDeposit = sisadeposit;
+    }
+    if(tempSisaDeposit <= 0){
+        transfer = tempTotalNota;
+    }else if(tempTotalNota > tempSisaDeposit){
+        transfer = tempTotalNota - tempSisaDeposit;
+    }
+    return transfer;
+}
+
 export const calculateTotalPrice = (listitems, listbiaya, listinventori)  =>{
     let totalPrice = 0;
+    let totalPriceItemHidup = 0;
     if(listitems != null && listitems.length > 0){
         for(let i=0; i < listitems.length > 0; i++){
             let det = listitems[i];
             let subtotalprice = new String(det.subtotalprice).replaceAll('.','') !== ''?new String(det.subtotalprice).replaceAll('.',''):0;
-            totalPrice += parseFloat(subtotalprice);
+            if(det.idproduct !== 'TOTAL'){
+                totalPrice += parseFloat(subtotalprice);
+                totalPriceItemHidup += parseFloat(subtotalprice);
+            }
+            
         }
     }
 
@@ -38,7 +81,7 @@ export const calculateTotalPrice = (listitems, listbiaya, listinventori)  =>{
     }
 
     
-    return totalPrice;
+    return  {'totalPrice':totalPrice,'totalPriceItemHidup':totalPriceItemHidup} ;
 }
 
 export const setPriceBoxOngkosByVendor = (listcharge,pricebox,priceongkos)  =>{

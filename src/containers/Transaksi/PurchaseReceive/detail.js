@@ -96,6 +96,13 @@ import React, {useState,
 
     function successHandler(data,propsdata) {
         let det = data.data;
+        let totalprice = det.totalprice?det.totalprice:0;
+        let setor = det.setor?det.setor:0;
+        let transfer = parseFloat(totalprice) - parseFloat(setor);
+        if(transfer < 1){
+            transfer = 0;
+        }
+        det.transfer = transfer;
         setValue(det);
 
         let listItems = det.items?det.items:[];
@@ -261,9 +268,9 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Setor')}</span>
+                            <span className="col-md-5">{i18n.t('Transfer')}</span>
                                 <strong className="col-md-7">
-                                {value.setor ?numToMoney(value.setor):''}
+                                {value.transfer ?numToMoney(value.transfer):0}
                                 </strong>
                             </div>
 

@@ -256,18 +256,18 @@ const GenerateDocument = ({ valuedata }) => {
             <Fragment>
                 {
                     IsReady ?
-                        <View style={{ marginTop: '10px' }}>
+                        <View style={{ marginTop: '0px' }}>
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ flexDirection: 'row-reverse' }}>
                                     <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 150, maxWidth: 150 }]}>{''}</Text>
                                 </View>
 
-                                <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                                    <Text style={{ fontSize: 8 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text>
+                                <View style={{ flexDirection: 'row-reverse', marginLeft: '40%' }}>
+                                    <Text style={{ fontSize: 7 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text>
                                 </View>
                             </View>    
 
-                            <View style={{ flexDirection: 'row',marginTop:'10px' }}>
+                            <View style={{ flexDirection: 'row',marginTop:'20px' }}>
                                 <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%' }]}>{valuedata != null ? valuedata.companyName : ''}</Text>
                             </View>
                             <View style={{ flexDirection: 'row' }}>

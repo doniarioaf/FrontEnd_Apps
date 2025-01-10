@@ -365,11 +365,13 @@ const setInformasiNilaiUang = (items) =>{
             label = 'Saldo DP :';
             value = numToMoney(saldoDepositBeforeNotaSubmit);
             break;
-        }else if(val == 'SETOR' && setor !== totalprice){
-            label = 'Setor DP:';
-            value = numToMoney(setor);
-            break;
-        }else if(val == 'TAMBAHDP' && tambahDP > 0){
+        }
+        // else if(val == 'SETOR' && setor !== totalprice){
+        //     label = 'Setor DP:';
+        //     value = numToMoney(setor);
+        //     break;
+        // }
+        else if(val == 'TAMBAHDP' && tambahDP > 0){
             label = 'Tambah DP :';
             value = numToMoney(tambahDP);
             break;
@@ -387,7 +389,8 @@ const setInformasiNilaiUang = (items) =>{
                     </View>
 
                     <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                        <Text style={{ fontSize: fontSizeBig }}>{'Setor :  '}{numToMoney(setor)}</Text>
+                        {/* <Text style={{ fontSize: fontSizeBig }}>{'Setor :  '}{numToMoney(setor)}</Text> */}
+                        <Text style={{ fontSize: fontSizeBig }}>{''}</Text>
                     </View>
 
                     
@@ -505,20 +508,20 @@ const GenerateSupplier = ({ valuedata }) => {
                 {
                     IsReady ?
                     
-                    <View style={{ marginTop: '10px' }}>
+                    <View style={{ marginTop: '0px' }}>
 
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ flexDirection: 'row-reverse' }}>
                                 <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 150, maxWidth: 150 }]}>{''}</Text>
                             </View>
 
-                            <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                                <Text style={{ fontSize: 8 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text>
+                            <View style={{ flexDirection: 'row-reverse', marginLeft: '40%' }}>
+                                <Text style={{ fontSize: 7 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text>
                             </View>
                         </View>    
 
 
-                        <View style={{ flexDirection: 'row',marginTop:'10px' }}>
+                        <View style={{ flexDirection: 'row',marginTop:'20px' }}>
                             <View style={{ flexDirection: 'row-reverse' }}>
                                 <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{valuedata != null ? valuedata.companyName : ''}</Text>
                             </View>

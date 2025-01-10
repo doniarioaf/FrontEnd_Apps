@@ -3,7 +3,7 @@ export const baseApiURL =
     // 'http://localhost:8080/sumberberliansamudra/v1'; //Irsan
     // 'http://localhost:8189/sumberberliansamudra/v1'; //Doni
     'http://localhost:8080/v1';
-    // 'http://147.139.139.25:80/sinarmediasakti/v1';
+    // 'http://203.100.57.94:8080/sumberberliansamudra/v1'; //server
 export const loginURL = `${baseApiURL}/login`;
 export const preloginURL = `${baseApiURL}/prelogin`;
 export const checkAuthURL = `${baseApiURL}/checkuser`;

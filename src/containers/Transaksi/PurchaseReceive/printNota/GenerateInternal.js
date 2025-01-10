@@ -310,6 +310,17 @@ const setUdangMati = (valuedata) =>{
             ]
         }
         
+    }else{
+        return [
+            <View style={{ flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row-reverse', }}>
+                    <Text style={{ fontSize: fontSizeBig,width: 350, maxWidth: 350  }}>{''}</Text>
+                </View>
+                <View style={{ flexDirection: 'row-reverse', marginLeft: '1%' }}>
+                    <Text style={{ fontSize: fontSizeBig }}>{'Nama :  '}{valuedata.accountnamebank}</Text>
+                </View>
+            </View>
+        ]
     }
     return null;
 }
@@ -493,6 +504,19 @@ const setNotes = (valuedate) =>{
                 </View>
             ];        
         }
+    }else{
+        return [
+            <View style={{ flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row-reverse', }}>
+                    <Text style={{ fontSize: fontSizeBig,width:'350',maxWidth:'350' }}>{''}</Text>
+                </View>
+
+                
+                <View style={{ flexDirection: 'row-reverse', marginLeft: '1%' }}>
+                    <Text style={{ fontSize: fontSizeBig }}>{'No Rekening :  '}{valuedate.accountnobank}</Text>
+                </View>
+            </View>
+        ];
     }
     return null;
 }
@@ -510,18 +534,18 @@ const GenerateInternal = ({ valuedata }) => {
             <Fragment>
                 {
                     IsReady ?
-                    <View style={{ marginTop: '10px' }}>
+                    <View style={{ marginTop: '0px' }}>
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ flexDirection: 'row-reverse' }}>
                                 <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 150, maxWidth: 150 }]}>{''}</Text>
                             </View>
 
-                            <View style={{ flexDirection: 'row-reverse', marginLeft: '20%' }}>
-                                <Text style={{ fontSize: 8 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text>
+                            <View style={{ flexDirection: 'row-reverse', marginLeft: '40%' }}>
+                                <Text style={{ fontSize: 7 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text>
                             </View>
                         </View>    
 
-                        <View style={{ flexDirection: 'row',marginTop:'10px' }}>
+                        <View style={{ flexDirection: 'row',marginTop:'20px' }}>
                             <View style={{ flexDirection: 'row-reverse' }}>
                                 <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 250, maxWidth: 250 }]}>{valuedata != null ? valuedata.companyName : ''}</Text>
                             </View>

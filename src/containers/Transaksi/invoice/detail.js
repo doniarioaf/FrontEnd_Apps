@@ -27,7 +27,7 @@ import React, {useState,
   import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { MenuInvoice, deleteInvoice_Permission, editInvoice_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
-  import { formatdate, formatdatetime } from '../../shared/constantValue';
+  import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
   import '../../CSS/table.css';
 
   const useStyles = makeStyles((theme) => ({
@@ -146,7 +146,8 @@ import React, {useState,
             fileLink.href = dataUrl;
     
             // it forces the name of the downloaded file
-            fileLink.download = 'Invoice.xlsx';
+            // fileLink.download = 'Invoice.xlsx';
+            fileLink.download = 'Invoice-'+moment(new Date()).format(formatdateYYYYMMDD)+'-'+value.nodocument+'.xlsx';
             fileLink.click();
             fileLink.remove();
             setLoading(false);
