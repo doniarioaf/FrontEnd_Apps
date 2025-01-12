@@ -52,8 +52,6 @@ export default function AddCargo(props) {
     const [InputNetAmount, setInputNetAmount] = useState('');
     const [ErrInputNetAmount, setErrInputNetAmount] = useState('');
 
-    const [selectedFile, setSelectedFile] = useState();
-    const [isSelected, setIsSelected] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -100,15 +98,17 @@ export default function AddCargo(props) {
     }
 
     const succesHandlerSubmitData = (data, propsdata) => {
-        let iddata = data.data;
-        if(isSelected && selectedFile !== undefined && selectedFile !== null){
-            const formData = new FormData();
-            formData.append('file', selectedFile);
+        succesHandlerSubmit(data,propsdata);
+
+        // let iddata = data.data;
+        // if(isSelected && selectedFile !== undefined && selectedFile !== null){
+        //     const formData = new FormData();
+        //     formData.append('file', selectedFile);
             
-            dispatch(actions.submitCargo({ url: '/file/'+iddata, payload: formData, type: 'ADD' }, succesHandlerSubmit, errorHandler));
-        }else{
-           succesHandlerSubmit(data,propsdata);
-        }
+        //     dispatch(actions.submitCargo({ url: '/file/'+iddata, payload: formData, type: 'ADD' }, succesHandlerSubmit, errorHandler));
+        // }else{
+        //    succesHandlerSubmit(data,propsdata);
+        // }
         
     }
 
@@ -178,22 +178,6 @@ export default function AddCargo(props) {
         setSelVendor(id);
 
     }
-
-    const changeHandlerFIle = (event) => {
-
-		setSelectedFile(event.target.files[0]);
-
-		setIsSelected(true);
-
-	};
-    function cancelFile(){
-        setSelectedFile(null);
-
-		setIsSelected(false);
-    }
-
-
-
     const errorHandler = (data, propsdata) => {
         setLoading(false);
         Swal.fire({
@@ -392,31 +376,6 @@ export default function AddCargo(props) {
                                             value={values.netamount !== '' ? numToMoney(parseFloat(new String(values.netamount).replaceAll(".", ""))) : ''}
                                         />
 
-                                        <label className="mt-3 form-label required" htmlFor="netamount">
-                                            {i18n.t('Upload File')}
-                                        </label>
-                                        <br/>
-                                        {/* <div style={{backgroundColor:'#343439',width:'20%',height:'5%',position:'absolute',right:'15px' }}></div> */}
-                                        <input type="file" name={"file"}  onChange={changeHandlerFIle} />
-                                        
-                                        {isSelected && selectedFile !== undefined && selectedFile !== null ? 
-                                        <div>
-                                            <p>Nama File: {selectedFile.name || selectedFile.name !== undefined?selectedFile.name:''}</p>
-
-                                            <p>Tipe File: {selectedFile.type || selectedFile.type !== undefined?selectedFile.type:''}</p>
-
-                                            <p>Ukuran Dalam KB: {selectedFile.size || selectedFile.size !== undefined?selectedFile.size / 1024:0}</p>
-                                            <Button
-                                    // style={{marginLeft:"1%"}}
-                                                color={'primary'}
-                                                onClick={() => cancelFile()}
-                                            >
-                                                {'Cancel File'}
-                                            </Button>
-                                        </div>
-
-                                        
-                                        :<p>Silahkan Pilih File</p> }
                                     </div>
 
                                 </div>

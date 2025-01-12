@@ -25,9 +25,20 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
   import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { editCargo_Permission,deleteCargo_Permission,MenuCargo } from '../../shared/permissionMenu';
+  import { editCargo_Permission,deleteCargo_Permission,MenuCargo, addCargo_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime } from '../../shared/constantValue';
+  import Grid from '../../../components/TableGrid';
+
+  import DialogUploadFile from './dialogUploadFile';
+  import styled                       from "styled-components";
+  import Dialog                       from '@material-ui/core/Dialog';
+
+  const StyledDialog = styled(Dialog)`
+    & > .MuiDialog-container > .MuiPaper-root {
+        height: 500px;
+    }
+    `;
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,11 +56,22 @@ import React, {useState,
     const history = useHistory();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
+    const [LoadingSend, setLoadingSend] = useState(false);
+    
     const [value, setValue] = useState([]);
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
+
+    
+    const [ShowDialog, setShowDialog] = useState(false);
+    const [rows, setRows] = useState([]);
+    const [columns] = useState([
+            { name: 'id', title: 'id' },
+            { name: 'file', title: i18n.t('File') },
+        ]);
+    const [tableColumnExtensions] = useState([]);
 
     const id = props.match.params.id;
 
@@ -90,6 +112,17 @@ import React, {useState,
 
     function successHandler(data,propsdata) {
         setValue(data.data);
+        if(data.data){
+            const theData = data.data.listDoc.reduce((obj, el) => [
+                ...obj,
+                {
+                    'id': el.id,
+                    'file': el.filename,
+                }
+            ], []);
+            setRows(theData);
+        }
+         
        
         setLoading(false);
     }
@@ -127,10 +160,24 @@ import React, {useState,
         })
     }
 
-    function downloadFile(){
-        setLoading(true);
-        dispatch(actions.getCargoData( {url:'/downloadfile/'+id},successHandlerDownload, errorHandler));
+    const succesHandlerSubmitFile = (data) => {
+        setLoading(false);
+        setShowDialog(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(0);
+            }
+        })
     }
+
+    // function downloadFile(){
+    //     setLoading(true);
+    //     dispatch(actions.getCargoData( {url:'/downloadfile/'+id},successHandlerDownload, errorHandler));
+    // }
     function successHandlerDownload(data,propsdata) {
         let det = data.data;
 
@@ -162,7 +209,42 @@ import React, {useState,
         setLoading(false);
 
     }
+
+    function onClickAdd() {
+        setShowDialog(true);
+    }
+    function onClickView(id) {
+        // history.push(pathmenu.detailWorkOrder+'/'+id);
+    }
+    function onClickDelete(id) {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                setLoading(true);
+                dispatch(actions.submitCargo({ url: '/deletefile/'+id, type: 'ADD' }, succesHandlerSubmitFile, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+        
+    }
+
+    function onClickDownload(idval) {
+        setLoading(true);
+        dispatch(actions.getCargoData( {url:'/downloadfile/'+idval},successHandlerDownload, errorHandler));
+        
+    }
+
+
     function errorHandler(data,propsdata) {
+        setShowDialog(false);
         setLoading(false);
         Swal.fire({
             icon: 'error',
@@ -287,12 +369,12 @@ import React, {useState,
                                 </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            {/* <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('File')}</span>
                                 <strong className="col-md-7" onClick={() => downloadFile()} style={{cursor:'pointer',color:'blue'}} >
                                 {value.fileName ?value.fileName:''}
                                 </strong>
-                            </div>
+                            </div> */}
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_CREATED')}</span>
@@ -329,6 +411,29 @@ import React, {useState,
             </Card>
             </div>
             </div>
+
+            <Container fluid className="center-parent">
+            <div className="table-responsive">
+            <Grid
+                rows={rows}
+                columns={columns}
+                totalCounts={rows.length}
+                loading={loading}
+                columnextension={tableColumnExtensions}
+                permissionadd={!isGetPermissions(addCargo_Permission,'TRANSACTION')}
+                onclickadd={onClickAdd}
+                // permissionview={true}
+                // onclickview={onClickView}
+                onclickdownload={onClickDownload}
+                permissiondownload={!isGetPermissions(addCargo_Permission,'READ')}
+                permissiondelete={!isGetPermissions(addCargo_Permission,'TRANSACTION')}
+                onclickdelete={onClickDelete}
+                listfilterdisabled={['tanggal']}
+                width={120}
+            />
+            </div>
+            </Container>
+
             </CardBody>
             </Card>
             </Container>
@@ -367,6 +472,25 @@ import React, {useState,
         </div>
 
             {loading && <Loading/>}
+
+            <StyledDialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                maxWidth="sm"
+                fullWidth={true}
+                style={{height: '80%'}}
+                open={ShowDialog}
+            >
+                <DialogUploadFile
+                    showflag = {setShowDialog}
+                    flagloadingsend = {setLoadingSend}
+                    errorhandler = {errorHandler}
+                    idparam = {id}
+                    handlesubmit = {succesHandlerSubmitFile}
+                    // getAutoDebitid= {getAutoDebitid}
+                />
+                {LoadingSend && <Loading/>}
+            </StyledDialog>
         </ContentWrapper>
     )
   }
