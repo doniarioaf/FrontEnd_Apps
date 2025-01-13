@@ -102,6 +102,21 @@ export default function EditStockAdjusment(props) {
                 'subtotalprice': el.subtotalprice?el.subtotalprice:0
             }
         ], []);
+
+        let objCalc = calculateTotal(list);
+        let totalPriceItem = objCalc.totalPriceItem;
+        let totalSubPriceItem = objCalc.totalSubPriceItem;
+        list.push(
+            {
+                'idproduct': 'TOTAL',
+                'idcategoryproduct': '',
+                'categoryproductname': '',
+                'qty': 0,
+                'itemsprice': totalPriceItem,
+                'subtotalprice': totalSubPriceItem
+            }
+        );
+
         setListItems(list);
 
         setLoading(false);
@@ -141,10 +156,12 @@ export default function EditStockAdjusment(props) {
         if (ListItems.length > 0) {
             for (let i = 0; i < ListItems.length; i++) {
                 let det = ListItems[i];
-                if (parseInt(det.qty) <= 0) {
-                    setErrItems(i18n.t('Qty Harus diatas 0'));
-                    flag = false;
-                    break;
+                if(det.idproduct !== 'TOTAL'){
+                    if (parseInt(det.qty) <= 0) {
+                        setErrItems(i18n.t('Qty Harus diatas 0'));
+                        flag = false;
+                        break;
+                    }
                 }
             }
         } else {
@@ -194,7 +211,8 @@ export default function EditStockAdjusment(props) {
             obj.idpricelist = 0;
             let items = [];
             if (ListItems.length > 0) {
-                items = ListItems.reduce((obj, el) => [
+                let listfilteroutput = ListItems.filter(output => output.idproduct !== 'TOTAL');
+                items = listfilteroutput.reduce((obj, el) => [
                     ...obj,
                     {
                         'idproduct': el.idproduct,
@@ -319,6 +337,15 @@ export default function EditStockAdjusment(props) {
             let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
             list[index][name] = valPrice;
             list[index]['subtotalprice'] = subtotal;
+
+            let objCalc = calculateTotal(list);
+            let totalPriceItem = objCalc.totalPriceItem;
+            let totalSubPriceItem = objCalc.totalSubPriceItem;
+            let indexTotal = list.findIndex(obj => obj.idproduct == 'TOTAL');
+            if(indexTotal > -1){
+                list[indexTotal]['itemsprice'] = totalPriceItem;
+                list[indexTotal]['subtotalprice'] = totalSubPriceItem;
+            };
             setListItems(list);
         }
     }
@@ -349,7 +376,17 @@ export default function EditStockAdjusment(props) {
         let subprice = qty * price;
         list[index]['itemsprice'] = price;
         list[index]['subtotalprice'] = subprice;
+        
+        let objCalc = calculateTotal(list);
+        let totalPriceItem = objCalc.totalPriceItem;
+        let totalSubPriceItem = objCalc.totalSubPriceItem;
+        let indexTotal = list.findIndex(obj => obj.idproduct == 'TOTAL');
+        if(indexTotal > -1){
+            list[indexTotal]['itemsprice'] = totalPriceItem;
+            list[indexTotal]['subtotalprice'] = totalSubPriceItem;
+        };
         setListItems(list);
+
         setLoading(false);
     }
     
@@ -359,21 +396,65 @@ export default function EditStockAdjusment(props) {
         if (ListProduct != null && ListProduct.length == 1) {
             idproduct = ListProduct[0].value;
         }
-        setListItems([...ListItems,
-        {
-            'idproduct': idproduct,
-            'idcategoryproduct': '',
-            'categoryproductname': '',
-            'qty': 0,
-            'itemsprice': 0,
-            'subtotalprice': 0
-        }]);
+        let list = [...ListItems];
+        let listAdd = [...ListItems,
+            {
+                'idproduct': idproduct,
+                'idcategoryproduct': '',
+                'categoryproductname': '',
+                'qty': 0,
+                'itemsprice': 0,
+                'subtotalprice': 0
+            }];
+
+        let indexTotal = list.findIndex(obj => obj.idproduct == 'TOTAL');
+        let totalSubPriceItem = 0;
+        let totalPriceItem = 0;
+        if(indexTotal > -1){
+            totalPriceItem = list[indexTotal]['itemsprice'];
+            totalSubPriceItem = list[indexTotal]['subtotalprice'];
+            listAdd.splice(indexTotal, 1);   
+        };
+        listAdd.push(
+            {
+                'idproduct': 'TOTAL',
+                'idcategoryproduct': '',
+                'categoryproductname': '',
+                'qty': 0,
+                'itemsprice': totalPriceItem,
+                'subtotalprice': totalSubPriceItem
+            }
+        );
+        setListItems(listAdd);
     };
+
+    const calculateTotal = (list) => {
+        let totalSubPriceItem = 0;
+        let totalPriceItem = 0;
+        for(let i=0; i < list.length; i++){
+            let det = list[i];
+            if(det.idproduct !== 'TOTAL'){
+                totalSubPriceItem = totalSubPriceItem + (det.subtotalprice?parseFloat(new String(det.subtotalprice).replaceAll('.','')):0);
+                totalPriceItem = totalPriceItem + (det.itemsprice?parseFloat(new String(det.itemsprice).replaceAll('.','')):0);
+            }
+            
+        }
+        return {'totalSubPriceItem':totalSubPriceItem,'totalPriceItem':totalPriceItem}
+    }
 
 
     const handleRemoveItems = index => {
         const list = [...ListItems];
         list.splice(index, 1);
+
+        let objCalc = calculateTotal(list);
+        let totalPriceItem = objCalc.totalPriceItem;
+        let totalSubPriceItem = objCalc.totalSubPriceItem;
+        let indexTotal = list.findIndex(obj => obj.idproduct == 'TOTAL');
+        if(indexTotal > -1){
+            list[indexTotal]['itemsprice'] = totalPriceItem;
+            list[indexTotal]['subtotalprice'] = totalSubPriceItem;
+        };
         setListItems(list);
     };
 
@@ -525,12 +606,15 @@ export default function EditStockAdjusment(props) {
                                                                         color={'primary'}
                                                                         // style={{color:'white'}}
                                                                         onClick={() => handleRemoveItems(i)}
+                                                                        hidden={x.idproduct == 'TOTAL'}
                                                                     >
                                                                         <DeleteIcon style={{ fontSize: 18 }} />
                                                                     </IconButton>
                                                                 </td>
                                                                 <td style={{ width: '20%' }}>
-                                                                    <DropdownList
+                                                                    {
+                                                                        x.idproduct !== 'TOTAL'?
+                                                                        <DropdownList
                                                                         name="idproduct"
                                                                         filter='contains'
                                                                         placeholder={i18n.t('select.SELECT_OPTION')}
@@ -541,7 +625,9 @@ export default function EditStockAdjusment(props) {
                                                                         value={x.idproduct}
                                                                         disabled={true}
 
-                                                                    />
+                                                                        />:x.idproduct
+                                                                    }
+                                                                    
                                                                 </td>
                                                                 <td style={{ width: '20%' }}>
                                                                 {/* <Input
@@ -553,28 +639,37 @@ export default function EditStockAdjusment(props) {
                                                                     value={x.categoryproductname}
                                                                     disabled={true}
                                                                 /> */}
+                                                                {
+                                                                    x.idproduct !== 'TOTAL'?
                                                                     <DropdownList
-                                                                        name="idcategoryproduct"
-                                                                        filter='contains'
-                                                                        placeholder={i18n.t('select.SELECT_OPTION')}
-                                                                        onChange={val => handleInputDropDownChange(val, i, 'idcategoryproduct')}
-                                                                        data={ListCategoryProduct}
-                                                                        textField={'label'}
-                                                                        valueField={'value'}
-                                                                        value={x.idcategoryproduct}
+                                                                    name="idcategoryproduct"
+                                                                    filter='contains'
+                                                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                    onChange={val => handleInputDropDownChange(val, i, 'idcategoryproduct')}
+                                                                    data={ListCategoryProduct}
+                                                                    textField={'label'}
+                                                                    valueField={'value'}
+                                                                    value={x.idcategoryproduct}
 
-                                                                    />
+                                                                />
+                                                                    :''
+                                                                }
+                                                                    
                                                                 </td>
                                                                 <td>
-                                                                    <Input
-                                                                    name="qty"
-                                                                    type="text"
-                                                                    id="qty"
-                                                                    onChange={val => handleInputChangeItems(val, i)}
-                                                                    // onBlur={handleBlur}
-                                                                    value={x.qty}
-                                                                    // disabled={values.draftpurchasereceive !== 'nodata'}
-                                                                /></td>
+                                                                    {
+                                                                        x.idproduct !== 'TOTAL'?
+                                                                        <Input
+                                                                            name="qty"
+                                                                            type="text"
+                                                                            id="qty"
+                                                                            onChange={val => handleInputChangeItems(val, i)}
+                                                                            // onBlur={handleBlur}
+                                                                            value={x.qty}
+                                                                            // disabled={values.draftpurchasereceive !== 'nodata'}
+                                                                        />:''
+                                                                    }
+                                                                    </td>
 
                                                                 <td style={{ width: '15%' }}>
                                                                     <Input
