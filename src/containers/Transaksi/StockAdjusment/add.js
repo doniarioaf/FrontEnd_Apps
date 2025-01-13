@@ -46,7 +46,7 @@ export default function AddStockAdjusment(props) {
     const [ListItems, setListItems] = useState([]);
     const [ErrItems, setErrItems] = useState("");
     const [ListProduct, setListProduct] = useState([]);
-    // const [ListCategoryProduct, setListCategoryProduct] = useState([]);
+    const [ListCategoryProduct, setListCategoryProduct] = useState([]);
 
 
     useEffect(() => {
@@ -66,9 +66,20 @@ export default function AddStockAdjusment(props) {
                 }
             ], []);
             setListProduct(theDataProd);
-        }
 
-        dispatch(actions.getStockAdjusmentData({ url: '/pricelist?pricedate=' + PriceDate.getTime(),propsdata:theDataProd }, successHandlerPriceList, errorHandler));
+            let theDataCpProd = data.data.categoryProductOpt.reduce((obj, el) => [
+                ...obj,
+                {
+                    'value': el.id,
+                    'label': el.nama+' ('+el.size+')',
+                    'data': el
+                }
+            ], []);
+            setListCategoryProduct(theDataCpProd);
+        }
+        setLoading(false);
+
+        // dispatch(actions.getStockAdjusmentData({ url: '/pricelist?pricedate=' + PriceDate.getTime(),propsdata:theDataProd }, successHandlerPriceList, errorHandler));
         // setLoading(false);
     }
 
@@ -160,7 +171,7 @@ export default function AddStockAdjusment(props) {
             obj.pricedate = PriceDate.getTime();
             obj.note = values.notes;
             obj.type = SelType;
-            obj.idpricelist = InputPriceID;
+            obj.idpricelist = 0;
             let items = [];
             if (ListItems.length > 0) {
                 items = ListItems.reduce((obj, el) => [
@@ -237,8 +248,8 @@ export default function AddStockAdjusment(props) {
             setStockDate(datetrans);
             setPriceDate(datetrans);
 
-            setLoading(true);
-            dispatch(actions.getStockAdjusmentData({ url: '/pricelist?pricedate=' + datetrans.getTime(),propsdata:ListProduct }, successHandlerPriceList, errorHandler));
+            // setLoading(true);
+            // dispatch(actions.getStockAdjusmentData({ url: '/pricelist?pricedate=' + datetrans.getTime(),propsdata:ListProduct }, successHandlerPriceList, errorHandler));
         } else {
             setStockDate(null)
         }
@@ -251,8 +262,8 @@ export default function AddStockAdjusment(props) {
         if (data !== null) {
             let datetrans = moment(data, formatdate).toDate();
             setPriceDate(datetrans);
-            setLoading(true);
-            dispatch(actions.getStockAdjusmentData({ url: '/pricelist?pricedate=' + datetrans.getTime(),propsdata:ListProduct }, successHandlerPriceList, errorHandler));
+            // setLoading(true);
+            // dispatch(actions.getStockAdjusmentData({ url: '/pricelist?pricedate=' + datetrans.getTime(),propsdata:ListProduct }, successHandlerPriceList, errorHandler));
 
         } else {
             setPriceDate(null)
@@ -299,10 +310,33 @@ export default function AddStockAdjusment(props) {
 
     const handleInputDropDownChange = (e, index, name) => {
         const list = [...ListItems];
+        let idproduct = '';
+        let idcategoryproduct = '';
+        if(name == 'idproduct'){
+            idproduct = e.value;    
+            idcategoryproduct = list[index]['idcategoryproduct'];
+        }else if(name == 'idcategoryproduct'){
+            idproduct = list[index]['idproduct'];    
+            idcategoryproduct = e.value;
+        }
+        setLoading(true);
         list[index][name] = e.value;
         setListItems(list);
+        dispatch(actions.getStockAdjusmentData({ url: '/getitems/'+idproduct+'/'+idcategoryproduct,propsdata:{index:index,list:list} }, successHandlerGetItem, errorHandler));
+        
     };
-    
+    function successHandlerGetItem(data, propsdata) {
+        let det = data.data;
+        let index = propsdata.index;
+        let list = propsdata.list;
+        let qty = list[index]['qty'];
+        let price = det.price?det.price:0;
+        let subprice = qty * price;
+        list[index]['itemsprice'] = price;
+        list[index]['subtotalprice'] = subprice;
+        setListItems(list);
+        setLoading(false);
+    }
 
     const handleAddItems = () => {
         let idproduct = '';
@@ -454,7 +488,7 @@ export default function AddStockAdjusment(props) {
                                                         <IconButton
                                                             style={{ color: 'white' }}
                                                             onClick={() => handleAddItems()}
-                                                            hidden={values.vendor == '' || (values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== '')}
+                                                            // hidden={values.vendor == '' || (values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== '')}
                                                         >
                                                             <AddIcon style={{ fontSize: 25 }} />
                                                         </IconButton>
@@ -493,7 +527,7 @@ export default function AddStockAdjusment(props) {
                                                                     />
                                                                 </td>
                                                                 <td style={{ width: '20%' }}>
-                                                                <Input
+                                                                {/* <Input
                                                                     name="categoryproductname"
                                                                     type="text"
                                                                     id="categoryproductname"
@@ -501,8 +535,8 @@ export default function AddStockAdjusment(props) {
                                                                     // onBlur={handleBlur}
                                                                     value={x.categoryproductname}
                                                                     disabled={true}
-                                                                />
-                                                                    {/* <DropdownList
+                                                                /> */}
+                                                                    <DropdownList
                                                                         name="idcategoryproduct"
                                                                         filter='contains'
                                                                         placeholder={i18n.t('select.SELECT_OPTION')}
@@ -512,7 +546,7 @@ export default function AddStockAdjusment(props) {
                                                                         valueField={'value'}
                                                                         value={x.idcategoryproduct}
 
-                                                                    /> */}
+                                                                    />
                                                                 </td>
                                                                 <td>
                                                                     <Input

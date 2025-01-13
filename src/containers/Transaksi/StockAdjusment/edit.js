@@ -46,7 +46,7 @@ export default function EditStockAdjusment(props) {
     const [ListItems, setListItems] = useState([]);
     const [ErrItems, setErrItems] = useState("");
     const [ListProduct, setListProduct] = useState([]);
-    // const [ListCategoryProduct, setListCategoryProduct] = useState([]);
+    const [ListCategoryProduct, setListCategoryProduct] = useState([]);
 
     const id = props.match.params.id;
 
@@ -67,6 +67,16 @@ export default function EditStockAdjusment(props) {
                 }
             ], []);
             setListProduct(theDataProd);
+
+            let theDataCpProd = data.data.categoryProductOpt.reduce((obj, el) => [
+                ...obj,
+                {
+                    'value': el.id,
+                    'label': el.nama+' ('+el.size+')',
+                    'data': el
+                }
+            ], []);
+            setListCategoryProduct(theDataCpProd);
         }
         dispatch(actions.getStockAdjusmentData( {url:'/'+id},successHandlerDetail, errorHandler));
         // dispatch(actions.getStockAdjusmentData({ url: '/pricelist?pricedate=' + PriceDate.getTime(),propsdata:theDataProd }, successHandlerPriceList, errorHandler));
@@ -181,7 +191,7 @@ export default function EditStockAdjusment(props) {
             obj.pricedate = PriceDate.getTime();
             obj.note = values.notes;
             obj.type = SelType;
-            obj.idpricelist = InputPriceID;
+            obj.idpricelist = 0;
             let items = [];
             if (ListItems.length > 0) {
                 items = ListItems.reduce((obj, el) => [
@@ -315,9 +325,33 @@ export default function EditStockAdjusment(props) {
 
     const handleInputDropDownChange = (e, index, name) => {
         const list = [...ListItems];
+        let idproduct = '';
+        let idcategoryproduct = '';
+        if(name == 'idproduct'){
+            idproduct = e.value;    
+            idcategoryproduct = list[index]['idcategoryproduct'];
+        }else if(name == 'idcategoryproduct'){
+            idproduct = list[index]['idproduct'];    
+            idcategoryproduct = e.value;
+        }
+        setLoading(true);
         list[index][name] = e.value;
         setListItems(list);
+        dispatch(actions.getStockAdjusmentData({ url: '/getitems/'+idproduct+'/'+idcategoryproduct,propsdata:{index:index,list:list} }, successHandlerGetItem, errorHandler));
     };
+
+    function successHandlerGetItem(data, propsdata) {
+        let det = data.data;
+        let index = propsdata.index;
+        let list = propsdata.list;
+        let qty = list[index]['qty'];
+        let price = det.price?det.price:0;
+        let subprice = qty * price;
+        list[index]['itemsprice'] = price;
+        list[index]['subtotalprice'] = subprice;
+        setListItems(list);
+        setLoading(false);
+    }
     
 
     const handleAddItems = () => {
@@ -471,7 +505,7 @@ export default function EditStockAdjusment(props) {
                                                         <IconButton
                                                             style={{ color: 'white' }}
                                                             onClick={() => handleAddItems()}
-                                                            hidden={values.vendor == '' || (values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== '')}
+                                                            // hidden={values.vendor == '' || (values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== '')}
                                                         >
                                                             <AddIcon style={{ fontSize: 25 }} />
                                                         </IconButton>
@@ -510,7 +544,7 @@ export default function EditStockAdjusment(props) {
                                                                     />
                                                                 </td>
                                                                 <td style={{ width: '20%' }}>
-                                                                <Input
+                                                                {/* <Input
                                                                     name="categoryproductname"
                                                                     type="text"
                                                                     id="categoryproductname"
@@ -518,8 +552,8 @@ export default function EditStockAdjusment(props) {
                                                                     // onBlur={handleBlur}
                                                                     value={x.categoryproductname}
                                                                     disabled={true}
-                                                                />
-                                                                    {/* <DropdownList
+                                                                /> */}
+                                                                    <DropdownList
                                                                         name="idcategoryproduct"
                                                                         filter='contains'
                                                                         placeholder={i18n.t('select.SELECT_OPTION')}
@@ -529,7 +563,7 @@ export default function EditStockAdjusment(props) {
                                                                         valueField={'value'}
                                                                         value={x.idcategoryproduct}
 
-                                                                    /> */}
+                                                                    />
                                                                 </td>
                                                                 <td>
                                                                     <Input
