@@ -128,6 +128,12 @@ const handleMenu = () => {
                     translate: 'Rekapan Barang Masuk Harian',
                     permission:permissionmenu.MenuReportRekapanBarangMasuk,
                 },
+                {
+                    name: 'Lprn Kartu Stock',
+                    path: pathmenu.menuReportKartuStock,
+                    translate: 'Lprn Kartu Stock',
+                    permission:permissionmenu.MenuReportKartuStock,
+                },
             ]
         },
         {
