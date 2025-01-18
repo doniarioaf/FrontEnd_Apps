@@ -32,6 +32,10 @@ export default function ReportKartuDeposit(props) {
     const [SelProduct, setSelProduct] = useState([]);
     const [ErrSelProduct, setErrSelProduct] = useState('');
 
+    const [selectedCategoryProduct, setSelectedCategoryProduct] = useState([]);
+    const [ListCategoryProduct, setListCategoryProduct] = useState([]);
+    const [SelCategoryProduct, setSelCategoryProduct] = useState([]);
+
     const [start, setStart] = useState(new Date());
     const [end, setEnd] = useState(new Date());
     const [output, setOutput] = useState('XLSX');
@@ -60,6 +64,23 @@ export default function ReportKartuDeposit(props) {
                 }
             );
             setListProduct(theData);
+
+            const theDataCP = data.data.categoryProductOpt.reduce((obj, el) => [
+                ...obj,
+                {
+                    'value': el.id,
+                    'label': el.size,
+                    'data': el
+                }
+            ], []);
+            theDataCP.push(
+                {
+                    'value': 'ALL',
+                    'label': 'All',
+                    'data': []
+                }
+            );
+            setListCategoryProduct(theDataCP);
         }
         setLoading(false);
     }
@@ -74,6 +95,16 @@ export default function ReportKartuDeposit(props) {
         setSelProduct(temp);
     }
 
+    const handleChangeCategoryProduct = (data) =>{
+        let temp = [];
+        if (data !== null && data.length > 0) {
+            for (var i = 0; i < data.length; i++) {
+                temp.push(data[i].value);
+            }
+        }
+        setSelCategoryProduct(temp);
+    }
+
     const handleStartDate = (data) =>{
         // setStart(moment(data, "DD MMMM YYYY").toDate())
         if(data !== null){
@@ -86,16 +117,23 @@ export default function ReportKartuDeposit(props) {
     }
 
     const submitHandler = () => {
-        if( start != null && end != null && SelProduct.length > 0){
+        if( start != null && end != null && SelProduct.length > 0 && SelCategoryProduct.length > 0){
             let idproduct = 0;
             if(SelProduct.indexOf('ALL') > -1){
                 idproduct = 'ALL'
             }else{
                 idproduct = SelProduct.join(',');
             }
+
+            let idcategoryproduct = 0;
+            if(SelCategoryProduct.indexOf('ALL') > -1){
+                idcategoryproduct = 'ALL'
+            }else{
+                idcategoryproduct = SelCategoryProduct.join(',');
+            }
             
             setLoading(true);
-            dispatch(actions.getReport({ url: '/reportkartustock?from=' + start.getTime() + '&to=' + end.getTime()+'&idproducts='+idproduct,type:'GETFILE',typefile:'application/vnd.ms-excel' }, successHandlerReport, errorHandler));
+            dispatch(actions.getReport({ url: '/reportkartustock?from=' + start.getTime() + '&to=' + end.getTime()+'&idproducts='+idproduct+'&idcategoryproducts='+idcategoryproduct,type:'GETFILE',typefile:'application/vnd.ms-excel' }, successHandlerReport, errorHandler));
             // dispatch(actions.submitPurchaseReceiveData({ url: '/reportpembelian', payload: obj, type: 'GETFILE',typefile:'application/vnd.ms-excel' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -142,6 +180,7 @@ export default function ReportKartuDeposit(props) {
                 startdate:start !== null ? moment(start, formatdate).toDate() : new Date(),
                 enddate:end !== null ? moment(end, formatdate).toDate(): new Date(),
                 product:SelProduct,
+                categoryproduct:SelCategoryProduct,
             }
         }
         validate={values => {
@@ -222,6 +261,21 @@ export default function ReportKartuDeposit(props) {
                                 name="colors"
                                 options={ListProduct}
                                 onChange={val => handleChangeProduct(val)}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                            // placeholder={i18n.t('select.SELECT_OPTION')}
+                            />
+
+                        <label className="mt-3 form-label required" htmlFor="vendor">
+                                {i18n.t('Category Product')}
+                                
+                            </label>
+                            <Select
+                                defaultValue={selectedCategoryProduct}
+                                isMulti
+                                name="colors"
+                                options={ListCategoryProduct}
+                                onChange={val => handleChangeCategoryProduct(val)}
                                 className="basic-multi-select"
                                 classNamePrefix="select"
                             // placeholder={i18n.t('select.SELECT_OPTION')}
