@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { formatRupiah, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { editInvoice_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 // import moment from 'moment';
@@ -64,7 +64,7 @@ export default function AddPackingList(props) {
         setListPackingList(theDataProd);
         setSelPackingList(det.idpackinglist);
         setInputPhone(det.phone);
-        setInputKurs(det.kurs?det.kurs:'');
+        setInputKurs(det.kurs?numToMoney(parseFloat(det.kurs)):'');
         setTransDate(det.date?new Date(det.date):null);
         setInputCustomer(packinglist.customerName+'/'+packinglist.customerAlias);
         setInputCustomerAddress(packinglist.customerAddress);
@@ -130,7 +130,7 @@ export default function AddPackingList(props) {
             setLoading(true);
             let obj = new Object();
             obj.date = TransDate.getTime();
-            obj.kurs = values.kurs !== ''?new String(values.kurs).replaceAll('.',''):1;
+            obj.kurs = values.kurs !== ''?removeFormatRupiah(values.kurs):1;
             obj.idpackinglist = SelPackingList;
             obj.phone = values.phone;
             dispatch(actions.submitInvoice({ url: '/'+id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
@@ -187,6 +187,30 @@ export default function AddPackingList(props) {
         setLoading(false);
     }
     
+    const handleChangeInputKurs = (val) => {
+        let value = val.target.value;
+        let flag = true;
+        if (isNaN(value) && value !== '') {
+            flag = false;
+            if(new String(value).split(',').length >= 3){
+                flag = false;
+            }else{
+                flag = true;
+            }
+        }
+        let valPriceTemp = '';
+        if(new String(value).includes(',')){
+            let splitComma = new String(value).split(','); 
+            let angka = splitComma[0];
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+            valPriceTemp = removeFormatRupiah(angka)+','+desimal;
+        }else{
+            valPriceTemp = removeFormatRupiah(value);
+        }
+        if (flag) {
+            setInputKurs(formatRupiah(valPriceTemp,2));
+        }
+    }
     return (
         <Formik
             initialValues={
@@ -281,10 +305,11 @@ export default function AddPackingList(props) {
                                         id="kurs"
                                         // maxLength={100}
 
-                                        onChange={handleChange}
-                                        // onChange={val => handleInputNama(val)}
+                                        // onChange={handleChange}
+                                        onChange={val => handleChangeInputKurs(val)}
                                         onBlur={handleBlur}
-                                        value={values.kurs !== ''?numToMoney(parseFloat(new String(values.kurs).replaceAll('.',''))):''}
+                                        value={values.kurs }
+                                        // value={values.kurs !== ''?numToMoney(parseFloat(new String(values.kurs).replaceAll('.',''))):''}
                                         // disabled={true}
                                     />
                                     <div className="invalid-feedback-custom">{ErrInputKurs}</div>

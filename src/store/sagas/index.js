@@ -24,7 +24,7 @@ import {
     submitDeleteCompanySaga,
     submitDeleteRoleSaga,
     submitDeleteUserMobileSaga,
-    submitDeleteUserSaga,
+    // submitDeleteUserSaga,
     submitEditBranchSaga,
     submitEditCompanySaga,
     submitEditRoleSaga,
@@ -70,7 +70,8 @@ import {
     getCargoDataSaga,
     submitCargoSaga,
     getPelunasanPiutangDataSaga,
-    submitPelunasanPiutangSaga
+    submitPelunasanPiutangSaga,
+    submitDeleteUserAppsSaga
 } from './admin';
 
 
@@ -97,6 +98,7 @@ export function* watchAdmin() {
         takeEvery(actions.GET_USERAPPS_DATA, getDataUserAppsSaga),
         takeEvery(actions.SUBMIT_ADD_USERAPPS_DATA, submitAddUserAppsSaga),
         takeEvery(actions.GET_USERAPPS_WITH_PARAM_DATA, getDataUserAppsWithParamSaga),
+        takeEvery(actions.SUBMIT_DELETE_USER, submitDeleteUserAppsSaga),
         takeEvery(actions.SUBMIT_EDIT_USERAPPS_DATA, submitEditUserAppsSaga),
         takeEvery(actions.SUBMIT_POST_COMPANY, submitPostCompanySaga),
         takeEvery(actions.SUBMIT_DELETE_COMPANY, submitDeleteCompanySaga),
@@ -144,5 +146,6 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_CARGO, submitCargoSaga),
         takeEvery(actions.GET_PELUNASANPIUTANG_DATA, getPelunasanPiutangDataSaga),
         takeEvery(actions.SUBMIT_PELUNASANPIUTANG, submitPelunasanPiutangSaga),
+        takeEvery(actions.SUBMIT_DELETE_ROLE, submitDeleteRoleSaga),
     ]);
 }

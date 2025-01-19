@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { formatRupiah, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addInvoice_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 // import moment from 'moment';
@@ -111,7 +111,7 @@ export default function AddPackingList(props) {
             setLoading(true);
             let obj = new Object();
             obj.date = TransDate.getTime();
-            obj.kurs = values.kurs !== ''?new String(values.kurs).replaceAll('.',''):1;
+            obj.kurs = values.kurs !== ''?removeFormatRupiah(values.kurs):1;
             obj.idpackinglist = SelPackingList;
             obj.phone = values.phone;
             obj.totalamount = TotalAmount;
@@ -175,6 +175,31 @@ export default function AddPackingList(props) {
         setListItems(listItems);
         setLoading(false);
     }
+
+    const handleChangeInputKurs = (val) => {
+        let value = val.target.value;
+        let flag = true;
+        if (isNaN(value) && value !== '') {
+            flag = false;
+            if(new String(value).split(',').length >= 3){
+                flag = false;
+            }else{
+                flag = true;
+            }
+        }
+        let valPriceTemp = '';
+        if(new String(value).includes(',')){
+            let splitComma = new String(value).split(','); 
+            let angka = splitComma[0];
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+            valPriceTemp = removeFormatRupiah(angka)+','+desimal;
+        }else{
+            valPriceTemp = removeFormatRupiah(value);
+        }
+        if (flag) {
+            setInputKurs(formatRupiah(valPriceTemp,2));
+        }
+    }
     
     return (
         <Formik
@@ -191,7 +216,7 @@ export default function AddPackingList(props) {
             }
             validate={values => {
                 const errors = {};
-                setInputKurs(values.kurs);
+                // setInputKurs(values.kurs);
                 setInputPhone(values.phone);
                 return errors;
             }}
@@ -269,10 +294,11 @@ export default function AddPackingList(props) {
                                         id="kurs"
                                         // maxLength={100}
 
-                                        onChange={handleChange}
-                                        // onChange={val => handleInputNama(val)}
+                                        // onChange={handleChange}
+                                        onChange={val => handleChangeInputKurs(val)}
                                         onBlur={handleBlur}
-                                        value={values.kurs !== ''?numToMoney(parseFloat(new String(values.kurs).replaceAll('.',''))):''}
+                                        value={values.kurs }
+                                        // value={values.kurs !== ''?numToMoney(parseFloat(new String(values.kurs).replaceAll('.',''))):''}
                                         // disabled={true}
                                     />
                                     <div className="invalid-feedback-custom">{ErrInputKurs}</div>

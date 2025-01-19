@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { MenuPelunasanPiutang, deletePelunasanPiutang_Permission, editPelunasanPiutang_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime } from '../../shared/constantValue';
@@ -316,13 +316,13 @@ import { calculateDolarToRupiah } from '.';
                                 return (
                                     <tr>
                                         <td>{x.nodocument}</td>
-                                        <td>{x.amount?x.amount:0}</td>
-                                        <td>{x.amountrp?numToMoney(parseFloat(x.amountrp)):0}</td>
-                                        <td>{x.outstanding?x.outstanding:0}</td>
-                                        <td>{x.biayabebanudangmati?x.biayabebanudangmati:0}</td>
-                                        <td>{x.biayabank?x.biayabank:0}</td>
-                                        <td>{x.pembayaran?x.pembayaran:0}</td>
-                                        <td>{x.pembayaranrp?numToMoney(parseFloat(x.pembayaranrp)):0}</td>
+                                        <td>{x.amount?formatRupiah(new String(x.amount).replaceAll('.',','),2):0}</td>
+                                        <td>{x.amountrp?formatRupiah(new String(x.amountrp).replaceAll('.',','),2):0}</td>
+                                        <td>{x.outstanding?formatRupiah(new String(x.outstanding).replaceAll('.',','),2):0}</td>
+                                        <td>{x.biayabebanudangmati?formatRupiah(new String(x.biayabebanudangmati).replaceAll('.',','),2):0}</td>
+                                        <td>{x.biayabank?formatRupiah(new String(x.biayabank).replaceAll('.',','),2):0}</td>
+                                        <td>{x.pembayaran?formatRupiah(new String(x.pembayaran).replaceAll('.',','),2):0}</td>
+                                        <td>{x.pembayaranrp?formatRupiah(new String(x.pembayaranrp).replaceAll('.',','),2):0}</td>
                                         <td>{x.metodepembayaran}</td>
                                     </tr>
                                 )

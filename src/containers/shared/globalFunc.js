@@ -404,7 +404,9 @@ export const terbilang = (nilai) =>{
         let splitComma = new String(nilai).split(','); 
         let angka = splitComma[0];
         let desimal = splitComma[1] !== undefined?splitComma[1]:'';
-        if(new String(desimal).length == 1){
+        if(new String(desimal).length > 1){
+            return nilai;
+        }else if(new String(desimal).length == 1){
             return angka+','+desimal+'0';
         }else if(new String(desimal).length == 0){
             return angka+',00';

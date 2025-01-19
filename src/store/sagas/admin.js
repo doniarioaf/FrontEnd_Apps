@@ -115,6 +115,17 @@ export function* submitEditRoleSaga(action) {
     }
 }
 
+export function* submitDeleteRoleSaga(action) {
+    try {
+        const response = yield axios.delete(baseRoleURL('/'+action.id),action.payload).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(handleMessageError(error).msg);
+    }
+}
+
 export function* getDataUserAppsSaga(action) {
     try {
         const response = yield axios.get(baseUserAppsURL(action.param)).then(response => response.data);
@@ -153,6 +164,17 @@ export function* getDataUserAppsWithParamSaga(action) {
 export function* submitEditUserAppsSaga(action) {
     try {
         const response = yield axios.put(baseUserAppsURL('/'+action.id),action.payload).then(response => response.data);
+        //officeId,resourceId,isTellerTransaction
+        action.successHandler(response);
+    }catch (error) {
+        // const errMessages = yield error.data.errors.reduce((obj, el) => [...obj, el.defaultUserMessage], []);
+        action.errorHandler(handleMessageError(error).msg);
+    }
+}
+
+export function* submitDeleteUserAppsSaga(action) {
+    try {
+        const response = yield axios.delete(baseUserAppsURL('/'+action.id),action.payload).then(response => response.data);
         //officeId,resourceId,isTellerTransaction
         action.successHandler(response);
     }catch (error) {

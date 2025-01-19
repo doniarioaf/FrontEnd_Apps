@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
 import * as actions from '../../../store/actions';
 import * as pathmenu from '../../shared/pathMenu';
-import { reloadToHomeNotAuthorize, isGetPermissions, firstAndLastDateInMonth, numToMoney } from '../../shared/globalFunc';
+import { reloadToHomeNotAuthorize, isGetPermissions, firstAndLastDateInMonth, numToMoney, formatRupiah } from '../../shared/globalFunc';
 import { MenuPelunasanPiutang,addPelunasanPiutang_Permission } from '../../shared/permissionMenu';
 import { useHistory } from 'react-router-dom';
 import { DropdownList, DatePicker } from 'react-widgets';
@@ -102,9 +102,9 @@ const PelunasanPiutangIndex = () => {
                         'nodoc': el.nodocument,
                         'customer': el.customerName,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
-                        'amount': el.amount?el.amount:0,
-                        'amountRp': numToMoney(calculateDolarToRupiah(el.amount,el.kurs)),
-                        'outstanding': el.outstanding?parseFloat(el.outstanding).toFixed(2):0,
+                        'amount': el.amount?formatRupiah((el.amount?new String(el.amount).replaceAll('.',','):''),2):0,
+                        'amountRp': formatRupiah(new String(calculateDolarToRupiah(el.amount,el.kurs)).replaceAll('.',','),2),
+                        'outstanding': el.outstanding?formatRupiah((el.outstanding?new String(el.outstanding).replaceAll('.',','):''),2):0,
                     }
                 ], []);
             }
@@ -121,9 +121,9 @@ const PelunasanPiutangIndex = () => {
                         'nodoc': el.nodocument,
                         'customer': el.customerName,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
-                        'amount': el.amount?el.amount:0,
-                        'amountRp': numToMoney(calculateDolarToRupiah(el.amount,el.kurs)),
-                        'outstanding': el.outstanding?el.outstanding:0,
+                        'amount': el.amount?formatRupiah((el.amount?new String(el.amount).replaceAll('.',','):''),2):0,
+                        'amountRp': formatRupiah(new String(calculateDolarToRupiah(el.amount,el.kurs)).replaceAll('.',','),2),
+                        'outstanding': el.outstanding?formatRupiah((el.outstanding?new String(el.outstanding).replaceAll('.',','):''),2):0,
                     }
                 ], []);
             }
@@ -166,8 +166,8 @@ const PelunasanPiutangIndex = () => {
                         'nodoc': el.nodocument,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
                         'customer': el.customerName,
-                        'amount': el.amountInvoice?el.amountInvoice:0,
-                        'amountRp': numToMoney(calculateDolarToRupiah(el.amountInvoice,el.kursInvoice)),
+                        'amount': el.amountInvoice?formatRupiah((el.amountInvoice?new String(el.amountInvoice).replaceAll('.',','):''),2):0,
+                        'amountRp': formatRupiah(new String(calculateDolarToRupiah(el.amountInvoice,el.kursInvoice)).replaceAll('.',',')),
                     }
                 ], []);
             }

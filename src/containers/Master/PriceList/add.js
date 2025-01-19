@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { formatRupiah, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addPriceList_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -146,7 +146,7 @@ export default function AddPriceList(props) {
                             'idproduct':el.idproduct,
                             'categoryproductid': el.categoryproductid,
                             'amount': new String(el.price).replaceAll('.', '') !== '' ? new String(el.price).replaceAll('.', '') : '0',
-                            'allowance': new String(el.allowance).replaceAll('.', '') !== '' ? new String(el.allowance).replaceAll('.', '') : '0',
+                            'allowance': removeFormatRupiah(el.allowance) !== '' ? removeFormatRupiah(el.allowance) : '0',
                         }
                     ], []);
                 }
@@ -225,10 +225,36 @@ export default function AddPriceList(props) {
 
     const handleInputChangePrice = (e, index) => {
         const { name, value } = e.target;
-        const list = [...ListCategoryProduct];
-        let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
-        list[index][name] = valPrice;
-        setListCategoryProduct(list);
+        let flag = true;
+        if(name == 'allowance'){
+            if (isNaN(value) && value !== '') {
+                flag = false;
+                if(new String(value).split(',').length >= 3){
+                    flag = false;
+                }else{
+                    flag = true;
+                }
+            }
+        }
+        if (flag) {
+            const list = [...ListCategoryProduct];
+            if(name == 'allowance'){
+            let valAllowanceTemp = '';
+            if(new String(value).includes(',')){
+            let splitComma = new String(value).split(','); 
+            let angka = splitComma[0];
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,1):'';
+            valAllowanceTemp = removeFormatRupiah(angka)+','+desimal;
+            }else{
+                valAllowanceTemp = removeFormatRupiah(value);
+            }
+                list[index][name] = formatRupiah(valAllowanceTemp,1);
+            }else{
+                let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
+                list[index][name] = valPrice;
+            }
+            setListCategoryProduct(list);
+        }
     }
 
     const handleInputDropDownChange = (e, index, name) => {
@@ -377,7 +403,8 @@ export default function AddPriceList(props) {
                                                                                     id="allowance"
                                                                                     onChange={val => handleInputChangePrice(val, i)}
                                                                                     onBlur={handleBlur}
-                                                                                    value={x.allowance !== '' ? numToMoney(parseFloat(x.allowance)) : ''}
+                                                                                    value={x.allowance}
+                                                                                    // value={x.allowance !== '' ? numToMoney(parseFloat(x.allowance)) : ''}
                                                                                 />
 
                                                                             </td>

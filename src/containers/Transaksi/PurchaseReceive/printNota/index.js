@@ -148,7 +148,7 @@ export default function PrintNota(props) {
     return (
         <div>
             <ContentWrapper>
-                <ContentHeading history={history} link={pathmenu.printnota + '/' + id} label={'Nota'} labeldefault={'Nota'} />
+                <ContentHeading history={history} link={pathmenu.printnota + '/' + id} label={'Print'} labeldefault={'Print'} />
                 <div className="row mt-2">
                     <div className="mt-2 col-lg-6 ft-detail mb-5">
                         <label className="mt-3 form-label required" htmlFor="SelPrintType">

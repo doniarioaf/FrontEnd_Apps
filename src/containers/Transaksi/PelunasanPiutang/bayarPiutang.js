@@ -75,9 +75,10 @@ export default function AddStockAdjusment(props) {
                     {
                         'idinvoice':el.id,
                         'nodocument': el.nodocument,
-                        'amount': el.amount,
-                        'amountrp': amountRp,
-                        'outstanding': parseFloat(el.outstanding).toFixed(2),
+                        'amount': el.amount?formatRupiah((el.amount?new String(el.amount).replaceAll('.',','):''),2):0,
+                        // 'amountrp': amountRp,
+                        'amountrp': formatRupiah(new String(amountRp).replaceAll('.',','),2),
+                        'outstanding': el.outstanding?formatRupiah((el.outstanding?new String(el.outstanding).replaceAll('.',','):''),2):0,
                         'biayabebanudangmati': 0,
                         'biayabank': 0,
                         'pembayaran': 0,
@@ -90,9 +91,9 @@ export default function AddStockAdjusment(props) {
                 {
                     'idinvoice':0,
                     'nodocument': 'TOTAL',
-                    'amount': parseFloat(totalAmount).toFixed(2),
-                    'amountrp': parseFloat(totalAmountRp).toFixed(2),
-                    'outstanding': parseFloat(totalOutstanding).toFixed(2),
+                    'amount': formatRupiah((new String(totalAmount).replaceAll('.',',')),2),
+                    'amountrp': formatRupiah((new String(totalAmountRp).replaceAll('.',',')),2),
+                    'outstanding': formatRupiah((new String(totalOutstanding).replaceAll('.',',')),2),
                     'biayabebanudangmati': 0,
                     'biayabank': 0,
                     'pembayaran': 0,
@@ -176,7 +177,7 @@ export default function AddStockAdjusment(props) {
             setLoading(true);
             let obj = new Object();
             obj.date = TransDate.getTime();
-            obj.kurs = new String(values.kurs).replaceAll('.', '') !== '' ? new String(values.kurs).replaceAll('.', '') : '0';
+            obj.kurs = removeFormatRupiah(values.kurs) !== '' ? removeFormatRupiah(values.kurs) : '0';
             let items = [];
             if (ListItems.length > 0) {
                 let listitem = ListItems.filter(output => output.nodocument !== 'TOTAL');
@@ -235,15 +236,16 @@ export default function AddStockAdjusment(props) {
 
     const handleInputChangeItems = (e, index) => {
         const { name, value } = e.target;
-        let kurs = InputKurs !== ''?parseFloat(new String(InputKurs).replaceAll('.','')):0;
+        let kurs = InputKurs !== ''?removeFormatRupiah(InputKurs):0;
         let flag = true;
         let subtotal = 0;
         if(name == 'biayabebanudangmati' || name == 'biayabank' || name == 'pembayaran'){
-            let valPriceTemp = removeFormatRupiah(value);
-            if (isNaN(valPriceTemp) && valPriceTemp !== '') {
+            if (isNaN(value) && value !== '') {
                 flag = false;
                 if(new String(value).split(',').length >= 3){
                     flag = false;
+                }else{
+                    flag = true;
                 }
             }
         }
@@ -255,10 +257,19 @@ export default function AddStockAdjusment(props) {
             }else{
                 let indexTotal = list.findIndex(obj => obj.nodocument == 'TOTAL');
 
-                list[index][name] = formatRupiah(value);
+                let valPriceTemp = '';
+                if(new String(value).includes(',')){
+                    let splitComma = new String(value).split(','); 
+                    let angka = splitComma[0];
+                    let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                    valPriceTemp = removeFormatRupiah(angka)+','+desimal;
+                }else{
+                    valPriceTemp = removeFormatRupiah(value);
+                }
+                list[index][name] = formatRupiah(valPriceTemp,2);
                 
                 if(name == 'pembayaran'){
-                    list[index]['pembayaranrp'] = removeFormatRupiah(value) !== ''?numToMoney(parseFloat(removeFormatRupiah(value))* parseFloat(kurs)):'';
+                    list[index]['pembayaranrp'] = removeFormatRupiah(value) !== ''?formatRupiah(new String(parseFloat(removeFormatRupiah(value))* parseFloat(kurs)).replaceAll('.',','),2):'';
                 }
                 let calc = calculateTotal(list);
                 list[indexTotal]['biayabebanudangmati'] = calc.totalbiayaudangmati;
@@ -294,10 +305,10 @@ export default function AddStockAdjusment(props) {
             totalPembayaranrp += pembayaranrp;
         }
         let obj = new Object();
-        obj.totalbiayaudangmati = numToMoney(totalBebanBiayaUdangMati);
-        obj.totalbiayabank = numToMoney(totalBiayaBank);
-        obj.totalpembayaran = numToMoney(totalPembayaran);
-        obj.totalpembayaranrp = numToMoney(totalPembayaranrp);
+        obj.totalbiayaudangmati = formatRupiah(new String(totalBebanBiayaUdangMati).replaceAll('.',','));
+        obj.totalbiayabank = formatRupiah(new String(totalBiayaBank)).replaceAll('.',',');
+        obj.totalpembayaran = formatRupiah(new String(totalPembayaran)).replaceAll('.',',');
+        obj.totalpembayaranrp = formatRupiah(new String(totalPembayaranrp)).replaceAll('.',',');
         return obj;
     }
     const changeValueKurs = (value) => {
@@ -307,16 +318,41 @@ export default function AddStockAdjusment(props) {
 
     const handleInputKurs = (data) =>{
         let val = data.target.value;
-        let valKurs = val !== ''?parseFloat(new String(val).replaceAll('.','')):0;
-        const list = [...ListItems];
-        for(let i=0; i < list.length; i++){
-            let valPrice = list[i]['pembayaran'];
-            valPrice = removeFormatRupiah(valPrice) !== ''?removeFormatRupiah(valPrice):0
-            list[i]['pembayaranrp'] = numToMoney(parseFloat(valPrice) * parseFloat(valKurs));
+        let flag = true;
+        if (isNaN(val) && val !== '') {
+            flag = false;
+            if(new String(val).split(',').length >= 3){
+                flag = false;
+            }else{
+                flag = true;
+            }
         }
-        setListItems(list);
+        let valPriceTemp = '';
+        if(new String(val).includes(',')){
+            let splitComma = new String(val).split(','); 
+            let angka = splitComma[0];
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+            valPriceTemp = removeFormatRupiah(angka)+','+desimal;
+        }else{
+            valPriceTemp = removeFormatRupiah(val);
+        }
 
-        setInputKurs(val)
+        if (flag) {
+            let formatRp = formatRupiah(valPriceTemp,2);
+            setInputKurs(formatRp);
+
+            let valKurs = parseFloat(removeFormatRupiah(formatRp));
+            // let valKurs = val !== ''?parseFloat(new String(val).replaceAll('.','')):0;
+            const list = [...ListItems];
+            for(let i=0; i < list.length; i++){
+                let valPrice = list[i]['pembayaran'];
+                valPrice = removeFormatRupiah(valPrice) !== ''?removeFormatRupiah(valPrice):0
+                list[i]['pembayaranrp'] = formatRupiah(new String(parseFloat(valPrice) * parseFloat(valKurs)).replaceAll('.',','),2);
+            }
+            setListItems(list);
+        }
+
+        
     }
 
     const handleRemoveItems = index => {
@@ -392,7 +428,7 @@ export default function AddStockAdjusment(props) {
                                         // onChange={handleChange}
                                         onChange={val => handleInputKurs(val)}
                                         onBlur={handleBlur}
-                                        value={values.kurs !== ''?changeValueKurs(values.kurs):''}
+                                        value={values.kurs}
                                     />
                                     </div>
                                 </div>
@@ -438,7 +474,8 @@ export default function AddStockAdjusment(props) {
                                                                         {x.amount}
                                                                     </td>
                                                                     <td >
-                                                                        {x.amountrp !== ''?numToMoney(parseFloat(x.amountrp)):'' }
+                                                                        {/* {x.amountrp !== ''?numToMoney(parseFloat(x.amountrp)):'' } */}
+                                                                        {x.amountrp}
                                                                     </td>
                                                                     <td >
                                                                         {x.outstanding}

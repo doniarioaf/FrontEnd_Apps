@@ -136,6 +136,7 @@ import React, {useState,
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
+                setLoading(true);
                 dispatch(actions.submitDeleteUser(id,succesHandlerSubmit, errorHandler));
             //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {

@@ -450,7 +450,7 @@ import React, {useState,
                         :(<div>
                             <MenuItem hidden={!isGetPermissions(editPurchaseReceive_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpurchasereceive+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deletePurchaseReceive_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(MenuPurchaseReceive,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Nota')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(MenuPurchaseReceive,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Print')}</MenuItem>
                             
                         </div>)
                         
