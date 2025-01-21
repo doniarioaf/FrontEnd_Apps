@@ -23,6 +23,7 @@ const VendorIndex = () => {
         {name: 'name', title: i18n.t('label_NAME')},
         {name: 'alias', title: i18n.t('Alias')},
         {name: 'type', title: i18n.t('Type')},
+        {name: 'parent', title: i18n.t('Parent')},
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -42,6 +43,7 @@ const VendorIndex = () => {
                     'name': el.nama ?el.nama:'',
                     'alias': el.alias ?el.alias:'',
                     'type': el.type ?el.type:'',
+                    'parent': el.isparent ?'Yes':'No',
                 }
             ], []);
             setRows(theData);

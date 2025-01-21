@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import ContentWrapper from '../../../components/Layout/ContentWrapper';
 import ContentHeading from '../../../components/Layout/ContentHeading';
-import { Input, Button } from 'reactstrap';
+import { Input, Button,FormGroup,Label } from 'reactstrap';
 import { DropdownList } from 'react-widgets';
 import * as actions from '../../../store/actions';
 import { useDispatch } from 'react-redux';
@@ -32,9 +32,13 @@ export default function AddVendor(props) {
     const [InputAlias, setInputAlias] = useState('');
     const [ErrInputAlias, setErrInputAlias] = useState('');
 
-    const [ListType, setListType] = useState([{value:'UDANG',label:'Udang'},{value:'CARGO',label:'Cargo'},{value:'UPI',label:'UPI'}]);
+    const [ListType, setListType] = useState([{value:'UDANG',label:'Udang'},{value:'CARGO',label:'Cargo'},{value:'UPI',label:'UPI'},{value:'BROKER',label:'Broker'}]);
     const [SelType, setSelType] = useState('');
     const [ErrSelType, setErrSelType] = useState('');
+
+    const [ListVendorParent, setListVendorParent] = useState([]);
+    const [SelVendorParent, setSelVendorParent] = useState('');
+    const [ErrSelVendorParent, setErrSelVendorParent] = useState('');
 
     const [InputPricebox, setInputPricebox] = useState('');
     const [InputPriceOngkos, setInputPriceOngkos] = useState('');
@@ -54,6 +58,8 @@ export default function AddVendor(props) {
     const [ListVendorNotInlcueCategoryProd, setListVendorNotInlcueCategoryProd] = useState([]);
     const [VendorNotInlcueCategoryProd, setVendorNotInlcueCategoryProd] = useState([]);
 
+    const [CheckIsParent, setCheckIsParent] = useState(false);
+
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getVendorData({ url: '/template' }, successHandler, errorHandler));
@@ -68,6 +74,17 @@ export default function AddVendor(props) {
                 }
             ], []);
             setListVendorNotInlcueCategoryProd(theData);
+            if(data.data.vendorParentOpt){
+                const theDataVend = data.data.vendorParentOpt.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        value: el.id,
+                        label: el.nama ,
+                    }
+                ], []);
+                setListVendorParent(theDataVend);
+            }
+            
         }
         setLoading(false);
     }
@@ -78,6 +95,7 @@ export default function AddVendor(props) {
         setErrInputNama('');
         setErrInputAlias('');
         setErrSelType('');
+        setErrSelVendorParent('');
         if (values.nama == '') {
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
@@ -90,6 +108,12 @@ export default function AddVendor(props) {
         if (SelType == '') {
             setErrSelType(i18n.t('label_REQUIRED'));
             flag = false;
+        }
+        if(!CheckIsParent){
+            if (SelVendorParent == '') {
+                setErrSelVendorParent(i18n.t('label_REQUIRED'));
+                flag = false;
+            }
         }
         return flag;
     }
@@ -127,6 +151,12 @@ export default function AddVendor(props) {
             obj.komisi = new String(values.komisi).replaceAll(".", "") !== '' ? new String(values.komisi).replaceAll(".", "") : 0;
             obj.profit = new String(values.profit).replaceAll(".", "") !== '' ? new String(values.profit).replaceAll(".", "") : 0;
             obj.value1 = new String(values.value1).replaceAll(".", "") !== '' ? new String(values.value1).replaceAll(".", "") : 0;
+            obj.isparent = CheckIsParent;
+            let idvendorparent = null;
+            if(!CheckIsParent){
+                idvendorparent = SelVendorParent;
+            }
+            obj.idvendorparent = idvendorparent; 
             dispatch(actions.submitVendorData({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -147,6 +177,11 @@ export default function AddVendor(props) {
                 //   Swal.fire('Changes are not saved', '', 'info')
             }
         })
+    }
+
+    const handleChangeIsParent = (data) =>{
+        setCheckIsParent(data.target.checked);
+        setSelVendorParent('');
     }
 
     const handleCategoryProdChange = (data) => {
@@ -184,6 +219,11 @@ export default function AddVendor(props) {
         let id = data?.value ? data.value : '';
         setSelType(id);
     }
+
+    const handleChangeVendorParent = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelVendorParent(id);
+    }
     return (
         <Formik
             initialValues={
@@ -200,7 +240,9 @@ export default function AddVendor(props) {
                     kurir: InputKurir,
                     komisi: InputKomisi,
                     profit: InputProfit,
-                    value1: InputValue1
+                    value1: InputValue1,
+                    isparent: CheckIsParent,
+                    vendorparent:SelVendorParent
                 }
             }
             validate={values => {
@@ -353,7 +395,38 @@ export default function AddVendor(props) {
                                             value={values.komisi !== '' ? numToMoney(parseFloat(new String(values.komisi).replaceAll(".", ""))) : ''}
                                         />
 
+                                        <FormGroup check style={{marginTop:'20px'}}>
+                                        <Input type="checkbox" name="check" 
+                                        id="isparent" 
+                                        onChange={val => handleChangeIsParent(val)}
+                                        defaultChecked={values.isparent}
+                                        checked={values.isparent}
+                                        style={{transform:'scale(1.5)'}}
+                                        />
+                                        <Label for="isparent" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('Parent?')}</Label>
+                                        </FormGroup>
 
+                                        <div hidden={values.isparent}>
+                                        <label className="mt-3 form-label required" htmlFor="vendorparent">
+                                            {i18n.t('Vendor Parent')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <DropdownList
+                                            name="vendorparent"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeVendorParent(val)}
+                                            onBlur={val => setFieldTouched("vendorparent", val?.value ? val.value : '')}
+                                            data={ListVendorParent}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.vendorparent}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrSelVendorParent}</div>
+                                        </div>
 
                                     </div>
 

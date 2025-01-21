@@ -515,6 +515,20 @@ export default function EditFormInternalUser(props) {
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                    <label className="mt-3 form-label required" htmlFor="role">
+                                            {i18n.t('Role')}
+                                        </label>
+                                        <Select
+                                            // defaultValue={[options[0], options[1]]}
+                                            value={selectedRoles}
+                                            isMulti
+                                            name="colors"
+                                            options={ListRoles}
+                                            onChange={val => handleRolesChange(val)}
+                                            className="basic-multi-select"
+                                            classNamePrefix="select"
+                                        // placeholder={i18n.t('select.SELECT_OPTION')}
+                                        />
 
 
                                         <label className="mt-3 form-label required" htmlFor="email">
@@ -553,20 +567,7 @@ export default function EditFormInternalUser(props) {
                                         />
                                         <div className="invalid-feedback-custom">{ErrInputAddress}</div>
 
-                                        <label className="mt-3 form-label required" htmlFor="role">
-                                            {i18n.t('Role')}
-                                        </label>
-                                        <Select
-                                            // defaultValue={[options[0], options[1]]}
-                                            value={selectedRoles}
-                                            isMulti
-                                            name="colors"
-                                            options={ListRoles}
-                                            onChange={val => handleRolesChange(val)}
-                                            className="basic-multi-select"
-                                            classNamePrefix="select"
-                                        // placeholder={i18n.t('select.SELECT_OPTION')}
-                                        />
+                                        
 
                                         <FormGroup check style={{ marginTop: '20px' }}>
                                             <Input type="checkbox" name="check"

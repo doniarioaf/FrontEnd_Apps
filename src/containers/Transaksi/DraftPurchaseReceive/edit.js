@@ -63,6 +63,10 @@ export default function EditDraftPurchaseReceive(props) {
 
     const [Data, setData] = useState([]);
 
+    const [InputFlightNo, setInputFlightNo] = useState('');
+    const [InputNotes1, setInputNotes1] = useState('');
+    const [InputNotes2, setInputNotes2] = useState('');
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -116,6 +120,9 @@ export default function EditDraftPurchaseReceive(props) {
         setInputReceiveMinute(receivetime[1]);
 
         setInputSMU(theData.smu);
+        setInputFlightNo(theData.flightno?theData.flightno:'');
+        setInputNotes1(theData.notes1?theData.notes1:'');
+        setInputNotes2(theData.notes2?theData.notes2:'');
         setInputGrandTotalEkor(theData.totalekor);
         setInputGrandTotalKilo(theData.totalkg);
         setInputPersentase(theData.persentase);
@@ -233,6 +240,9 @@ export default function EditDraftPurchaseReceive(props) {
                 }
             }
             obj.items = items;
+            obj.flightno = values.flightno;
+            obj.notes1 = values.notes1;
+            obj.notes2 = values.notes2;
             dispatch(actions.submitDraftPurchaseReceive({ url: '/'+id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -687,7 +697,10 @@ export default function EditDraftPurchaseReceive(props) {
                     grandtotalekor:InputGrandTotalEkor,
                     grandtotalkilo:InputGrandTotalKilo,
                     persentase:InputPersentase,
-                    smu:InputSMU
+                    smu:InputSMU,
+                    flightno:InputFlightNo,
+                    notes1:InputNotes1,
+                    notes2:InputNotes2
                 }
             }
             validate={values => {
@@ -697,6 +710,9 @@ export default function EditDraftPurchaseReceive(props) {
                 setInputReceiveHours(values.receivehours);
                 setInputReceiveMinute(values.receiveminute);
                 setInputSMU(values.smu);
+                setInputFlightNo(values.flightno);
+                setInputNotes1(values.notes1);
+                setInputNotes2(values.notes2);
                 return errors;
             }}
             enableReinitialize="true"
@@ -880,6 +896,42 @@ export default function EditDraftPurchaseReceive(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.smu}
+                                        />
+
+                                        <label className="mt-3 form-label required" htmlFor="flightno">
+                                            {i18n.t('Flight No')}
+                                        </label>
+                                        <Input
+                                            name="flightno"                                            
+                                            type="text"
+                                            id="flightno"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.flightno}
+                                        />
+
+                                        <label className="mt-3 form-label required" htmlFor="notes1">
+                                            {i18n.t('Notes 1')}
+                                        </label>
+                                        <Input
+                                            name="notes1"                                            
+                                            type="text"
+                                            id="notes1"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.notes1}
+                                        />
+
+                                        <label className="mt-3 form-label required" htmlFor="notes2">
+                                            {i18n.t('Notes 2')}
+                                        </label>
+                                        <Input
+                                            name="notes2"                                            
+                                            type="text"
+                                            id="notes2"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.notes2}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="grandtotalekor">

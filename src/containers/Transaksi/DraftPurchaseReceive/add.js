@@ -3,13 +3,13 @@ import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import ContentWrapper from '../../../components/Layout/ContentWrapper';
 import ContentHeading from '../../../components/Layout/ContentHeading';
-import { Button, Input, FormGroup, Label } from 'reactstrap';
+import { Button, Input } from 'reactstrap';
 import * as actions from '../../../store/actions';
 import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { addDraftPurchaseReceive_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -60,6 +60,10 @@ export default function AddDraftPurchaseReceive(props) {
     const [ErrItemsMati, setErrItemsMati] = useState('');
 
     const [ListProduct, setListProduct] = useState([]);
+
+    const [InputFlightNo, setInputFlightNo] = useState('');
+    const [InputNotes1, setInputNotes1] = useState('');
+    const [InputNotes2, setInputNotes2] = useState('');
 
     useEffect(() => {
         setLoading(true);
@@ -203,6 +207,9 @@ export default function AddDraftPurchaseReceive(props) {
                 }
             }
             obj.items = items;
+            obj.flightno = values.flightno;
+            obj.notes1 = values.notes1;
+            obj.notes2 = values.notes2;
             dispatch(actions.submitDraftPurchaseReceive({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -497,7 +504,10 @@ export default function AddDraftPurchaseReceive(props) {
                     grandtotalekor:InputGrandTotalEkor,
                     grandtotalkilo:InputGrandTotalKilo,
                     persentase:InputPersentase,
-                    smu:InputSMU
+                    smu:InputSMU,
+                    flightno:InputFlightNo,
+                    notes1:InputNotes1,
+                    notes2:InputNotes2
                 }
             }
             validate={values => {
@@ -507,6 +517,9 @@ export default function AddDraftPurchaseReceive(props) {
                 setInputReceiveHours(values.receivehours);
                 setInputReceiveMinute(values.receiveminute);
                 setInputSMU(values.smu);
+                setInputFlightNo(values.flightno);
+                setInputNotes1(values.notes1);
+                setInputNotes2(values.notes2);
                 return errors;
             }}
             enableReinitialize="true"
@@ -691,6 +704,42 @@ export default function AddDraftPurchaseReceive(props) {
                                             onBlur={handleBlur}
                                             value={values.smu}
                                         />
+
+                                        <label className="mt-3 form-label required" htmlFor="flightno">
+                                            {i18n.t('Flight No')}
+                                        </label>
+                                        <Input
+                                            name="flightno"                                            
+                                            type="text"
+                                            id="flightno"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.flightno}
+                                        />
+
+                                        <label className="mt-3 form-label required" htmlFor="notes1">
+                                            {i18n.t('Notes 1')}
+                                        </label>
+                                        <Input
+                                            name="notes1"                                            
+                                            type="text"
+                                            id="notes1"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.notes1}
+                                        />
+
+                                        <label className="mt-3 form-label required" htmlFor="notes2">
+                                            {i18n.t('Notes 2')}
+                                        </label>
+                                        <Input
+                                            name="notes2"                                            
+                                            type="text"
+                                            id="notes2"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.notes2}
+                                        />                                        
 
                                         <label className="mt-3 form-label required" htmlFor="grandtotalekor">
                                             {i18n.t('Total Ekor')}

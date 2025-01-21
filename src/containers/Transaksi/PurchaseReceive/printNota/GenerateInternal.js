@@ -539,9 +539,18 @@ const GenerateInternal = ({ valuedata }) => {
                             <View style={{ flexDirection: 'row-reverse' }}>
                                 <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 150, maxWidth: 150 }]}>{''}</Text>
                             </View>
-
+                            
                             <View style={{ flexDirection: 'row-reverse', marginLeft: '40%' }}>
-                                <Text style={{ fontSize: 7 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text>
+                                {
+                                    valuedata != null?
+                                    (valuedata.notatype !== 'PAJAK'?
+                                        <Text style={{ fontSize: 7 }}> {'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text>
+                                    :null)
+                                    :
+                                    
+                                    null
+                                }
+                                {/* <Text style={{ fontSize: 7 }}> {'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text> */}
                             </View>
                         </View>    
 

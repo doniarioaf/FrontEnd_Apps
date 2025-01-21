@@ -233,6 +233,20 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Parent?')}</span>
+                                <strong className="col-md-7">
+                                {value.isparent ?'Yes':'No'}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Parent')}</span>
+                                <strong className="col-md-7">
+                                {value.vendorParentName ?value.vendorParentName:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Price Box')}</span>
                                 <strong className="col-md-7">
                                 {value.pricebox ?numToMoney(value.pricebox):'0'}
