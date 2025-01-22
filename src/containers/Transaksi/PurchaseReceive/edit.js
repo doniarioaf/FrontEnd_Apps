@@ -733,7 +733,7 @@ export default function EditPurchaseReceive(props) {
         setSelVendor(id);
 
         let valdata = data?.data ? data.data : '';
-
+        
         setInputSetor(0);
 
         setListCategoryProduct([]);

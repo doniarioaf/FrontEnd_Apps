@@ -145,7 +145,7 @@ export default function EditInventori(props) {
                     return (
                         <form className="mb-6" onSubmit={handleSubmit} name="FormProduct">
                             <ContentWrapper>
-                                <ContentHeading history={history} link={pathmenu.editInventori + '/' + id} label={'Edit Inventori'} labeldefault={'Edit Inventori'} />
+                                <ContentHeading history={history} link={pathmenu.editInventori + '/' + id} label={'Edit Inventory'} labeldefault={'Edit Inventory'} />
 
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">

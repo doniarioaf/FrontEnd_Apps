@@ -311,6 +311,12 @@ import React, {useState,
                                 {value.date ?moment (new Date(value.date)).format(formatdate):''}
                             </strong>
                             </div>
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Box')}</span>
+                            <strong className="col-md-7">
+                                {value.box?value.box:0}
+                            </strong>
+                            </div>
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('SMU')}</span>

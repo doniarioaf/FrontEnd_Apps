@@ -64,6 +64,7 @@ export default function AddDraftPurchaseReceive(props) {
     const [InputFlightNo, setInputFlightNo] = useState('');
     const [InputNotes1, setInputNotes1] = useState('');
     const [InputNotes2, setInputNotes2] = useState('');
+    const [InputBox, setInputBox] = useState('');
 
     useEffect(() => {
         setLoading(true);
@@ -210,6 +211,7 @@ export default function AddDraftPurchaseReceive(props) {
             obj.flightno = values.flightno;
             obj.notes1 = values.notes1;
             obj.notes2 = values.notes2;
+            obj.box = values.box !== ''?values.box:0;
             dispatch(actions.submitDraftPurchaseReceive({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -507,7 +509,8 @@ export default function AddDraftPurchaseReceive(props) {
                     smu:InputSMU,
                     flightno:InputFlightNo,
                     notes1:InputNotes1,
-                    notes2:InputNotes2
+                    notes2:InputNotes2,
+                    box:InputBox
                 }
             }
             validate={values => {
@@ -520,6 +523,7 @@ export default function AddDraftPurchaseReceive(props) {
                 setInputFlightNo(values.flightno);
                 setInputNotes1(values.notes1);
                 setInputNotes2(values.notes2);
+                setInputBox(values.box);
                 return errors;
             }}
             enableReinitialize="true"
@@ -693,6 +697,25 @@ export default function AddDraftPurchaseReceive(props) {
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                        <label className="mt-3 form-label required" htmlFor="box">
+                                            {i18n.t('Box')}
+                                        </label>
+                                        <Input
+                                            name="box"                                            
+                                            type="text"
+                                            id="box"
+                                            // onChange={handleChange}
+                                            onChange={val => {
+                                                let value = val.target.value;
+                                                if (!isNaN(value)) {
+                                                    setFieldValue("box", value);
+                                                }
+                                            }
+                                            }
+                                            onBlur={handleBlur}
+                                            value={values.box}
+                                        />
+
                                         <label className="mt-3 form-label required" htmlFor="alias">
                                             {i18n.t('SMU')}
                                         </label>

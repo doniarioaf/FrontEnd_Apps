@@ -99,6 +99,22 @@ export const setPriceBoxOngkosByVendor = (listcharge,pricebox,priceongkos)  =>{
 
 }
 
+export const setPriceBox = (listcharge,qtybox)  =>{
+    let listBiaya = [...listcharge];
+    let indexBox = listBiaya.findIndex(obj => obj.namabiaya == 'BOX');
+    let subtotalBox = 0;
+    let qtyBoxTemp = 0;
+    if(qtybox != null && qtybox != undefined){
+        let pricebox = listBiaya[indexBox]['price']
+        qtyBoxTemp = qtybox;
+        subtotalBox = parseFloat(new String(pricebox).replaceAll('.','')) * qtybox;
+    }
+    listBiaya[indexBox]['subtotal'] = subtotalBox;
+    listBiaya[indexBox]['qty'] = qtyBoxTemp;
+    return listBiaya;
+
+}
+
 export const setSetorValueTotalPrice = (listcharge,totalprice)  =>{
     let listBiaya = [...listcharge];
     let indexSetor = listBiaya.findIndex(obj => obj.namabiaya == 'SETOR');

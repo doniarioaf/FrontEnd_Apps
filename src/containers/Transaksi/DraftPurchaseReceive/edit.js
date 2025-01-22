@@ -66,6 +66,7 @@ export default function EditDraftPurchaseReceive(props) {
     const [InputFlightNo, setInputFlightNo] = useState('');
     const [InputNotes1, setInputNotes1] = useState('');
     const [InputNotes2, setInputNotes2] = useState('');
+    const [InputBox, setInputBox] = useState('');
 
     const id = props.match.params.id;
 
@@ -126,6 +127,7 @@ export default function EditDraftPurchaseReceive(props) {
         setInputGrandTotalEkor(theData.totalekor);
         setInputGrandTotalKilo(theData.totalkg);
         setInputPersentase(theData.persentase);
+        setInputBox(theData.box);
 
         dispatch(actions.getDraftPurchaseReceiveData({ url: '/searchvendor?idvendor=' + idvendor,propsdata:propsdetail }, successHandlerVendor, errorHandler));
     }
@@ -243,6 +245,7 @@ export default function EditDraftPurchaseReceive(props) {
             obj.flightno = values.flightno;
             obj.notes1 = values.notes1;
             obj.notes2 = values.notes2;
+            obj.box = values.box !== ''?values.box:0;
             dispatch(actions.submitDraftPurchaseReceive({ url: '/'+id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -700,7 +703,8 @@ export default function EditDraftPurchaseReceive(props) {
                     smu:InputSMU,
                     flightno:InputFlightNo,
                     notes1:InputNotes1,
-                    notes2:InputNotes2
+                    notes2:InputNotes2,
+                    box:InputBox
                 }
             }
             validate={values => {
@@ -713,6 +717,7 @@ export default function EditDraftPurchaseReceive(props) {
                 setInputFlightNo(values.flightno);
                 setInputNotes1(values.notes1);
                 setInputNotes2(values.notes2);
+                setInputBox(values.box);
                 return errors;
             }}
             enableReinitialize="true"
@@ -886,6 +891,25 @@ export default function EditDraftPurchaseReceive(props) {
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                        <label className="mt-3 form-label required" htmlFor="box">
+                                            {i18n.t('Box')}
+                                        </label>
+                                        <Input
+                                            name="box"                                            
+                                            type="text"
+                                            id="box"
+                                            // onChange={handleChange}
+                                            onChange={val => {
+                                                let value = val.target.value;
+                                                if (!isNaN(value)) {
+                                                    setFieldValue("box", value);
+                                                }
+                                            }
+                                            }
+                                            onBlur={handleBlur}
+                                            value={values.box}
+                                        />
+                                        
                                         <label className="mt-3 form-label required" htmlFor="alias">
                                             {i18n.t('SMU')}
                                         </label>

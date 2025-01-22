@@ -66,7 +66,7 @@ const InventoriIndex = () => {
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuInventori} label={'Inventori'} labeldefault={'Inventori'} />
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuInventori} label={'Inventory'} labeldefault={'Inventory'} />
             <Container fluid>
             <Card>
             <CardBody>

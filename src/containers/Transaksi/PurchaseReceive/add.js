@@ -21,7 +21,7 @@ import '../../CSS/table.css';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
-import { calculateSetor, calculateTotalPrice, calculateTransfer, setPriceBoxOngkosByVendor } from './utilityPurchaseReceive';
+import { calculateSetor, calculateTotalPrice, calculateTransfer, setPriceBox, setPriceBoxOngkosByVendor } from './utilityPurchaseReceive';
 
 export default function AddPurchaseReceive(props) {
     reloadToHomeNotAuthorize(addPurchaseReceive_Permission, 'TRANSACTION');
@@ -633,12 +633,13 @@ export default function AddPurchaseReceive(props) {
 
         setListItemsPurchaseReceive([]);
         setListItemsPurchaseReceiveMati([]);
-
+        let qtyBox = 0;
         if(id !== 'nodata'){
             setInputNotes(val.notes1?val.notes1:'');
             setInputNotes2(val.notes2?val.notes2:'');
             setInputFlightNo(val.flightno?val.flightno:'');
             setInputSMU(val.smu?val.smu:'');
+            qtyBox = val.box?val.box:'';
         }else{
             setInputNotes('');
             setInputNotes2('');
@@ -646,12 +647,21 @@ export default function AddPurchaseReceive(props) {
             setInputSMU('');
         }
 
-        
-        let totalPrice = calculateTotalPrice([], ListItemsPurchaseReceiveBiaya, ListItemsInventori).totalPrice;
+        let listCharge = setPriceBox(ListItemsPurchaseReceiveBiaya, qtyBox);
+        setListItemsPurchaseReceiveBiaya(listCharge);
+
+        let totalPrice = calculateTotalPrice([], listCharge, ListItemsInventori).totalPrice;
         setInputTotalPrice(totalPrice);
         if (IsDefaultSetorTotalPrice) {
             setInputSetor(totalPrice);
         }
+
+        
+        // let totalPrice = calculateTotalPrice([], listCharge, []);
+        // setInputTotalPrice(totalPrice);
+        // if (IsDefaultSetorTotalPrice) {
+        //     setInputSetor(totalPrice);
+        // }
 
         if(id !== 'nodata'){
             setLoading(true);
@@ -758,7 +768,6 @@ export default function AddPurchaseReceive(props) {
         setSelVendor(id);
 
         let valdata = data?.data ? data.data : '';
-
         setInputSetor(0);
 
         setListCategoryProduct([]);
