@@ -78,6 +78,11 @@ export default function AddPurchaseReceive(props) {
 
     const [InputTransfer, setInputTransfer] = useState(0);
 
+    const [InputFlightNo, setInputFlightNo] = useState('');
+    const [InputNotes2, setInputNotes2] = useState('');
+    const [InputSMU, setInputSMU] = useState('');
+    const [IdDraftPR, setIdDraftPR] = useState('');
+
 
     useEffect(() => {
         setLoading(true);
@@ -272,6 +277,9 @@ export default function AddPurchaseReceive(props) {
             obj.transactiondate = ReceiveDate.getTime();
             obj.koli = '';//values.koli;
             obj.notes = values.notes;
+            obj.notes2 = values.notes2;
+            obj.flightno = values.flightno;
+            obj.smu = values.smu;
             obj.bank = values.bank;
             obj.accountnobank = values.accnobank;
             obj.accountnamebank = values.accnamabank;
@@ -620,10 +628,23 @@ export default function AddPurchaseReceive(props) {
     };
     const handleChangeDraftPR = (data) => {
         let id = data?.value ? data.value : '';
+        let val = data?.data ? data.data : '';
         setSelDraftPurchaseReceive(id);
 
         setListItemsPurchaseReceive([]);
         setListItemsPurchaseReceiveMati([]);
+
+        if(id !== 'nodata'){
+            setInputNotes(val.notes1?val.notes1:'');
+            setInputNotes2(val.notes2?val.notes2:'');
+            setInputFlightNo(val.flightno?val.flightno:'');
+            setInputSMU(val.smu?val.smu:'');
+        }else{
+            setInputNotes('');
+            setInputNotes2('');
+            setInputFlightNo('');
+            setInputSMU('');
+        }
 
         
         let totalPrice = calculateTotalPrice([], ListItemsPurchaseReceiveBiaya, ListItemsInventori).totalPrice;
@@ -749,6 +770,11 @@ export default function AddPurchaseReceive(props) {
         setInputAccNameBank(valdata.accountnamebank);
         setSelDraftPurchaseReceive('');
         setListDraftPurchaseReceive([]);
+        setInputNotes('');
+        setInputNotes2('');
+        setInputFlightNo('');
+        setInputSMU('');
+        setIdDraftPR('');
 
         setLoading(true);
         let listCharge = setPriceBoxOngkosByVendor(ListItemsPurchaseReceiveBiaya, valdata.pricebox, valdata.priceongkos);
@@ -778,11 +804,13 @@ export default function AddPurchaseReceive(props) {
             {
                 'value': el.id,
                 'label': el.nodocument+''+(el.smu && el.smu !== ''?' - '+el.smu:''),
+                'data':el
             }
         ], []);
         theDataDraftPR.push({
             'value': 'nodata',
             'label': 'No Data',
+            'data':''
         });
         setListDraftPurchaseReceive(theDataDraftPR);
 
@@ -937,7 +965,10 @@ export default function AddPurchaseReceive(props) {
                     tambahdeposit: TambahDeposit,
                     draftpurchasereceive: SelDraftPurchaseReceive,
                     area:SelArea,
-                    transfer:InputTransfer
+                    transfer:InputTransfer,
+                    smu:InputSMU,
+                    flightno:InputFlightNo,
+                    notes2:InputNotes2,
                 }
             }
             validate={values => {
@@ -949,6 +980,9 @@ export default function AddPurchaseReceive(props) {
                 setInputNotes(values.notes);
                 setInputSetor(values.setor);
                 setTambahDeposit(values.tambahdeposit);
+                setInputSMU(values.smu);
+                setInputFlightNo(values.flightno);
+                setInputNotes2(values.notes2);
                 return errors;
             }}
             enableReinitialize="true"
@@ -1125,21 +1159,71 @@ export default function AddPurchaseReceive(props) {
                                             value={values.koli}
                                         />
                                         <div className="invalid-feedback-custom">{ErrInputKoli}</div> */}
+                                        <label className="mt-3 form-label required" htmlFor="smu">
+                                            {i18n.t('SMU')}
+                                        </label>
+                                        <Input
+
+                                            name="smu"
+                                            type="text"
+                                            id="smu"
+                                            // maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.smu}
+                                            disabled={values.draftpurchasereceive !== '' && values.draftpurchasereceive !== 'nodata'}
+                                        />
+
+                                        <label className="mt-3 form-label required" htmlFor="flightno">
+                                            {i18n.t('Flight No')}
+                                        </label>
+                                        <Input
+
+                                            name="flightno"
+                                            type="text"
+                                            id="flightno"
+                                            // maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.flightno}
+                                            disabled={values.draftpurchasereceive !== '' && values.draftpurchasereceive !== 'nodata'}
+                                        />
 
                                         <label className="mt-3 form-label required" htmlFor="notes">
-                                            {i18n.t('Notes')}
+                                            {i18n.t('Notes 1')}
                                         </label>
                                         <Input
 
                                             name="notes"
                                             type="text"
                                             id="notes"
-                                            maxLength={100}
+                                            // maxLength={100}
 
                                             onChange={handleChange}
                                             // onChange={val => handleInputNama(val)}
                                             onBlur={handleBlur}
                                             value={values.notes}
+                                            disabled={values.draftpurchasereceive !== '' && values.draftpurchasereceive !== 'nodata'}
+                                        />
+                                        <label className="mt-3 form-label required" htmlFor="notes2">
+                                            {i18n.t('Notes 2')}
+                                        </label>
+                                        <Input
+
+                                            name="notes2"
+                                            type="text"
+                                            id="notes2"
+                                            // maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.notes2}
+                                            disabled={values.draftpurchasereceive !== '' && values.draftpurchasereceive !== 'nodata'}
                                         />
                                         {
                                             values.istambahdeposit ?

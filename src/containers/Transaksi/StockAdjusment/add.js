@@ -37,7 +37,7 @@ export default function AddStockAdjusment(props) {
     const [StockDate, setStockDate] = useState(new Date());
     const [ErrStockDate, setErrStockDate] = useState("");
 
-    const ListType = [{'value':'H','label':'Hidup'},{'value':'M','label':'Mati'}]
+    const ListType = [{'value':'H','label':'Hidup'},{'value':'M','label':'Mati'}];
     const [SelType, setSelType] = useState('');
     const [ErrSelType, setErrSelType] = useState('');
 
@@ -47,6 +47,21 @@ export default function AddStockAdjusment(props) {
     const [ErrItems, setErrItems] = useState("");
     const [ListProduct, setListProduct] = useState([]);
     const [ListCategoryProduct, setListCategoryProduct] = useState([]);
+
+    const LisTime = [
+        {'value':'00:00-02:00','label':'00:00-02:00'},
+        {'value':'02:00-04:00','label':'02:00-04:00'},
+        {'value':'04:00-06:00','label':'04:00-06:00'},
+        {'value':'06:00-08:00','label':'06:00-08:00'},
+        {'value':'08:00-10:00','label':'08:00-10:00'},
+        {'value':'10:00-12:00','label':'10:00-12:00'},
+        {'value':'12:00-14:00','label':'12:00-14:00'},
+        {'value':'14:00-16:00','label':'14:00-16:00'},
+        {'value':'16:00-18:00','label':'16:00-18:00'},
+        {'value':'18:00-20:00','label':'18:00-20:00'},
+        {'value':'20:00-22:00','label':'20:00-22:00'},
+        {'value':'22:00-24:00','label':'22:00-24:00'},
+        ];
 
 
     useEffect(() => {
@@ -98,6 +113,7 @@ export default function AddStockAdjusment(props) {
                     'idcategoryproduct': el.categoryproductid,
                     'categoryproductname': el.categoryproductidName,
                     'qty': 0,
+                    'stocktime': '',
                     'itemsprice': el.amount?el.amount:0,
                     'subtotalprice': 0
                 }
@@ -127,6 +143,7 @@ export default function AddStockAdjusment(props) {
                         flag = false;
                         break;
                     }
+                    
                 }
                 
             }
@@ -184,6 +201,7 @@ export default function AddStockAdjusment(props) {
                         'idproduct': el.idproduct,
                         'idcategoryproduct': el.idcategoryproduct,
                         'qty': el.qty,
+                        'stocktime':el.stocktime,
                         'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
                         'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
                         'type': SelType
@@ -332,10 +350,12 @@ export default function AddStockAdjusment(props) {
             idproduct = list[index]['idproduct'];    
             idcategoryproduct = e.value;
         }
-        setLoading(true);
         list[index][name] = e.value;
         setListItems(list);
-        dispatch(actions.getStockAdjusmentData({ url: '/getitems/'+idproduct+'/'+idcategoryproduct,propsdata:{index:index,list:list} }, successHandlerGetItem, errorHandler));
+        if(name == 'idproduct' || name == 'idcategoryproduct'){
+            setLoading(true);
+            dispatch(actions.getStockAdjusmentData({ url: '/getitems/'+idproduct+'/'+idcategoryproduct,propsdata:{index:index,list:list} }, successHandlerGetItem, errorHandler));
+        }
         
     };
     function successHandlerGetItem(data, propsdata) {
@@ -371,6 +391,7 @@ export default function AddStockAdjusment(props) {
                 'idproduct': idproduct,
                 'idcategoryproduct': '',
                 'categoryproductname': '',
+                'stocktime':'',
                 'qty': 0,
                 'itemsprice': 0,
                 'subtotalprice': 0
@@ -389,6 +410,7 @@ export default function AddStockAdjusment(props) {
                 'idproduct': 'TOTAL',
                 'idcategoryproduct': '',
                 'categoryproductname': '',
+                'stocktime':'',
                 'qty': 0,
                 'itemsprice': totalPriceItem,
                 'subtotalprice': totalSubPriceItem
@@ -561,6 +583,7 @@ export default function AddStockAdjusment(props) {
                                                     </th>
                                                     <th >{i18n.t('Product')}</th>
                                                     <th >{i18n.t('Category Product')}</th>
+                                                    <th hidden={values.type == 'H'}>{i18n.t('Time')}</th>
                                                     <th >{i18n.t('Qty')}</th>
                                                     <th >{i18n.t('Price')}</th>
                                                     <th >{i18n.t('Subtotal Price')}</th>
@@ -626,6 +649,27 @@ export default function AddStockAdjusment(props) {
                                                                 }
                                                                     
                                                                 </td>
+
+                                                                <td style={{ width: '12%' }} hidden={values.type == 'H'}>
+                                                                {
+                                                                    x.idproduct !== 'TOTAL'?
+                                                                    <DropdownList
+                                                                        name="stocktime"
+                                                                        filter='contains'
+                                                                        placeholder={i18n.t('select.SELECT_OPTION')}
+                                                                        onChange={val => handleInputDropDownChange(val, i, 'stocktime')}
+                                                                        data={LisTime}
+                                                                        textField={'label'}
+                                                                        valueField={'value'}
+                                                                        value={x.stocktime}
+
+                                                                    />
+
+                                                                    :''
+                                                                }
+                                                                    
+                                                                </td>
+
                                                                 <td>
                                                                     {
                                                                         x.idproduct !== 'TOTAL'?

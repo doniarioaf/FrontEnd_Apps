@@ -233,6 +233,34 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('SMU')}</span>
+                                <strong className="col-md-7">
+                                {value.smu ?value.smu:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Flight No')}</span>
+                                <strong className="col-md-7">
+                                {value.flightno ?value.flightno:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Notes 1')}</span>
+                                <strong className="col-md-7">
+                                {value.notes ?value.notes:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Notes 2')}</span>
+                                <strong className="col-md-7">
+                                {value.notes2 ?value.notes2:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Bank')}</span>
                                 <strong className="col-md-7">
                                 {value.bank ?value.bank:''}

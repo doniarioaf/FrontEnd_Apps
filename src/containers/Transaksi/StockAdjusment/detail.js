@@ -261,6 +261,7 @@ import React, {useState,
                         <tr>
                         <th >{i18n.t('Product')}</th>
                         <th >{i18n.t('Category Product')}</th>
+                        <th hidden={value.type ?(value.type == 'H'?true:false):''}>{i18n.t('Time')}</th>
                         <th >{i18n.t('Qty')}</th>
                         <th >{i18n.t('Price')}</th>
                         <th >{i18n.t('Subtotal Price')}</th>
@@ -271,6 +272,7 @@ import React, {useState,
                                     <tr>
                                         <td>{x.productName}</td>
                                         <td>{x.categoryProductName}</td>
+                                        <td hidden={value.type ?(value.type == 'H'?true:false):''}>{x.stocktime}</td>
                                         <td>{x.qty}</td>
                                         <td>{x.price?numToMoney(x.price):0}</td>
                                         <td>{x.subtotalprice?numToMoney(x.subtotalprice):0}</td>
