@@ -56,8 +56,8 @@ export default function ReportPembelian(props) {
             ], []);
             theData.push(
                 {
-                    'value': 'nodata',
-                    'label': 'No Data',
+                    'value': 'ALL',
+                    'label': 'All',
                     'data': []
                 }
             );
@@ -107,7 +107,7 @@ export default function ReportPembelian(props) {
     const submitHandler = () => {
         if( start != null && end != null){
             let idvendor = SelVendor;
-            if(SelVendor == '' || SelVendor == 'nodata'){
+            if(SelVendor == '' || SelVendor == 'ALL'){
                 idvendor = 0;
             }
 
