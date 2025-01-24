@@ -111,7 +111,7 @@ const DraftPurchaseReceiveIndex = () => {
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menudraftpurchasereceive} label={'Draft Purchase Receive'} labeldefault={'Draft Purchase Receive'} />
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menudraftpurchasereceive} label={'Input Penerimaan Barang'} labeldefault={'Input Penerimaan Barang'} />
             <Container fluid>
                 <table>
                     <th>{'From'}</th>

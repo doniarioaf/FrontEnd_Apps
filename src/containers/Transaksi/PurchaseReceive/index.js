@@ -103,7 +103,7 @@ const PurchaseReceiveIndex = () => {
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menupurchasereceive} label={'Purchase Receive'} labeldefault={'Purchase Receive'} />
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menupurchasereceive} label={'Nota Pembelian'} labeldefault={'Nota Pembelian'} />
             <Container fluid>
                 <table>
                     <th>{'From'}</th>

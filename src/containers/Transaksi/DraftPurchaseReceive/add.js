@@ -547,7 +547,7 @@ export default function AddDraftPurchaseReceive(props) {
                     return (
                         <form className="mb-6" onSubmit={handleSubmit} name="FormDraftPurchaseReceive">
                             <ContentWrapper>
-                                <ContentHeading history={history} link={pathmenu.addpurchasereceive} label={'Add Draft Purchase Receive'} labeldefault={'Add Draft Purchase Receive'} />
+                                <ContentHeading history={history} link={pathmenu.addpurchasereceive} label={'Add Input Penerimaan Barang'} labeldefault={'Add Input Penerimaan Barang'} />
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
                                         <label className="mt-3 form-label required" htmlFor="vendor">

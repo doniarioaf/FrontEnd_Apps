@@ -148,15 +148,15 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuDeposit,
                 },
                 {
-                    name: 'Draft Purchase Receive',
+                    name: 'Input Penerimaan Barang',
                     path: pathmenu.menudraftpurchasereceive,
-                    translate: 'Draft Purchase Receive',
+                    translate: 'Input Penerimaan Barang',
                     permission:permissionmenu.MenuPurchaseReceive,
                 },
                 {
-                    name: 'Purchase Receive',
+                    name: 'Nota Pembelian',
                     path: pathmenu.menupurchasereceive,
-                    translate: 'Purchase Receive',
+                    translate: 'Nota Pembelian',
                     permission:permissionmenu.MenuPurchaseReceive,
                 },
                 {

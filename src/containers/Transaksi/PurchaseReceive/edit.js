@@ -990,7 +990,7 @@ export default function EditPurchaseReceive(props) {
                     return (
                         <form className="mb-6" onSubmit={handleSubmit} name="FormPurchaseReceive">
                             <ContentWrapper>
-                                <ContentHeading history={history} link={pathmenu.editpurchasereceive + "/" + id} label={'Edit Purchase Receive'} labeldefault={'Edit Purchase Receive'} />
+                                <ContentHeading history={history} link={pathmenu.editpurchasereceive + "/" + id} label={'Edit Nota Pembelian'} labeldefault={'Edit Nota Pembelian'} />
 
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">

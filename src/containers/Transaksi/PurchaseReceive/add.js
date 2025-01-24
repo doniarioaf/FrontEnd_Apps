@@ -1015,7 +1015,7 @@ export default function AddPurchaseReceive(props) {
                     return (
                         <form className="mb-6" onSubmit={handleSubmit} name="FormPurchaseReceive">
                             <ContentWrapper>
-                                <ContentHeading history={history} link={pathmenu.addpurchasereceive} label={'Add Purchase Receive'} labeldefault={'Add Purchase Receive'} />
+                                <ContentHeading history={history} link={pathmenu.addpurchasereceive} label={'Add Nota Pembelian'} labeldefault={'Add Nota Pembelian'} />
 
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">

@@ -299,7 +299,7 @@ export default function AddPackingList(props) {
                     let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
                     let allowance = parseFloat(listTemp[index]['allowance']); //InPersen
                     allowance = allowance / 100.0;
-                    let netto = parseFloat(valPriceTemp) + (parseFloat(valPriceTemp) * allowance);
+                    let netto = parseFloat(valPriceTemp) - (parseFloat(valPriceTemp) * allowance);
                     netto = netto.toFixed(2);
                     let subtotal = parseFloat(netto) * parseFloat(pricetemp);
                     list[index]['nettoweight'] = netto;

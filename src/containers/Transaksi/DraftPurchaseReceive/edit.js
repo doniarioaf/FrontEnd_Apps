@@ -741,7 +741,7 @@ export default function EditDraftPurchaseReceive(props) {
                     return (
                         <form className="mb-6" onSubmit={handleSubmit} name="FormDraftPurchaseReceive">
                             <ContentWrapper>
-                                <ContentHeading history={history} link={pathmenu.editdraftpurchasereceive+'/'+id} label={'Edit Draft Purchase Receive'} labeldefault={'Edit Draft Purchase Receive'} />
+                                <ContentHeading history={history} link={pathmenu.editdraftpurchasereceive+'/'+id} label={'Edit Input Penerimaan Barang'} labeldefault={'Edit Input Penerimaan Barang'} />
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
                                         <label className="mt-3 form-label required" htmlFor="vendor">
