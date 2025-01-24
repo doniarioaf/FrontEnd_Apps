@@ -13,7 +13,9 @@
   "label_CONTACT_NUMBER": "Contact Number",
   "label_ADDRESS": "Address",
   "label_CREATED": "Created",
+  "label_CREATED_DATE": "Created Date",
   "label_MODIFIED": "Modified",
+  "label_MODIFIED_DATE": "Modified Date",
   "label_DIALOG_ALERT_SURE":"Are You Sure",
   "label_DESCRIPTION":"Description",
   "label_ADD_COMPANY": "Add Company",
@@ -124,6 +126,8 @@
   "label_THRU_DATE":"Thru Date",
   "label_RECEIVE_DATE":"Receive Date",
   "label_RECEIVE_FROM":"Receive From",
+  "label_ACC_NO":"Account Number Bank",
+  "label_ACC_NAME":"Account Name Bank",
   "validation": {
     "employeemanggala":{
       "noidentitas":{

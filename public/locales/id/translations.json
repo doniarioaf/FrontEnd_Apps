@@ -12,8 +12,10 @@
     "label_CODE": "Kode",
     "label_CONTACT_NUMBER": "Nomor Kontak",
     "label_ADDRESS": "Alamat",
-    "label_CREATED": "Di Buat",
-    "label_MODIFIED": "Di Ubah",
+    "label_CREATED": "Dibuat",
+    "label_CREATED_DATE": "Tanggal Dibuat",
+    "label_MODIFIED": "Diubah",
+    "label_MODIFIED_DATE": "Tanggal Diubah",
     "label_DIALOG_ALERT_SURE":"Apakah Kamu Yakin?",
     "label_DESCRIPTION":"Keterangan",
     "label_ADD_COMPANY": "Tambah Perusahaan",
@@ -124,6 +126,8 @@
     "label_THRU_DATE":"Sampai Tanggal",
     "label_RECEIVE_DATE":"Diterima Tanggal",
     "label_RECEIVE_FROM":"Diterima Dari",
+    "label_ACC_NO":"No Akun Bank",
+    "label_ACC_NAME":"Nama Akun Bank",
     "validation": {
       "employeemanggala":{
         "noidentitas":{

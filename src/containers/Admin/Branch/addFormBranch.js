@@ -86,10 +86,10 @@ export default function AddFormBranch(props) {
             setErrInputName(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(InputCode == ''){
-            setErrInputCode(i18n.t('label_REQUIRED'));
-            flag = false;
-        }
+        // if(InputCode == ''){
+        //     setErrInputCode(i18n.t('label_REQUIRED'));
+        //     flag = false;
+        // }
 
         if(InputContactNumber == ''){
             setErrInputContactNumber(i18n.t('label_REQUIRED'));
@@ -247,7 +247,7 @@ export default function AddFormBranch(props) {
                             />
                             <div className="invalid-feedback-custom">{ErrInputDisplayName}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="code">
+                            {/* <label className="mt-3 form-label required" htmlFor="code">
                                 {i18n.t('label_CODE')}
                             </label>
                             <Input
@@ -263,7 +263,7 @@ export default function AddFormBranch(props) {
                                 onBlur={handleBlur}
                                 value={values.code}
                             />
-                            <div className="invalid-feedback-custom">{ErrInputCode}</div>
+                            <div className="invalid-feedback-custom">{ErrInputCode}</div> */}
 
                             <label className="mt-3 form-label required" htmlFor="contactnumber">
                                 {i18n.t('label_CONTACT_NUMBER')}

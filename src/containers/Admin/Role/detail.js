@@ -126,6 +126,7 @@ import { MenuRole, editRole_Permission,deleteRole_Permission } from '../../share
           }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
+                setLoading(true);
                 dispatch(actions.submitDeleteRole(id,succesHandlerSubmit, errorHandler));
             //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {

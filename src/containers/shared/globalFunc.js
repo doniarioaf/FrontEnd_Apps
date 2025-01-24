@@ -270,3 +270,153 @@ export const invoiceTypeName = (data) =>{
 
     return data;
 }
+
+export const decryptObject = (keystorage)  =>{
+    const objectenc = localStorage.getItem(keystorage) ? localStorage.getItem(keystorage):[];
+    try{
+        const bytes = CryptoJS.AES.decrypt(objectenc, key.keyEcncrypt);
+        const objectdec = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        // let idx = permissionsuser.indexOf('');
+        return objectdec;
+    }catch(err){
+        // window.location.href = '/';
+        return [];
+    }
+}
+
+export const decryptObjectNotLocalStorage = (encrypt, isJsonParse)  =>{
+    const objectenc = encrypt;
+    try{
+        const bytes = CryptoJS.AES.decrypt(encrypt, key.keyEcncrypt);
+        if(isJsonParse){
+            const objectdec = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+            // let idx = permissionsuser.indexOf('');
+            return objectdec;
+        }
+        return bytes;
+        
+    }catch(err){
+        // window.location.href = '/';
+        return null;
+    }
+}
+
+export const addDays = (date, days)  =>{
+    //const date = new Date(); *Harus new Date*
+    return date.setDate(date.getDate() + days);
+}
+
+export const firstAndLastDateInMonth = ()  =>{
+    let date = new Date();
+    let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    return {first:firstDay,last:lastDay};
+}
+
+export const terbilang = (nilai) =>{
+    // deklarasi variabel nilai sebagai angka matemarika
+    // Objek Math bertujuan agar kita bisa melakukan tugas matemarika dengan javascript
+    nilai = Math.floor(Math.abs(nilai));
+
+    // deklarasi nama angka dalam bahasa indonesia
+    var huruf = [
+      '',
+      'satu',
+      'dua',
+      'tiga',
+      'empat',
+      'lima',
+      'enam',
+      'tujuh',
+      'delapan',
+      'sembilan',
+      'sepuluh',
+      'sebelas',
+      ];
+
+    // menyimpan nilai default untuk pembagian
+    var bagi = 0;
+    // deklarasi variabel penyimpanan untuk menyimpan proses rumus terbilang
+    var penyimpanan = '';
+
+    // rumus terbilang
+    if (nilai < 12) {
+      penyimpanan = ' ' + huruf[nilai];
+    } else if (nilai < 20) {
+      penyimpanan = terbilang(Math.floor(nilai - 10)) + ' belas';
+    } else if (nilai < 100) {
+      bagi = Math.floor(nilai / 10);
+      penyimpanan = terbilang(bagi) + ' puluh' + terbilang(nilai % 10);
+    } else if (nilai < 200) {
+      penyimpanan = ' seratus' + terbilang(nilai - 100);
+    } else if (nilai < 1000) {
+      bagi = Math.floor(nilai / 100);
+      penyimpanan = terbilang(bagi) + ' ratus' + terbilang(nilai % 100);
+    } else if (nilai < 2000) {
+      penyimpanan = ' seribu' + terbilang(nilai - 1000);
+    } else if (nilai < 1000000) {
+      bagi = Math.floor(nilai / 1000);
+      penyimpanan = terbilang(bagi) + ' ribu' + terbilang(nilai % 1000);
+    } else if (nilai < 1000000000) {
+      bagi = Math.floor(nilai / 1000000);
+      penyimpanan = terbilang(bagi) + ' juta' + terbilang(nilai % 1000000);
+    } else if (nilai < 1000000000000) {
+      bagi = Math.floor(nilai / 1000000000);
+      penyimpanan = terbilang(bagi) + ' miliar' + terbilang(nilai % 1000000000);
+    } else if (nilai < 1000000000000000) {
+      bagi = Math.floor(nilai / 1000000000000);
+      penyimpanan = terbilang(nilai / 1000000000000) + ' triliun' + terbilang(nilai % 1000000000000);
+    }
+
+    // mengambalikan nilai yang ada dalam variabel penyimpanan
+    return penyimpanan;
+  }
+
+  export const terbilangRupiah = (nilai) =>{
+    let text = terbilang(nilai);
+    let result = new String(text.substring(1, 2)).toUpperCase();
+    let result1 = text.substring(2, text.length);
+    if(text.replaceAll(' ','') !== ''){
+        return result+result1+' rupiah';
+    }
+    return '';
+  }
+
+  export const removeFormatRupiah = (nilai) =>{
+    let removeDot = new String(nilai).replaceAll('.','');
+    let changeCommaToDot = new String(removeDot).replaceAll(',','.');
+    return changeCommaToDot;
+  }
+
+  export const formatRupiah = (nilai,numberdesimal) =>{
+    if(new String(nilai).includes(',')){
+        let numDes = numberdesimal !== undefined ? numberdesimal:2;
+        let splitComma = new String(nilai).split(','); 
+        let angka = splitComma[0];
+        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,numDes):'';
+        return numToMoney(parseFloat(angka))+','+desimal;
+    }
+    return numToMoney(parseFloat(nilai));
+  }
+
+  export const desimal00 = (nilai) =>{
+    if(new String(nilai).includes(',')){
+        let splitComma = new String(nilai).split(','); 
+        let angka = splitComma[0];
+        let desimal = splitComma[1] !== undefined?splitComma[1]:'';
+        if(new String(desimal).length > 1){
+            return nilai;
+        }else if(new String(desimal).length == 1){
+            return angka+','+desimal+'0';
+        }else if(new String(desimal).length == 0){
+            return angka+',00';
+        }   
+    }
+    return nilai+',00';
+  }
+
+  export const getFormatFile = (filename) => {
+    let split = new String(filename).split('.');
+    let splitlength = new String(filename).split('.').length;
+    return split[splitlength - 1];
+  }

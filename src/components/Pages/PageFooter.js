@@ -9,7 +9,7 @@ const PageFooter = (props) => {
             <span className="mr-2">&copy;</span>
             <span>{year}</span>
             <span className="mx-2">-</span>
-            <span>Bizz Apps</span>
+            <span>Berlian Pro</span>
         </div>
     );
 

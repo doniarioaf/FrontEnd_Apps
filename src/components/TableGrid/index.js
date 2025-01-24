@@ -8,7 +8,9 @@ import {
     FilteringState,
     IntegratedFiltering,
     EditingState,
-    TableColumnVisibility
+    TableColumnVisibility,
+    SelectionState,
+    IntegratedSelection
 }                                   from '@devexpress/dx-react-grid';
 
 import {
@@ -19,6 +21,7 @@ import {
     TableEditColumn,
     PagingPanel,
     VirtualTable,
+    TableSelection,
 }                                   from '@devexpress/dx-react-grid-material-ui';
 import TableCell                    from "@material-ui/core/TableCell";
 import {useTranslation}             from 'react-i18next';
@@ -186,6 +189,21 @@ const TableGrid = props => {
                 columns={props.columns}
                 
             >
+                {
+                    props.selection ?
+                    <SelectionState
+                        selection={props.selection}
+                        onSelectionChange={props.setselection}
+                    />
+                :''
+                }
+                {
+                    props.selection ?
+                    <IntegratedSelection />
+                :''
+                }
+                
+                
                 <EditingState onCommitChanges={() => {
                 }}/>
                 <PagingState
@@ -212,6 +230,11 @@ const TableGrid = props => {
                 <TableColumnVisibility
                     hiddenColumnNames={hiddenColumnNames}
                 />
+                {
+                    props.selection ?
+                    <TableSelection showSelectAll /> 
+                :''
+                }
                 <TableFilterRow
                     showFilterSelector
                     cellComponent={FilterCell}

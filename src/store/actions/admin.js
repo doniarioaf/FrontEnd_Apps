@@ -218,3 +218,356 @@ export const getAddressData = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getParameterClientData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PARAMETERCLIENT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitAddParameterClient = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_ADD_PARAMETERCLIENT,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitEditParameterClient = (param,payload, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_EDIT_PARAMETERCLIENT,
+        param: param,
+        payload:payload,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeleteParameterClient = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DELETE_PARAMETERCLIENT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getCustomerData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_CUSTOMER_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitCustomerData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_CUSTOMER,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getProductData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PRODUCT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitProductData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PRODUCT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getVendorData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_VENDOR_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitVendorData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_VENDOR,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getInventoriData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_INVENTORI_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitInventoriData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_INVENTORI,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getCategoryProductData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_CATEGORYPRODUCT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitCategoryProductData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_CATEGORYPRODUCT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getMappingStockData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_MAPPINGSTOCK_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitMappingStockData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_MAPPINGSTOCK,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getPriceListData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PRICELIST_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitPriceListData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PRICELIST,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getPurchaseReceiveData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PURCHASERECEIVE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitPurchaseReceiveData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PURCHASERECEIVE,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getDepositData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_DEPOSIT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDeposit = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DEPOSIT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getAreaData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_AREA_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitArea = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_AREA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getDraftPurchaseReceiveData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_DRAFTPURCHASERECEIVE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitDraftPurchaseReceive = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_DRAFTPURCHASERECEIVE,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getStockAdjusmentData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_STOCKADJUSMENT_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitStockAdjusment = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_STOCKADJUSMENT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getPackingListData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PACKINGLIST_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitPackingList = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PACKINGLIST,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getInvoiceData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_INVOICE_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitInvoice = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_INVOICE,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getReport = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_REPORT,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getPelunasanHutangData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PELUNASANHUTANG_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitPelunasanHutang = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PELUNASANHUTANG,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getCargoData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_CARGO_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitCargo = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_CARGO,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getPelunasanPiutangData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PELUNASANPIUTANG_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitPelunasanPiutang = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PELUNASANPIUTANG,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

@@ -1,22 +1,22 @@
-import React, {useState, useEffect}    from 'react';
-import {Formik}                        from 'formik';
-import {useTranslation}                from 'react-i18next';
-import ContentWrapper               from '../../../components/Layout/ContentWrapper';
-import {Input,Button,FormGroup,Label,Card, CardBody} from 'reactstrap';
-import Grid                         from './gridBranch';
-import * as actions                 from '../../../store/actions';
-import {DropdownList}      from 'react-widgets';
+import React, { useState, useEffect } from 'react';
+import { Formik } from 'formik';
+import { useTranslation } from 'react-i18next';
+import ContentWrapper from '../../../components/Layout/ContentWrapper';
+import { Input, Button, FormGroup, Label, Card, CardBody } from 'reactstrap';
+import Grid from './gridBranch';
+import * as actions from '../../../store/actions';
+import { DropdownList } from 'react-widgets';
 import { IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import "react-widgets/dist/css/react-widgets.css";
-import {useDispatch}   from 'react-redux';
+import { useDispatch } from 'react-redux';
 // import { reloadToHomeNotAuthorize } from '../../../../shared/maskFunc';
 import { Loading } from '../../../components/Common/Loading';
-import Swal             from "sweetalert2";
-import {useHistory}                 from 'react-router-dom';
+import Swal from "sweetalert2";
+import { useHistory } from 'react-router-dom';
 
 export default function EditFormCompany(props) {
-    const {i18n} = useTranslation('translations');
+    const { i18n } = useTranslation('translations');
     const dispatch = useDispatch();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
@@ -40,18 +40,18 @@ export default function EditFormCompany(props) {
     const [RowsBranch, setRowsBranch] = useState([]);
     const [DataDetail, setDataDetail] = useState([]);
     const [columns] = useState([
-        {name: 'id', title: 'id'},
-        {name: 'name', title: i18n.t('label_NAME')},
+        { name: 'id', title: 'id' },
+        { name: 'name', title: i18n.t('label_NAME') },
     ]);
     const [StartdefaultHeight] = useState(150);
-    const [defaultHeight, setdefaultHeight] = useState(StartdefaultHeight+'px');
+    const [defaultHeight, setdefaultHeight] = useState(StartdefaultHeight + 'px');
 
     const id = props.match.params.id;
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getCompanyData('/'+id,successHandlerDetail, errorHandler));
-        dispatch(actions.getCompanyData('/template',successHandler, errorHandler));
+        dispatch(actions.getCompanyData('/' + id, successHandlerDetail, errorHandler));
+        dispatch(actions.getCompanyData('/template', successHandler, errorHandler));
     }, []);
 
     function successHandlerDetail(data) {
@@ -75,7 +75,7 @@ export default function EditFormCompany(props) {
     }
 
     function successHandler(data) {
-        if(data.data){
+        if (data.data) {
             // let listbranch = data.data.branchoptions;
             setListBranch(data.data.branchoptions.reduce((obj, el) => (
                 [...obj, {
@@ -88,75 +88,75 @@ export default function EditFormCompany(props) {
         setLoading(false);
     }
 
-    const handleInputName = (data) =>{
+    const handleInputName = (data) => {
         let val = data.target.value;
         setInputName(val);
     }
 
-    const handleInputCode = (data) =>{
+    const handleInputCode = (data) => {
         let val = data.target.value;
         setInputCode(val);
     }
 
-    const handleInputContactNumber = (data) =>{
+    const handleInputContactNumber = (data) => {
         let val = data.target.value;
-        if(!isNaN(val)){
+        if (!isNaN(val)) {
             setInputContactNumber(val);
         }
     }
 
-    const handleInputDisplayName = (data) =>{
+    const handleInputDisplayName = (data) => {
         let val = data.target.value;
         setInputDisplayName(val)
     }
 
-    const handleInputAddrees = (data) =>{
+    const handleInputAddrees = (data) => {
         let val = data.target.value;
         setInputAddress(val)
     }
 
-    const handleInputEmail = (data) =>{
+    const handleInputEmail = (data) => {
         let val = data.target.value;
         setInputEmail(val)
     }
 
-    const handleChangeIsActive = (data) =>{
+    const handleChangeIsActive = (data) => {
         setCheckIsActived(data.target.checked);
     }
 
-    const handleChangeBranche = (data) =>{
+    const handleChangeBranche = (data) => {
         let idbranch = data?.value ? data.value : '';
         setSelBranch(idbranch);
     }
-    const setHeightGridListCharges = (dataval) =>{
-        if(dataval.length > 2){
-            let height = ( 50 * (dataval.length - 2) ) + StartdefaultHeight;
-            if(height > 600){
+    const setHeightGridListCharges = (dataval) => {
+        if (dataval.length > 2) {
+            let height = (50 * (dataval.length - 2)) + StartdefaultHeight;
+            if (height > 600) {
                 height = 600;
             }
-            setdefaultHeight(height+'px');
+            setdefaultHeight(height + 'px');
         }
     }
     const handleAddListBranch = () => {
         let dataval = [];
         let filterid = RowsBranch.filter(output => output.id == SelBranch);
-        if(filterid.length == 0){
+        if (filterid.length == 0) {
             let listfilteroutput = ListBranch.filter(output => output.value == SelBranch);
-            if(listfilteroutput.length > 0){
+            if (listfilteroutput.length > 0) {
                 dataval = [...RowsBranch];
                 let filter = listfilteroutput[0];
                 let obj = {
-                    'id':filter.value,
-                    'name':filter.label
+                    'id': filter.value,
+                    'name': filter.label
                 };
                 dataval.push(obj);
                 setRowsBranch(dataval);
                 setHeightGridListCharges(dataval);
             }
         }
-        
+
     }
-    const handleSubstractListDetailTrans = (id) =>{
+    const handleSubstractListDetailTrans = (id) => {
         let listfilter = RowsBranch.filter(output => output.id !== id);
         let dataval = [...listfilter];
         setRowsBranch(dataval);
@@ -165,12 +165,12 @@ export default function EditFormCompany(props) {
         let getdeletbranch = RowsBranch.filter(output => output.id == id);
         let isexistbranch = ListBranch.filter(output => output.value == id);
         let arrbranch = [...ListBranch];
-        if(getdeletbranch.length > 0 && isexistbranch.length == 0){
+        if (getdeletbranch.length > 0 && isexistbranch.length == 0) {
             let deletebranch = getdeletbranch[0]
-            arrbranch.push({value:deletebranch.id,label:deletebranch.name});
+            arrbranch.push({ value: deletebranch.id, label: deletebranch.name });
             setListBranch(arrbranch);
         }
-        
+
         // setRowsBranch(listbranch);
     }
 
@@ -182,31 +182,31 @@ export default function EditFormCompany(props) {
         setErrInputDisplayName('');
         setErrInputAddress('');
         setErrInputEmail('')
-        if(InputName == ''){
+        if (InputName == '') {
             setErrInputName(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(InputCode == ''){
+        if (InputCode == '') {
             setErrInputCode(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
-        if(InputContactNumber == ''){
+        if (InputContactNumber == '') {
             setErrInputContactNumber(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
-        if(InputDisplayName == ''){
+        if (InputDisplayName == '') {
             setErrInputDisplayName(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
-        if(InputAddress == ''){
+        if (InputAddress == '') {
             setErrInputAddress(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
-        if(InputEmail == ''){
+        if (InputEmail == '') {
             setErrInputEmail(i18n.t('label_REQUIRED'));
             flag = false;
         }
@@ -221,20 +221,20 @@ export default function EditFormCompany(props) {
             showCancelButton: true,
             confirmButtonText: `Confirm`,
             denyButtonText: `Don't save`,
-          }).then((result) => {
+        }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
                 executeSubmit();
-            //   Swal.fire('Saved!', '', 'success')
+                //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
-            //   Swal.fire('Changes are not saved', '', 'info')
+                //   Swal.fire('Changes are not saved', '', 'info')
             }
-          })
+        })
     }
 
     const executeSubmit = () => {
         let flag = checkColumnMandatory();
-        if(flag){
+        if (flag) {
             setLoading(true);
             let obj = new Object();
             obj.nama = InputName;
@@ -245,12 +245,12 @@ export default function EditFormCompany(props) {
             obj.email = InputEmail;
             obj.isactive = CheckIsActived;
             let listbranch = [];
-            for(let i=0; i < RowsBranch.length > 0 ; i++){
+            for (let i = 0; i < RowsBranch.length > 0; i++) {
                 let rows = RowsBranch[i];
                 listbranch.push(rows.id);
             }
             obj.branches = listbranch;
-            dispatch(actions.submitEditCompany(id,obj,succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitEditCompany(id, obj, succesHandlerSubmit, errorHandler));
         }
     }
 
@@ -266,11 +266,11 @@ export default function EditFormCompany(props) {
             }
         })
     }
-    
+
 
     const errorHandler = (data) => {
         setLoading(false);
-          Swal.fire({
+        Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: '' + data
@@ -279,26 +279,26 @@ export default function EditFormCompany(props) {
 
     return (
         <Formik
-        initialValues={
-            {
-            namebranch:InputName,
-            code:InputCode,
-            contactnumber:InputContactNumber,
-            displayname:InputDisplayName,
-            address:InputAddress,
-            email:InputEmail,
-            isactived:CheckIsActived,
-            branch:SelBranch
-            }   
-        }
-        validate={values => {
-            const errors = {};
-            return errors;
-        }}
-        enableReinitialize="true"
-        onSubmit={(values) => {
-           
-        }}
+            initialValues={
+                {
+                    namebranch: InputName,
+                    code: InputCode,
+                    contactnumber: InputContactNumber,
+                    displayname: InputDisplayName,
+                    address: InputAddress,
+                    email: InputEmail,
+                    isactived: CheckIsActived,
+                    branch: SelBranch
+                }
+            }
+            validate={values => {
+                const errors = {};
+                return errors;
+            }}
+            enableReinitialize="true"
+            onSubmit={(values) => {
+
+            }}
         >
             {
                 formikProps => {
@@ -313,213 +313,213 @@ export default function EditFormCompany(props) {
                         setFieldValue,
                     } = formikProps;
 
-                    return(
-                        <form className="mb-6" onSubmit={handleSubmit}  name="FormEditBranch">
+                    return (
+                        <form className="mb-6" onSubmit={handleSubmit} name="FormEditBranch">
                             <ContentWrapper>
-                            <div className="content-heading"  >
-                            <span>{i18n.t('label_EDIT_COMPANY')}</span>
-                            </div>
-                            <div className="row mt-2">
+                                <div className="content-heading"  >
+                                    <span>{i18n.t('label_EDIT_COMPANY')}</span>
+                                </div>
+                                <div className="row mt-2">
 
-                            <div className="mt-2 col-lg-6 ft-detail mb-5">
-                            <label className="mt-3 form-label required" htmlFor="namebranch">
-                                {i18n.t('label_NAME')}
-                            </label>
-                            <Input
-                                name="namebranch"
-                                // className={
-                                //     touched.namebranch && errors.namebranch
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="namebranch"
-                                onChange={val => handleInputName(val)}
-                                onBlur={handleBlur}
-                                value={values.namebranch}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputName}</div>
+                                    <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                        <label className="mt-3 form-label required" htmlFor="namebranch">
+                                            {i18n.t('label_NAME')}
+                                        </label>
+                                        <Input
+                                            name="namebranch"
+                                            // className={
+                                            //     touched.namebranch && errors.namebranch
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="namebranch"
+                                            onChange={val => handleInputName(val)}
+                                            onBlur={handleBlur}
+                                            value={values.namebranch}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputName}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="displayname">
-                                {i18n.t('label_DISPLAY_NAME')}
-                            </label>
-                            <Input
-                                name="displayname"
-                                // className={
-                                //     touched.displayname && errors.displayname
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="displayname"
-                                onChange={val => handleInputDisplayName(val)}
-                                onBlur={handleBlur}
-                                value={values.displayname}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputDisplayName}</div>
+                                        <label className="mt-3 form-label required" htmlFor="displayname">
+                                            {i18n.t('label_DISPLAY_NAME')}
+                                        </label>
+                                        <Input
+                                            name="displayname"
+                                            // className={
+                                            //     touched.displayname && errors.displayname
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="displayname"
+                                            onChange={val => handleInputDisplayName(val)}
+                                            onBlur={handleBlur}
+                                            value={values.displayname}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputDisplayName}</div>
 
-                            <label className="mt-3 form-label required" htmlFor="code">
-                                {i18n.t('label_CODE')}
-                            </label>
-                            <Input
-                                name="code"
-                                // className={
-                                //     touched.code && errors.code
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="code"
-                                onChange={val => handleInputCode(val)}
-                                onBlur={handleBlur}
-                                disabled={true}
-                                value={values.code}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputCode}</div>
-                            
-                            <div className="row mt-0">
-                            <div className="mt-0 col-lg-11 ft-detail mb-5" style={{paddingRight:'0px'}}>
-                            <label className="mt-3 form-label required" htmlFor="branch">
-                                {i18n.t('label_BRANCH')}
-                            </label>
+                                        <label className="mt-3 form-label required" htmlFor="code">
+                                            {i18n.t('label_CODE')}
+                                        </label>
+                                        <Input
+                                            name="code"
+                                            // className={
+                                            //     touched.code && errors.code
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="code"
+                                            onChange={val => handleInputCode(val)}
+                                            onBlur={handleBlur}
+                                            disabled={true}
+                                            value={values.code}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputCode}</div>
 
-                            <DropdownList
-                                // className={
-                                //     touched.branch && errors.branch
-                                //         ? "input-error" : ""
-                                // }
-                                name="branch"
-                                filter='contains'
-                                placeholder={i18n.t('select.SELECT_OPTION')}
-                                
-                                onChange={val => handleChangeBranche(val)}
-                                onBlur={val => setFieldTouched("branch", val?.value ? val.value : '')}
-                                data={ListBranch}
-                                textField={'label'}
-                                valueField={'value'}
-                                // style={{width: '25%'}}
-                                // disabled={values.isdisabledcountry}
-                                value={values.branch}
-                            />
-                            </div>
+                                        <div className="row mt-0">
+                                            <div className="mt-0 col-lg-11 ft-detail mb-5" style={{ paddingRight: '0px' }}>
+                                                <label className="mt-3 form-label required" htmlFor="branch">
+                                                    {i18n.t('label_BRANCH')}
+                                                </label>
 
-                            <div className="mt-0 col-lg-1 ft-detail mb-5" style={{paddingLeft:'0px',paddingTop:'35px'}}>
-                            <IconButton color={'primary'}
-                                onClick={() => handleAddListBranch()}
-                            >
-                                <AddIcon style={{ fontSize: 30 }}/>
-                            </IconButton>
-                            </div>
+                                                <DropdownList
+                                                    // className={
+                                                    //     touched.branch && errors.branch
+                                                    //         ? "input-error" : ""
+                                                    // }
+                                                    name="branch"
+                                                    filter='contains'
+                                                    placeholder={i18n.t('select.SELECT_OPTION')}
 
-                            </div>
+                                                    onChange={val => handleChangeBranche(val)}
+                                                    onBlur={val => setFieldTouched("branch", val?.value ? val.value : '')}
+                                                    data={ListBranch}
+                                                    textField={'label'}
+                                                    valueField={'value'}
+                                                    // style={{width: '25%'}}
+                                                    // disabled={values.isdisabledcountry}
+                                                    value={values.branch}
+                                                />
+                                            </div>
 
-                            </div>
-                            <div className="mt-2 col-lg-6 ft-detail mb-5">
-                            
-                            <label className="mt-3 form-label required" htmlFor="contactnumber">
-                                {i18n.t('label_CONTACT_NUMBER')}
-                            </label>
-                            <Input
-                                name="contactnumber"
-                                // className={
-                                //     touched.contactnumber && errors.contactnumber
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="contactnumber"
-                                onChange={val => handleInputContactNumber(val)}
-                                onBlur={handleBlur}
-                                value={values.contactnumber}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputContactNumber}</div>
+                                            <div className="mt-0 col-lg-1 ft-detail mb-5" style={{ paddingLeft: '0px', paddingTop: '35px' }}>
+                                                <IconButton color={'primary'}
+                                                    onClick={() => handleAddListBranch()}
+                                                >
+                                                    <AddIcon style={{ fontSize: 30 }} />
+                                                </IconButton>
+                                            </div>
 
-                            <label className="mt-3 form-label required" htmlFor="address">
-                                {i18n.t('label_ADDRESS')}
-                            </label>
-                            <Input
-                                name="address"
-                                // className={
-                                //     touched.address && errors.address
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="address"
-                                onChange={val => handleInputAddrees(val)}
-                                onBlur={handleBlur}
-                                value={values.address}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputAddress}</div>
+                                        </div>
 
-                            <label className="mt-3 form-label required" htmlFor="email">
-                                {i18n.t('Email')}
-                            </label>
-                            <Input
-                                name="email"
-                                // className={
-                                //     touched.email && errors.email
-                                //         ? "w-50 input-error"
-                                //         : "w-50"
-                                // }
-                                type="text"
-                                id="email"
-                                onChange={val => handleInputEmail(val)}
-                                onBlur={handleBlur}
-                                value={values.email}
-                            />
-                            <div className="invalid-feedback-custom">{ErrInputEmail}</div>
+                                    </div>
+                                    <div className="mt-2 col-lg-6 ft-detail mb-5">
+
+                                        <label className="mt-3 form-label required" htmlFor="contactnumber">
+                                            {i18n.t('label_CONTACT_NUMBER')}
+                                        </label>
+                                        <Input
+                                            name="contactnumber"
+                                            // className={
+                                            //     touched.contactnumber && errors.contactnumber
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="contactnumber"
+                                            onChange={val => handleInputContactNumber(val)}
+                                            onBlur={handleBlur}
+                                            value={values.contactnumber}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputContactNumber}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="address">
+                                            {i18n.t('label_ADDRESS')}
+                                        </label>
+                                        <Input
+                                            name="address"
+                                            // className={
+                                            //     touched.address && errors.address
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="address"
+                                            onChange={val => handleInputAddrees(val)}
+                                            onBlur={handleBlur}
+                                            value={values.address}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputAddress}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="email">
+                                            {i18n.t('Email')}
+                                        </label>
+                                        <Input
+                                            name="email"
+                                            // className={
+                                            //     touched.email && errors.email
+                                            //         ? "w-50 input-error"
+                                            //         : "w-50"
+                                            // }
+                                            type="text"
+                                            id="email"
+                                            onChange={val => handleInputEmail(val)}
+                                            onBlur={handleBlur}
+                                            value={values.email}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputEmail}</div>
 
 
-                            <FormGroup check style={{marginTop:'20px'}}>
-                            <Input type="checkbox" name="check" 
-                            id="isactived" 
-                            onChange={val => handleChangeIsActive(val)}
-                            defaultChecked={values.isactived}
-                            checked={values.isactived}
-                            style={{transform:'scale(1.5)'}}
-                            />
-                            <Label for="isactived" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('label_IS_ACTIVE')}</Label>
-                            </FormGroup>
-                            </div>
+                                        <FormGroup check style={{ marginTop: '20px' }}>
+                                            <Input type="checkbox" name="check"
+                                                id="isactived"
+                                                onChange={val => handleChangeIsActive(val)}
+                                                defaultChecked={values.isactived}
+                                                checked={values.isactived}
+                                                style={{ transform: 'scale(1.5)' }}
+                                            />
+                                            <Label for="isactived" check style={{ transform: 'scale(1.5)', marginLeft: '20px' }}>{i18n.t('label_IS_ACTIVE')}</Label>
+                                        </FormGroup>
+                                    </div>
 
-                            </div>
+                                </div>
 
-                            <div className="row justify-content-center" style={{marginTop:'-30px',marginBottom:'20px'}}>
-                            <Button
-                            // disabled={props.activeStep === 0}
-                                style={{marginLeft:"20%"}}
-                                onClick={() => history.goBack()}
-                            >
-                            {/* {i18n.t('common.BACK')} */}
-                            {'Cancel'}
-                            </Button>
+                                <div className="row justify-content-center" style={{ marginTop: '-30px', marginBottom: '20px' }}>
+                                    <Button
+                                        // disabled={props.activeStep === 0}
+                                        style={{ marginLeft: "20%" }}
+                                        onClick={() => history.goBack()}
+                                    >
+                                        {/* {i18n.t('common.BACK')} */}
+                                        {'Cancel'}
+                                    </Button>
 
-                            <Button
-                                style={{marginLeft:"1%"}}
-                                onClick={() => submitHandler()}
-                            >
-                            {'Submit'}
-                            </Button>
-                            </div>
+                                    <Button
+                                        style={{ marginLeft: "1%" }}
+                                        onClick={() => submitHandler()}
+                                    >
+                                        {'Submit'}
+                                    </Button>
+                                </div>
 
-                            <Card>
-                            <CardBody>
-                            <div className="table-responsive" style={{height:defaultHeight}}>
-                                <Grid
-                                    rows={RowsBranch}
-                                    columns={columns}
-                                    totalCounts={RowsBranch.length}
-                                    loading={loading}
-                                    columnextension={[]}
-                                    handleSubstractList={handleSubstractListDetailTrans}
-                                />
-                            </div>
-                            </CardBody>
-                            </Card>
+                                <Card>
+                                    <CardBody>
+                                        <div className="table-responsive" style={{ height: defaultHeight }}>
+                                            <Grid
+                                                rows={RowsBranch}
+                                                columns={columns}
+                                                totalCounts={RowsBranch.length}
+                                                loading={loading}
+                                                columnextension={[]}
+                                                handleSubstractList={handleSubstractListDetailTrans}
+                                            />
+                                        </div>
+                                    </CardBody>
+                                </Card>
 
                             </ContentWrapper>
-                            {loading && <Loading/>}
+                            {loading && <Loading />}
                         </form>
 
                     )
