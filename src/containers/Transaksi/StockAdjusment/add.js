@@ -687,6 +687,8 @@ export default function AddStockAdjusment(props) {
                                                                     </td>
 
                                                                 <td style={{ width: '15%' }}>
+                                                                {
+                                                                        x.idproduct !== 'TOTAL'?
                                                                     <Input
                                                                         name="itemsprice"
                                                                         type="text"
@@ -695,7 +697,9 @@ export default function AddStockAdjusment(props) {
                                                                         // onBlur={handleBlur}
                                                                         value={x.itemsprice !== '' ? numToMoney(parseFloat(x.itemsprice)) : ''}
                                                                         disabled={true}
-                                                                    /></td>
+                                                                    />
+                                                                :''}
+                                                                    </td>
 
                                                                 <td style={{ width: '15%' }}>
                                                                     <Input

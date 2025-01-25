@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { formatRupiah, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addPackingList_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -194,7 +194,7 @@ export default function AddPackingList(props) {
             obj.attention = values.attention;
             obj.flightnumber = values.flightnumber;
             obj.awbnumber = values.awbnumber;
-            obj.netto = values.netto;
+            obj.netto = removeFormatRupiah(values.netto);
             obj.koli = values.koli;
             obj.idpricelist = idpricelist;
             let items = [];
@@ -205,11 +205,11 @@ export default function AddPackingList(props) {
                         'idproduct': el.idproduct,
                         'idcategoryproduct': el.idcategoryproduct,
                         'qty': el.qty,
-                        'allowance': new String(el.allowance).replaceAll(',', '.') !== '' ? new String(el.allowance).replaceAll(',', '.') : '0',
-                        'brutoweight': new String(el.brutoweight).replaceAll(',', '.') !== '' ? new String(el.brutoweight).replaceAll(',', '.') : '0',
-                        'nettoweight': new String(el.nettoweight).replaceAll(',', '.') !== '' ? new String(el.nettoweight).replaceAll(',', '.') : '0',
-                        'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
-                        'totalprice': el.subtotalprice,//new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
+                        'allowance': removeFormatRupiah(el.allowance) !== '' ? removeFormatRupiah(el.allowance) : '0',
+                        'brutoweight': removeFormatRupiah(el.brutoweight) !== '' ? removeFormatRupiah(el.brutoweight) : '0',
+                        'nettoweight': removeFormatRupiah(el.nettoweight) !== '' ? removeFormatRupiah(el.nettoweight) : '0',
+                        'price': removeFormatRupiah(el.itemsprice) !== '' ? removeFormatRupiah(el.itemsprice) : '0',
+                        'totalprice': removeFormatRupiah(el.subtotalprice),
                         'box': el.box
                     }
                 ], []);
@@ -277,33 +277,62 @@ export default function AddPackingList(props) {
             }
             
             if(name == 'brutoweight'){
-                valPriceTemp = new String(value).replaceAll(',', '.') !== '' ? new String(value).replaceAll(',', '.') : '0';
-                if (isNaN(valPriceTemp) && valPriceTemp !== '') {
+                if (isNaN(value) && value !== '') {
                     flag = false;
                     if(new String(value).split(',').length >= 3){
                         flag = false;
+                    }else{
+                        flag = true;
                     }
                 }
             }
             
             if(flag) {
                 if (name == 'qty') {
-                    // const listTemp = [...ListItems];
-                    // let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
-                    
-                    // let qtyTemp = parseInt(valPriceTemp)
-                    // subtotal = parseInt(qtyTemp) * parseFloat(pricetemp);
-                    // list[index]['subtotalprice'] = subtotal;
+                    const listTemp = [...ListItems];
+                    let pricetemp = new String(listTemp[index]['itemsprice']) !== '' ? listTemp[index]['itemsprice'] : '0';
+                    let valTemp = '';
+                    if(new String(pricetemp).includes(',')){
+                        let splitComma = new String(pricetemp).split(','); 
+                        let angka = splitComma[0];
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                        valTemp = removeFormatRupiah(angka)+'.'+desimal;
+                    }else{
+                        valTemp = removeFormatRupiah(pricetemp);
+                    }
+                    let qtyTemp = parseInt(valPriceTemp);
+                    subtotal = parseInt(qtyTemp) * parseFloat(valTemp);
+                    console.log('subtotal ',subtotal);
+                    console.log('subtotal ',formatRupiah(subtotal,2));
+                    list[index]['subtotalprice'] = formatRupiah(subtotal,2);
                 } else if(name == 'brutoweight'){
                     const listTemp = [...ListItems];
-                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
-                    let allowance = parseFloat(listTemp[index]['allowance']); //InPersen
-                    allowance = allowance / 100.0;
-                    let netto = parseFloat(valPriceTemp) - (parseFloat(valPriceTemp) * allowance);
-                    netto = netto.toFixed(2);
-                    let subtotal = parseFloat(netto) * parseFloat(pricetemp);
-                    list[index]['nettoweight'] = netto;
-                    list[index]['subtotalprice'] = subtotal.toFixed(2);
+                    // let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
+                    let allowance = listTemp[index]['allowance']; //InPersen
+                    let valTemp = '';
+                    if(new String(allowance).includes(',')){
+                        let splitComma = new String(allowance).split(','); 
+                        let angka = splitComma[0];
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                        valTemp = removeFormatRupiah(angka)+'.'+desimal;
+                    }else{
+                        valTemp = removeFormatRupiah(allowance);
+                    }
+                    allowance = parseFloat(valTemp) / 100.0;
+
+                    valTemp = '';
+                    if(new String(value).includes(',')){
+                        let splitComma = new String(value).split(','); 
+                        let angka = splitComma[0];
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                        valTemp = removeFormatRupiah(angka)+'.'+desimal;
+                    }else{
+                        valTemp = removeFormatRupiah(value);
+                    }
+                    let netto = parseFloat(valTemp) - (parseFloat(valTemp) * allowance);
+                    // netto = netto.toFixed(2);
+                    list[index]['nettoweight'] = formatRupiah(netto,2);
+                    // list[index]['subtotalprice'] = subtotal.toFixed(2);
                 }
                 //
             }
@@ -311,8 +340,8 @@ export default function AddPackingList(props) {
         }
         if (flag) {
             
-            let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
-            list[index][name] = valPrice;
+            // let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
+            list[index][name] = value;
             setNetto(calculateNetto(list));
             setListItems(list);
         }
@@ -343,17 +372,17 @@ export default function AddPackingList(props) {
         let qty = list[index]['qty'];
         let brutoweight = list[index]['brutoweight'];
         qty = qty !== ''?qty:0;
-        brutoweight = brutoweight !== ''?brutoweight:0
+        brutoweight = brutoweight !== ''?brutoweight:0;
         brutoweight = new String(brutoweight).replaceAll(',','.');
 
         let hasil = allowance / 100.0;
         let netto = parseFloat(brutoweight) + (parseFloat(brutoweight) * hasil);
-        netto = netto.toFixed(2);
-        list[index]['nettoweight'] = netto;
-        let subtotal = parseFloat(netto) * parseFloat(amount);
-        list[index]['subtotalprice'] = subtotal.toFixed(2);
-        list[index]['allowance'] = allowance;
-        list[index]['itemsprice'] = amount;
+        // netto = netto.toFixed(2);
+        list[index]['nettoweight'] = formatRupiah(netto,2);
+        let subtotal = parseFloat(qty) * parseFloat(amount);
+        list[index]['subtotalprice'] = formatRupiah(subtotal,2);
+        list[index]['allowance'] = formatRupiah(allowance,2);
+        list[index]['itemsprice'] = formatRupiah(amount,2);
         list[index][name] = e.value;
 
         setNetto(calculateNetto(list));
@@ -387,10 +416,19 @@ export default function AddPackingList(props) {
         let totalnetto = 0;
         for(let i =0; i < list.length; i++){
             let det = list[i];
-            let netto = det.nettoweight?new String(det.nettoweight).replaceAll(',','.'):0;
-            totalnetto += parseFloat(netto);
+            let netto = det.nettoweight?det.nettoweight:0;
+            let valTemp = '';
+            if(new String(netto).includes(',')){
+                let splitComma = new String(netto).split(','); 
+                let angka = splitComma[0];
+                let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                valTemp = removeFormatRupiah(angka)+'.'+desimal;
+            }else{
+                valTemp = removeFormatRupiah(netto);
+            }
+            totalnetto += parseFloat(valTemp);
         }
-        return totalnetto.toFixed(2);
+        return formatRupiah(totalnetto,2);
     }
 
     const handleRemoveItems = index => {
@@ -744,7 +782,7 @@ export default function AddPackingList(props) {
                                                                         id="itemsprice"
                                                                         onChange={val => handleInputChangeItems(val, i)}
                                                                         // onBlur={handleBlur}
-                                                                        value={x.itemsprice !== '' ? numToMoney(parseFloat(x.itemsprice)) : ''}
+                                                                        value={x.itemsprice}
                                                                         disabled={true}
                                                                     /></td>
 
@@ -756,7 +794,7 @@ export default function AddPackingList(props) {
                                                                         // onChange={val => handleInputChangePrice(val,i)}
                                                                         // onBlur={handleBlur}
                                                                         // value={x.subtotalprice}
-                                                                        value={x.subtotalprice !== '' ? numToMoney(parseFloat(x.subtotalprice)) : ''}
+                                                                        value={x.subtotalprice}
                                                                         disabled={true}
                                                                     /></td>
 
