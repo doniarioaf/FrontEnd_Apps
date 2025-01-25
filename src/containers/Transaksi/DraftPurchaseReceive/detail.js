@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { MenuDraftPurchaseReceive, deleteDraftPurchaseReceive_Permission, editDraftPurchaseReceive_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime } from '../../shared/constantValue';
@@ -119,8 +119,8 @@ import React, {useState,
                 let totalkg = 0;
                 for(let x =0; x < listfilteroutput.length; x++){
                     let det = listfilteroutput[x];
-                    let jumlahekor = det.ekor?parseInt(det.ekor):0;
-                    let jumlahkilo = det.kilo?parseInt(det.kilo):0;
+                    let jumlahekor = det.ekor?parseFloat(det.ekor):0;
+                    let jumlahkilo = det.kilo?parseFloat(det.kilo):0;
 
                     totalekor += jumlahekor;
                     totalkg += jumlahkilo;
@@ -130,7 +130,7 @@ import React, {useState,
                         'idcategoryproduct': el.idcategoryproduct,
                         'size': el.sizecategoryproduct,
                         'weight': el.weightfromingramcategoryproduct+'-'+el.weighttoingramcategoryproduct+' Gram',
-                        'listtotal':[{label:'Total Ekor',code:'totalekor',total:totalekor},{label:'Total Kg',code:'totalkg',total:totalkg}]
+                        'listtotal':[{label:'Total Ekor',code:'totalekor',total:formatRupiah(totalekor,2)},{label:'Total Kg',code:'totalkg',total:formatRupiah(totalkg,2)}]
                     }
                 );
                 arrDistinctCP.push(idcategoryproduct);
@@ -150,7 +150,7 @@ import React, {useState,
                     {
                         'idproduct': det.idproduct,
                         'idcategoryproduct': det.idcategoryproduct,
-                        'jumlah':det.ekor?det.ekor:0,
+                        'jumlah':det.ekor?formatRupiah(det.ekor,2):0,
                         'jumlahtype':'EKOR'
                     }
                 );
@@ -159,7 +159,7 @@ import React, {useState,
                     {
                         'idproduct': det.idproduct,
                         'idcategoryproduct': det.idcategoryproduct,
-                        'jumlah':det.kilo?det.kilo:0,
+                        'jumlah':det.kilo?formatRupiah(det.kilo,2):0,
                         'jumlahtype':'KG'
                     }
                 );

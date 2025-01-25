@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { formatRupiah, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addDraftPurchaseReceive_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -157,9 +157,9 @@ export default function AddDraftPurchaseReceive(props) {
             obj.arriveltime = values.arrivalhours+':'+values.arrivalminute;
             obj.receivetime = values.receivehours+':'+values.receiveminute;
             obj.smu = values.smu;
-            obj.totalekor = InputGrandTotalEkor !== ''?new String(InputGrandTotalEkor).replaceAll(".",""):0;
-            obj.totalkg = InputGrandTotalKilo !== ''?new String(InputGrandTotalKilo).replaceAll(".",""):0;
-            obj.persentase = InputPersentase;
+            obj.totalekor = InputGrandTotalEkor !== ''?removeFormatRupiah(InputGrandTotalEkor):0;
+            obj.totalkg = InputGrandTotalKilo !== ''?removeFormatRupiah(InputGrandTotalKilo):0;
+            obj.persentase = removeFormatRupiah(InputPersentase);
             let items = [];
             let no = 1;
             if(ListItems.length > 0){
@@ -180,8 +180,8 @@ export default function AddDraftPurchaseReceive(props) {
                         let objItem = new Object();
                         objItem.idproduct = det.idproduct;
                         objItem.idcategoryproduct = det.idcategoryproduct;
-                        objItem.ekor = jumlahEkor;
-                        objItem.kilo = jumlahKg;
+                        objItem.ekor = removeFormatRupiah(jumlahEkor);
+                        objItem.kilo = removeFormatRupiah(jumlahKg);
                         objItem.boxsequence = no;
                         objItem.type = 'H';
                         items.push(objItem);
@@ -198,7 +198,7 @@ export default function AddDraftPurchaseReceive(props) {
                         let objItem = new Object();
                         objItem.idproduct = det.idproduct;
                         objItem.idcategoryproduct = det.idcategoryproduct;
-                        objItem.ekor = det.jumlah && det.jumlah !== ''?det.jumlah:0;
+                        objItem.ekor = det.jumlah && det.jumlah !== ''?removeFormatRupiah(det.jumlah):0;
                         objItem.kilo = 0;
                         objItem.boxsequence = no;
                         objItem.type = 'M';
@@ -304,7 +304,7 @@ export default function AddDraftPurchaseReceive(props) {
                 {
                     'idproduct': idproduct,
                     'idcategoryproduct': det.idcategoryproduct,
-                    'jumlah':0,
+                    'jumlah':'',
                 }
             );
         }
@@ -329,7 +329,7 @@ export default function AddDraftPurchaseReceive(props) {
                 {
                     'idproduct': idproduct,
                     'idcategoryproduct': det.idcategoryproduct,
-                    'jumlah':0,
+                    'jumlah':'',
                     'jumlahtype':'EKOR'
                 }
             );
@@ -338,7 +338,7 @@ export default function AddDraftPurchaseReceive(props) {
                 {
                     'idproduct': idproduct,
                     'idcategoryproduct': det.idcategoryproduct,
-                    'jumlah':0,
+                    'jumlah':'',
                     'jumlahtype':'KG'
                 }
             );
@@ -354,12 +354,28 @@ export default function AddDraftPurchaseReceive(props) {
     };
     const handleInputChangeItemsMati = (e, index, indexcol) => {
         const { name, value } = e.target;
+
+        let flag = true;
+        let valTemp = '';
+        if(new String(value).includes(',')){
+            let splitComma = new String(value).split(','); 
+            let angka = splitComma[0];
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+            valTemp = removeFormatRupiah(angka)+'.'+desimal;
+        }else{
+            valTemp = removeFormatRupiah(value);
+        }
+        if(isNaN(valTemp) || new String(value).endsWith('.') || new String(value).includes(',')){
+            flag = false;
+        }
+        if(flag){
         const list = [...ListItemsMati];
         const listitems = list[index]['items'];
         listitems[indexcol][name] = value;
         list[index]['items'] = listitems;
         setListItemsMati(list);
         calculatePersentase(InputGrandTotalEkor,list);
+        }
     }
     const handleRemoveItemsMati = (index) => {
         const list = [...ListItemsMati];
@@ -369,43 +385,90 @@ export default function AddDraftPurchaseReceive(props) {
     }
     const handleInputChangeItems = (e, index, indexcol,idcategoryproduct) => {
         const { name, value } = e.target;
-        const list = [...ListItems];
-        const listitems = list[index]['items'];
-        listitems[indexcol]['jumlah'] = value;
-        list[index]['items'] = listitems;
-        setListItems(list);
 
-        let totalekor = 0;
-        let totalkg = 0;
-        for(let i=0; i < list.length; i++){
-            let det = list[i];
-            let listfilteroutput = det.items.filter(output => output.idcategoryproduct == idcategoryproduct && output.jumlahtype == name);
-            for(let y=0; y < listfilteroutput.length; y++){
-                let detItems = listfilteroutput[y];
-                let jumlah = detItems.jumlah && detItems.jumlah !== ''?parseInt(detItems.jumlah):0;
-                if(name == 'EKOR'){
-                    totalekor += jumlah;
-                }else if(name == 'KG'){
-                    totalkg += jumlah;
+        let flag = true;
+        let valTemp = '';
+        if(new String(value).includes(',')){
+            let splitComma = new String(value).split(','); 
+            let angka = splitComma[0];
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+            valTemp = removeFormatRupiah(angka)+'.'+desimal;
+        }else{
+            valTemp = removeFormatRupiah(value);
+        }
+        if(name == 'EKOR'){
+            if(isNaN(valTemp) || new String(value).endsWith('.') || new String(value).includes(',')){
+                flag = false;
+            }
+        }
+        if(name == 'KG'){
+            if(isNaN(valTemp) || new String(value).includes('.')){
+                flag = false;
+            }else if (isNaN(value) && value !== '') {
+                flag = false;
+                if(new String(value).split(',').length >= 3){
+                    flag = false;
+                }else{
+                    flag = true;
+                    let arr = new String(value).split(',');
+                    if(arr.length > 0){
+                        let valArr1 = arr[1];
+                        if(new String(valArr1).length > 2){
+                            flag = false;
+                        }
+                    }
                 }
             }
         }
-        
-        let listtotal = [...ListCategory];
-        let indexItems = listtotal.findIndex(obj => obj.idcategoryproduct == idcategoryproduct);
-        const listtotalitems = listtotal[indexItems]['listtotal'];
-        let indexTotalItems = -1;
-        if(name == 'EKOR'){
-            indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalekor');
-            listtotalitems[indexTotalItems]['total'] = totalekor;
-        }else if(name == 'KG'){
-            indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalkg');
-            listtotalitems[indexTotalItems]['total'] = totalkg;
+        if(flag){
+            const list = [...ListItems];
+            const listitems = list[index]['items'];
+            // listitems[indexcol]['jumlah'] = formatRupiah(value,2);
+            listitems[indexcol]['jumlah'] = value;
+            list[index]['items'] = listitems;
+            setListItems(list);
+
+            let totalekor = 0;
+            let totalkg = 0;
+            for(let i=0; i < list.length; i++){
+                let det = list[i];
+                let listfilteroutput = det.items.filter(output => output.idcategoryproduct == idcategoryproduct && output.jumlahtype == name);
+                for(let y=0; y < listfilteroutput.length; y++){
+                    let detItems = listfilteroutput[y];
+                    let jumlah = detItems.jumlah && detItems.jumlah !== ''?detItems.jumlah:0;
+                    let valTemp = '';
+                    if(new String(jumlah).includes(',')){
+                        let splitComma = new String(jumlah).split(','); 
+                        let angka = splitComma[0];
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                        valTemp = removeFormatRupiah(angka)+'.'+desimal;
+                    }else{
+                        valTemp = removeFormatRupiah(jumlah);
+                    }
+                    if(name == 'EKOR'){
+                        totalekor += parseFloat(valTemp);
+                    }else if(name == 'KG'){
+                        totalkg += parseFloat(valTemp);
+                    }
+                }
+            }
+            
+            let listtotal = [...ListCategory];
+            let indexItems = listtotal.findIndex(obj => obj.idcategoryproduct == idcategoryproduct);
+            const listtotalitems = listtotal[indexItems]['listtotal'];
+            let indexTotalItems = -1;
+            if(name == 'EKOR'){
+                indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalekor');
+                listtotalitems[indexTotalItems]['total'] = formatRupiah(totalekor,2);
+            }else if(name == 'KG'){
+                indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalkg');
+                listtotalitems[indexTotalItems]['total'] = formatRupiah(totalkg,2);
+            }
+            listtotal[indexItems]['listtotal'] = listtotalitems;
+            let obj = calculateGrandTotal(listtotal);
+            calculatePersentase(obj.grandTotalEkor,ListItemsMati);
+            setListCategory(listtotal);
         }
-        listtotal[indexItems]['listtotal'] = listtotalitems;
-        let obj = calculateGrandTotal(listtotal);
-        calculatePersentase(obj.grandTotalEkor,ListItemsMati);
-        setListCategory(listtotal);
     }
 
     const handleRemoveItems = (index) => {
@@ -419,7 +482,15 @@ export default function AddDraftPurchaseReceive(props) {
             let listfilteroutput = det.items;
             for(let y=0; y < listfilteroutput.length; y++){
                 let detItems = listfilteroutput[y];
-                let jumlah = detItems.jumlah && detItems.jumlah !== ''?parseInt(detItems.jumlah):0;
+                let jumlah = detItems.jumlah && detItems.jumlah !== ''?detItems.jumlah:0;
+                if(new String(jumlah).includes(',')){
+                    let splitComma = new String(jumlah).split(','); 
+                    let angka = splitComma[0];
+                    let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                    jumlah = removeFormatRupiah(angka)+'.'+desimal;
+                }else{
+                    jumlah = removeFormatRupiah(jumlah);
+                }
 
                 let indexItems = listtotal.findIndex(obj => obj.idcategoryproduct == detItems.idcategoryproduct);
                 const listtotalitems = listtotal[indexItems]['listtotal'];
@@ -427,15 +498,31 @@ export default function AddDraftPurchaseReceive(props) {
                 if(detItems.jumlahtype == 'EKOR'){
                     indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalekor');
                     let totalekor = listtotalitems[indexTotalItems]['total'];
-                    totalekor = totalekor && totalekor !== ''?parseInt(totalekor):0;
+                    totalekor = totalekor && totalekor !== ''?totalekor:0;
+                    if(new String(totalekor).includes(',')){
+                        let splitComma = new String(totalekor).split(','); 
+                        let angka = splitComma[0];
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                        totalekor = removeFormatRupiah(angka)+'.'+desimal;
+                    }else{
+                        totalekor = removeFormatRupiah(totalekor);
+                    }
 
-                    listtotalitems[indexTotalItems]['total'] = totalekor - jumlah;
+                    listtotalitems[indexTotalItems]['total'] = formatRupiah(parseFloat(totalekor) - parseFloat(jumlah),2);
                 }else if(detItems.jumlahtype == 'KG'){
                     indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalkg');
                     let totalkg = listtotalitems[indexTotalItems]['total'];
-                    totalkg = totalkg && totalkg !== ''?parseInt(totalkg):0;
+                    totalkg = totalkg && totalkg !== ''?totalkg:0;
+                    if(new String(totalkg).includes(',')){
+                        let splitComma = new String(totalkg).split(','); 
+                        let angka = splitComma[0];
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                        totalkg = removeFormatRupiah(angka)+'.'+desimal;
+                    }else{
+                        totalkg = removeFormatRupiah(totalkg);
+                    }
 
-                    listtotalitems[indexTotalItems]['total'] = totalkg - jumlah;
+                    listtotalitems[indexTotalItems]['total'] = formatRupiah(parseFloat(totalkg) - parseFloat(jumlah),2);
                 }
                 listtotal[indexItems]['listtotal'] = listtotalitems;
             }
@@ -456,17 +543,35 @@ export default function AddDraftPurchaseReceive(props) {
             let indexTotalItemsEkor = det.listtotal.findIndex(obj => obj.code == 'totalekor');
             let indexTotalItemsKg = det.listtotal.findIndex(obj => obj.code == 'totalkg');
             let totalEkor = det.listtotal[indexTotalItemsEkor]['total'];
-            totalEkor = totalEkor && totalEkor !== ''?parseInt(totalEkor):0;
+            totalEkor = totalEkor && totalEkor !== ''?totalEkor:0;
+
+            if(new String(totalEkor).includes(',')){
+                let splitComma = new String(totalEkor).split(','); 
+                let angka = splitComma[0];
+                let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                totalEkor = removeFormatRupiah(angka)+'.'+desimal;
+            }else{
+                totalEkor = removeFormatRupiah(totalEkor);
+            }
 
             let totalKg = det.listtotal[indexTotalItemsKg]['total'];
-            totalKg = totalKg && totalKg !== ''?parseInt(totalKg):0;
+            totalKg = totalKg && totalKg !== ''?totalKg:0;
 
-            grandTotalEkor += totalEkor;
-            grandTotalKg += totalKg;
+            if(new String(totalKg).includes(',')){
+                let splitComma = new String(totalKg).split(','); 
+                let angka = splitComma[0];
+                let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                totalKg = removeFormatRupiah(angka)+'.'+desimal;
+            }else{
+                totalKg = removeFormatRupiah(totalKg);
+            }
+
+            grandTotalEkor += parseFloat(totalEkor);
+            grandTotalKg += parseFloat(totalKg);
         }
         
-        setInputGrandTotalEkor(grandTotalEkor);
-        setInputGrandTotalKilo(grandTotalKg);
+        setInputGrandTotalEkor(formatRupiah(grandTotalEkor,2));
+        setInputGrandTotalKilo(formatRupiah(grandTotalKg,2));
 
         return {'grandTotalEkor':grandTotalEkor,'grandTotalKg':grandTotalKg}
     }
@@ -479,10 +584,27 @@ export default function AddDraftPurchaseReceive(props) {
                 let detItems = det.items[y];
                     //items
                 let jumlah = detItems.jumlah?detItems.jumlah:0;
-                totalItemMati += parseInt(jumlah);
+                let valTemp = '';
+                if(new String(jumlah).includes(',')){
+                    let splitComma = new String(jumlah).split(','); 
+                    let angka = splitComma[0];
+                    let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                    valTemp = removeFormatRupiah(angka)+'.'+desimal;
+                }else{
+                    valTemp = removeFormatRupiah(jumlah);
+                }
+                totalItemMati += parseFloat(valTemp);
             }
         }
-        let grandtotalekorTemp = grandtotalekor && grandtotalekor !== ''?parseFloat(grandtotalekor):0
+        let grandtotalekorTemp = grandtotalekor && grandtotalekor !== ''?grandtotalekor:0
+        if(new String(grandtotalekorTemp).includes(',')){
+            let splitComma = new String(grandtotalekorTemp).split(','); 
+            let angka = splitComma[0];
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+            grandtotalekorTemp = removeFormatRupiah(angka)+'.'+desimal;
+        }else{
+            grandtotalekorTemp = removeFormatRupiah(grandtotalekorTemp);
+        }
         let persentase = 0;
         if(totalItemMati > 0 && grandtotalekorTemp > 0){
             persentase = (parseFloat(totalItemMati / grandtotalekorTemp)) * 100;
@@ -490,7 +612,7 @@ export default function AddDraftPurchaseReceive(props) {
             persentase = 100;
         }
          
-        setInputPersentase(parseFloat(persentase).toFixed(2));
+        setInputPersentase(formatRupiah(persentase,2));
     }
 
     return (
@@ -863,7 +985,7 @@ export default function AddDraftPurchaseReceive(props) {
                                                                 <td >
                                                                     <Input
                                                                         name={xx.jumlahtype}
-                                                                        type="number"
+                                                                        type="text"
                                                                         id={xx.jumlahtype}
                                                                         onChange={val => handleInputChangeItems(val, i, ii,xx.idcategoryproduct)}
                                                                         // onBlur={handleBlur}
@@ -925,7 +1047,7 @@ export default function AddDraftPurchaseReceive(props) {
                                                                 <td >
                                                                     <Input
                                                                         name={'jumlah'}
-                                                                        type="number"
+                                                                        type="text"
                                                                         id={'jumlah'}
                                                                         onChange={val => handleInputChangeItemsMati(val, i, ii)}
                                                                         // onBlur={handleBlur}
