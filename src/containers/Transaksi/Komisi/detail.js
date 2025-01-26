@@ -24,10 +24,11 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { editVendor_Permission,deleteVendor_Permission,MenuVendor } from '../../shared/permissionMenu';
+  import { formatRupiah, isGetPermissions,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { MenuKomisi, deleteKomisi_Permission, editKomisi_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
-  import { formatdatetime } from '../../shared/constantValue';
+  import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
+  import '../../CSS/table.css';
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,7 +41,7 @@ import React, {useState,
 
 
   function Detail(props) {
-    reloadToHomeNotAuthorize(MenuVendor,'READ');
+    reloadToHomeNotAuthorize(MenuKomisi,'READ');
     const i18n = useTranslation('translations');
     const history = useHistory();
     const dispatch = useDispatch();
@@ -50,9 +51,10 @@ import React, {useState,
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
-    const [CategoryNotInclude, setCategoryNotInclude] = useState([]);
 
     const id = props.match.params.id;
+
+    const [ListItem, setListItem] = useState([]);
 
     const handleToggle = (flag) => {
         setOpen((prevOpen) => !prevOpen);
@@ -86,20 +88,31 @@ import React, {useState,
 
       useEffect(() => {
         setLoading(true);
-        dispatch(actions.getVendorData( {url:'/'+id},successHandler, errorHandler));
+        dispatch(actions.getKomisiData( {url:'/'+id},successHandler, errorHandler));
     }, []);
 
     function successHandler(data,propsdata) {
-        setValue(data.data);
-        if(data.data.items){
-            let arr = [];
-                for(let i=0; i < data.data.items.length ; i++){
-                    let val = data.data.items[i];
-                    arr.push(val.categoryproductName+' ('+val.categoryproductSize+')');
-                }
-                setCategoryNotInclude(arr.join());
-        }
+        let det = data.data;
+        setValue(det);
+
+        let listItems = det.items?det.items:[];
+        setLisPR(listItems);
         setLoading(false);
+    }
+
+    function setLisPR(listpr) {
+        setListItem(listpr.reduce((obj, el) => [
+            ...obj,
+            {
+                'id': el.id,
+                'nama': el.vendornamabroker,
+                'nodoc': el.nodocument,
+                'transdate': el.date ? moment(el.date).format(formatdate) : '',
+                'koli': el.koli,
+                'komisiperkoli': el.komisi?formatRupiah((el.komisi?new String(el.komisi).replaceAll('.',','):''),2):0,
+                'subtotalkomisi': el.subTotalkomisi?formatRupiah((el.subTotalkomisi?new String(el.subTotalkomisi).replaceAll('.',','):''),2):0,
+            }
+        ], []));
     }
 
 
@@ -114,7 +127,7 @@ import React, {useState,
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
                 setLoading(true);
-                dispatch(actions.submitVendorData( {url:'/'+id,type:'DELETE'} ,succesHandlerSubmit, errorHandler));
+                dispatch(actions.submitKomisi( {url:'/'+id,type:'DELETE'} ,succesHandlerSubmit, errorHandler));
             //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
             //   Swal.fire('Changes are not saved', '', 'info')
@@ -130,7 +143,7 @@ import React, {useState,
             text: i18n.t('label_SUCCESS')
         }).then((result) => {
             if (result.isConfirmed) {
-                history.push(pathmenu.menuVendor);
+                history.push(pathmenu.menukomisi);
             }
         })
     }
@@ -140,13 +153,31 @@ import React, {useState,
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: '' + error
+            text: error.msg
         })
+    }
+
+    const downloadExcelPL = () => {
+        setLoading(true);
+        dispatch(actions.getPackingListData( {url:'/printexcel/'+id,type:'GETFILE',typefile:'application/vnd.ms-excel'},successHandlerExcel, errorHandler));
+    }
+
+    function successHandlerExcel(data,propsdata) {
+        var blob = new Blob([data],{ type: 'application/vnd.ms-excel'});
+        var dataUrl = URL.createObjectURL(blob);
+        var fileLink = document.createElement('a');
+        fileLink.href = dataUrl;
+
+        // it forces the name of the downloaded file
+        fileLink.download = 'PackingList-'+moment(new Date()).format(formatdateYYYYMMDD)+'-'+value.nodocument+'.xlsx';
+        fileLink.click();
+        fileLink.remove();
+        setLoading(false);
     }
 
     return (
         <ContentWrapper>
-            <ContentHeading history={history} link={pathmenu.detailVendor+'/'+id} label={'Detail'} labeldefault={'Detail'} />
+            <ContentHeading history={history} link={pathmenu.detailkomisi+'/'+id} label={'Detail'} labeldefault={'Detail'} />
             <Container fluid>
             <Card>
             <CardBody>
@@ -175,7 +206,7 @@ import React, {useState,
                 <h2>
                     {
                         !loading  ?
-                            value.nama :
+                            value.nodocument :
                             <Skeleton style={{maxWidth: 300}}/>
                     }
                 </h2>
@@ -190,123 +221,18 @@ import React, {useState,
                     loading ?<Skeleton count={7} height={21} style={{marginTop: '1rem'}}/> :
                     (
                         <section>
+
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_NAME')}</span>
+                            <span className="col-md-5">{i18n.t('No Document')}</span>
                             <strong className="col-md-7">
-                                {value.nama?value.nama:''}
+                                {value.nodocument?value.nodocument:''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Alias')}</span>
-                            <strong className="col-md-7">
-                                {value.alias?value.alias:''}
-                            </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Type')}</span>
-                            <strong className="col-md-7">
-                                {value.type?value.type:''}
-                            </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Bank')}</span>
-                            <strong className="col-md-7">
-                                {value.bank?value.bank:''}
-                            </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_ACC_NO')}</span>
+                            <span className="col-md-5">{i18n.t('Tanggal')}</span>
                                 <strong className="col-md-7">
-                                {value.accountnobank ?value.accountnobank:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('label_ACC_NAME')}</span>
-                                <strong className="col-md-7">
-                                {value.accountnamebank ?value.accountnamebank:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Parent?')}</span>
-                                <strong className="col-md-7">
-                                {value.isparent ?'Yes':'No'}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Parent')}</span>
-                                <strong className="col-md-7">
-                                {value.vendorParentName ?value.vendorParentName:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Broker')}</span>
-                                <strong className="col-md-7">
-                                {value.vendorBrokerName ?value.vendorBrokerName:''}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Price Box')}</span>
-                                <strong className="col-md-7">
-                                {value.pricebox ?numToMoney(value.pricebox):'0'}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Packing')}</span>
-                                <strong className="col-md-7">
-                                {value.packing ?numToMoney(value.packing):'0'}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Kurir')}</span>
-                                <strong className="col-md-7">
-                                {value.kurir ?numToMoney(value.kurir):'0'}
-                                </strong>
-                            </div>
-
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Komisi')}</span>
-                                <strong className="col-md-7">
-                                {value.komisi ?numToMoney(value.komisi):'0'}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Profit')}</span>
-                                <strong className="col-md-7">
-                                {value.profit ?numToMoney(value.profit):'0'}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Value 1')}</span>
-                                <strong className="col-md-7">
-                                {value.value1 ?numToMoney(value.value1):'0'}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Price Ongkos')}</span>
-                                <strong className="col-md-7">
-                                {value.priceongkos ?numToMoney(value.priceongkos):'0'}
-                                </strong>
-                            </div>
-
-                            <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Category Not Include')}</span>
-                                <strong className="col-md-7">
-                                {CategoryNotInclude}
+                                {value.date ?moment (new Date(value.date)).format(formatdate):''}
                                 </strong>
                             </div>
 
@@ -345,6 +271,38 @@ import React, {useState,
             </Card>
             </div>
             </div>
+
+            {
+                <div className="row justify-content-center">
+                    <h4>{'Item'}</h4>
+                    <table id="tablegrid">
+                    <tbody>
+                        <tr>
+                        <th >{i18n.t('Nama Broker')}</th>
+                        <th >{i18n.t('No Document')}</th>
+                        <th >{i18n.t('Tanggal')}</th>
+                        <th >{i18n.t('Koli')}</th>
+                        <th >{i18n.t('Komisi Per Koli')}</th>
+                        <th >{i18n.t('Subtotal Komisi')}</th>
+                        </tr>
+                        {
+                            ListItem.map((x, i) => {
+                                return (
+                                    <tr>
+                                        <td>{x.nama}</td>
+                                        <td>{x.nodoc}</td>
+                                        <td>{x.transdate}</td>
+                                        <td>{x.koli}</td>
+                                        <td>{x.komisiperkoli}</td>
+                                        <td>{x.subtotalkomisi}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                    </table>
+                </div>
+            }
             </CardBody>
             </Card>
             </Container>
@@ -366,8 +324,11 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(editVendor_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editVendor+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
-                            <MenuItem hidden={!isGetPermissions(deleteVendor_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(MenuKomisi,'TRANSACTION')}  onClick={() => history.push(pathmenu.printpdfpackinglist+'/'+id)}>{i18n.t('Print')}</MenuItem>
+                            {/* <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => downloadExcelPL()}>{i18n.t('Excel Packing List')}</MenuItem> */}
+                            <MenuItem hidden={!isGetPermissions(editKomisi_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editbayarkomisi+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(deleteKomisi_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
+                            {/* <MenuItem hidden={!isGetPermissions(MenuPurchaseReceive,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Nota')}</MenuItem> */}
                             
                         </div>)
                         

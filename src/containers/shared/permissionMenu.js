@@ -90,6 +90,10 @@ export const addPelunasanPiutang_Permission = ['READ_PELUNASANPIUTANG','CREATE_P
 export const editPelunasanPiutang_Permission = ['READ_PELUNASANPIUTANG','EDIT_PELUNASANPIUTANG'];
 export const deletePelunasanPiutang_Permission = ['DELETE_PELUNASANPIUTANG'];
 
+export const addKomisi_Permission = ['READ_KOMISI','CREATE_KOMISI'];
+export const editKomisi_Permission = ['READ_KOMISI','EDIT_KOMISI'];
+export const deleteKomisi_Permission = ['DELETE_KOMISI'];
+
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
@@ -125,6 +129,7 @@ export const MenuReportPenjualan = ['READ_REPORT_PENJUALAN'];
 export const MenuReportPelunasanPiutang = ['READ_REPORT_PELUNASAN_PIUTANG'];
 export const MenuReportKartuDeposit = ['READ_REPORT_KARTUDEPOSIT'];
 export const MenuReportKartuStock = ['READ_REPORT_KARTUSTOCK'];
+export const MenuKomisi = ['READ_KOMISI'];
 
 
 

@@ -263,7 +263,7 @@ const PelunasanPiutangIndex = () => {
             let list = [];
             if(selection.length > 0){
                 for(let i=0; i < selection.length; i++){
-                    let val = rowspiutang[i];
+                    let val = rowspiutang[selection[i]];
                     list.push(val.id);
                 }
                 localStorage.setItem('meo!kmadmasku',list.join(','));

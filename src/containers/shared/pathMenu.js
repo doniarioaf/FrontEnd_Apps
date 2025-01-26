@@ -104,3 +104,7 @@ export const menuReportPenjualan = `/reportPenjualan`;
 export const menuReportPelunasanPiutang = `/reportPelunasanPiutang`;
 export const menuReportKartuDeposit = `/reportKartuDeposit`;
 export const menuReportKartuStock = `/reportKartuStock`;
+export const menukomisi = `/komisi`;
+export const bayarkomisi = `/form/bayar/komisi`;
+export const detailkomisi = `/form/detail/komisi`;
+export const editbayarkomisi = `/form/editbayar/komisi`;

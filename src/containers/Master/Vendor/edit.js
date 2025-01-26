@@ -59,6 +59,9 @@ export default function EditVendor(props) {
 
     const [CheckIsParent, setCheckIsParent] = useState(false);
 
+    const [ListVendorBroker, setListVendorBroker] = useState([]);
+    const [SelVendorBroker, setSelVendorBroker] = useState('nodata');
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -92,6 +95,7 @@ export default function EditVendor(props) {
         setInputValue1(val.value1 ? val.value1 : '0');
         setCheckIsParent(val.isparent);
         setSelVendorParent(val.idvendorparent?val.idvendorparent:'');
+        setSelVendorBroker(val.idvendorbroker?val.idvendorbroker:'nodata');
 
         let selectedData = [];
         let VendorNotInlcueCategoryProd = [];
@@ -125,6 +129,23 @@ export default function EditVendor(props) {
             setListVendorParent(theDataVend);
         }
 
+        let theDataVendBroker = [];
+            if(data.data.vendorBrokerOpt){
+                theDataVendBroker = data.data.vendorBrokerOpt.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        value: el.id,
+                        label: el.nama ,
+                    }
+                ], []);
+            }
+            theDataVendBroker.push({
+                value: 'nodata',
+                label: 'No Data' , 
+            });
+            
+            setListVendorBroker(theDataVendBroker);
+
         setLoading(false);
     }
     const checkColumnMandatory = (values) => {
@@ -146,7 +167,7 @@ export default function EditVendor(props) {
             setErrSelType(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(!CheckIsParent){
+        if(!CheckIsParent && SelType !== 'BROKER'){
             if (SelVendorParent == '') {
                 setErrSelVendorParent(i18n.t('label_REQUIRED'));
                 flag = false;
@@ -193,6 +214,12 @@ export default function EditVendor(props) {
                 idvendorparent = SelVendorParent;
             }
             obj.idvendorparent = idvendorparent;
+
+            let idvendorbroker = null;
+            if(SelType == 'UDANG'){
+                idvendorbroker = SelVendorBroker !== '' && SelVendorBroker !== 'nodata'?SelVendorBroker:null;
+            }
+            obj.idvendorbroker = idvendorbroker;
             dispatch(actions.submitVendorData({ url: '/' + id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -258,6 +285,10 @@ export default function EditVendor(props) {
         let id = data?.value ? data.value : '';
         setSelVendorParent(id);
     }
+    const handleChangeVendorBroker = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelVendorBroker(id);
+    }
     return (
         <Formik
             initialValues={
@@ -276,7 +307,8 @@ export default function EditVendor(props) {
                     profit: InputProfit,
                     value1: InputValue1,
                     isparent: CheckIsParent,
-                    vendorparent:SelVendorParent
+                    vendorparent:SelVendorParent,
+                    vendorbroker:SelVendorBroker
                 }
             }
             validate={values => {
@@ -447,7 +479,7 @@ export default function EditVendor(props) {
                                         <Label for="isparent" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('Parent?')}</Label>
                                         </FormGroup>
 
-                                        <div hidden={values.isparent}>
+                                        <div hidden={values.isparent || values.type == 'BROKER'}>
                                         <label className="mt-3 form-label required" htmlFor="vendorparent">
                                             {i18n.t('Vendor Parent')}
                                             <span style={{ color: 'red' }}>*</span>
@@ -469,6 +501,25 @@ export default function EditVendor(props) {
                                         <div className="invalid-feedback-custom">{ErrSelVendorParent}</div>
                                         </div>
 
+                                        <div hidden={values.type !== 'UDANG'}>
+                                        <label className="mt-3 form-label required" htmlFor="vendorbroker">
+                                            {i18n.t('Vendor Broker')}
+                                        </label>
+                                        <DropdownList
+                                            name="vendorbroker"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeVendorBroker(val)}
+                                            onBlur={val => setFieldTouched("vendorbroker", val?.value ? val.value : '')}
+                                            data={ListVendorBroker}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.vendorbroker}
+                                        />
+                                    </div>
 
                                     </div>
 

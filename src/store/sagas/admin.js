@@ -14,7 +14,8 @@ import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileU
     baseReportURL,
     basePelunasanHutangURL,
     baseCargoURL,
-    basePelunasanPiutangURL} from '../../containers/shared/apiURL';
+    basePelunasanPiutangURL,
+    baseKomisiURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -977,6 +978,47 @@ export function* submitPelunasanPiutangSaga(action) {
             action.successHandler(response,propsdata);
         }else if(type == 'DELETE'){
             const response = yield axios.delete(basePelunasanPiutangURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+}
+
+export function* getKomisiDataSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'GET';
+    let propsdata = action.param.propsdata?action.param.propsdata:'';
+    try {
+        if(type == 'GET'){
+            const response = yield axios.get(baseKomisiURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'POST'){
+            const response = yield axios.post(baseKomisiURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error),propsdata);
+    }
+}
+
+export function* submitKomisiSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:[];
+    try {
+        if(type == 'ADD'){
+            const response = yield axios.post(baseKomisiURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'EDIT'){
+            const response = yield axios.put(baseKomisiURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'DELETE'){
+            const response = yield axios.delete(baseKomisiURL(url)).then(response => response.data);
             action.successHandler(response,propsdata);
         }
         

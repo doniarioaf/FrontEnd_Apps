@@ -571,3 +571,21 @@ export const submitPelunasanPiutang = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getKomisiData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_KOMISI_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitKomisi = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_KOMISI,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

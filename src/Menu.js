@@ -160,6 +160,12 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuPurchaseReceive,
                 },
                 {
+                    name: 'Komisi',
+                    path: pathmenu.menukomisi,
+                    translate: 'Komisi',
+                    permission:permissionmenu.MenuKomisi,
+                },
+                {
                     name: 'Lprn Pembelian',
                     path: pathmenu.menureportpurchasereceive,
                     translate: 'Lprn Pembelian',

@@ -246,6 +246,11 @@ const reportPelunasanPiutang = lazy(() => import('./containers/Report/reportPelu
 const reportKartuDeposit = lazy(() => import('./containers/Report/reportKartuDeposit'));
 const reportKartuStock = lazy(() => import('./containers/Report/reportKartuStock'));
 
+const menuKomisi = lazy(() => import('./containers/Transaksi/Komisi'));
+const bayarKomisi = lazy(() => import('./containers/Transaksi/Komisi/BayarKomisi'));
+const detailKomisi = lazy(() => import('./containers/Transaksi/Komisi/detail'));
+const editbayarKomisi = lazy(() => import('./containers/Transaksi/Komisi/editBayarKomisi'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -501,6 +506,12 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.menuReportPelunasanPiutang} component={waitFor(reportPelunasanPiutang)} />
                                         <Route path={pathmenu.menuReportKartuDeposit} component={waitFor(reportKartuDeposit)} />
                                         <Route path={pathmenu.menuReportKartuStock} component={waitFor(reportKartuStock)} />
+
+                                        <Route path={pathmenu.menukomisi} component={waitFor(menuKomisi)} />
+                                        <Route path={pathmenu.bayarkomisi+ '/:id'} component={waitFor(bayarKomisi)} />
+                                        <Route path={pathmenu.detailkomisi+ '/:id'} component={waitFor(detailKomisi)} />
+                                        <Route path={pathmenu.editbayarkomisi+ '/:id'} component={waitFor(editbayarKomisi)} />
+                                        
                                         
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
 
