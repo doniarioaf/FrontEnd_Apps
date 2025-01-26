@@ -478,7 +478,7 @@ const KomisiIndex = () => {
                                     columnextension={tableColumnExtensions}
                                     // permissionadd={!isGetPermissions(addDraftPurchaseReceive_Permission, 'TRANSACTION')}
                                     // onclickadd={onClickAdd}
-                                    permissionview={!isGetPermissions(MenuPelunasanPiutang, 'READ')}
+                                    permissionview={!isGetPermissions(MenuKomisi, 'READ')}
                                     onclickview={onClickView}
                                     listfilterdisabled={['transdate']}
                                 />
