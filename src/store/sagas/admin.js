@@ -1023,6 +1023,6 @@ export function* submitKomisiSaga(action) {
         }
         
     }catch (error) {
-        action.errorHandler(handleMessageError(error));
+        action.errorHandler(handleMessageError(error),propsdata);
     }
 }

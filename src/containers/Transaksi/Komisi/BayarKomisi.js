@@ -35,6 +35,10 @@ export default function BayarKomisi(props) {
     const [ListItems, setListItems] = useState([]);
     const [ErrItems, setErrItems] = useState("");
 
+    const [ListIdVendorBroker, setListIdVendorBroker] = useState([]);
+
+    const [ListMsgError, setListMsgError] = useState([]);
+
     const id = props.match.params.id;
     useEffect(() => {
         setLoading(true);
@@ -60,18 +64,41 @@ export default function BayarKomisi(props) {
     }
 
     function setLisPR(listpr) {
-        setListItems(listpr.reduce((obj, el) => [
-            ...obj,
-            {
-                'id': el.id,
-                'nama': el.vendornamabroker,
-                'nodoc': el.nodocument,
-                'transdate': el.date ? moment(el.date).format(formatdate) : '',
-                'koli': el.koli,
-                'komisiperkoli': el.komisi?formatRupiah((el.komisi?new String(el.komisi).replaceAll('.',','):''),2):0,
-                'subtotalkomisi': el.subTotalkomisi?formatRupiah((el.subTotalkomisi?new String(el.subTotalkomisi).replaceAll('.',','):''),2):0,
+        let list = [];
+        let idvendorsbroker = [];
+        for(let i=0; i < listpr.length; i++){
+            let el = listpr[i];
+            let idbroker = el.idvendorbroker;
+            if(idvendorsbroker.indexOf(idbroker) == -1){
+                idvendorsbroker.push(idbroker);
             }
-        ], []));
+            list.push(
+                {
+                    'id': el.id,
+                    'idvendorbroker':idbroker,
+                    'nama': el.vendornamabroker,
+                    'nodoc': el.nodocument,
+                    'transdate': el.date ? moment(el.date).format(formatdate) : '',
+                    'koli': el.koli,
+                    'komisiperkoli': el.komisi?formatRupiah((el.komisi?new String(el.komisi).replaceAll('.',','):''),2):0,
+                    'subtotalkomisi': el.subTotalkomisi?formatRupiah((el.subTotalkomisi?new String(el.subTotalkomisi).replaceAll('.',','):''),2):0,
+                }
+            );
+        }
+        setListItems(list);
+        setListIdVendorBroker(idvendorsbroker);
+        // setListItems(listpr.reduce((obj, el) => [
+        //     ...obj,
+        //     {
+        //         'id': el.id,
+        //         'nama': el.vendornamabroker,
+        //         'nodoc': el.nodocument,
+        //         'transdate': el.date ? moment(el.date).format(formatdate) : '',
+        //         'koli': el.koli,
+        //         'komisiperkoli': el.komisi?formatRupiah((el.komisi?new String(el.komisi).replaceAll('.',','):''),2):0,
+        //         'subtotalkomisi': el.subTotalkomisi?formatRupiah((el.subTotalkomisi?new String(el.subTotalkomisi).replaceAll('.',','):''),2):0,
+        //     }
+        // ], []));
     }
     const checkColumnMandatory = (values) => {
         let flag = true;
@@ -91,12 +118,48 @@ export default function BayarKomisi(props) {
         let flag = checkColumnMandatory(values);
         if (flag) {
             setLoading(true);
-            let obj = new Object();
+            if(ListIdVendorBroker.length == 1){
+                let propsdata = {index:0};
+                sendPayload(ListItems,propsdata);
+            }else{
+                for(let i=0; i < ListIdVendorBroker.length; i++){
+                    let idvendorbroker = ListIdVendorBroker[i];
+                    let index = i;
+                    let listfilteroutput = ListItems.filter(output => output.idvendorbroker == idvendorbroker);
+                    if(listfilteroutput.length > 0){
+                        let propsdata = {index:index};
+                        sendPayload(listfilteroutput,propsdata);
+                        break;
+                    }
+                }
+                
+            }
+            // let obj = new Object();
+            // obj.date = TransDate.getTime();
+            // obj.note = '';
+            // let items = [];
+            // if (ListItems.length > 0) {
+            //     items = ListItems.reduce((obj, el) => [
+            //         ...obj,
+            //         {
+            //             'idpurchasereceive': el.id,
+            //             'koli': el.koli,
+            //             'komisiperkoli': removeFormatRupiah(el.komisiperkoli) !== '' ? removeFormatRupiah(el.komisiperkoli): '0',
+            //             'subtotalkomisi': removeFormatRupiah(el.subtotalkomisi) !== '' ? removeFormatRupiah(el.subtotalkomisi) : '0',
+            //         }
+            //     ], []);
+            // }
+            // obj.items = items;
+            // dispatch(actions.submitKomisi({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
+        }
+    }
+    function sendPayload(listitem,propsdata) {
+        let obj = new Object();
             obj.date = TransDate.getTime();
             obj.note = '';
             let items = [];
-            if (ListItems.length > 0) {
-                items = ListItems.reduce((obj, el) => [
+            if (listitem.length > 0) {
+                items = listitem.reduce((obj, el) => [
                     ...obj,
                     {
                         'idpurchasereceive': el.id,
@@ -107,21 +170,97 @@ export default function BayarKomisi(props) {
                 ], []);
             }
             obj.items = items;
-            dispatch(actions.submitKomisi({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
-        }
+            dispatch(actions.submitKomisi({ url: '', payload: obj, type: 'ADD', propsdata:propsdata }, succesHandlerSubmit, errorHandlerSubmit));
     }
 
     const succesHandlerSubmit = (data, propsdata) => {
-        setLoading(false);
-        Swal.fire({
-            icon: 'success',
-            title: 'SUCCESS',
-            text: i18n.t('label_SUCCESS')
-        }).then((result) => {
-            if (result.isConfirmed) {
-                history.goBack();
+        let index = propsdata.index;
+        let length = ListIdVendorBroker.length - 1;
+        let msgerr = propsdata.msgerr?propsdata.msgerr:[];
+        if(index == length){
+            setLoading(false);
+            if(msgerr.length > 0){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: msgerr[0]
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        history.goBack();
+                    }
+                })
+            }else{
+                Swal.fire({
+                    icon: 'success',
+                    title: 'SUCCESS',
+                    text: i18n.t('label_SUCCESS')
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        history.goBack();
+                    }
+                })
             }
-        })
+            
+            
+        }else {
+            index = index + 1;
+            if(index < ListIdVendorBroker.length){
+                let idvendorbroker = ListIdVendorBroker[index];
+                let listfilteroutput = ListItems.filter(output => output.idvendorbroker == idvendorbroker);
+                if(listfilteroutput.length > 0){
+                    let propsdata = {index:index};
+                    sendPayload(listfilteroutput,propsdata);
+                }
+            }else{
+                setLoading(false);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'SUCCESS',
+                    text: i18n.t('label_SUCCESS')
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        history.goBack();
+                    }
+                })
+            }
+            
+        }
+    }
+
+    function errorHandlerSubmit(error, propsdata) {
+        // setLoading(false);
+        let index = propsdata.index;
+        let length = ListIdVendorBroker.length - 1;
+        let msgerr = propsdata.msgerr?propsdata.msgerr:[];
+        if(index == length){
+            setLoading(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error.msg
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    history.goBack();
+                }
+            })
+        }else{
+            index = index + 1;
+            msgerr.push(error.msg);
+            if(index < ListIdVendorBroker.length){
+                let idvendorbroker = ListIdVendorBroker[index];
+                let listfilteroutput = ListItems.filter(output => output.idvendorbroker == idvendorbroker);
+                if(listfilteroutput.length > 0){
+                    let propsdata = {index:index,msgerr:msgerr};
+                    sendPayload(listfilteroutput,propsdata);
+                }
+            }
+        }
+
+        // Swal.fire({
+        //     icon: 'error',
+        //     title: 'Oops...',
+        //     text: error.msg
+        // })
     }
 
     const submitHandler = (values) => {
@@ -157,6 +296,7 @@ export default function BayarKomisi(props) {
             setTransDate(null)
         }
     }
+    
 
     function errorHandler(error, propsdata) {
         setLoading(false);
