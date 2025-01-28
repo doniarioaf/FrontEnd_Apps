@@ -324,7 +324,7 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
-                            <MenuItem hidden={!isGetPermissions(MenuKomisi,'TRANSACTION')}  onClick={() => history.push(pathmenu.printpdfpackinglist+'/'+id)}>{i18n.t('Print')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(MenuKomisi,'TRANSACTION')}  onClick={() => history.push(pathmenu.printkomisi+'/'+id)}>{i18n.t('Print')}</MenuItem>
                             {/* <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => downloadExcelPL()}>{i18n.t('Excel Packing List')}</MenuItem> */}
                             <MenuItem hidden={!isGetPermissions(editKomisi_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editbayarkomisi+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteKomisi_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
