@@ -21,17 +21,19 @@ const styles = StyleSheet.create({
     },
     width:{
         widthno:20,
-        widthtanggal:100,
+        widthtanggal:90,
         widthnodokumen:70,
+        widthvendor:70,
         widthkoli:50,
-        widthkomisiperkoli:120,
-        widthsubtotalkomisi:130,
+        widthkomisiperkoli:80,
+        widthsubtotalkomisi:100,
         no:'5%',
-        tanggal:'20%',
+        tanggal:'18%',
         nodokumen:'15%',
-        koli:'11%',
-        komisiperkoli:'24%',
-        subtotalkomisi:'25%',
+        vendor:'14%',
+        koli:'10%',
+        komisiperkoli:'18%',
+        subtotalkomisi:'20%',
     },
     table: {
         display: "table",
@@ -103,6 +105,11 @@ const setItems = (items) =>{
                 </View>
             );
             rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.vendor, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: styles.width.widthvendor, maxWidth: styles.width.widthvendor, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.vendoralias}</Text>
+                </View>
+            );
+            rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.nodokumen, height: "25px" }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthnodokumen, maxWidth: styles.width.widthnodokumen, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.nodocument}</Text>
                 </View>
@@ -137,6 +144,11 @@ const setItems = (items) =>{
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.tanggal, height: "25px" }]}>
                 <Text style={[styles.tableCell, { width: styles.width.widthtanggal, maxWidth: styles.width.widthtanggal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
+            </View>
+        );
+        rowItem.push(
+            <View style={[styles.tableColWidth, { width:styles.width.vendor, height: "25px" }]}>
+                <Text style={[styles.tableCell, { width: styles.width.widthvendor, maxWidth: styles.width.widthvendor, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
             </View>
         );
         rowItem.push(
@@ -223,6 +235,9 @@ const GenerateDocument = ({ valuedata }) => {
                             <View style={[styles.tableColWidth, { width:styles.width.tanggal, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthtanggal, maxWidth: styles.width.widthtanggal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Tanggal"}</Text>
                             </View>
+                            <View style={[styles.tableColWidth, { width:styles.width.vendor, height: "25px" }]}>
+                                <Text style={[styles.tableCell, { width: styles.width.widthvendor, maxWidth: styles.width.widthvendor, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Vendor"}</Text>
+                            </View>
                             <View style={[styles.tableColWidth, { width:styles.width.nodokumen, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthnodokumen, maxWidth: styles.width.widthnodokumen, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"No Document"}</Text>
                             </View>
@@ -246,10 +261,10 @@ const GenerateDocument = ({ valuedata }) => {
                             
                             <View style={[styles.table]}>
                             <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, { width:"51%", height: "100px" }]}>
+                            <View style={[styles.tableColWidth, { width:"52%", height: "70px" }]}>
                                 <Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '5px', fontSize: fontSizeBig }]}>{"Remarks"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { width:"49%", height: "100px" }]}>
+                            <View style={[styles.tableColWidth, { width:"48%", height: "70px" }]}>
                                 <Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '5px', fontSize: fontSizeBig }]}>{""}</Text>
                             </View>
                             </View>

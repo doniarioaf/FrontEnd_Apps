@@ -251,6 +251,7 @@ const bayarKomisi = lazy(() => import('./containers/Transaksi/Komisi/BayarKomisi
 const detailKomisi = lazy(() => import('./containers/Transaksi/Komisi/detail'));
 const editbayarKomisi = lazy(() => import('./containers/Transaksi/Komisi/editBayarKomisi'));
 const printNotaKomisi = lazy(() => import('./containers/Transaksi/Komisi/Print'));
+const reportKomisi = lazy(() => import('./containers/Report/reportKomisi'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -513,6 +514,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.detailkomisi+ '/:id'} component={waitFor(detailKomisi)} />
                                         <Route path={pathmenu.editbayarkomisi+ '/:id'} component={waitFor(editbayarKomisi)} />
                                         <Route path={pathmenu.printkomisi+ '/:id'} component={waitFor(printNotaKomisi)} />
+                                        <Route path={pathmenu.menuReportKomisi} component={waitFor(reportKomisi)} />
                                         
                                         
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />

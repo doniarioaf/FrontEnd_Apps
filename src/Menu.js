@@ -178,6 +178,14 @@ const handleMenu = () => {
                     translate: 'Lprn Kartu Deposit',
                     permission:permissionmenu.MenuReportKartuDeposit,
                 },
+
+                {
+                    name: 'Lprn Komisi',
+                    path: pathmenu.menuReportKomisi,
+                    translate: 'Lprn Kartu Deposit',
+                    permission:permissionmenu.MenuReportKomisi,
+                },
+
             ]
         },
         {
