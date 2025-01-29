@@ -14,13 +14,13 @@ import * as pathmenu from '../../../shared/pathMenu';
 import "react-widgets/dist/css/react-widgets.css";
 
 import { PDFViewer } from '@react-pdf/renderer';
-import PdfDocumentKomisi from './PdfDocumentKomisi';
-import '../../PurchaseReceive/printNota/App.css';
+import PdfDocumentDraftPR from './PdfDocumentDraftPR';
 
 import { formatdate, formatdatetime } from '../../../shared/constantValue';
 import moment from 'moment';
+import '../../PurchaseReceive/printNota/App.css';
 
-export default function PrintNotaKomisi(props) {
+export default function PrintDraftPR(props) {
     reloadToHomeNotAuthorize(MenuPackingList, 'READ');
     const { i18n } = useTranslation('translations');
     const dispatch = useDispatch();
@@ -35,11 +35,11 @@ export default function PrintNotaKomisi(props) {
 
     const id = props.match.params.id;
 
-    const fileName = "Komisi";
+    const fileName = "PenerimaanBarang";
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getKomisiData( {url:'/print/'+id},successHandler, errorHandler));
+        dispatch(actions.getDraftPurchaseReceiveData( {url:'/print/'+id},successHandler, errorHandler));
     }, [dispatch]);
 
     function successHandler(data,propsdata) {
@@ -53,11 +53,6 @@ export default function PrintNotaKomisi(props) {
         let dettemp = data.data;
         dettemp.date = det.date ? moment(new Date(det.date)).format(formatdate) : '';
         dettemp.currdatetime = moment(new Date()).format(formatdatetime);
-        if(det.items){
-            for(let i=0; i < det.items.length; i++){
-                dettemp.items[i].date = det.items[i].date ?moment(new Date(det.items[i].date)).format(formatdate) : '';
-            }
-        }
         setValue(dettemp);
 
         setTimeout(() => {
@@ -125,7 +120,7 @@ export default function PrintNotaKomisi(props) {
     return (
             <div>
                 <ContentWrapper>
-                    <ContentHeading history={history} link={pathmenu.printkomisi + '/' + id} label={'Print Komisi'} labeldefault={'Print Komisi'} />
+                    <ContentHeading history={history} link={pathmenu.printdraftpurchasereceive + '/' + id} label={'Print Penerimaan Barang'} labeldefault={'Print Penerimaan Barang'} />
                     <Container fluid>
                         <Card>
                             <CardBody>
@@ -146,7 +141,7 @@ export default function PrintNotaKomisi(props) {
                                                     border: 'none', // Remove any borders or default styles
                                                 }} fileName={"myPdf.pdf"}
                                                     width={800} height={500} >
-                                                    <PdfDocumentKomisi data={Value} />
+                                                    <PdfDocumentDraftPR data={Value} />
     
                                                 </PDFViewer>
     

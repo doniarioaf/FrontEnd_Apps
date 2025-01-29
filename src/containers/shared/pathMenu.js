@@ -69,6 +69,7 @@ export const menudraftpurchasereceive = `/inputpenerimaanbarang`;
 export const adddraftpurchasereceive = `/form/add/inputpenerimaanbarang`;
 export const detaildraftpurchasereceive = `/form/detail/inputpenerimaanbarang`;
 export const editdraftpurchasereceive = `/form/edit/inputpenerimaanbarang`;
+export const printdraftpurchasereceive = `/form/print/inputpenerimaanbarang`;
 export const menustockadjusment = `/stockadjusment`;
 export const addstockadjusment = `/form/add/stockadjusment`;
 export const detailstockadjusment = `/form/detail/stockadjusment`;

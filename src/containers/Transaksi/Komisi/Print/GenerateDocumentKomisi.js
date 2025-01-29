@@ -1,9 +1,8 @@
-import React, { Fragment, useEffect, useState, useRef } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 // import roboto from '../../../../components/';
 import roboto from '../../../../components/Fonts/Roboto/Roboto-Bold.ttf';
-import { numToMoney, terbilang } from '../../../shared/globalFunc';
-import logo from "./kseilogo.png";
+import { numToMoney } from '../../../shared/globalFunc';
 
 // import logo from "img/logo.png";
 
