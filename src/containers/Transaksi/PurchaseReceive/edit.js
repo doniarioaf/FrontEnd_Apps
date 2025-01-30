@@ -466,7 +466,7 @@ export default function EditPurchaseReceive(props) {
                     inventori.push(
                         {
                             'idinventori': el.idinventori,
-                            'qty': el.qty,
+                            'qty': el.qty?parseInt(el.qty):0,
                             'price': new String(el.price).replaceAll('.', '') !== '' ? new String(el.price).replaceAll('.', '') : '0',
                             'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0'
                         }
@@ -664,7 +664,9 @@ export default function EditPurchaseReceive(props) {
             list[index][name] = valPrice;
             list[index]['subtotal'] = subtotal;
             setListItemsPurchaseReceiveBiaya(list);
-            let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive, list, ListItemsInventori);
+            let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, list, ListItemsInventori);
+            let totalPrice = objPrice.totalPrice;
+            let totalPriceItemHidup = objPrice.totalPriceItemHidup;
             setInputTotalPrice(totalPrice);
             // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
             setorValue(totalPrice, IsDefaultSetorTotalPrice);
@@ -715,7 +717,9 @@ export default function EditPurchaseReceive(props) {
             list[index]['subtotalprice'] = subtotal;
             setListItemsInventori(list);
 
-            let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive, ListItemsPurchaseReceiveBiaya, list);
+            let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, ListItemsPurchaseReceiveBiaya, list);
+            let totalPrice = objPrice.totalPrice;
+            let totalPriceItemHidup = objPrice.totalPriceItemHidup;
             setInputTotalPrice(totalPrice);
             setorValue(totalPrice, IsDefaultSetorTotalPrice);
         }
@@ -752,7 +756,9 @@ export default function EditPurchaseReceive(props) {
         setLoading(true);
         let listCharge = setPriceBoxOngkosByVendor(ListItemsPurchaseReceiveBiaya, valdata.pricebox, valdata.priceongkos);
         setListItemsPurchaseReceiveBiaya(listCharge);
-        let totalPrice = calculateTotalPrice([], listCharge, []);
+        let objPrice = calculateTotalPrice([], listCharge, []);
+        let totalPrice = objPrice.totalPrice;
+        let totalPriceItemHidup = objPrice.totalPriceItemHidup;
         setInputTotalPrice(totalPrice);
         if (IsDefaultSetorTotalPrice) {
             setInputSetor(totalPrice);
@@ -847,7 +853,7 @@ export default function EditPurchaseReceive(props) {
         let indexTotal = list.findIndex(obj => obj.idproduct == 'TOTAL');
 
         
-        let objPrice =calculateTotalPrice(list, ListItemsPurchaseReceiveBiaya, ListItemsInventori)
+        let objPrice =calculateTotalPrice(list, ListItemsPurchaseReceiveBiaya, ListItemsInventori);
         let totalPrice = objPrice.totalPrice;
         let totalPriceItemHidup = objPrice.totalPriceItemHidup;
         list[indexTotal]['subtotalprice'] = totalPriceItemHidup;
@@ -886,7 +892,9 @@ export default function EditPurchaseReceive(props) {
         list.splice(index, 1);
         setListItemsInventori(list);
 
-        let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive, ListItemsPurchaseReceiveBiaya, list);
+        let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, ListItemsPurchaseReceiveBiaya, list);
+        let totalPrice = objPrice.totalPrice;
+        let totalPriceItemHidup = objPrice.totalPriceItemHidup;
         setInputTotalPrice(totalPrice);
         // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
         setorValue(totalPrice, IsDefaultSetorTotalPrice);
@@ -911,7 +919,9 @@ export default function EditPurchaseReceive(props) {
         const list = [...ListItemsPurchaseReceiveBiaya];
         list.splice(index, 1);
         setListItemsPurchaseReceiveBiaya(list);
-        let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive, list, ListItemsInventori);
+        let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, list, ListItemsInventori);
+        let totalPrice = objPrice.totalPrice;
+        let totalPriceItemHidup = objPrice.totalPriceItemHidup;
         setInputTotalPrice(totalPrice);
         // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(list,totalPrice));
         setorValue(totalPrice, IsDefaultSetorTotalPrice);

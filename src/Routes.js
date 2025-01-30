@@ -253,6 +253,7 @@ const editbayarKomisi = lazy(() => import('./containers/Transaksi/Komisi/editBay
 const printNotaKomisi = lazy(() => import('./containers/Transaksi/Komisi/Print'));
 const reportKomisi = lazy(() => import('./containers/Report/reportKomisi'));
 const printDraftPr = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive/print'));
+const printStockAdjusmentUdangMati = lazy(() => import('./containers/Transaksi/StockAdjusment/print'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -517,6 +518,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.printkomisi+ '/:id'} component={waitFor(printNotaKomisi)} />
                                         <Route path={pathmenu.menuReportKomisi} component={waitFor(reportKomisi)} />
                                         <Route path={pathmenu.printdraftpurchasereceive+ '/:id'} component={waitFor(printDraftPr)} />
+                                        <Route path={pathmenu.printstockadjusmentstockmati+ '/:id'} component={waitFor(printStockAdjusmentUdangMati)} />
                                         
                                         
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
