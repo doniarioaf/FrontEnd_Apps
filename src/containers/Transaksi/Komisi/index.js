@@ -96,13 +96,6 @@ const KomisiIndex = () => {
             ], []);
             theData.push(
                 {
-                    'value': 9999,
-                    'label': 'Broker 2',
-                    'data': []
-                }
-            );
-            theData.push(
-                {
                     'value': 'ALL',
                     'label': 'All',
                     'data': []

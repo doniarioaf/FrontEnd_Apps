@@ -17,7 +17,7 @@ import { PDFViewer } from '@react-pdf/renderer';
 import PdfDocumentKomisi from './PdfDocumentKomisi';
 import '../../PurchaseReceive/printNota/App.css';
 
-import { formatdate, formatdatetime } from '../../../shared/constantValue';
+import { formatdate, formatdatetime, formattimeHHmm } from '../../../shared/constantValue';
 import moment from 'moment';
 
 export default function PrintNotaKomisi(props) {
@@ -53,6 +53,7 @@ export default function PrintNotaKomisi(props) {
         let dettemp = data.data;
         dettemp.date = det.date ? moment(new Date(det.date)).format(formatdate) : '';
         dettemp.currdatetime = moment(new Date()).format(formatdatetime);
+        dettemp.currtime = moment(new Date()).format(formattimeHHmm);
         if(det.items){
             for(let i=0; i < det.items.length; i++){
                 dettemp.items[i].date = det.items[i].date ?moment(new Date(det.items[i].date)).format(formatdate) : '';

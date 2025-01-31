@@ -22,6 +22,21 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
 
+export const LisTime = [
+    {'value':'00:00-02:00','label':'00:00-02:00'},
+    {'value':'02:00-04:00','label':'02:00-04:00'},
+    {'value':'04:00-06:00','label':'04:00-06:00'},
+    {'value':'06:00-08:00','label':'06:00-08:00'},
+    {'value':'08:00-10:00','label':'08:00-10:00'},
+    {'value':'10:00-12:00','label':'10:00-12:00'},
+    {'value':'12:00-14:00','label':'12:00-14:00'},
+    {'value':'14:00-16:00','label':'14:00-16:00'},
+    {'value':'16:00-18:00','label':'16:00-18:00'},
+    {'value':'18:00-20:00','label':'18:00-20:00'},
+    {'value':'20:00-22:00','label':'20:00-22:00'},
+    {'value':'22:00-24:00','label':'22:00-24:00'},
+    ];
+
 export default function AddStockAdjusment(props) {
     reloadToHomeNotAuthorize(addStockAdjusment_Permission, 'TRANSACTION');
     const { i18n } = useTranslation('translations');
@@ -48,20 +63,7 @@ export default function AddStockAdjusment(props) {
     const [ListProduct, setListProduct] = useState([]);
     const [ListCategoryProduct, setListCategoryProduct] = useState([]);
 
-    const LisTime = [
-        {'value':'00:00-02:00','label':'00:00-02:00'},
-        {'value':'02:00-04:00','label':'02:00-04:00'},
-        {'value':'04:00-06:00','label':'04:00-06:00'},
-        {'value':'06:00-08:00','label':'06:00-08:00'},
-        {'value':'08:00-10:00','label':'08:00-10:00'},
-        {'value':'10:00-12:00','label':'10:00-12:00'},
-        {'value':'12:00-14:00','label':'12:00-14:00'},
-        {'value':'14:00-16:00','label':'14:00-16:00'},
-        {'value':'16:00-18:00','label':'16:00-18:00'},
-        {'value':'18:00-20:00','label':'18:00-20:00'},
-        {'value':'20:00-22:00','label':'20:00-22:00'},
-        {'value':'22:00-24:00','label':'22:00-24:00'},
-        ];
+    
 
 
     useEffect(() => {

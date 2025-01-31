@@ -247,16 +247,15 @@ const GenerateDraftPurchaseReceive = ({ valuedata }) => {
                     IsReady ?
                         <View style={{ marginTop: '0px' }}>
                             
-                            <View style={{ flexDirection: 'row' }}>
+                            {/* <View style={{ flexDirection: 'row' }}>
                                 <View style={{ flexDirection: 'row-reverse' }}>
-                                {/* <Image source={"img/logoheaderpdf.png"} /> */}
                                     <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 150, maxWidth: 150 }]}>{''}</Text>
                                 </View>
 
                                 <View style={{ flexDirection: 'row-reverse', marginLeft: '40%' }}>
                                     <Text style={{ fontSize: 7 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text>
                                 </View>
-                            </View>
+                            </View> */}
 
 
                             <View style={{ flexDirection: 'row',paddingTop:'20px'}}>
@@ -269,7 +268,7 @@ const GenerateDraftPurchaseReceive = ({ valuedata }) => {
                             <View style={styles.tableRow}>
 
                             <View style={[styles.tableColWidthNoBorder, {  height: "50px",marginBottom:'80px',marginLeft:'100px' }]}>
-                                <Text style={[{ width: styles.width.widthno, maxWidth: styles.width.widthno, marginTop: '5px', fontSize: 18,marginLeft:'10px' }]}>{"Surat Penerimaan Barang"}</Text>
+                                <Text style={[{ fontFamily: 'roboto',width: styles.width.widthno, maxWidth: styles.width.widthno, marginTop: '5px', fontSize: 18,marginLeft:'10px' }]}>{"Surat Penerimaan Barang"}</Text>
 
                             <View style={[styles.tableNoBorder]}>
                             <View style={styles.tableRow}>
@@ -288,7 +287,8 @@ const GenerateDraftPurchaseReceive = ({ valuedata }) => {
                             </View>
 
                             <Text style={[styles.tableCell, {width: 10, maxWidth: 10, marginTop: '5px', fontSize: fontSizeBig }]}>
-                               <Text style={{fontFamily: 'roboto'}}>{'SPB Date : '}</Text> {valuedata != null?valuedata.date:''}
+                                
+                               <Text style={{fontFamily: 'roboto'}}>{'SPB Date :                                                                   '}</Text> {valuedata != null?valuedata.date:''}
                             </Text>
                                 
                             </View>
@@ -400,6 +400,8 @@ const GenerateDraftPurchaseReceive = ({ valuedata }) => {
 
                             </View>
                             </View>
+                            <Text style={{textAlign:'right',fontSize:7}}>{"Edit:"}{(valuedata != null?valuedata.countEdit:'')}{"  Print:"}{(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}</Text>
+                            {/* <Text style={{ fontSize: 7 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text> */}
 
                         </View>
                     :

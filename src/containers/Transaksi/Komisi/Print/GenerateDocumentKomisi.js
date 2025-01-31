@@ -183,6 +183,23 @@ const getNamaBroker = (items) =>{
     return '';
 }
 
+const getBankBroker = (items) =>{
+    if(items){
+        let det = items.length > 0? items[0]:'';
+        let list = [];
+        if(det.vendorbankbroker !== '' && det.vendoraccnobroker !== '' && det.vendoraccnamebroker !== ''){
+            list.push(<Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '1px', fontSize: fontSizeBig }]}>{"Bank Account :"}</Text>);
+            list.push(<Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '1px', fontSize: fontSizeBig }]}>{det.vendorbankbroker}</Text>);
+            list.push(<Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '1px', fontSize: fontSizeBig }]}>{"a/c "+det.vendoraccnobroker}</Text>);
+            list.push(<Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '1px', fontSize: fontSizeBig }]}>{"a/n "+det.vendoraccnamebroker}</Text>);
+            return list;
+        }
+        
+        // return null;
+    }
+    return null;
+}
+
 const GenerateDocument = ({ valuedata }) => {
     const [IsReady, setIsReady] = useState(false);
         
@@ -198,16 +215,15 @@ const GenerateDocument = ({ valuedata }) => {
                     IsReady ?
                         <View style={{ marginTop: '0px' }}>
                             
-                            <View style={{ flexDirection: 'row' }}>
+                            {/* <View style={{ flexDirection: 'row' }}>
                                 <View style={{ flexDirection: 'row-reverse' }}>
-                                {/* <Image source={"img/logoheaderpdf.png"} /> */}
                                     <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', width: 150, maxWidth: 150 }]}>{''}</Text>
                                 </View>
 
                                 <View style={{ flexDirection: 'row-reverse', marginLeft: '40%' }}>
                                     <Text style={{ fontSize: 7 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text>
                                 </View>
-                            </View>
+                            </View> */}
 
 
                             <View style={{ flexDirection: 'row',paddingTop:'20px'}}>
@@ -220,7 +236,7 @@ const GenerateDocument = ({ valuedata }) => {
                                 {'To          : '}{valuedata != null ? getNamaBroker(valuedata.items) : ''}{'\n'}
                                 {'Tanggal : '}{valuedata != null ? valuedata.date : ''}{'\n'}
                                 {'Doc No : '}{valuedata != null ? valuedata.nodocument : ''}{'\n'}
-                                {'Broker : '}{valuedata != null ? getNamaBroker(valuedata.items) : ''}
+                                {/* {'Broker : '}{valuedata != null ? getNamaBroker(valuedata.items) : ''} */}
                                 </Text>
                             </View>    
 
@@ -238,7 +254,7 @@ const GenerateDocument = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: styles.width.widthvendor, maxWidth: styles.width.widthvendor, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Vendor"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.nodokumen, height: "25px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthnodokumen, maxWidth: styles.width.widthnodokumen, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"No Document"}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthnodokumen, maxWidth: styles.width.widthnodokumen, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"No Dokumen"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.koli, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthkoli, maxWidth: styles.width.widthkoli, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Koli"}</Text>
@@ -260,11 +276,25 @@ const GenerateDocument = ({ valuedata }) => {
                             
                             <View style={[styles.table]}>
                             <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, { width:"52%", height: "70px" }]}>
-                                <Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '5px', fontSize: fontSizeBig }]}>{"Remarks"}</Text>
+                            <View style={[styles.tableColWidth, { width:"52%", height: "90px" }]}>
+                                <Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '5px', fontSize: fontSizeBig }]}>{"Keterangan"}</Text>
+                                {getBankBroker(valuedata != null ? valuedata.items : [])}
                             </View>
-                            <View style={[styles.tableColWidth, { width:"48%", height: "70px" }]}>
-                                <Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '5px', fontSize: fontSizeBig }]}>{""}</Text>
+                            <View style={[styles.tableColWidth, { width:"48%", height: "90px", paddingLeft:'5px' }]}>
+                            <View style={{ flexDirection: 'row',paddingTop:'78px' }}>
+                                <View style={{ flexDirection: 'row-reverse' }}>
+                                {/* <Image source={"img/logoheaderpdf.png"} /> */}
+                                <Text style={{ fontSize: 7 }}>{'Print : '}{(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}</Text>
+                                    {/* <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', overflow: 'hidden', textOverflow: 'ellipsis', width: 120, maxWidth: 120 }]}>{'Print : 999'}</Text> */}
+                                </View>
+
+                                <View style={{ flexDirection: 'row-reverse', marginLeft: '46%' }}>
+                                <Text style={{ fontSize: 7 }}>{'Print By : '+(valuedata != null?valuedata.namaUser+' '+valuedata.currtime:'')}</Text>
+                                    {/* <Text style={{ fontSize: 7 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text> */}
+                                </View>
+                            </View>
+
+                                {/* <Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '5px', fontSize: fontSizeBig }]}>{""}</Text> */}
                             </View>
                             </View>
                             </View>

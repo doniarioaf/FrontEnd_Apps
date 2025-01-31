@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 // import roboto from '../../../../components/';
 import roboto from '../../../../components/Fonts/Roboto/Roboto-Bold.ttf';
 import { numToMoney } from '../../../shared/globalFunc';
+import { LisTime } from '../add';
 
 // import logo from "img/logo.png";
 
@@ -115,6 +116,163 @@ const styles = StyleSheet.create({
     },
     title: { fontFamily: 'roboto', fontWeight: 600 },
 });
+
+const setItemsAllCP = (items, valueheader) =>{
+    if(items != undefined && items != null){
+        let listRow = [];
+        let distinctID = [];
+        let grandTotal = [];
+        let listCP = valueheader.listcp?valueheader.listcp:[];
+        let listmappingstock = valueheader.mappingstock?valueheader.mappingstock:[];
+        for(let i=0; i < listCP.length; i++){
+            let det = listCP[i];
+            grandTotal.push({idcategoryproduct:det.id, grandtotal:0});
+        }
+        let jarakPer1Persen = 5;
+
+        let timeNumber = 13;
+        let timePersen = timeNumber+"%";
+        let widthtime = jarakPer1Persen * timeNumber;
+
+        let qtyNumber = 8;
+        let qtyPersen = qtyNumber+"%";
+        let widthqty = jarakPer1Persen * qtyNumber;
+
+        let totalNumber = (100 - timeNumber) - (qtyNumber * listCP.length);
+        let totalPersen = totalNumber+"%";
+        let widthtotal = jarakPer1Persen * totalNumber;
+
+
+        let rowItem = [];
+        if(listCP.length > 0){
+            grandTotal.push({idcategoryproduct:'total', grandtotal:0});
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:timePersen, height: "25px" }]}>
+                    <Text style={[styles.tableCell, {fontFamily: 'roboto', width: widthtime, maxWidth: widthtime, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Waktu"}</Text>
+                </View>
+            );
+        }
+        
+        for(let i=0; i < listCP.length; i++){
+            let det = listCP[i];
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:qtyPersen, height: "25px" }]}>
+                    <Text style={[styles.tableCell, {fontFamily: 'roboto', width: widthqty, maxWidth: widthqty, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.size}</Text>
+                </View>
+            );
+        };
+
+        rowItem.push(
+        <View style={[styles.tableColWidth, { width:totalPersen, height: "25px" }]}>
+            <Text style={[styles.tableCell, { fontFamily: 'roboto',width: widthtotal, maxWidth: widthtotal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{'Total'}</Text>
+        </View>
+        );
+
+        listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
+
+        let timeIsDone = [];
+        for(let i=0; i < LisTime.length; i++){
+            let rowItem = [];
+            let det = LisTime[i];
+            let stocktime = det.value?det.value:'';
+            
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:timePersen, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: widthtime, maxWidth: widthtime, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{stocktime}</Text>
+                </View>
+            );
+
+            if(timeIsDone.indexOf(stocktime) == -1){
+                let listfilteroutput = items.filter(output => output.stocktime == stocktime);
+                let totalQtyRowTime = 0;
+                if(listCP.length > 0){
+                    for(let j=0; j < listCP.length; j++){
+                        let detCP = listCP[j];
+                        let idCP = '';
+                        let listfilteroutputMappingStock = listmappingstock.filter(output => output.categoryproductidmapping == detCP.id);
+                        if(listfilteroutputMappingStock.length > 0){
+                            idCP = listfilteroutputMappingStock[0].categoryproductid;
+                        }else{
+                            idCP = detCP.id;    
+                        }
+
+                        let listfilteroutputByID = listfilteroutput.filter(output => output.idcategoryproduct == parseInt(idCP));
+                        if(listfilteroutputByID.length > 0){
+                            let detJ = listfilteroutputByID[0];
+                            totalQtyRowTime += parseInt(detJ.qty);
+
+                            let indexItems = grandTotal.findIndex(obj => obj.idcategoryproduct == detCP.id);
+                            let grandTotalitems = grandTotal[indexItems]['grandtotal'];
+                            grandTotalitems += parseInt(detJ.qty);
+
+                            grandTotal[indexItems]['grandtotal'] = grandTotalitems;
+
+                            rowItem.push(
+                                <View style={[styles.tableColWidth, { width:qtyPersen, height: "25px" }]}>
+                                    <Text style={[styles.tableCell, { width: widthqty, maxWidth: widthqty, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{detJ.qty}</Text>
+                                </View>
+                            );
+                        }else{
+                            rowItem.push(
+                                <View style={[styles.tableColWidth, { width:qtyPersen, height: "25px" }]}>
+                                    <Text style={[styles.tableCell, { width: widthqty, maxWidth: widthqty, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{0}</Text>
+                                </View>
+                            );
+                        };
+                    };
+                };
+                let indexItems = grandTotal.findIndex(obj => obj.idcategoryproduct == 'total');
+                let grandTotalitems = grandTotal[indexItems]['grandtotal'];
+                grandTotalitems += parseInt(totalQtyRowTime);
+
+                grandTotal[indexItems]['grandtotal'] = grandTotalitems;
+                rowItem.push(
+                <View style={[styles.tableColWidth, { width:totalPersen, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: widthtotal, maxWidth: widthtotal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{totalQtyRowTime}</Text>
+                </View>
+                );
+                timeIsDone.push(stocktime);
+                listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
+            };
+        };
+
+        if(listRow.length > 1){
+            rowItem = [];
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:timePersen, height: "25px" }]}>
+                    <Text style={[styles.tableCell, {fontFamily: 'roboto', width: widthtime, maxWidth: widthtime, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{'Total'}</Text>
+                </View>
+            );
+            for(let i=0; i < listCP.length; i++){
+                let detCP = listCP[i];
+                let listfilteroutput = grandTotal.filter(output => output.idcategoryproduct == detCP.id);
+                if(listfilteroutput.length > 0){
+                    let det = listfilteroutput[0];
+                    rowItem.push(
+                        <View style={[styles.tableColWidth, { width:qtyPersen, height: "25px" }]}>
+                            <Text style={[styles.tableCell, {fontFamily: 'roboto', width: widthqty, maxWidth: widthqty, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.grandtotal}</Text>
+                        </View>
+                    );
+                };
+            };
+            let grandTotalTotal = 0;
+            let listfilteroutput = grandTotal.filter(output => output.idcategoryproduct == 'total');
+            if(listfilteroutput.length > 0){
+                grandTotalTotal = listfilteroutput[0].grandtotal;
+            }
+            rowItem.push(
+            <View style={[styles.tableColWidth, { width:totalPersen, height: "25px" }]}>
+                <Text style={[styles.tableCell, {fontFamily: 'roboto', width: widthtotal, maxWidth: widthtotal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{grandTotalTotal}</Text>
+            </View>
+            );
+            listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
+        }
+
+        return listRow;
+
+    };
+    return null;
+}
 
 const setItems = (items) =>{
     if(items != undefined && items != null){
@@ -333,7 +491,8 @@ const GenerateStockUdangMati = ({ valuedata }) => {
                             </View>
                             
                             <View style={[styles.table,{marginTop:'0px'}]}>
-                            {setItems(valuedata != null ? valuedata.items : [])}
+                            {/* {setItems(valuedata != null ? valuedata.items : [])} */}
+                            {setItemsAllCP((valuedata != null ? valuedata.items : []),(valuedata != null ? valuedata : []))}
                             </View>
 
                         </View>
