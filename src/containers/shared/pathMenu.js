@@ -53,6 +53,7 @@ export const detailpricelist = `/form/detail/pricelist`;
 export const editpricelist = `/form/edit/pricelist`;
 export const menupurchasereceive = `/notapembelian`;
 export const addpurchasereceive = `/form/add/notapembelian`;
+export const addpurchasereceivefromtabpenerimaanbarang = `/form/addfromtabpenerimaanbarang/notapembelian`;
 export const printnota = `/form/nota/notapembelian`;
 export const detailpurchasereceive = `/form/detail/notapembelian`;
 export const editpurchasereceive = `/form/edit/notapembelian`;

@@ -71,6 +71,7 @@ export default function AddPurchaseReceive(props) {
 
     const [ListDraftPurchaseReceive, setListDraftPurchaseReceive] = useState([]);
     const [SelDraftPurchaseReceive, setSelDraftPurchaseReceive] = useState('');
+    const [ErrSelDraftPurchaseReceive, setErrSelDraftPurchaseReceive] = useState('');
 
     const [ListArea, setListArea] = useState([]);
     const [SelArea, setSelArea] = useState('');
@@ -83,7 +84,7 @@ export default function AddPurchaseReceive(props) {
     const [InputSMU, setInputSMU] = useState('');
     const [IdDraftPR, setIdDraftPR] = useState('');
 
-
+    const fromtype = props.from?props.from:'';
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getPurchaseReceiveData({ url: '/template' }, successHandler, errorHandler));
@@ -92,7 +93,7 @@ export default function AddPurchaseReceive(props) {
     function successHandler(data, propsdata) {
         if (data.data) {
             let listfilteroutput = data.data.vendorOpt.filter(output => output.type == 'UDANG');
-            const theData = listfilteroutput.reduce((obj, el) => [
+            const theDataVendor = listfilteroutput.reduce((obj, el) => [
                 ...obj,
                 {
                     'value': el.id,
@@ -100,7 +101,7 @@ export default function AddPurchaseReceive(props) {
                     'data': el
                 }
             ], []);
-            setListVendor(theData);
+            setListVendor(theDataVendor);
 
             const theDataProd = data.data.productOpt.reduce((obj, el) => [
                 ...obj,
@@ -143,8 +144,37 @@ export default function AddPurchaseReceive(props) {
                 }
             ], []);
             setListArea(theDataArea);
+
+            if(fromtype == "FROMDPR"){
+                let value = localStorage.getItem("mxowe1I9ey");
+                if(value !== null && value !== undefined && value !== ""){
+                    let arrVal = new String(value).split("|");
+                    
+                    
+                    if(arrVal.length > 1){
+                        let iddraft = parseInt(arrVal[0]);
+                        let idvendor = parseInt(arrVal[1]);
+                        setSelVendor(idvendor);
+                        setSelDraftPurchaseReceive(iddraft);
+                        
+                        let listfilteroutput = theDataVendor.filter(output => output.value == idvendor);
+                        if(listfilteroutput.length > 0){
+                            
+                            changeVendor(listfilteroutput[0],theDataCharge);
+                        }
+                    }
+                    
+                }
+            }else{
+                setLoading(false);
+            }
+
+        }else{
+            setLoading(false);   
         }
-        setLoading(false);
+
+        
+        
     }
 
 
@@ -165,6 +195,7 @@ export default function AddPurchaseReceive(props) {
         setErrInputAccNameBank('');
         setErrItemsHidup('');
         setErrSelArea('');
+        setErrSelDraftPurchaseReceive('');
 
         if (ListItemsPurchaseReceive.length > 0) {
             // for (let i = 0; i < ListItemsPurchaseReceive.length; i++) {
@@ -196,6 +227,19 @@ export default function AddPurchaseReceive(props) {
         if (SelVendor == '') {
             setErrSelVendor(i18n.t('label_REQUIRED'));
             flag = false;
+        }else{
+            let listfilterVendor = ListVendor.filter(output => output.value == SelVendor);
+            if(listfilterVendor.length == 0){
+                setErrSelVendor(i18n.t('Vendor Tidak Dikenal'));
+                flag = false;
+            }
+        }
+        if(SelDraftPurchaseReceive !== '' && SelDraftPurchaseReceive !== 'nodata') {
+            let listfilterVendor = ListDraftPurchaseReceive.filter(output => output.value == SelDraftPurchaseReceive);
+            if(listfilterVendor.length == 0){
+                setErrSelDraftPurchaseReceive(i18n.t('Penerimaan Barang Tidak Dikenal'));
+                flag = false;
+            }
         }
 
         if (SelArea == '') {
@@ -242,6 +286,7 @@ export default function AddPurchaseReceive(props) {
 
     const executeSubmit = (values) => {
         let flag = checkColumnMandatory(values);
+        
         if (flag) {
             setIsTambahDeposit(false);
             let totalprice = new String(values.totalprice).replaceAll('.', '') !== '' ? new String(values.totalprice).replaceAll('.', '') : 0;
@@ -419,7 +464,7 @@ export default function AddPurchaseReceive(props) {
                 // history.go
                 //   Swal.fire('Saved!', '', 'success')
             } else if (result.isDenied) {
-                console.log('cancel')
+                
                 //   Swal.fire('Changes are not saved', '', 'info')
             }
         })
@@ -631,6 +676,9 @@ export default function AddPurchaseReceive(props) {
         setListItemsInventori(list);
     };
     const handleChangeDraftPR = (data) => {
+        changeDraftPR(data,ListItemsPurchaseReceiveBiaya,ListItemsInventori);
+    }
+    const changeDraftPR = (data,paramlistcharge,paramlistinventori) => {
         let id = data?.value ? data.value : '';
         let val = data?.data ? data.data : '';
         setSelDraftPurchaseReceive(id);
@@ -651,10 +699,10 @@ export default function AddPurchaseReceive(props) {
             setInputSMU('');
         }
 
-        let listCharge = setPriceBox(ListItemsPurchaseReceiveBiaya, qtyBox);
+        let listCharge = setPriceBox(paramlistcharge, qtyBox);
         setListItemsPurchaseReceiveBiaya(listCharge);
 
-        let objPrice = calculateTotalPrice([], listCharge, ListItemsInventori);
+        let objPrice = calculateTotalPrice([], listCharge, paramlistinventori);
         let totalPrice = objPrice.totalPrice;
         let totalPriceItemHidup = objPrice.totalPriceItemHidup;
         setInputTotalPrice(totalPrice);
@@ -772,6 +820,10 @@ export default function AddPurchaseReceive(props) {
         setLoading(false);
     }
     const handleChangeVendor = (data) => {
+        changeVendor(data,ListItemsPurchaseReceiveBiaya,ListItemsInventori);
+    }
+    const changeVendor = (data,paramlistcharge,paramlistinventori) => {
+        
         let id = data?.value ? data.value : '';
         setSelVendor(id);
 
@@ -794,7 +846,7 @@ export default function AddPurchaseReceive(props) {
         setIdDraftPR('');
 
         setLoading(true);
-        let listCharge = setPriceBoxOngkosByVendor(ListItemsPurchaseReceiveBiaya, valdata.pricebox, valdata.priceongkos);
+        let listCharge = setPriceBoxOngkosByVendor(paramlistcharge, valdata.pricebox, valdata.priceongkos);
         setListItemsPurchaseReceiveBiaya(listCharge);
         let objPrice = calculateTotalPrice([], listCharge, []);
         let totalPrice = objPrice.totalPrice;
@@ -803,10 +855,15 @@ export default function AddPurchaseReceive(props) {
         if (IsDefaultSetorTotalPrice) {
             setInputSetor(totalPrice);
         }
+        
 
-        dispatch(actions.getPurchaseReceiveData({ url: '/searchvendor?idvendor=' + id }, successHandlerVendor, errorHandler));
+        dispatch(actions.getPurchaseReceiveData({ url: '/searchvendor?idvendor=' + id,propsdata:{charge:listCharge,inventory:paramlistinventori} }, successHandlerVendor, errorHandler));
     }
     function successHandlerVendor(data, propsdata) {
+        //propsdata:{charge:listCharge,inventory:paramlistinventori}
+        let listCharge = propsdata.charge?propsdata.charge:[];
+        let listinventory = propsdata.inventory?propsdata.inventory:[];
+        
         const theDataProd = data.data.categoryproductOpt.reduce((obj, el) => [
             ...obj,
             {
@@ -817,6 +874,7 @@ export default function AddPurchaseReceive(props) {
         ], []);
         setListCategoryProduct(theDataProd);
         setSisaDeposit(data.data.sisaDeposit ? data.data.sisaDeposit : 0);
+        
 
         const theDataDraftPR = data.data.draftPurchaseReceiveOpt.reduce((obj, el) => [
             ...obj,
@@ -832,8 +890,30 @@ export default function AddPurchaseReceive(props) {
             'data':''
         });
         setListDraftPurchaseReceive(theDataDraftPR);
+        
 
-        setLoading(false);
+        if(fromtype == "FROMDPR"){
+            let value = localStorage.getItem("mxowe1I9ey");
+            if(value !== null && value !== undefined && value !== ""){
+                let arrVal = new String(value).split("|");
+                if(arrVal.length > 1){
+                    let iddraft = parseInt(arrVal[0]);
+                    let idvendor = parseInt(arrVal[1]);
+                    setSelDraftPurchaseReceive(iddraft);
+
+                    let listfilteroutput = theDataDraftPR.filter(output => output.value == iddraft);
+                    if(listfilteroutput.length > 0){
+                        //
+                        changeDraftPR(listfilteroutput[0],listCharge,listinventory);
+                    }
+                }
+                
+            }
+        }else{
+            setLoading(false);
+        }
+
+        // setLoading(false);
     }
 
     const handleAddItemsHidup = () => {
@@ -1051,7 +1131,7 @@ export default function AddPurchaseReceive(props) {
                                             textField={'label'}
                                             valueField={'value'}
                                             // style={{width: '25%'}}
-                                            // disabled={values.isdisabledcountry}
+                                            disabled={fromtype == "FROMDPR"}
                                             value={values.vendor}
                                         />
                                         <div className="invalid-feedback-custom">{ErrSelVendor}</div>
@@ -1146,9 +1226,10 @@ export default function AddPurchaseReceive(props) {
                                             textField={'label'}
                                             valueField={'value'}
                                             // style={{width: '25%'}}
-                                            // disabled={values.isdisabledcountry}
+                                            disabled={fromtype == "FROMDPR"}
                                             value={values.draftpurchasereceive}
                                         />
+                                        <div className="invalid-feedback-custom">{ErrSelDraftPurchaseReceive}</div>
 
                                     </div>
 

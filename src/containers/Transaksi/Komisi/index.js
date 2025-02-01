@@ -77,6 +77,7 @@ const KomisiIndex = () => {
       
 
     useEffect(() => {
+        localStorage.removeItem('ajskme3ss');
         setLoading(true);
         dispatch(actions.getKomisiData({ url: '/template', type: 'GET', payload: null }, successHandlerTemplate, errorHandler));
 

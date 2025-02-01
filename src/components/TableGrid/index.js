@@ -33,6 +33,7 @@ import IconAdd from '../../components/Icons/IconAdd';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import PostAdd from '@material-ui/icons/PostAdd';
 // import * as pathmenu           from '../../shared/pathMenu';
 import {Loading}                    from '../../components/Common/Loading';
 import { valPageSize, valPageSizes } from '../../containers/shared/constantValue';
@@ -111,6 +112,16 @@ const TableGrid = props => {
             return (
                 <TableEditColumn.Cell row={row} {...restProps}>
                     {children}
+
+                    <Tooltip title={i18n.t(props.texttooltoppostadd?props.texttooltoppostadd:'Add')}>
+                        <IconButton color={'primary'} 
+                        hidden={props.permissionpostadd !== undefined?props.permissionpostadd:true}
+                        onClick={() => props.onclickpostadd?props.onclickpostadd(row):''}
+                        disabled={props.postadddisabled?props.postadddisabled(row):false}
+                        >
+                            <PostAdd/>
+                        </IconButton>
+                    </Tooltip>
 
                     <Tooltip title={i18n.t('Delete')}>
                         <IconButton color={'primary'} 

@@ -180,8 +180,9 @@ const addPriceList = lazy(() => import('./containers/Master/PriceList/add'));
 const detailPriceList = lazy(() => import('./containers/Master/PriceList/detail'));
 const editPriceList = lazy(() => import('./containers/Master/PriceList/edit'));
 
-const menuPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive'));
+const menuPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/indexnew'));
 const addPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/add'));
+const addPrFromTabDpr = lazy(() => import('./containers/Transaksi/PurchaseReceive/addPrFromTabDpr'));
 const printNota = lazy(() => import('./containers/Transaksi/PurchaseReceive/printNota'));
 const detailPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/detail'));
 const editPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/edit'));
@@ -447,6 +448,7 @@ const Routes = ({ location, ...props }) => {
 
                                         <Route path={pathmenu.menupurchasereceive} component={waitFor(menuPurchaseReceive)} />
                                         <Route path={pathmenu.addpurchasereceive} component={waitFor(addPurchaseReceive)} />
+                                        <Route path={pathmenu.addpurchasereceivefromtabpenerimaanbarang+ '/:id'} component={waitFor(addPrFromTabDpr)} />
                                         <Route path={pathmenu.printnota + '/:id'} component={waitFor(printNota)} />
                                         <Route path={pathmenu.detailpurchasereceive + '/:id'} component={waitFor(detailPurchaseReceive)} />
                                         <Route path={pathmenu.editpurchasereceive + '/:id'} component={waitFor(editPurchaseReceive)} />
