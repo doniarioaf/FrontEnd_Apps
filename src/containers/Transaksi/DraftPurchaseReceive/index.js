@@ -55,7 +55,7 @@ const DraftPurchaseReceiveIndex = () => {
                     'id': el.id,
                     'nodoc': el.nodocument,
                     'smu': el.smu,
-                    'vendor': el.vendorName,
+                    'vendor': el.vendorAlias,
                     'transdate': el.date ? moment(el.date).format(formatdate) : '',
                 }
             ], []);
