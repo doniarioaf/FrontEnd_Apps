@@ -150,17 +150,19 @@ export default function AddPurchaseReceive(props) {
                 if(value !== null && value !== undefined && value !== ""){
                     let arrVal = new String(value).split("|");
                     
-                    
                     if(arrVal.length > 1){
                         let iddraft = parseInt(arrVal[0]);
                         let idvendor = parseInt(arrVal[1]);
                         setSelVendor(idvendor);
                         setSelDraftPurchaseReceive(iddraft);
-                        
                         let listfilteroutput = theDataVendor.filter(output => output.value == idvendor);
                         if(listfilteroutput.length > 0){
-                            
                             changeVendor(listfilteroutput[0],theDataCharge);
+                        }else{
+                            //kemungkinan di master vendor nya sudah di delete
+                            setLoading(false);
+                            msgInfoText("Vendor tidak ditemukan");
+                            
                         }
                     }
                     
@@ -444,6 +446,29 @@ export default function AddPurchaseReceive(props) {
             icon: 'error',
             title: 'Oops...',
             text: data.msg
+        })
+    }
+
+    const msgInfoText = (text) => {
+
+        Swal.fire({
+            icon: 'info',
+            title: 'Information',
+            text: text,
+            showDenyButton: false,
+            showCancelButton: false,
+            confirmButtonText: `Ok`,
+            denyButtonText: `Cancel`,
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                // submitPayload(true,values)
+                // history.go
+                //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+                
+                //   Swal.fire('Changes are not saved', '', 'info')
+            }
         })
     }
 
@@ -905,6 +930,10 @@ export default function AddPurchaseReceive(props) {
                     if(listfilteroutput.length > 0){
                         //
                         changeDraftPR(listfilteroutput[0],listCharge,listinventory);
+                    }else{
+                        setLoading(false);
+                        msgInfoText("Penerimaan barang tidak ditemukan");
+                        
                     }
                 }
                 

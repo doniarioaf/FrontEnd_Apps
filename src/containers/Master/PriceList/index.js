@@ -28,10 +28,13 @@ const PriceListIndex = () => {
     const [columns] = useState([
         { name: 'id', title: 'id' },
         // {name: 'code', title: i18n.t('Code')},
+        { name: 'customer', title: i18n.t('Customer') },
         { name: 'pricedate', title: i18n.t('Date From') },
         { name: 'pricedatethru', title: i18n.t('Date Thru') },
     ]);
-    const [tableColumnExtensions] = useState([]);
+    const [tableColumnExtensions] = useState([
+        {columnName: 'customer', width: '450'},
+    ]);
     const [loading, setLoading] = useState(false);
     let getdate = firstAndLastDateInMonth();
     const [from, setFrom] = useState(getdate.first);
@@ -49,6 +52,7 @@ const PriceListIndex = () => {
                 ...obj,
                 {
                     'id': el.id,
+                    'customer': el.customerName,
                     'pricedate': el.pricedate ? moment(el.pricedate).format(formatdate) : '',
                     'pricedatethru': el.pricedatethru ? moment(el.pricedatethru).format(formatdate) : '',
                 }

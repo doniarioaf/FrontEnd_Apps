@@ -84,8 +84,8 @@ export default function AddPackingList(props) {
             setListCustomer(theDataProd);
         }
 
-        dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + TransDate.getTime() }, successHandlerPriceList, errorHandler));
-        // setLoading(false);
+        // dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + TransDate.getTime() }, successHandlerPriceList, errorHandler));
+        setLoading(false);
     }
 
     function successHandlerPriceList(data, propsdata) {
@@ -255,8 +255,12 @@ export default function AddPackingList(props) {
             let datetrans = moment(data, formatdate).toDate();
             setTransDate(datetrans);
 
-            setLoading(true);
-            dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + datetrans.getTime() }, successHandlerPriceList, errorHandler));
+            if(SelCustomer !== ''){
+                setLoading(true);
+                dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + datetrans.getTime()+'&idcustomer='+SelCustomer }, successHandlerPriceList, errorHandler));
+            }
+            // setLoading(true);
+            // dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + datetrans.getTime() }, successHandlerPriceList, errorHandler));
         } else {
             setTransDate(null)
         }
@@ -440,9 +444,14 @@ export default function AddPackingList(props) {
     };
 
     const handleChangeCustomer = (data) => {
+        setPriceList(null);
+        setListCategoryProduct([]);
+        setListItems([]);
+        
         let id = data?.value ? data.value : '';
         setSelCustomer(id);
-
+        setLoading(true);
+        dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + TransDate.getTime()+'&idcustomer='+id }, successHandlerPriceList, errorHandler));
     }
 
     const msgInfo = (text) => {

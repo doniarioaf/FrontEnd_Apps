@@ -197,6 +197,13 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Customer')}</span>
+                                <strong className="col-md-7">
+                                {value.customerName ?value.customerName:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Note')}</span>
                                 <strong className="col-md-7">
                                 {value.notes ?value.notes:''}
