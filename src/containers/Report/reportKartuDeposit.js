@@ -51,7 +51,8 @@ export default function ReportKartuDeposit(props) {
                 ...obj,
                 {
                     'value': el.id,
-                    'label': el.nama + ' (' + el.alias + ')',
+                    // 'label': el.nama + ' (' + el.alias + ')',
+                    'label': el.alias,
                     'data': el
                 }
             ], []);

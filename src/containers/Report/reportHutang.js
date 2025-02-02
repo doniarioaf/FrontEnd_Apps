@@ -65,7 +65,8 @@ export default function ReportHutang(props) {
                     ...obj,
                     {
                         'value': el.id,
-                        'label': el.nama + ' (' + el.alias + ')',
+                        // 'label': el.nama + ' (' + el.alias + ')',
+                        'label': el.alias,
                         'data': el
                     }
                 ], []);
@@ -78,7 +79,8 @@ export default function ReportHutang(props) {
                             theData.push(
                                 {
                                     'value': el.id,
-                                    'label': el.nama + ' (' + el.alias + ')',
+                                    // 'label': el.nama + ' (' + el.alias + ')',
+                                    'label': el.alias,
                                     'data': el
                                 }
                             );
@@ -94,7 +96,8 @@ export default function ReportHutang(props) {
                             theData.push(
                                 {
                                     'value': el.id,
-                                    'label': el.nama + ' (' + el.alias + ')',
+                                    // 'label': el.nama + ' (' + el.alias + ')',
+                                    'label': el.alias,
                                     'data': el
                                 }
                             );
@@ -110,7 +113,8 @@ export default function ReportHutang(props) {
                             theData.push(
                                 {
                                     'value': el.id,
-                                    'label': el.nama + ' (' + el.alias + ')',
+                                    // 'label': el.nama + ' (' + el.alias + ')',
+                                    'label': el.alias,
                                     'data': el
                                 }
                             );

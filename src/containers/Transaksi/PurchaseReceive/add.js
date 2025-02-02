@@ -1241,7 +1241,7 @@ export default function AddPurchaseReceive(props) {
                                         <div className="invalid-feedback-custom">{ErrInputAccNameBank}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="draftpurchasereceive">
-                                            {i18n.t('Draft')}
+                                            {i18n.t('SPB')}
                                         </label>
 
                                         <DropdownList

@@ -396,11 +396,12 @@ const GenerateDraftPurchaseReceive = ({ valuedata }) => {
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.inputsystem, height: "60px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthinputsystem, maxWidth: styles.width.widthinputsystem, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{""}</Text>
+                                <Text style={{textAlign:'right',marginTop:"44px",marginRight:"2px",fontSize:7}}>{"Printed By: "}{(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text>
                             </View>
 
                             </View>
                             </View>
-                            <Text style={{textAlign:'right',fontSize:7}}>{"Edit:"}{(valuedata != null?valuedata.countEdit:'')}{"  Print:"}{(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}</Text>
+                            <Text style={{textAlign:'right',marginRight:"2px",fontSize:7}}>{"Edit:"}{(valuedata != null?valuedata.countEdit:'')}{"  Print:"}{(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}</Text>
                             {/* <Text style={{ fontSize: 7 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text> */}
 
                         </View>
