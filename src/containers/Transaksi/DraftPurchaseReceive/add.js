@@ -458,13 +458,11 @@ export default function AddDraftPurchaseReceive(props) {
                     if(name == 'EKOR'){
                         totalekor += parseFloat(valTemp);
                     }else if(name == 'KG'){
-                        console.log('valTemp KG ',valTemp);
                         totalkg += parseFloat(valTemp);
                     }
                 }
             }
 
-            console.log('totalkg ',totalkg);
             
             let listtotal = [...ListCategory];
             let indexItems = listtotal.findIndex(obj => obj.idcategoryproduct == idcategoryproduct);
