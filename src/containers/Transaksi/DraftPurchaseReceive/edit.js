@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { formatRupiah, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
+import { desimal000, formatRupiah, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { editDraftPurchaseReceive_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -125,7 +125,7 @@ export default function EditDraftPurchaseReceive(props) {
         setInputNotes1(theData.notes1?theData.notes1:'');
         setInputNotes2(theData.notes2?theData.notes2:'');
         setInputGrandTotalEkor(theData.totalekor?formatRupiah(theData.totalekor,2):0);
-        setInputGrandTotalKilo(theData.totalkg?formatRupiah(theData.totalkg,2):0);
+        setInputGrandTotalKilo(theData.totalkg?desimal000(formatRupiah(new String(theData.totalkg).replaceAll('.',','),3),{isShow000:false}):0);
         setInputPersentase(theData.persentase?formatRupiah(theData.persentase,2):0);
         setInputBox(theData.box);
 
@@ -339,7 +339,7 @@ export default function EditDraftPurchaseReceive(props) {
                             'idcategoryproduct': el.idcategoryproduct,
                             'size': el.sizecategoryproduct,
                             'weight': el.weightfromingramcategoryproduct+'-'+el.weighttoingramcategoryproduct+' Gram',
-                            'listtotal':[{label:'Total Ekor',code:'totalekor',total:formatRupiah(totalekor,2)},{label:'Total Kg',code:'totalkg',total:formatRupiah(totalkg,2)}]
+                            'listtotal':[{label:'Total Ekor',code:'totalekor',total:formatRupiah(totalekor,2)},{label:'Total Kg',code:'totalkg',total:desimal000(formatRupiah(new String(totalkg).replaceAll('.',','),3),{isShow000:false})}]
                         }
                     );
                     arrDistinctCP.push(idcategoryproduct);
@@ -355,7 +355,7 @@ export default function EditDraftPurchaseReceive(props) {
                 let listfilteroutput = listfilteroutputHidup.filter(output => output.boxsequence == boxseq);
                 for(let x =0; x < listfilteroutput.length; x++){
                     let det = listfilteroutput[x];
-                    let kilo = det.kilo?new String(det.kilo).replaceAll('.',','):'';
+                    let kilo = det.kilo?desimal000(formatRupiah(new String(det.kilo).replaceAll('.',','),3),{isShow000:false}):'';
                     temp.push(
                         {
                             'idproduct': det.idproduct,
@@ -584,9 +584,13 @@ export default function EditDraftPurchaseReceive(props) {
         let flag = true;
         let valTemp = '';
         if(new String(value).includes(',')){
+            let valEndSubstring = 2;
+            if(name == 'KG'){
+                valEndSubstring = 3;
+            }
             let splitComma = new String(value).split(','); 
             let angka = splitComma[0];
-            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,valEndSubstring):'';
             valTemp = removeFormatRupiah(angka)+'.'+desimal;
         }else{
             valTemp = removeFormatRupiah(value);
@@ -608,7 +612,7 @@ export default function EditDraftPurchaseReceive(props) {
                     let arr = new String(value).split(',');
                     if(arr.length > 0){
                         let valArr1 = arr[1];
-                        if(new String(valArr1).length > 2){
+                        if(new String(valArr1).length > 3){
                             flag = false;
                         }
                     }
@@ -633,9 +637,13 @@ export default function EditDraftPurchaseReceive(props) {
                     let jumlah = detItems.jumlah && detItems.jumlah !== ''?detItems.jumlah:0;
                     let valTemp = '';
                     if(new String(jumlah).includes(',')){
+                        let valEndSubstring = 2;
+                        if(name == 'KG'){
+                            valEndSubstring = 3;
+                        }
                         let splitComma = new String(jumlah).split(','); 
                         let angka = splitComma[0];
-                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,valEndSubstring):'';
                         valTemp = removeFormatRupiah(angka)+'.'+desimal;
                     }else{
                         valTemp = removeFormatRupiah(jumlah);
@@ -657,7 +665,7 @@ export default function EditDraftPurchaseReceive(props) {
                 listtotalitems[indexTotalItems]['total'] = formatRupiah(totalekor,2);
             }else if(name == 'KG'){
                 indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalkg');
-                listtotalitems[indexTotalItems]['total'] = formatRupiah(totalkg,2);
+                listtotalitems[indexTotalItems]['total'] = formatRupiah(new String(totalkg.toFixed(3)).replaceAll('.',','),3);
             }
             listtotal[indexItems]['listtotal'] = listtotalitems;
             let obj = calculateGrandTotal(listtotal);
@@ -755,7 +763,7 @@ export default function EditDraftPurchaseReceive(props) {
             if(new String(totalKg).includes(',')){
                 let splitComma = new String(totalKg).split(','); 
                 let angka = splitComma[0];
-                let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,3):'';
                 totalKg = removeFormatRupiah(angka)+'.'+desimal;
             }else{
                 totalKg = removeFormatRupiah(totalKg);
@@ -766,7 +774,7 @@ export default function EditDraftPurchaseReceive(props) {
         }
         
         setInputGrandTotalEkor(formatRupiah(grandTotalEkor,2));
-        setInputGrandTotalKilo(formatRupiah(grandTotalKg,2));
+        setInputGrandTotalKilo(formatRupiah(new String(grandTotalKg.toFixed(3)).replaceAll('.',','),3));
 
         return {'grandTotalEkor':grandTotalEkor,'grandTotalKg':grandTotalKg}
     }

@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { desimal000, formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { MenuDraftPurchaseReceive, deleteDraftPurchaseReceive_Permission, editDraftPurchaseReceive_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime } from '../../shared/constantValue';
@@ -130,7 +130,7 @@ import React, {useState,
                         'idcategoryproduct': el.idcategoryproduct,
                         'size': el.sizecategoryproduct,
                         'weight': el.weightfromingramcategoryproduct+'-'+el.weighttoingramcategoryproduct+' Gram',
-                        'listtotal':[{label:'Total Ekor',code:'totalekor',total:formatRupiah(totalekor,2)},{label:'Total Kg',code:'totalkg',total:formatRupiah(totalkg,2)}]
+                        'listtotal':[{label:'Total Ekor',code:'totalekor',total:formatRupiah(totalekor,2)},{label:'Total Kg',code:'totalkg',total:desimal000(formatRupiah(new String(totalkg).replaceAll('.',','),3),{isShow000:false})}]
                     }
                 );
                 arrDistinctCP.push(idcategoryproduct);
@@ -159,7 +159,7 @@ import React, {useState,
                     {
                         'idproduct': det.idproduct,
                         'idcategoryproduct': det.idcategoryproduct,
-                        'jumlah':det.kilo?formatRupiah(det.kilo,2):0,
+                        'jumlah':det.kilo?desimal000(formatRupiah(new String(det.kilo).replaceAll('.',','),3),{isShow000:false}):0,
                         'jumlahtype':'KG'
                     }
                 );
@@ -377,7 +377,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Total Kg')}</span>
                                 <strong className="col-md-7">
-                                {value.totalkg ?value.totalkg:''}
+                                {value.totalkg ?formatRupiah(new String(value.totalkg).replaceAll('.',','),3):''}
                                 </strong>
                             </div>
 

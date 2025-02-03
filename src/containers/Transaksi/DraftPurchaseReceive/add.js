@@ -212,6 +212,7 @@ export default function AddDraftPurchaseReceive(props) {
             obj.notes1 = values.notes1;
             obj.notes2 = values.notes2;
             obj.box = values.box !== ''?values.box:0;
+            // console.log('OBJ ',obj);
             dispatch(actions.submitDraftPurchaseReceive({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -389,9 +390,13 @@ export default function AddDraftPurchaseReceive(props) {
         let flag = true;
         let valTemp = '';
         if(new String(value).includes(',')){
+            let valEndSubstring = 2;
+            if(name == 'KG'){
+                valEndSubstring = 3;
+            }
             let splitComma = new String(value).split(','); 
             let angka = splitComma[0];
-            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,valEndSubstring):'';
             valTemp = removeFormatRupiah(angka)+'.'+desimal;
         }else{
             valTemp = removeFormatRupiah(value);
@@ -413,7 +418,7 @@ export default function AddDraftPurchaseReceive(props) {
                     let arr = new String(value).split(',');
                     if(arr.length > 0){
                         let valArr1 = arr[1];
-                        if(new String(valArr1).length > 2){
+                        if(new String(valArr1).length > 3){
                             flag = false;
                         }
                     }
@@ -438,9 +443,14 @@ export default function AddDraftPurchaseReceive(props) {
                     let jumlah = detItems.jumlah && detItems.jumlah !== ''?detItems.jumlah:0;
                     let valTemp = '';
                     if(new String(jumlah).includes(',')){
+                        let valEndSubstring = 2;
+                        if(name == 'KG'){
+                            valEndSubstring = 3;
+                        }
+
                         let splitComma = new String(jumlah).split(','); 
                         let angka = splitComma[0];
-                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,valEndSubstring):'';
                         valTemp = removeFormatRupiah(angka)+'.'+desimal;
                     }else{
                         valTemp = removeFormatRupiah(jumlah);
@@ -448,10 +458,13 @@ export default function AddDraftPurchaseReceive(props) {
                     if(name == 'EKOR'){
                         totalekor += parseFloat(valTemp);
                     }else if(name == 'KG'){
+                        console.log('valTemp KG ',valTemp);
                         totalkg += parseFloat(valTemp);
                     }
                 }
             }
+
+            console.log('totalkg ',totalkg);
             
             let listtotal = [...ListCategory];
             let indexItems = listtotal.findIndex(obj => obj.idcategoryproduct == idcategoryproduct);
@@ -462,7 +475,7 @@ export default function AddDraftPurchaseReceive(props) {
                 listtotalitems[indexTotalItems]['total'] = formatRupiah(totalekor,2);
             }else if(name == 'KG'){
                 indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalkg');
-                listtotalitems[indexTotalItems]['total'] = formatRupiah(totalkg,2);
+                listtotalitems[indexTotalItems]['total'] = formatRupiah(new String(totalkg.toFixed(3)).replaceAll('.',','),3);
             }
             listtotal[indexItems]['listtotal'] = listtotalitems;
             let obj = calculateGrandTotal(listtotal);
@@ -560,7 +573,7 @@ export default function AddDraftPurchaseReceive(props) {
             if(new String(totalKg).includes(',')){
                 let splitComma = new String(totalKg).split(','); 
                 let angka = splitComma[0];
-                let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,3):'';
                 totalKg = removeFormatRupiah(angka)+'.'+desimal;
             }else{
                 totalKg = removeFormatRupiah(totalKg);
@@ -571,7 +584,7 @@ export default function AddDraftPurchaseReceive(props) {
         }
         
         setInputGrandTotalEkor(formatRupiah(grandTotalEkor,2));
-        setInputGrandTotalKilo(formatRupiah(grandTotalKg,2));
+        setInputGrandTotalKilo(formatRupiah(new String(grandTotalKg.toFixed(3)).replaceAll('.',','),3));
 
         return {'grandTotalEkor':grandTotalEkor,'grandTotalKg':grandTotalKg}
     }
@@ -946,7 +959,7 @@ export default function AddDraftPurchaseReceive(props) {
                                             {
                                                 ListCategory.map((x, i) => {
                                                     return(
-                                                        <th colSpan={2} style={{textAlign:'center',width:'210px'}}>{i18n.t(x.size)} <br></br>{x.weight} </th>
+                                                        <th colSpan={2} style={{textAlign:'center',width:'220px'}}>{i18n.t(x.size)} <br></br>{x.weight} </th>
                                                     )
                                                 })
                                             }
@@ -958,7 +971,7 @@ export default function AddDraftPurchaseReceive(props) {
                                                     return(
                                                         x.listtotal.map((xx, ii) => {
                                                             return(
-                                                                <td width={'50%'}>{xx.label+' : '+xx.total} </td>
+                                                                <td width={xx.label == 'Total Kg'?'55%':'45%' }>{xx.label+' : '+xx.total} </td>
                                                             )
                                                             
                                                         })

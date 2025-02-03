@@ -415,6 +415,35 @@ export const terbilang = (nilai) =>{
     return nilai+',00';
   }
 
+  export const desimal000 = (nilai,param) =>{
+    let isShow000 = param.isShow000?param.isShow000:false;
+    if(new String(nilai).includes(',')){
+        let splitComma = new String(nilai).split(','); 
+        let angka = splitComma[0];
+        let desimal = splitComma[1] !== undefined?splitComma[1]:'';
+        if(new String(desimal).length > 2){
+            return nilai;
+        }else if(new String(desimal).length == 2){
+            return angka+','+desimal+'0';
+        }else if(new String(desimal).length == 1){
+            return angka+','+desimal+'00';
+        }else if(new String(desimal).length == 0){
+            if(isShow000){
+                return angka+',000';
+            }else{
+                return angka;
+            }
+            
+        }   
+    }
+    if(isShow000){
+        return nilai+',000';
+    }else{
+        return nilai;
+    }
+    
+  }
+
   export const getFormatFile = (filename) => {
     let split = new String(filename).split('.');
     let splitlength = new String(filename).split('.').length;
