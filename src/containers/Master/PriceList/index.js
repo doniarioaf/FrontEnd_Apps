@@ -52,7 +52,7 @@ const PriceListIndex = () => {
                 ...obj,
                 {
                     'id': el.id,
-                    'customer': el.customerName,
+                    'customer': el.customerName+' ('+el.customerAlias+')',
                     'pricedate': el.pricedate ? moment(el.pricedate).format(formatdate) : '',
                     'pricedatethru': el.pricedatethru ? moment(el.pricedatethru).format(formatdate) : '',
                 }

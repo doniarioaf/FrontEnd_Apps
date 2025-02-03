@@ -228,7 +228,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Vendor')}</span>
                             <strong className="col-md-7">
-                                {value.vendorName?value.vendorName:''}
+                                {value.vendorName?value.vendorName+' ('+value.vendorAlias+')':''}
                             </strong>
                             </div>
 

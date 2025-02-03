@@ -54,7 +54,7 @@ const DepositIndex = () => {
                 {
                     'id': el.id,
                     'nodocument':el.nodocument,
-                    'vendor': el.vendorName,
+                    'vendor': el.vendorName+' ('+el.vendorAlias+')',
                     'transdate': el.depositdate ? moment(el.depositdate).format(formatdate) : '',
                 }
             ], []);

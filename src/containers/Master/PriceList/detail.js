@@ -199,7 +199,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Customer')}</span>
                                 <strong className="col-md-7">
-                                {value.customerName ?value.customerName:''}
+                                {value.customerName ?value.customerName+' ('+value.customerAlias+')':''}
                                 </strong>
                             </div>
 

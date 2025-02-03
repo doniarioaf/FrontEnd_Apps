@@ -124,9 +124,15 @@ const setItems = (items) =>{
 
         let listfilteroutput = items.filter(output => output.ekor > 0);
         console.log('listfilteroutput ',listfilteroutput);
-        
+        let letListDone = [];
         for(let i=0; i < listfilteroutput.length; i++){
             let det = listfilteroutput[i];
+            let key = det.idproduct+'-'+det.idcategoryproduct;
+            if(letListDone.indexOf(key) == -1){
+                letListDone.push(key);
+            }else{
+                continue;
+            }
             let rowItem = [];
             let qtyHidup = '-';
             let qtyMati = '-';

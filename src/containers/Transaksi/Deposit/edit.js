@@ -54,7 +54,7 @@ export default function EditDeposit(props) {
                 ...obj,
                 {
                     value: el.id,
-                    label: el.alias,
+                    label: el.nama+' ('+el.alias+')',
                 }
             ], []);
             setListVendor(theData);

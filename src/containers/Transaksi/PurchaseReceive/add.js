@@ -757,6 +757,11 @@ export default function AddPurchaseReceive(props) {
         let listitemhidup = [];
         for(let i =0; i < listfilteroutputHidup.length; i++){
             let el = listfilteroutputHidup[i];
+            let ekor = el.ekor?parseInt(el.ekor):0;
+            if(ekor <= 0){
+                continue;
+            }
+
             let idcategoryproduct = el.idcategoryproduct;
             if(arrDistinctCP.indexOf(idcategoryproduct) == -1){
                 let listfilteroutput = listfilteroutputHidup.filter(output => output.idcategoryproduct == idcategoryproduct);

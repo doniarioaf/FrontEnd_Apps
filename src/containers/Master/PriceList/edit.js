@@ -72,7 +72,7 @@ export default function EditPriceList(props) {
             {
                     
                 'value': el.id,
-                'label': el.nama,
+                'label': el.nama+' ('+el.alias+')',
             }
         ], []);
         setListCustomer(theDataCust);
