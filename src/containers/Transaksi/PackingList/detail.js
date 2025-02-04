@@ -328,7 +328,7 @@ import React, {useState,
                                     <tr>
                                         <td>{x.box}</td>
                                         <td>{x.productName}</td>
-                                        <td>{x.categoryProductName +' ('+x.categoryProductSize+')'}</td>
+                                        <td>{x.categoryProductName +' ('+x.categoryProductSize+') ('+x.categoryJumlahitemsperkoli+')'}</td>
                                         <td>{x.qty}</td>
                                         <td>{x.brutoweight?numToMoney(x.brutoweight):0}</td>
                                         <td>{x.allowance?numToMoney(x.allowance):0}</td>

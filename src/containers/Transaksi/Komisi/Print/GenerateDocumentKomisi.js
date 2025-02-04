@@ -22,17 +22,17 @@ const styles = StyleSheet.create({
         widthno:20,
         widthtanggal:90,
         widthnodokumen:70,
-        widthvendor:70,
-        widthkoli:50,
-        widthkomisiperkoli:80,
-        widthsubtotalkomisi:100,
+        widthvendor:110,
+        widthkoli:30,
+        widthkomisiperkoli:70,
+        widthsubtotalkomisi:85,
         no:'5%',
         tanggal:'18%',
         nodokumen:'15%',
-        vendor:'14%',
-        koli:'10%',
-        komisiperkoli:'18%',
-        subtotalkomisi:'20%',
+        vendor:'22%',
+        koli:'7%',
+        komisiperkoli:'15%',
+        subtotalkomisi:'18%',
     },
     table: {
         display: "table",
@@ -228,10 +228,10 @@ const GenerateDocument = ({ valuedata }) => {
 
                             <View style={{ flexDirection: 'row',paddingTop:'20px'}}>
                             <View style={{ flexDirection: 'row-reverse' }}>
-                                <Image source={"img/logoheaderpdf.png"} style={{marginLeft:'70px',width:'200px',height:'100px'}}/>
+                                <Image source={"img/logoheaderpdf.png"} style={{marginLeft:'20px',width:'150px',height:'80px'}}/>
                             </View>
 
-                            <View style={{ flexDirection: 'row-reverse', marginLeft: '15%' }}>
+                            <View style={{ flexDirection: 'row-reverse', marginLeft: '35%' }}>
                             <Text style={{ fontSize: fontSizeBig,lineHeight: 2 }} >
                                 {'To          : '}{valuedata != null ? getNamaBroker(valuedata.items) : ''}{'\n'}
                                 {'Tanggal : '}{valuedata != null ? valuedata.date : ''}{'\n'}

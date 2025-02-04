@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 // import roboto from '../../../../components/';
 import roboto from '../../../../components/Fonts/Roboto/Roboto-Bold.ttf';
-import { numToMoney } from '../../../shared/globalFunc';
+import { desimal000, formatRupiah, numToMoney } from '../../../shared/globalFunc';
 
 // import logo from "img/logo.png";
 
@@ -24,15 +24,17 @@ const styles = StyleSheet.create({
         widthukuran:75,
         widthgram:70,
         widthkuantitas:70,
-        widthmati:70,
-        widthtotal:80,
+        widthkilo:52,
+        widthmati:47,
+        widthtotal:60,
         no:'5%',
         namabarang:'20%',
         ukuran:'15%',
         gram:'14%',
         kuantitas:'14%',
-        mati:'15%',
-        total:'17%',
+        kilo:'11%',
+        mati:'9%',
+        total:'12%',
 
         widthflightno:120,
         widthsmuno:150,
@@ -118,6 +120,7 @@ const setItems = (items) =>{
     if(items != undefined && items != null){
         let listRow = [];
         let totalQty = 0;
+        let totalKilo = 0;
         let totalmati = 0;
         let totalTotal = 0;
         let no = 1;
@@ -155,6 +158,9 @@ const setItems = (items) =>{
             if(qtyMati !== '-'){
                 totalmati = totalmati + parseInt(qtyMati);
             }
+            if(det.kilo){
+                totalKilo = totalKilo + parseFloat(det.kilo);
+            }
             totalTotal = totalTotal + totalQtyHidupMati;
             
             rowItem.push(
@@ -180,6 +186,11 @@ const setItems = (items) =>{
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: "25px" }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{qtyHidup}</Text>
+                </View>
+            );
+            rowItem.push(
+                <View style={[styles.tableColWidth, { width:styles.width.kilo, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: styles.width.widthkilo, maxWidth: styles.width.widthkilo, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.kilo?desimal000(formatRupiah(new String(det.kilo).replaceAll('.',','),3),{isShow000:false}):0}</Text>
                 </View>
             );
             rowItem.push(
@@ -220,6 +231,11 @@ const setItems = (items) =>{
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: "25px" }]}>
                 <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{totalQty}</Text>
+            </View>
+        );
+        rowItem.push(
+            <View style={[styles.tableColWidth, { width:styles.width.kilo, height: "25px" }]}>
+                <Text style={[styles.tableCell, { width: styles.width.widthkilo, maxWidth: styles.width.widthkilo, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{desimal000(formatRupiah(new String(totalKilo).replaceAll('.',','),3),{isShow000:false})}</Text>
             </View>
         );
         rowItem.push(
@@ -353,6 +369,9 @@ const GenerateDraftPurchaseReceive = ({ valuedata }) => {
                             </View>
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.kuantitas, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Kuantitas"}</Text>
+                            </View>
+                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.kilo, height: "25px" }]}>
+                                <Text style={[styles.tableCell, { width: styles.width.widthkilo, maxWidth: styles.width.widthkilo, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Kg"}</Text>
                             </View>
 
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.mati, height: "25px" }]}>

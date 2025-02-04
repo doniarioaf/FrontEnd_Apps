@@ -181,7 +181,7 @@ const setItemsAllCP = (items, valueheader) =>{
                     <Text style={[styles.tableCell, { width: widthtime, maxWidth: widthtime, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{stocktime}</Text>
                 </View>
             );
-
+            console.log('timeIsDone.indexOf(stocktime) '+timeIsDone.indexOf(stocktime));
             if(timeIsDone.indexOf(stocktime) == -1){
                 let listfilteroutput = items.filter(output => output.stocktime == stocktime);
                 let totalQtyRowTime = 0;
@@ -189,14 +189,17 @@ const setItemsAllCP = (items, valueheader) =>{
                     for(let j=0; j < listCP.length; j++){
                         let detCP = listCP[j];
                         let idCP = '';
-                        let listfilteroutputMappingStock = listmappingstock.filter(output => output.categoryproductidmapping == detCP.id);
-                        if(listfilteroutputMappingStock.length > 0){
-                            idCP = listfilteroutputMappingStock[0].categoryproductid;
-                        }else{
-                            idCP = detCP.id;    
-                        }
+                        // let listfilteroutputMappingStock = listmappingstock.filter(output => output.categoryproductidmapping == detCP.id);
+                        // if(listfilteroutputMappingStock.length > 0){
+                        //     idCP = listfilteroutputMappingStock[0].categoryproductid;
+                        // }else{
+                        //     idCP = detCP.id;    
+                        // }
+                        idCP = detCP.id;
 
+                        
                         let listfilteroutputByID = listfilteroutput.filter(output => output.idcategoryproduct == parseInt(idCP));
+                        
                         if(listfilteroutputByID.length > 0){
                             let detJ = listfilteroutputByID[0];
                             totalQtyRowTime += parseInt(detJ.qty);

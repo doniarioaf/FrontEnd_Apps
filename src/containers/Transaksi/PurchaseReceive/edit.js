@@ -1134,6 +1134,7 @@ export default function EditPurchaseReceive(props) {
                                             onChange={val => handleChangeReceiveDate(val)}
                                             format={formatdate}
                                             value={values.receivedate}
+                                            disabled={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
                                         />
                                         <div className="invalid-feedback-custom">{ErrReceiveDate}</div>
 

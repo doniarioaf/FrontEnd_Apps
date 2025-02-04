@@ -716,12 +716,14 @@ export default function AddPurchaseReceive(props) {
             setInputNotes2(val.notes2?val.notes2:'');
             setInputFlightNo(val.flightno?val.flightno:'');
             setInputSMU(val.smu?val.smu:'');
+            setReceiveDate(val.date?new Date(val.date):new Date());
             qtyBox = val.box?val.box:'';
         }else{
             setInputNotes('');
             setInputNotes2('');
             setInputFlightNo('');
             setInputSMU('');
+            setReceiveDate(new Date());
         }
 
         let listCharge = setPriceBox(paramlistcharge, qtyBox);
@@ -1278,6 +1280,7 @@ export default function AddPurchaseReceive(props) {
                                             onChange={val => handleChangeReceiveDate(val)}
                                             format={formatdate}
                                             value={values.receivedate}
+                                            disabled={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
                                         />
                                         <div className="invalid-feedback-custom">{ErrReceiveDate}</div>
 

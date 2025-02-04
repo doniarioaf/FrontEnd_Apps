@@ -31,7 +31,7 @@ export default function PrintNota(props) {
     const dispatch = useDispatch();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
-    const [ListPrintType, setListPrintType] = useState([{ value: 'SUPPLIER', label: 'Supplier' }, { value: 'INTERNAL', label: 'Internal' }, { value: 'PAJAK', label: 'Pajak' }]);
+    const [ListPrintType, setListPrintType] = useState([{ value: 'SUPPLIER', label: 'Supplier' }, { value: 'PAJAK', label: 'Pajak' }]);
     const [SelPrintType, setSelPrintType] = useState('SUPPLIER');
 
     const [Value, setValue] = useState(null);
