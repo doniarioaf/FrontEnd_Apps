@@ -39,11 +39,18 @@ export const calculateTransfer = (totalnota, sisadeposit)  =>{
 export const calculateTotalPrice = (listitems, listbiaya, listinventori)  =>{
     let totalPrice = 0;
     let totalPriceItemHidup = 0;
+    let totalQty = 0;
+    let totalQtyNota = 0;
     if(listitems != null && listitems.length > 0){
         for(let i=0; i < listitems.length > 0; i++){
             let det = listitems[i];
+            let qty = det.qty?det.qty:0;
+            let qtynota = det.qtynota?det.qtynota:0;
             let subtotalprice = new String(det.subtotalprice).replaceAll('.','') !== ''?new String(det.subtotalprice).replaceAll('.',''):0;
             if(det.idproduct !== 'TOTAL'){
+                totalQty += parseInt(qty);
+                totalQtyNota += parseInt(qtynota);
+
                 totalPrice += parseFloat(subtotalprice);
                 totalPriceItemHidup += parseFloat(subtotalprice);
             }
@@ -81,7 +88,7 @@ export const calculateTotalPrice = (listitems, listbiaya, listinventori)  =>{
     }
 
     
-    return  {'totalPrice':totalPrice,'totalPriceItemHidup':totalPriceItemHidup} ;
+    return  {'totalPrice':totalPrice,'totalPriceItemHidup':totalPriceItemHidup, 'totalqty':totalQty,'totalqtynota':totalQtyNota} ;
 }
 
 export const setPriceBoxOngkosByVendor = (listcharge,pricebox,priceongkos)  =>{

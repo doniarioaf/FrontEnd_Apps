@@ -347,7 +347,8 @@ import React, {useState,
                         <th >{i18n.t('Product')}</th>
                         <th >{i18n.t('Category Product')}</th>
                         <th >{i18n.t('Qty')}</th>
-                        <th >{i18n.t('Qty Bonus')}</th>
+                        {/* <th >{i18n.t('Qty Bonus')}</th> */}
+                        <th >{i18n.t('Qty Nota')}</th>
                         <th >{i18n.t('Price')}</th>
                         <th >{i18n.t('Subtotal Price')}</th>
                         </tr>
@@ -358,7 +359,8 @@ import React, {useState,
                                         <td>{x.productName}</td>
                                         <td>{x.categoryProductName}</td>
                                         <td>{x.qty}</td>
-                                        <td>{x.qtybonus}</td>
+                                        {/* <td>{x.qtybonus}</td> */}
+                                        <td>{x.qtynota}</td>
                                         <td>{x.price?numToMoney(x.price):0}</td>
                                         <td>{x.subtotalprice?numToMoney(x.subtotalprice):0}</td>
                                     </tr>
