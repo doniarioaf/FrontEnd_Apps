@@ -11,7 +11,7 @@ import * as pathmenu from '../../shared/pathMenu';
 import { reloadToHomeNotAuthorize, isGetPermissions, firstAndLastDateInMonth } from '../../shared/globalFunc';
 import { MenuDeposit, addDeposit_Permission } from '../../shared/permissionMenu';
 import { useHistory } from 'react-router-dom';
-import { DatePicker } from 'react-widgets';
+import { DatePicker,DropdownList } from 'react-widgets';
 import { formatdate } from '../../shared/constantValue';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -29,6 +29,7 @@ const DepositIndex = () => {
         { name: 'id', title: 'id' },
         {name:'nodocument', title: 'No Document'},
         { name: 'vendor', title: i18n.t('Vendor') },
+        { name: 'status', title: i18n.t('Status') },
         { name: 'transdate', title: i18n.t('Date') },
     ]);
     const [tableColumnExtensions] = useState([]);
@@ -36,6 +37,10 @@ const DepositIndex = () => {
     let getdate = firstAndLastDateInMonth();
     const [from, setFrom] = useState(getdate.first);
     const [to, setTo] = useState(getdate.last);
+
+    const [ListIsActive, setListIsActive] = useState([{value:'Y',label:'Aktif'},{value:'N',label:'Non Aktif'}]);
+    const [SelIsActive, setSelIsActive] = useState('Y');
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -44,6 +49,7 @@ const DepositIndex = () => {
         obj.from = from.getTime();
         obj.to = to.getTime();
         obj.idvendor = null;
+        obj.isactive = SelIsActive;
         dispatch(actions.getDepositData({ url: '/list', type: 'POST', payload: obj }, successHandler, errorHandler));
     }, []);
 
@@ -55,6 +61,7 @@ const DepositIndex = () => {
                     'id': el.id,
                     'nodocument':el.nodocument,
                     'vendor': el.vendorName+' ('+el.vendorAlias+')',
+                    'status':el.isactive?'Aktif':'Non Aktif',
                     'transdate': el.depositdate ? moment(el.depositdate).format(formatdate) : '',
                 }
             ], []);
@@ -70,6 +77,11 @@ const DepositIndex = () => {
             title: 'Oops...',
             text: '' + error
         })
+    }
+
+    const handleChangeStatus = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelIsActive(id);
     }
 
     function onClickAdd() {
@@ -104,6 +116,7 @@ const DepositIndex = () => {
             obj.from = from.getTime();
             obj.to = to.getTime();
             obj.idvendor = null;
+            obj.isactive = SelIsActive;
             dispatch(actions.getDepositData({ url: '/list', type: 'POST', payload: obj }, successHandler, errorHandler));
         }
 
@@ -116,6 +129,7 @@ const DepositIndex = () => {
                 <table>
                     <th>{'From'}</th>
                     <th style={{ paddingLeft: '10px' }}>{'To'}</th>
+                    <th style={{ paddingLeft: '10px' }}>{'Status'}</th>
                     <tbody>
                         <tr>
                             <td><DatePicker
@@ -146,6 +160,22 @@ const DepositIndex = () => {
                                     value={to}
                                 // max={new Date()}
                                 // style={{width: '25%'}}
+                                />
+                            </td>
+                            <td style={{ paddingLeft: '10px',width:'130px' }}>
+                                <DropdownList
+                                    name="SelIsActive"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeStatus(val)}
+                                    // onBlur={val => setFieldTouched("shownol", val?.value ? val.value : '')}
+                                    data={ListIsActive}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={SelIsActive}
                                 />
                             </td>
                             <td>

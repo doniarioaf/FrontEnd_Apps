@@ -233,6 +233,13 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Status')}</span>
+                            <strong className="col-md-7">
+                                {value.isactive?(value.isactive?'Aktif':'Non Aktif'):''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Tanggal')}</span>
                             <strong className="col-md-7">
                                 {value.depositdate?moment(value.depositdate).format(formatdate):''}
