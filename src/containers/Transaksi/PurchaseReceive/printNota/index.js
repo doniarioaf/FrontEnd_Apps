@@ -17,10 +17,10 @@ import "react-widgets/dist/css/react-widgets.css";
 
 import { PDFViewer } from '@react-pdf/renderer';
 import PdfDocumentSupplier from './PdfDocumentSupplier';
-import PdfDocumentInternal from './PdfDocumentInternal';
+import PdfDocumentPajak from './PdfDocumentPajak';
 // import PdfDocumentPajak from './PdfDocumentPajak';
 
-import { formatdate, formatdatetime } from '../../../shared/constantValue';
+import { formatdate, formatdatetime, formattimeHHmm } from '../../../shared/constantValue';
 import moment from 'moment';
 import './App.css';
 
@@ -71,6 +71,18 @@ export default function PrintNota(props) {
             dettemp.notatype = SelPrintType;
             dettemp.transactiondate = det.transactiondate ? moment(new Date(det.transactiondate)).format(formatdate) : '';
             dettemp.currdatetime = moment(new Date()).format(formatdatetime) ;
+            dettemp.currtime = moment(new Date()).format(formattimeHHmm);
+            dettemp.currdate = moment(new Date()).format(formatdate) ;
+            let deposits = [];
+            if(det.deposits){
+                for(let i=0; i < det.deposits.length; i++){
+                    let detDepo = det.deposits[i];
+                    let dettempDepo = det.deposits[i];
+                    dettempDepo.date = detDepo.date ? moment(new Date(detDepo.date)).format(formatdate) : '';
+                    deposits.push(dettempDepo);
+                }
+            }
+            dettemp.deposits = deposits;
             setValue(dettemp);
 
             setTimeout(() => {
@@ -98,8 +110,8 @@ export default function PrintNota(props) {
         // return <PdfDocumentSupplier data={value} />
         if(printType == 'SUPPLIER'){
             return <PdfDocumentSupplier data={value} />
-        }else if(printType == 'INTERNAL' || printType == 'PAJAK'){
-            return <PdfDocumentInternal data={value} />
+        }else if(printType == 'PAJAK'){
+            return <PdfDocumentPajak data={value} />
         }
         // else if(printType == 'PAJAK'){
         //     return <PdfDocumentPajak data={value} />

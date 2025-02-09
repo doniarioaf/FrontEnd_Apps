@@ -1,7 +1,7 @@
 import React from "react";
 import { Page, Document, StyleSheet, Image, Font,Text } from "@react-pdf/renderer";
 // import GenerateSuratJalan from "./GenerateSuratJalan";
-import GenerateSupplier from "./GenerateSupplier";
+import GenerateSupplier from "./GenerateSupplierV2";
 import './App.css';
 export const styles = StyleSheet.create({
     page: {

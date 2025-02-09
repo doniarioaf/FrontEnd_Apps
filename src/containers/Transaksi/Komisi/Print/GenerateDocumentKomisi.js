@@ -188,10 +188,10 @@ const getBankBroker = (items) =>{
         let det = items.length > 0? items[0]:'';
         let list = [];
         if(det.vendorbankbroker !== '' && det.vendoraccnobroker !== '' && det.vendoraccnamebroker !== ''){
-            list.push(<Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '1px', fontSize: fontSizeBig }]}>{"Bank Account :"}</Text>);
-            list.push(<Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '1px', fontSize: fontSizeBig }]}>{det.vendorbankbroker}</Text>);
-            list.push(<Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '1px', fontSize: fontSizeBig }]}>{"a/c "+det.vendoraccnobroker}</Text>);
-            list.push(<Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '1px', fontSize: fontSizeBig }]}>{"a/n "+det.vendoraccnamebroker}</Text>);
+            list.push(<Text style={[styles.tableCell, { width: 200, maxWidth: 200, marginTop: '1px', fontSize: fontSizeBig }]}>{"Bank Account :"}</Text>);
+            list.push(<Text style={[styles.tableCell, { width: 200, maxWidth: 200, marginTop: '1px', fontSize: fontSizeBig }]}>{det.vendorbankbroker}</Text>);
+            list.push(<Text style={[styles.tableCell, { width: 200, maxWidth: 200, marginTop: '1px', fontSize: fontSizeBig }]}>{"a/c "+det.vendoraccnobroker}</Text>);
+            list.push(<Text style={[styles.tableCell, { width: 200, maxWidth: 200, marginTop: '1px', fontSize: fontSizeBig }]}>{"a/n "+det.vendoraccnamebroker}</Text>);
             return list;
         }
         
