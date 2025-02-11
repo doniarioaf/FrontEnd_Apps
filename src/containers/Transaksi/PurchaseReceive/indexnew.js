@@ -344,8 +344,8 @@ const PurchaseReceiveIndex = () => {
                                     totalCounts={rows.length}
                                     loading={loading}
                                     columnextension={tableColumnExtensions}
-                                    permissionadd={!isGetPermissions(addPurchaseReceive_Permission, 'TRANSACTION')}
-                                    onclickadd={onClickAdd}
+                                    // permissionadd={!isGetPermissions(addPurchaseReceive_Permission, 'TRANSACTION')}
+                                    // onclickadd={onClickAdd}
                                     permissionview={!isGetPermissions(MenuPurchaseReceive, 'READ')}
                                     onclickview={onClickView}
                                     listfilterdisabled={['transdate']}

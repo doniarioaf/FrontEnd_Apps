@@ -99,7 +99,7 @@ export default function AddPackingList(props) {
                     ...obj,
                     {
                         'value': el.categoryproductid,
-                        'label': el.categoryproductidName+' ('+el.categoryproductSize+')',
+                        'label': el.categoryproductidName+' ('+el.categoryproductSize+') ('+el.jumlahitemsperkoli+')',
                         'data': el
                     }
                 ], []);

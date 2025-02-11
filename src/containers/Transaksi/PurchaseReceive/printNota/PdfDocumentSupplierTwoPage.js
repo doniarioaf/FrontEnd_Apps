@@ -1,7 +1,8 @@
 import React from "react";
 import { Page, Document, StyleSheet, Image, Font,Text } from "@react-pdf/renderer";
 // import GenerateSuratJalan from "./GenerateSuratJalan";
-import GenerateSupplier from "./GenerateSupplierV2";
+import GenerateSupplierV2_Hal_1 from "./GenerateSupplierV2_Hal_1";
+import GenerateSupplierV2_Hal_2 from "./GenerateSupplierV2_Hal_2";
 import './App.css';
 export const styles = StyleSheet.create({
     page: {
@@ -50,7 +51,7 @@ const PdfDocument = ({ data }) => {
         <Document onPrint={handlePrint}  onRender={(blob) => onRenderDocument(blob, "")} title={(data != null ? data.nodocument : '')}>
             {/* <Page size="A5"   style={styles.page} > */}
             <Page size="letter" orientation="portrait" style={styles.page} wrap>
-                <GenerateSupplier valuedata={data} />
+                <GenerateSupplierV2_Hal_1 valuedata={data} />
                 {/* <Text style={styles.footer} render={({ pageNumber, totalPages }) => (
                     `${pageNumber} / ${totalPages}`
                 )} fixed /> */}
@@ -60,9 +61,9 @@ const PdfDocument = ({ data }) => {
                 )} fixed /> */}
             </Page>
 
-            {/* <Page size="letter" orientation="portrait" style={styles.page} wrap>
-                <GenerateSupplier valuedata={data} />
-            </Page> */}
+            <Page size="letter" orientation="portrait" style={styles.page} wrap>
+                <GenerateSupplierV2_Hal_2 valuedata={data} />
+            </Page>
         </Document>
     )
 

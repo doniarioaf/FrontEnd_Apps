@@ -122,13 +122,13 @@ export default function EditPackingList(props) {
             ...obj,
             {
                 'value': el.idcategoryproduct,
-                'label': el.categoryProductName+' ('+el.categoryProductSize+')',
+                'label': el.categoryProductName+' ('+el.categoryProductSize+') ('+el.categoryJumlahitemsperkoli+')',
                 'data': el
             }
         ], []);
         setListCategoryProduct(theDataProd);
         if(transDate !== null && det.idcustomer !== null){
-            dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + transDate.getTime()+'&idcustomer='+det.idcustomer }, successHandlerPriceList, errorHandler));
+            dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + transDate.getTime()+'&idcustomer='+det.idcustomer,propsdata:{categoryproduct:theDataProd} }, successHandlerPriceList, errorHandler));
         }
         
 
@@ -145,7 +145,7 @@ export default function EditPackingList(props) {
                     ...obj,
                     {
                         'value': el.categoryproductid,
-                        'label': el.categoryproductidName+' ('+el.categoryproductSize+')',
+                        'label': el.categoryproductidName+' ('+el.categoryproductSize+') ('+el.jumlahitemsperkoli+')',
                         'data': el
                     }
                 ], []);
@@ -158,7 +158,7 @@ export default function EditPackingList(props) {
         }
         setLoading(false);
     }
-
+    
     const checkColumnMandatory = (values) => {
         let flag = true;
         setErrTransDate('');

@@ -370,33 +370,33 @@ const setItems = (value) =>{
             listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
         }
         
-        let listfilteroutputinventori = inventori.filter(output => output.qty > 0);
-        for(let i=0; i < listfilteroutputinventori.length; i++){
-            let det = listfilteroutputinventori[i];
-            rowItem = [];
-            rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.chargeandinventori, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthchargeandinventori, maxWidth: styles.width.widthchargeandinventori, textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{det.inventoriname}</Text>
-                </View>
-            );
-            rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.qty}</Text>
-                </View>
-            );
-            rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.harga, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?desimal00(formatRupiah(new String(det.price).replaceAll('.',','),2)):0}</Text>
-                </View>
-            );
-            rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.subtotalprice?addKurungBukaPadaValue(det.chargename,desimal00(formatRupiah(new String(det.subtotalprice).replaceAll('.',','),2))):0}</Text>
-                </View>
-            );
+        // let listfilteroutputinventori = inventori.filter(output => output.qty > 0);
+        // for(let i=0; i < listfilteroutputinventori.length; i++){
+        //     let det = listfilteroutputinventori[i];
+        //     rowItem = [];
+        //     rowItem.push(
+        //         <View style={[styles.tableColWidth, { width:styles.width.chargeandinventori, height: "25px" }]}>
+        //             <Text style={[styles.tableCell, { width: styles.width.widthchargeandinventori, maxWidth: styles.width.widthchargeandinventori, textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{det.inventoriname}</Text>
+        //         </View>
+        //     );
+        //     rowItem.push(
+        //         <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: "25px" }]}>
+        //             <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.qty}</Text>
+        //         </View>
+        //     );
+        //     rowItem.push(
+        //         <View style={[styles.tableColWidth, { width:styles.width.harga, height: "25px" }]}>
+        //             <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?desimal00(formatRupiah(new String(det.price).replaceAll('.',','),2)):0}</Text>
+        //         </View>
+        //     );
+        //     rowItem.push(
+        //         <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: "25px" }]}>
+        //             <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.subtotalprice?addKurungBukaPadaValue(det.chargename,desimal00(formatRupiah(new String(det.subtotalprice).replaceAll('.',','),2))):0}</Text>
+        //         </View>
+        //     );
             
-            listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
-        }
+        //     listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
+        // }
         
         return listRow;
     }
@@ -414,7 +414,7 @@ const getValueChargesBox = (items) =>{
     return 0
 }
 
-const GeneratePurchaseReceiveSupplier = ({ valuedata }) => {
+const GeneratePurchaseReceiveSupplierHal1 = ({ valuedata }) => {
     const [IsReady, setIsReady] = useState(false);
         
     useEffect(() => {
@@ -546,7 +546,7 @@ const GeneratePurchaseReceiveSupplier = ({ valuedata }) => {
 
                             </View>
 
-                            <View style={[styles.table]}>
+                            {/* <View style={[styles.table]}>
                             <View style={styles.tableRow}>
                             <View style={[styles.tableColWidth, { width:"100%", height: "150px" }]}>
                                 {lsitTambahDP(valuedata != null ? valuedata : [])}
@@ -560,9 +560,9 @@ const GeneratePurchaseReceiveSupplier = ({ valuedata }) => {
                             
                             </View>
                             
-                            </View>
+                            </View> */}
 
-                            <View style={[styles.table]}>
+                            {/* <View style={[styles.table]}>
                             <View style={styles.tableRow}>
                             <View style={[styles.tableColWidth, { width:"60%", height: "90px" }]}>
                                 <Text style={[styles.tableCell, { fontFamily: 'roboto',width: 100, maxWidth: 100, marginTop: '5px', fontSize: fontSizeBig }]}>{"Remarks"}</Text>
@@ -579,9 +579,9 @@ const GeneratePurchaseReceiveSupplier = ({ valuedata }) => {
 
                             </View>
                             </View>
-                            </View>
+                            </View> */}
                             
-                            <Text style={{textAlign:'right',marginRight:"2px",fontSize:7}}>{"Edit:"}{(valuedata != null?valuedata.countEdit:'')}{"  Print:"}{(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{" Page 1/1"}</Text>
+                            <Text style={{textAlign:'right',marginRight:"2px",fontSize:7}}>{"Edit:"}{(valuedata != null?valuedata.countEdit:'')}{"  Print:"}{(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{" Page 1/2"}</Text>
 
                         </View>
                     :
@@ -596,4 +596,4 @@ const GeneratePurchaseReceiveSupplier = ({ valuedata }) => {
         generatePdf(valuedata)
     );
 };
-export default GeneratePurchaseReceiveSupplier;
+export default GeneratePurchaseReceiveSupplierHal1;

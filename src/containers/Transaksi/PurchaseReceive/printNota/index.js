@@ -17,6 +17,7 @@ import "react-widgets/dist/css/react-widgets.css";
 
 import { PDFViewer } from '@react-pdf/renderer';
 import PdfDocumentSupplier from './PdfDocumentSupplier';
+import PdfDocumentSupplierTwoPage from './PdfDocumentSupplierTwoPage';
 import PdfDocumentPajak from './PdfDocumentPajak';
 // import PdfDocumentPajak from './PdfDocumentPajak';
 
@@ -83,6 +84,30 @@ export default function PrintNota(props) {
                 }
             }
             dettemp.deposits = deposits;
+
+            let items = det.items;
+            let charges = det.charges;
+            let inventori = det.inventori;
+            let totalData = 0;
+            //jika data diatas 10, maka dibikin 2 halaman
+            if(items){
+                let listfilteroutput = items.filter(output => output.qtynota > 0 && output.type == 'H');
+                totalData = totalData + listfilteroutput.length;
+            }
+            if(charges){
+                let listfilteroutputcharges = charges.filter(output => output.qty > 0);
+                totalData = totalData + listfilteroutputcharges.length;
+            }
+            if(inventori){
+                let listfilteroutputinventori = inventori.filter(output => output.qty > 0);
+                totalData = totalData + listfilteroutputinventori.length;
+            }
+            if(totalData > 10){
+                dettemp.totalpage = 2; 
+            }else{
+                dettemp.totalpage = 1; 
+            }
+
             setValue(dettemp);
 
             setTimeout(() => {
@@ -109,7 +134,12 @@ export default function PrintNota(props) {
 
         // return <PdfDocumentSupplier data={value} />
         if(printType == 'SUPPLIER'){
-            return <PdfDocumentSupplier data={value} />
+            if(value.totalpage == 1){
+                return <PdfDocumentSupplier data={value} />
+            }else{
+                return <PdfDocumentSupplierTwoPage data={value} />
+            }
+            
         }else if(printType == 'PAJAK'){
             return <PdfDocumentPajak data={value} />
         }
