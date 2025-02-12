@@ -141,7 +141,7 @@ const penyesuaianTerbilang = (value) =>{
     let list = [];
     if(deposits){
         if(deposits.length == 1){
-            list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '14px', fontSize: fontSizeBig }]}>{''}</Text>);
+            // list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '8px', fontSize: fontSizeBig }]}>{''}</Text>);
         }else if(deposits.length == 0){
             list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '8px', fontSize: fontSizeBig }]}>{''}</Text>);
             list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '8px', fontSize: fontSizeBig }]}>{''}</Text>);
@@ -205,9 +205,10 @@ const lsitTambahDP = (value) =>{
         
         
     }
-    if(totalDP > totalprice ){
-        sisaDP = totalprice - totalDP;
-    }
+    // if(totalDP > totalprice ){
+        // sisaDP = totalprice - totalDP;
+    // }
+    sisaDP = totalDP - totalprice;
     list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}>{"Sisa DP : "}{desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2))}</Text>);
     return list;
 }
