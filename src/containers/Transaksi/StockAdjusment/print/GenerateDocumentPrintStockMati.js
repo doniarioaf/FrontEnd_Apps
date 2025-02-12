@@ -181,7 +181,6 @@ const setItemsAllCP = (items, valueheader) =>{
                     <Text style={[styles.tableCell, { width: widthtime, maxWidth: widthtime, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{stocktime}</Text>
                 </View>
             );
-            console.log('timeIsDone.indexOf(stocktime) '+timeIsDone.indexOf(stocktime));
             if(timeIsDone.indexOf(stocktime) == -1){
                 let listfilteroutput = items.filter(output => output.stocktime == stocktime);
                 let totalQtyRowTime = 0;

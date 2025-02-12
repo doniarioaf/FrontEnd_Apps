@@ -555,7 +555,7 @@ const GeneratePurchaseReceiveSupplier = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}>{valuedata != null ? valuedata.notes2 : ''}</Text>
                                 {setUdangMati(valuedata != null ? valuedata.items : [])}
                                 {penyesuaianTerbilang(valuedata != null ? valuedata : [])}
-                                <Text style={[styles.tableCell, { fontFamily: 'roboto',width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}>{'Terbilang :'}{valuedata != null ? terbilangRupiah(valuedata.totalprice) : ''}</Text>    
+                                <Text style={[styles.tableCell, { fontFamily: 'roboto',width: 500, maxWidth: 500, marginTop: '1px', fontSize: fontSizeBig }]}>{'Terbilang :'}{valuedata != null ? terbilangRupiah(valuedata.totalprice) : ''}</Text>    
                             </View>
                             
                             </View>
