@@ -143,13 +143,13 @@ const penyesuaianTerbilang = (value) =>{
         if(deposits.length == 1){
             list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '14px', fontSize: fontSizeBig }]}>{''}</Text>);
         }else if(deposits.length == 0){
-            list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '14px', fontSize: fontSizeBig }]}>{''}</Text>);
-            list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '14px', fontSize: fontSizeBig }]}>{''}</Text>);
+            list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '8px', fontSize: fontSizeBig }]}>{''}</Text>);
+            list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '8px', fontSize: fontSizeBig }]}>{''}</Text>);
         }
         
     }else{
-        list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '14px', fontSize: fontSizeBig }]}>{''}</Text>);
-        list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '14px', fontSize: fontSizeBig }]}>{''}</Text>);
+        list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '8px', fontSize: fontSizeBig }]}>{''}</Text>);
+        list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '8px', fontSize: fontSizeBig }]}>{''}</Text>);
     }
 
     return list;
