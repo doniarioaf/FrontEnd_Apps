@@ -265,7 +265,7 @@ const detailPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasB
 const editPengeluaranKasBank = lazy(() => import('./containers/PengeluaranKasBank/editPengeluaranKasBank'));
 
 const menuInvoice = lazy(() => import('./containers/Invoice/FormInvoice'));
-const addInvoice = lazy(() => import('./containers/Invoice/FormInvoice/addInvoice'));
+const addInvoice = lazy(() => import('./containers/Invoice/FormInvoice/addInvoiceV2'));
 const detailInvoice = lazy(() => import('./containers/Invoice/FormInvoice/detail'));
 const editInvoice = lazy(() => import('./containers/Invoice/FormInvoice/editInvoice'));
 
