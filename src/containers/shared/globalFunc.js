@@ -288,3 +288,20 @@ export const numConvToValDB = (amount) =>{
     
     return amount;
 }
+
+export const removeFormatRupiah = (nilai) =>{
+    let removeDot = new String(nilai).replaceAll('.','');
+    let changeCommaToDot = new String(removeDot).replaceAll(',','.');
+    return changeCommaToDot;
+  }
+
+  export const formatRupiah = (nilai,numberdesimal) =>{
+    if(new String(nilai).includes(',')){
+        let numDes = numberdesimal !== undefined ? numberdesimal:2;
+        let splitComma = new String(nilai).split(','); 
+        let angka = splitComma[0];
+        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,numDes):'';
+        return numToMoney(parseFloat(angka))+','+desimal;
+    }
+    return numToMoney(parseFloat(nilai));
+  }

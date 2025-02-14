@@ -118,26 +118,92 @@ export default function AddForm(props) {
     const [InputNotes1, setInputNotes1] = useState('');
     const [InputNotes2, setInputNotes2] = useState('');
 
+    const id = props.match.params.id;
+
     useEffect(() => {
-        // setLoading(true);
-        // dispatch(actions.getInvoiceData('/template',successHandlerTemplate, errorHandler));
+        setLoading(true);
+        dispatch(actions.getInvoiceData('/v2/'+id,successHandler, errorHandler));
     }, []);
 
-    // const successHandlerTemplate = (data) =>{
-    //     setDataTemplate(data.data);
-    //     if(data.data){
-    //         setListInvoiceType(data.data.invoiceTypeOptions.reduce((obj, el) => (
-    //             [...obj, {
-    //                 value: el.code,
-    //                 label: el.codename
-    //             }]
-    //         ), []));
+    function successHandler(data) {
+        if(data.data){
+            let det = data.data;
+            let template = det.template;
 
-    //         setInputPPN(data.data.defaultPPN?numToMoney(parseFloat(data.data.defaultPPN)):'');
-    //     }
-        
-    //     setLoading(false);
-    // }
+            setInputInvoiceNumber(det.nodocument);
+            setInputTanggal(det.tanggal?moment(new Date(det.tanggal), formatdate).toDate():null);
+            setInputNotes1(det.notes1);
+            setInputJalur(det.jalurwo);
+            setInputJalurName(det.jalurname);
+            setInputCustomerID(det.idcustomer);
+            setInputCustomer(det.namaCustomer);
+            setInputRefNo(det.refno);
+            setInputDeliveredTo(det.deliveredto);
+            setInputDeliveredDate(det.deliverydate?moment(new Date(det.deliverydate), formatdate).toDate():null);
+            setInputTotalInvoice(det.totalinvoice?formatRupiah(new String(det.totalinvoice).replaceAll('.',',')):'');
+            setInputInvoiceNumberJasa(det.nodocumentjasa);
+            setInputNilaiJasa(det.nilaijasa?formatRupiah(new String(det.nilaijasa).replaceAll('.',',')):'');
+            setInputInvoiceNumberReimbursement(det.nodocumentreimbursement);
+            setInputNilaiReimbursement(det.nilaireimbursement?formatRupiah(new String(det.nilaireimbursement).replaceAll('.',',')):'');
+            setInputNoFakturPajak(det.nofakturpajak);
+            let nilaippn = det.nilaippn?formatRupiah(new String(det.nilaippn).replaceAll('.',',')):0;
+            setInputNilaiPPN(nilaippn);
+
+            let idwo = det.idwo?(det.idwo == 0?'':det.idwo):'';
+            setSelWO(idwo);
+
+            if(template.suratJalanOptions){
+                let obj = new Object();
+                obj.data = template.suratJalanOptions ;
+                successHandlerSJ(obj);
+            }
+            if(template.searchSuratJalanOptions){
+                let obj = new Object();
+                obj.data = template.searchSuratJalanOptions;
+                successHandlerSj(obj);
+            }
+            dispatch(actions.getInvoiceData('/searchwoeditfirstload/'+det.idcustomer+'/'+idwo,successHandlerWO, errorHandler));
+            setSelSJ(det.idsuratjalan);
+        }
+        setLoading(false);
+    }
+
+    function successHandlerSJ(data) {
+        let list = [];
+        if(data.data.suratjalan){
+            for(let i=0; i < data.data.suratjalan.length ; i++){
+                let det = data.data.suratjalan[i];
+
+                let obj = new Object();
+                obj.nosj = det.nodocument;
+                obj.warehouse = det.warehousename;
+                obj.nocontainer = det.nocontainer;
+                obj.tanggal = det.tanggal?moment (new Date(det.tanggal)).format(formatdate):'';
+                obj.tanggalkembali = det.tanggalkembali?moment (new Date(det.tanggalkembali)).format(formatdate):'';
+
+                if(data.data.partaiwo){
+                    let listpartai = data.data.partaiwo.filter(output => output.nocontainer == det.nocontainer);
+                    if(listpartai.length > 0){
+                        for(let j=0; j < listpartai.length ; j++){
+                            let obj1 = new Object();
+                            obj1 = obj;
+                            obj1.partai = listpartai[j].partainame;
+                            list.push(obj1);
+                        }
+                    }else{
+                        obj.partai = '';
+                        list.push(obj);
+                    }
+                }else{
+                    obj.partai = '';
+                    list.push(obj);
+                }
+                
+            }
+            
+        }
+        setListSuratJalanWO(list);
+    }
 
     const handleChangeTanggal = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
@@ -523,7 +589,7 @@ export default function AddForm(props) {
             obj.nilaippn = InputNilaiPPN !== ''?removeFormatRupiah(InputNilaiPPN):0;
             obj.notes1 = InputNotes1;
             obj.nofakturpajak = InputNoFakturPajak;
-            dispatch(actions.submitAddInvoice('/v2',obj,succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitEditInvoice('/v2/'+id,obj,succesHandlerSubmit, errorHandler));
         }
 
         
@@ -702,7 +768,7 @@ export default function AddForm(props) {
                     return(
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddInvoice">
                             <ContentWrapper>
-                            <ContentHeading history={history} link={pathmenu.addInvoice} label={'Add Invoice'} labeldefault={'Add Invoice'} />
+                            <ContentHeading history={history} link={pathmenu.editInvoice+'/'+id} label={'Edit Invoice'} labeldefault={'Edit Invoice'} />
                             <div className="row mt-2">
                             
                             <div className="mt-1 col-lg-6 ft-detail mb-5">
@@ -718,7 +784,7 @@ export default function AddForm(props) {
                                 onChange={val => handleInputInvoiceNumber(val)}
                                 onBlur={handleBlur}
                                 value={values.invoicenumber}
-                                // disabled={true}
+                                disabled={true}
                             />
                             <div className="invalid-feedback-custom">{ErrInputInvoiceNumber}</div>
 
