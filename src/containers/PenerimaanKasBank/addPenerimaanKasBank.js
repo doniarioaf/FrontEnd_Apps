@@ -9,7 +9,7 @@ import {useDispatch}   from 'react-redux';
 import { Loading } from '../../components/Common/Loading';
 import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
-import { reloadToHomeNotAuthorize,inputJustNumberAndCommaDot,formatMoney, numConvToValDB, numToMoney } from '../shared/globalFunc';
+import { reloadToHomeNotAuthorize,inputJustNumberAndCommaDot,formatMoney, numConvToValDB, numToMoney, formatRupiah, removeFormatRupiah } from '../shared/globalFunc';
 import { addPenerimaanKasBank_Permission} from '../shared/permissionMenu';
 import moment                          from 'moment';
 import momentLocalizer                 from 'react-widgets-moment';
@@ -54,6 +54,7 @@ export default function AddForm(props) {
     const [InputReceiveFrom, setInputReceiveFrom] = useState('');
     const [ErrInputReceiveFrom, setErrInputReceiveFrom] = useState('');
 
+    const [ListCOATemplate, setListCOATemplate] = useState([]);
     const [ListCOA, setListCOA] = useState([]);
     const [SelCOA, setSelCOA] = useState('');
     const [ErrSelCOA, setErrSelCOA] = useState('');
@@ -67,7 +68,7 @@ export default function AddForm(props) {
     const [ListWO, setListWO] = useState([]);
     const [ListChooseYN, setListChooseYN] = useState([]);
 
-    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:"",penyesuaian:"",ketpenyesuaian:""}]);
+    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:"",penyesuaian:"",ketpenyesuaian:"",nilaijasa:"",nilaireimbursement:"",nilaibuktipotong:"",nobuktipotong:"",tanggalbuktipotong:null,nilaippn:""}]);
     const [ErrInputCatatan, setErrInputCatatan] = useState('');
     const [ErrInputAmount, setErrInputAmount] = useState('');
     const [ErrIsDownPayment, setErrIsDownPayment] = useState('');
@@ -83,6 +84,14 @@ export default function AddForm(props) {
     const [InputIdWO, setInputIdWO] = useState('');
     const [DefaultCoa, setDefaultCoa] = useState('');
 
+    const [ListJenisTransaksi, setListJenisTransaksi] = useState([]);
+    const [SelJenisTransaksi, setSelJenisTransaksi] = useState('');
+    //9995 a/ Pembayaran Customer Baru
+    const [DataInvoice9995, setDataInvoice9995] = useState(null);
+    const [InputInvoice9995, setInputInvoice9995] = useState('');
+    const [InvoiceId9995, setInvoiceId9995] = useState('');
+    const [ShowQuickSearchInvoice9995, setShowQuickSearchInvoice9995] = useState(false);
+
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getPenerimaanKasBankData('/template',successHandlerTemplate, errorHandler));
@@ -90,23 +99,37 @@ export default function AddForm(props) {
 
     const successHandlerTemplate = (data) =>{
         if(data.data){
-            let listCOA = data.data.coaOptions.reduce((obj, el) => (
-                [...obj, {
-                    value: el.id,
-                    // label: el.nama+' ('+el.code+')'
-                    label: el.nama
-                }]
-            ), []);
-            listCOA.push({value:"nodata",label:"No Data"});
+            let coaOptions = data.data.coaOptions.filter(output => output.code !== '9995' && output.code !== '9996');
+            setCoa(coaOptions);
+            setListCOATemplate(data.data.coaOptions);
 
-            setListCOA(listCOA);
-
-            let defCOA = listCOA.filter(output => output.label == 'Pembayaran Customer');
-            if(defCOA.length > 0){
-                InputListItem[0].idcoa = defCOA[0].value;
-                setDefaultCoa(defCOA[0].value);
-                setInputListItem(InputListItem);
+            let coaPenerimaanCust = data.data.coaOptions.filter(output => output.code == '9995');
+            let jenisTrans = [];
+            if(coaPenerimaanCust.length > 0){
+                let el = coaPenerimaanCust[0];
+                jenisTrans.push(
+                    {
+                        value: el.code,
+                        label: el.nama,
+                        idcoa: el.id,
+                    }
+                );
             }
+            jenisTrans.push(
+                {
+                    value: 'LAINNYA',
+                    label: 'Lainnya',
+                    idcoa: 'LAINNYA',
+                }
+            );
+            setListJenisTransaksi(jenisTrans);
+
+            // let defCOA = listCOA.filter(output => output.label == 'Pembayaran Customer');
+            // if(defCOA.length > 0){
+            //     InputListItem[0].idcoa = defCOA[0].value;
+            //     setDefaultCoa(defCOA[0].value);
+            //     setInputListItem(InputListItem);
+            // }
 
             setListBank(data.data.bankOptions.reduce((obj, el) => (
                 [...obj, {
@@ -125,6 +148,49 @@ export default function AddForm(props) {
             setListChooseYN([{value:'Y',label:'Yes'},{value:'N',label:'No'}])
         }
         setLoading(false);
+    }
+
+    function setCoa(coaOptions){
+        //9995 = Penerimaan Customer
+            //9996 = Pembayaran Customer
+            let listCOA = [];
+            // let coaPenerimaanCust = coaOptions.filter(output => output.code == '9995');
+            // if(coaPenerimaanCust.length > 0){
+            //     let el = coaPenerimaanCust[0];
+            //     listCOA.push(
+            //         {
+            //             value: el.code,
+            //             label: el.nama,
+            //             idcoa: el.id,
+            //         }
+            //     );
+            // }
+            for(let i=0; i < coaOptions.length; i++){
+                let el = coaOptions[i];
+                if(el.code !== '9995' && el.code !== '9996'){
+                    listCOA.push(
+                        {
+                            value: el.code,
+                            label: el.nama,
+                            idcoa: el.id,
+                        }
+                    );
+                }
+            }
+            let coaPembayaranCust = coaOptions.filter(output => output.code == '9996');
+            if(coaPembayaranCust.length > 0){
+                let el = coaPembayaranCust[0];
+                listCOA.push(
+                    {
+                        value: el.code,
+                        label: el.nama,
+                        idcoa: el.id,
+                    }
+                );
+            }
+            
+
+            setListCOA(listCOA);
     }
 
     const handleInputReceiveFrom = (data) =>{
@@ -147,6 +213,11 @@ export default function AddForm(props) {
         setSelBank(id);
     }
 
+    const handleChangeJenisTransaksi = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelJenisTransaksi(id);
+    }
+
     const handleChangeReceiveDate = (data) =>{
         //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
         if(data !== null){
@@ -156,11 +227,43 @@ export default function AddForm(props) {
         }
     }
 
+    const handleChangeTanggalBuktiPotong = (data) =>{
+        //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
+        const list = [...InputListItem];
+        if(data !== null){
+            list[0]['tanggalbuktipotong'] = moment(data, formatdate).toDate();
+            // setInputReceiveDate(moment(data, formatdate).toDate())
+        }else{
+            list[0]['tanggalbuktipotong'] = null;
+        }
+        setInputListItem(list);
+    }
+
+    
     const handleChangeReceiveType = (data) =>{
         let id = data?.value ? data.value : '';
         setSelReceiveFrom(id);
         setInputReceiveFrom('');
         setInputReceiveFromName('');
+        setSelJenisTransaksi('');
+        if(id == 'CUSTOMER'){
+            setCoa(ListCOATemplate);
+             let defCOA = ListCOATemplate.filter(output => output.code == '9996');
+            if(defCOA.length > 0){
+                InputListItem[0].idcoa = defCOA[0].code;
+                setDefaultCoa(defCOA[0].code);
+                setInputListItem(InputListItem);
+            }
+        }else{
+            let coaOptions = ListCOATemplate.filter(output => output.code !== '9995' && output.code !== '9996');
+            setCoa(coaOptions);
+            let defCOA = coaOptions.filter(output => output.code == '9999');
+            if(defCOA.length > 0){
+                InputListItem[0].idcoa = defCOA[0].code;
+                setDefaultCoa(defCOA[0].code);
+                setInputListItem(InputListItem);
+            }
+        }
     }
     const handleShowQuickSearch = () =>{
         if(SelReceiveFrom !== ''){
@@ -310,7 +413,12 @@ export default function AddForm(props) {
                     let det = InputListItem[i];
                     if( det.amount !== '' ){
                         let objDet = new Object();
-                        objDet.idcoa = det.idcoa !== '' && det.idcoa !== 'nodata' ? det.idcoa:null;
+                        let filterCoa = ListCOA.filter(output => output.value == det.idcoa);
+                        let idcoa = null;
+                        if(filterCoa.length > 0){
+                            idcoa = filterCoa[0].idcoa;
+                        }
+                        objDet.idcoa = idcoa;//det.idcoa !== '' && det.idcoa !== 'nodata' ? det.idcoa:null;
                         objDet.catatan = det.catatan;
                         objDet.amount = numConvToValDB(det.amount);//.replaceAll('.','').replaceAll(',','.');
                         objDet.penyesuaian = numConvToValDB(det.penyesuaian);
@@ -351,6 +459,79 @@ export default function AddForm(props) {
         })
     }
 
+    const handleInputChange9995 = (e, index) => {
+        const { name, value } = e.target;
+        let valTemp = value;
+        let flag = true;
+        const list = [...InputListItem];
+        if(name == 'amount' || name == 'penyesuaian'){
+            if (isNaN(value) && value !== '') {
+                flag = false;
+                if(new String(value).split(',').length >= 3){
+                    flag = false;
+                }else{
+                    flag = true;
+                }
+            }
+        }
+        if (flag) {
+            let valPriceTemp = '';
+            if(new String(value).includes(',')){
+                let splitComma = new String(value).split(','); 
+                let angka = splitComma[0];
+                let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                valPriceTemp = removeFormatRupiah(angka)+','+desimal;
+            }else{
+                valPriceTemp = removeFormatRupiah(value);
+            }
+            if(name == 'amount' || name == 'nilaibuktipotong'){
+                let nilaireimbursement = DataInvoice9995.nilaireimbursement?parseFloat(DataInvoice9995.nilaireimbursement):0;
+                let nilaippn = DataInvoice9995.nilaippn?parseFloat(DataInvoice9995.nilaippn):0;
+                let nilaibuktipotong = 0;
+                if(name == 'nilaibuktipotong'){
+                    nilaibuktipotong = valPriceTemp;
+                }else{
+                    nilaibuktipotong = list[index]['nilaibuktipotong'] !== ''?list[index]['nilaibuktipotong']:0;
+                }
+                if(new String(nilaibuktipotong).includes(',')){
+                    let splitComma = new String(nilaibuktipotong).split(','); 
+                    let angka = splitComma[0];
+                    let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                    nilaibuktipotong = removeFormatRupiah(angka)+'.'+desimal;
+                }else{
+                    nilaibuktipotong = removeFormatRupiah(nilaibuktipotong);
+                }
+                nilaibuktipotong = parseFloat(nilaibuktipotong);
+
+                let totalReimbursement = nilaireimbursement + nilaippn + nilaibuktipotong;
+
+                let nilaitempamount = 0;
+                if(name == 'amount'){
+                    nilaitempamount = valPriceTemp;
+                }else{
+                    nilaitempamount = list[index]['amount'];
+                }
+                if(new String(nilaitempamount).includes(',')){
+                    let splitComma = new String(nilaitempamount).split(','); 
+                    let angka = splitComma[0];
+                    let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                    nilaitempamount = removeFormatRupiah(angka)+'.'+desimal;
+                }else{
+                    nilaitempamount = removeFormatRupiah(nilaitempamount);
+                }
+                nilaitempamount = parseFloat(nilaitempamount);
+
+                let nilaijasa = nilaitempamount - totalReimbursement;
+                list[index]['nilaijasa'] = formatRupiah(new String(nilaijasa).replaceAll('.',','),2);
+                list[index][name] = formatRupiah(valPriceTemp,2);
+            }else{
+                list[index][name] = value;
+            }
+            
+        }
+        setInputListItem(list);
+    };
+
     const handleInputChange = (e, index) => {
         const { name, value } = e.target;
         let valTemp = value;
@@ -380,7 +561,7 @@ export default function AddForm(props) {
         if(defCOA.length > 0){
             idcoa = defCOA[0].value;
         }
-        setInputListItem([...InputListItem, { idcoa:idcoa,catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:"",penyesuaian:"",ketpenyesuaian:""}]);
+        setInputListItem([...InputListItem, { idcoa:idcoa,catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:"",penyesuaian:"",ketpenyesuaian:"",nilaijasa:"",nilaireimbursement:"",nilaibuktipotong:"",nobuktipotong:"",tanggalbuktipotong:"",nilaippn:""}]);
     };
     
     const handleRemoveClick = index => {
@@ -421,6 +602,15 @@ export default function AddForm(props) {
         }
     };
 
+    const handleShowQuickSearchInv9995 = () => {
+        setErrInputReceiveFrom("");
+        if(InputReceiveFrom !== ""){
+            setShowQuickSearchInvoice9995(true);
+        }else{
+            setErrInputReceiveFrom(i18n.t('label_REQUIRED'));
+        }
+    };
+
     const handleShowQuickSearchInv = (e, index) => {
         setErrInputReceiveFrom("");
         if(InputReceiveFrom !== ""){
@@ -433,6 +623,32 @@ export default function AddForm(props) {
         }
     };
 
+    const handleDeleteValueSeacrhWO = (data) =>{
+        setInputIdWO('');
+        setInputWO('');
+        const theData = [
+            {
+                'idcoa': DefaultCoa,
+                'catatan': "",
+                'amount':'',
+                'isdownpayment':"",
+                'idinvoice':'',
+                'nodocinv':'',
+                'idworkorder':'',
+                'nodocwo':'',
+                'penyesuaian':'',
+                'ketpenyesuaian':'',
+                'nilaijasa':'',
+                'nilaireimbursement':'',
+                'nilaibuktipotong':'',
+                'nobuktipotong':'',
+                'tanggalbuktipotong':'',
+                'nilaippn':''
+            }
+        ];
+        
+        setInputListItem(theData);
+    }
     const handleQuickSeacrhWO = (data) =>{
         setShowQuickSearchWO(false);
         //id, nodocument, noaju
@@ -454,25 +670,42 @@ export default function AddForm(props) {
         //idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:""
     }
     const successHandlerListInvNotPaid = (data) =>{
-        
-        const theData = data.data.reduce((obj, el) => [
-            ...obj,
-            {
-                'idcoa': DefaultCoa,
-                'catatan': "",
-                'amount':numToMoney(el.totalinvoice),
-                'isdownpayment':"",
-                'idinvoice':el.id,
-                'nodocinv':el.nodocument,
-                'idworkorder':'',
-                'nodocwo':'',
-                'penyesuaian':numToMoney(el.totalinvoice),
-                'ketpenyesuaian':''
+        if(data.data){
+            if(data.data.length > 0){
+                const theData = data.data.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        'idcoa': DefaultCoa,
+                        'catatan': "",
+                        'amount':numToMoney(el.totalinvoice),
+                        'isdownpayment':"",
+                        'idinvoice':el.id,
+                        'nodocinv':el.nodocument,
+                        'idworkorder':'',
+                        'nodocwo':'',
+                        'penyesuaian':numToMoney(el.totalinvoice),
+                        'ketpenyesuaian':'',
+                        'nilaijasa':'',
+                        'nilaireimbursement':'',
+                        'nilaibuktipotong':'',
+                        'nobuktipotong':'',
+                        'tanggalbuktipotong':'',
+                        'nilaippn':''
+                    }
+                ], []);
+                setInputListItem(theData);
             }
-        ], []);
+            
+        }
         
-        setInputListItem(theData);
         setLoading(false);
+    }
+
+    const handleQuickSeacrhINV9995 = (data) =>{
+        setShowQuickSearchInvoice9995(false);
+        setInvoiceId9995(data.id);
+        setInputInvoice9995(data.nodocument);
+        setDataInvoice9995(data);
     }
 
     const handleQuickSeacrhINV = (data) =>{
@@ -506,7 +739,10 @@ export default function AddForm(props) {
                 keterangan:InputKeterangan,
                 items:InputListItem,
                 SelReceiveFrom:SelReceiveFrom,
-                workorder:InputWO
+                workorder:InputWO,
+                jenistransaksi:SelJenisTransaksi,
+                invoice9995:InputInvoice9995,
+                datainvoice9995:DataInvoice9995
             }
         }
         validate={values => {
@@ -642,7 +878,7 @@ export default function AddForm(props) {
                                 
                                 </td>
 
-                                 <td >
+                                 <td width={'10px'}>
                                 <IconButton color={'primary'}
                                     onClick={val =>handleShowQuickSearchWO("","")}
                                 >
@@ -650,13 +886,13 @@ export default function AddForm(props) {
                                 </IconButton>
                                 </td> 
 
-                                {/* <td hidden={x.nodocwo == ''}>
+                                <td hidden={values.workorder == ''}>
                                 <IconButton color={'primary'}
-                                    onClick={val =>handleDeleteWO(val,i)}
+                                    onClick={val =>handleDeleteValueSeacrhWO()}
                                 >
-                                    <DeleteIcon style={{ fontSize: 18 }}/>
+                                    <DeleteIcon/>
                                 </IconButton>
-                                </td> */}
+                                </td>
                             </tr>
                             </tbody>
                             </table>
@@ -729,6 +965,75 @@ export default function AddForm(props) {
                                 onBlur={handleBlur}
                                 value={values.keterangan}
                             />
+                            <div hidden={values.SelReceiveFrom !== 'CUSTOMER'}>
+                            <label className="mt-3 form-label required" htmlFor="jenistransaksi">
+                                {i18n.t('Jenis Transaksi')}
+                            </label>
+                                <DropdownList
+                                    name="jenistransaksi"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeJenisTransaksi(val)}
+                                    onBlur={val => setFieldTouched("jenistransaksi", val?.value ? val.value : '')}
+                                    data={ListJenisTransaksi}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={values.jenistransaksi}
+                                />
+                            </div>
+
+                        <div hidden={values.jenistransaksi !== "9995" }>
+                            <label className="mt-3 form-label required" htmlFor="workorder">
+                                {i18n.t('Invoice')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <table style={{width:'100%'}}>
+                            <tbody>
+                            <tr>
+                                <td>
+                               
+                                <Input
+                                name="invoice9995"
+                                // className={
+                                //     touched.namebranch && errors.namebranch
+                                //         ? "w-50 input-error"
+                                //         : "w-50"
+                                // }
+                                type="text"
+                                id="invoice9995"
+                                // maxLength={200}
+                                // onChange={val => handleInputChange(val,i)}
+                                // onBlur={handleBlur}
+                                disabled={true}
+                                value={values.invoice9995}
+                                />
+                                
+                                
+                                </td>
+
+                                 <td width={'10px'}>
+                                <IconButton color={'primary'}
+                                    onClick={val =>handleShowQuickSearchInv9995()}
+                                >
+                                    <SearchIcon />
+                                </IconButton>
+                                </td> 
+
+                                <td hidden={values.workorder == ''}>
+                                <IconButton color={'primary'}
+                                    onClick={val =>handleDeleteValueSeacrhWO()}
+                                >
+                                    <DeleteIcon/>
+                                </IconButton>
+                                </td>
+                            </tr>
+                            </tbody>
+                            </table>
+                            </div>
+
 
                             </div>
                             </div>
@@ -740,7 +1045,7 @@ export default function AddForm(props) {
                             {/* <div className="invalid-feedback-custom">{ErrIsDownPayment}</div> */}
                             {
                                 InputListItem.length == 0?'':
-                                <table id="tablegrid">
+                                <table id="tablegrid" hidden={values.jenistransaksi !== 'LAINNYA'}>
                                     <tr>
                                         <th>{i18n.t('Transaksi')}</th>
                                         {/* <th>{i18n.t('label_NOTE')}</th> */}
@@ -807,7 +1112,7 @@ export default function AddForm(props) {
                                                         // style={{width: '25%'}}
                                                         // value={values.amount}
                                                         value={x.amount}
-                                                        disabled={false}
+                                                        disabled={x.idcoa == '9995'}
                                                     />
                                                     </td>
 
@@ -827,7 +1132,7 @@ export default function AddForm(props) {
                                                         // style={{width: '25%'}}
                                                         // value={values.amount}
                                                         value={x.penyesuaian}
-                                                        disabled={false}
+                                                        disabled={x.idcoa == '9995'}
                                                     />
                                                     </td>
 
@@ -847,7 +1152,7 @@ export default function AddForm(props) {
                                                         // style={{width: '25%'}}
                                                         // value={values.amount}
                                                         value={x.ketpenyesuaian}
-                                                        disabled={false}
+                                                        disabled={x.idcoa == '9995'}
                                                     />
                                                     </td>
                                                     {/* <td>
@@ -974,6 +1279,134 @@ export default function AddForm(props) {
                                     </tbody>
                                 </table>
                             }
+                            {
+                                values.datainvoice9995 !== null?
+                            <table id="tablegrid" hidden={values.jenistransaksi !== '9995'}>
+                            <tr>
+                                <th>{i18n.t('No Invoice')}{' : '}{values.invoice9995}</th>
+                                <th>{i18n.t('Invoice')}</th>
+                                <th>{i18n.t('Terima')}</th>
+                            </tr>
+                            <tbody>
+                                <tr>
+                                    <td>{'Total'}</td>
+                                    <td>{formatRupiah(new String(values.datainvoice9995.totalinvoice).replaceAll('.',','),2)}</td>
+                                    <td>
+                                    <Input
+                                        name="amount"
+                                        // className={
+                                        //     touched.amount && errors.amount
+                                        //         ? "w-50 input-error"
+                                        //         : "w-50"
+                                        // }
+                                        type="text"
+                                        id="amount"
+                                        onChange={val => handleInputChange9995(val,0)}
+                                        onBlur={handleBlur}
+                                        // placeholder={i18n.t('label_AMOUNT')}
+                                        // style={{width: '25%'}}
+                                        // value={values.amount}
+                                        value={InputListItem[0].amount}
+                                    />
+                                    </td>
+                                    
+                                </tr>
+                                    <tr>
+                                    <td>{'Tagihan Pihak Ke-3'}</td>
+                                    <td>{formatRupiah(new String(values.datainvoice9995.nilaireimbursement).replaceAll('.',','),2)}</td>
+                                    <td>{formatRupiah(new String(values.datainvoice9995.nilaireimbursement).replaceAll('.',','),2)}</td>
+                                    </tr>
+
+                                    <tr>
+                                    <td>{'PPN'}</td>
+                                    <td>{formatRupiah(new String(values.datainvoice9995.nilaippn).replaceAll('.',','),2)}</td>
+                                    <td>{formatRupiah(new String(values.datainvoice9995.nilaippn).replaceAll('.',','),2)}</td>
+                                    </tr>
+                                    <tr>
+                                    <td>{'Nilai Bukti Potong'}</td>
+                                    <td>{''}</td>
+                                    <td>
+                                    <Input
+                                        name="nilaibuktipotong"
+                                        // className={
+                                        //     touched.amount && errors.amount
+                                        //         ? "w-50 input-error"
+                                        //         : "w-50"
+                                        // }
+                                        type="text"
+                                        id="nilaibuktipotong"
+                                        onChange={val => handleInputChange9995(val,0)}
+                                        onBlur={handleBlur}
+                                        // placeholder={i18n.t('label_AMOUNT')}
+                                        // style={{width: '25%'}}
+                                        // value={values.amount}
+                                        value={InputListItem[0].nilaibuktipotong}
+                                    />
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                    <td>{'Nomor Bukti Potong'}</td>
+                                    <td>{''}</td>
+                                    <td>
+                                    <Input
+                                        name="nobuktipotong"
+                                        // className={
+                                        //     touched.amount && errors.amount
+                                        //         ? "w-50 input-error"
+                                        //         : "w-50"
+                                        // }
+                                        type="text"
+                                        id="nobuktipotong"
+                                        onChange={val => handleInputChange9995(val,0)}
+                                        onBlur={handleBlur}
+                                        // placeholder={i18n.t('label_AMOUNT')}
+                                        // style={{width: '25%'}}
+                                        // value={values.amount}
+                                        value={InputListItem[0].nobuktipotong}
+                                    />
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                    <td>{'Tanggal Bukti Potong'}</td>
+                                    <td>{''}</td>
+                                    <td>
+                                    <DatePicker
+                                        name="tanggalbuktipotong"
+                                        // onChange={(val) => {
+                                        //         setFieldValue("startdate", val);
+                                        //     }
+                                        // }
+                                        onChange={val => handleChangeTanggalBuktiPotong(val)}
+                                        onBlur={handleBlur}
+                                        // defaultValue={Date(moment([]))}
+                                        format={formatdate}
+                                        value={InputListItem[0].tanggalbuktipotong}
+                                        // max={new Date()}
+                                        // style={{width: '25%'}}
+                                />
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                    <td>{'Jasa'}</td>
+                                    <td>{formatRupiah(new String(values.datainvoice9995.nilaijasa).replaceAll('.',','),2)}</td>
+                                    <td>{InputListItem[0].nilaijasa}</td>
+                                    </tr>
+                                    <tr>
+                                    <td>{'Nilai Penyesuaian'}</td>
+                                    <td>{''}</td>
+                                    <td>{InputListItem[0].penyesuaian}</td>
+                                    </tr>
+                                    <tr>
+                                    <td>{'Ket Nilai Penyesuaian'}</td>
+                                    <td>{''}</td>
+                                    <td>{InputListItem[0].ketpenyesuaian}</td>
+                                    </tr>
+                                
+                            </tbody>
+                            </table>
+                            :''
+                            }
+
                             </ContentWrapper>
                             {loading && <Loading/>}
                             <div className="row justify-content-center" style={{marginTop:'-30px',marginBottom:'20px'}}>
@@ -1009,7 +1442,28 @@ export default function AddForm(props) {
                                             errorHandler = {errorHandler}
                                             handlesearch = {handleQuickSeacrhINV}
                                             placeholder = {'Pencarian Berdasarkan No Document atau Nama Customer'}
-                                            idwo = {InputIndexIdWo}
+                                            idwo = {InputIdWO}
+                                            idcustomer = {InputReceiveFrom}
+                                        ></FormSearch>
+                                        {LoadingSend && <Loading/>}
+                                </StyledDialog>
+
+                                <StyledDialog
+                                    disableBackdropClick
+                                    disableEscapeKeyDown
+                                    maxWidth="md"
+                                    fullWidth={true}
+                                    // style={{height: '80%'}}
+                                    open={ShowQuickSearchInvoice9995}
+                                >
+                                        <FormSearch
+                                            showflag = {setShowQuickSearchInvoice9995}
+                                            flagloadingsend = {setLoadingSend}
+                                            seacrhtype = {'PENERIMAANINVOICE'}
+                                            errorHandler = {errorHandler}
+                                            handlesearch = {handleQuickSeacrhINV9995}
+                                            placeholder = {'Pencarian Berdasarkan No Document atau Nama Customer'}
+                                            idwo = {InputIdWO}
                                             idcustomer = {InputReceiveFrom}
                                         ></FormSearch>
                                         {LoadingSend && <Loading/>}
