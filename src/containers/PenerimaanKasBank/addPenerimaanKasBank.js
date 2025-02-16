@@ -601,6 +601,7 @@ export default function AddForm(props) {
     const errorHandler = (data) => {
         setShowQuickSearchWO(false);
         setShowQuickSearchINV(false);
+        setShowQuickSearchInvoice9995(false);
         setLoading(false);
           Swal.fire({
             icon: 'error',
@@ -749,7 +750,7 @@ export default function AddForm(props) {
         if(defCOA.length > 0){
             idcoa = defCOA[0].value;
         }
-        setInputListItem([...InputListItem, { idcoa:idcoa,catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:"",penyesuaian:"",ketpenyesuaian:"",nilaijasa:"",nilaireimbursement:"",nilaibuktipotong:"",nobuktipotong:"",tanggalbuktipotong:"",nilaippn:""}]);
+        setInputListItem([...InputListItem, { idcoa:idcoa,catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:"",penyesuaian:"",ketpenyesuaian:"",nilaijasa:"",nilaireimbursement:"",nilaibuktipotong:"",nobuktipotong:"",tanggalbuktipotong:null,nilaippn:""}]);
     };
     
     const handleRemoveClick = index => {
@@ -1227,13 +1228,13 @@ export default function AddForm(props) {
                                 </IconButton>
                                 </td> 
 
-                                <td hidden={values.workorder == ''}>
+                                {/* <td hidden={values.workorder == ''}>
                                 <IconButton color={'primary'}
                                     onClick={val =>handleDeleteValueSeacrhWO()}
                                 >
                                     <DeleteIcon/>
                                 </IconButton>
-                                </td>
+                                </td> */}
                             </tr>
                             </tbody>
                             </table>
