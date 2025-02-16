@@ -73,6 +73,7 @@ const DialogQuickSearch = props => {
                 {name: 'noinv', title: 'No Invoice'},
                 {name: 'nowo', title: 'No Work Order'},
                 {name: 'name', title: i18n.t('label_NAME')},
+                {name: 'docpenerimaan', title: i18n.t('Document Penerimaan')},
             ]
         }else if(props.seacrhtype == 'PENERIMAANWO'){
             data = [
@@ -130,6 +131,20 @@ const DialogQuickSearch = props => {
             setInputSearchName(value);
         }
         
+    }
+
+    const handleGetListDocPenerimaanInvoice = (list) =>{
+        let listDoc = [];
+        if(list != null && list != undefined){
+            for(let i=0; i < list.length; i++){
+                let det = list[i];
+                listDoc.push(det.nodocument);
+            }
+        }
+        if(listDoc.length > 0){
+            return listDoc.join(',');
+        }
+        return '';
     }
 
     const handleSearch = () =>{
@@ -236,6 +251,7 @@ const DialogQuickSearch = props => {
                         'noinv': el.nodocument,
                         'nowo': el.noocumentwo,
                         'name': el.namaCustomer,
+                        'docpenerimaan':handleGetListDocPenerimaanInvoice(el.listpenerimaaninvoice?el.listpenerimaaninvoice:[]),
                         'data':el
                     }
                 ], []);

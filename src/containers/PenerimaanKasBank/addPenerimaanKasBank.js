@@ -19,6 +19,7 @@ import * as pathmenu           from '../shared/pathMenu';
 import {DropdownList}      from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import AddIcon from '@material-ui/icons/Add';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 import RemoveIcon from '@material-ui/icons/Remove';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
@@ -71,6 +72,9 @@ export default function AddForm(props) {
     const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:"",penyesuaian:"",ketpenyesuaian:"",nilaijasa:"",nilaireimbursement:"",nilaibuktipotong:"",nobuktipotong:"",tanggalbuktipotong:null,nilaippn:""}]);
     const [ErrInputCatatan, setErrInputCatatan] = useState('');
     const [ErrInputAmount, setErrInputAmount] = useState('');
+    const [ErrNilaiBuktiPotong, setErrNilaiBuktiPotong] = useState('');
+    const [ErrNoBuktiPotong, setErrNoBuktiPotong] = useState('');
+    const [ErrTglBuktiPotong, setErrTglBuktiPotong] = useState('');
     const [ErrIsDownPayment, setErrIsDownPayment] = useState('');
     const [ErrSelWO, setErrSelWO] = useState('');
     const [ErrItems, setErrItems] = useState('');
@@ -92,6 +96,8 @@ export default function AddForm(props) {
     const [InvoiceId9995, setInvoiceId9995] = useState('');
     const [ShowQuickSearchInvoice9995, setShowQuickSearchInvoice9995] = useState(false);
 
+    const [valPPH, setValPPH] = useState(null);
+
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getPenerimaanKasBankData('/template',successHandlerTemplate, errorHandler));
@@ -99,6 +105,7 @@ export default function AddForm(props) {
 
     const successHandlerTemplate = (data) =>{
         if(data.data){
+            setValPPH(data.data.pph);
             let coaOptions = data.data.coaOptions.filter(output => output.code !== '9995' && output.code !== '9996');
             setCoa(coaOptions);
             setListCOATemplate(data.data.coaOptions);
@@ -216,6 +223,50 @@ export default function AddForm(props) {
     const handleChangeJenisTransaksi = (data) =>{
         let id = data?.value ? data.value : '';
         setSelJenisTransaksi(id);
+        setCoa(ListCOATemplate);
+        let defCOA = [];
+        if(id == '9995'){
+            defCOA = ListCOATemplate.filter(output => output.code == '9995');
+        }else{
+            if(SelReceiveFrom == 'CUSTOMER'){
+                setCoa(ListCOATemplate);
+                 defCOA = ListCOATemplate.filter(output => output.code == '9996');
+            }else{
+                let coaOptions = ListCOATemplate.filter(output => output.code !== '9995' && output.code !== '9996');
+                setCoa(coaOptions);
+                defCOA = coaOptions.filter(output => output.code == '9999');
+            }
+        }
+        
+        if(defCOA.length > 0){
+            // InputListItem[0].idcoa = defCOA[0].code;
+            setDefaultCoa(defCOA[0].code);
+            const theData = [
+                {
+                    'idcoa': defCOA[0].code,
+                    'catatan': "",
+                    'amount':'',
+                    'isdownpayment':"",
+                    'idinvoice':'',
+                    'nodocinv':'',
+                    'idworkorder':'',
+                    'nodocwo':'',
+                    'penyesuaian':'',
+                    'ketpenyesuaian':'',
+                    'nilaijasa':'',
+                    'nilaireimbursement':'',
+                    'nilaibuktipotong':'',
+                    'nobuktipotong':'',
+                    'tanggalbuktipotong':null,
+                    'nilaippn':''
+                }
+            ];
+            
+            setInputListItem(theData);
+            
+            // setInputListItem(InputListItem);
+        }
+        
     }
 
     const handleChangeReceiveDate = (data) =>{
@@ -250,18 +301,64 @@ export default function AddForm(props) {
             setCoa(ListCOATemplate);
              let defCOA = ListCOATemplate.filter(output => output.code == '9996');
             if(defCOA.length > 0){
-                InputListItem[0].idcoa = defCOA[0].code;
+                // InputListItem[0].idcoa = defCOA[0].code;
                 setDefaultCoa(defCOA[0].code);
-                setInputListItem(InputListItem);
+                const theData = [
+                    {
+                        'idcoa': defCOA[0].code,
+                        'catatan': "",
+                        'amount':'',
+                        'isdownpayment':"",
+                        'idinvoice':'',
+                        'nodocinv':'',
+                        'idworkorder':'',
+                        'nodocwo':'',
+                        'penyesuaian':'',
+                        'ketpenyesuaian':'',
+                        'nilaijasa':'',
+                        'nilaireimbursement':'',
+                        'nilaibuktipotong':'',
+                        'nobuktipotong':'',
+                        'tanggalbuktipotong':null,
+                        'nilaippn':''
+                    }
+                ];
+                
+                setInputListItem(theData);
+                
+                // setInputListItem(InputListItem);
             }
         }else{
             let coaOptions = ListCOATemplate.filter(output => output.code !== '9995' && output.code !== '9996');
             setCoa(coaOptions);
             let defCOA = coaOptions.filter(output => output.code == '9999');
             if(defCOA.length > 0){
-                InputListItem[0].idcoa = defCOA[0].code;
                 setDefaultCoa(defCOA[0].code);
-                setInputListItem(InputListItem);
+                const theData = [
+                    {
+                        'idcoa': defCOA[0].code,
+                        'catatan': "",
+                        'amount':'',
+                        'isdownpayment':"",
+                        'idinvoice':'',
+                        'nodocinv':'',
+                        'idworkorder':'',
+                        'nodocwo':'',
+                        'penyesuaian':'',
+                        'ketpenyesuaian':'',
+                        'nilaijasa':'',
+                        'nilaireimbursement':'',
+                        'nilaibuktipotong':'',
+                        'nobuktipotong':'',
+                        'tanggalbuktipotong':null,
+                        'nilaippn':''
+                    }
+                ];
+                
+                setInputListItem(theData);
+                // InputListItem[0].idcoa = defCOA[0].code;
+                // setDefaultCoa(defCOA[0].code);
+                // setInputListItem(InputListItem);
             }
         }
     }
@@ -299,6 +396,9 @@ export default function AddForm(props) {
         setErrIsDownPayment('');
         setErrSelWO('');
         setErrItems('');
+        setErrNilaiBuktiPotong('');
+        setErrNoBuktiPotong('');
+        setErrTglBuktiPotong('');
 
         let listitems = [];
         if(InputListItem.length > 0){
@@ -309,10 +409,32 @@ export default function AddForm(props) {
                     //     setErrInputCatatan(i18n.t('Catatan')+' '+i18n.t('label_REQUIRED'));
                     //     flag = false;
                     // }
+                    
 
                     if(det.amount == ''){
                         setErrInputAmount(i18n.t('Amount')+' '+i18n.t('label_REQUIRED'));
                         flag = false;
+                    }
+                    if(SelJenisTransaksi == '9995'){
+                        if((det.nilaibuktipotong !== '' && parseFloat(removeFormatRupiah(det.nilaibuktipotong)) > 0) || det.nobuktipotong !== '' || (det.tanggalbuktipotong !== '' && det.tanggalbuktipotong !== null) ){
+                            if(det.nobuktipotong == ''){
+                                setErrNoBuktiPotong(i18n.t('No Bukti Potong')+' '+i18n.t('label_REQUIRED'));
+                                flag = false;
+                            }
+
+                            if(det.nilaibuktipotong == ''){
+                                setErrNoBuktiPotong(i18n.t('Nilai Bukti Potong')+' '+i18n.t('label_REQUIRED'));
+                                flag = false;
+                            }else if(parseFloat(removeFormatRupiah(det.nilaibuktipotong)) <= 0){
+                                setErrNilaiBuktiPotong(i18n.t('Nilai Bukti Potong')+' '+i18n.t('label_REQUIRED'));
+                                flag = false;
+                            }
+
+                            if(det.tanggalbuktipotong == '' || det.tanggalbuktipotong == null){
+                                setErrTglBuktiPotong(i18n.t('Tanggal Bukti Potong')+' '+i18n.t('label_REQUIRED'));
+                                flag = false;
+                            }
+                        }
                     }
 
                     // if(det.isdownpayment == ''){
@@ -407,30 +529,58 @@ export default function AddForm(props) {
             obj.keterangan = InputKeterangan;
             obj.isactive = true;
             obj.idwo = idwo;
+            obj.pph = valPPH;
             let listdetails = [];
             if(InputListItem.length > 0){
                 for(let i=0; i < InputListItem.length; i++){
                     let det = InputListItem[i];
                     if( det.amount !== '' ){
                         let objDet = new Object();
-                        let filterCoa = ListCOA.filter(output => output.value == det.idcoa);
+                        let filterCoa = ListCOATemplate.filter(output => output.code === det.idcoa);
+                        
                         let idcoa = null;
                         if(filterCoa.length > 0){
-                            idcoa = filterCoa[0].idcoa;
+                            
+                            idcoa = filterCoa[0].id;
                         }
                         objDet.idcoa = idcoa;//det.idcoa !== '' && det.idcoa !== 'nodata' ? det.idcoa:null;
                         objDet.catatan = det.catatan;
-                        objDet.amount = numConvToValDB(det.amount);//.replaceAll('.','').replaceAll(',','.');
-                        objDet.penyesuaian = numConvToValDB(det.penyesuaian);
+                        if(SelJenisTransaksi == '9995'){
+                            let penyesuaian = det.penyesuaian;
+                            if(penyesuaian.includes('(')){
+                                penyesuaian = penyesuaian.replaceAll('(','');
+                                penyesuaian = penyesuaian.replaceAll(')','');
+                                penyesuaian = '-'+penyesuaian;
+                            }
+                            objDet.amount = removeFormatRupiah(det.amount);
+                            objDet.penyesuaian = det.penyesuaian !== ''?removeFormatRupiah(penyesuaian):0;
+                            objDet.nilaijasa = det.nilaijasa !== ''?removeFormatRupiah(det.nilaijasa):0;
+                            objDet.nilaireimbursement = DataInvoice9995.nilaireimbursement?DataInvoice9995.nilaireimbursement:0;
+                            objDet.nilaibuktipotong = det.nilaibuktipotong !== ''?removeFormatRupiah(det.nilaibuktipotong):0;
+                            objDet.nobuktipotong = det.nobuktipotong;
+                            objDet.tanggalbuktipotong = det.tanggalbuktipotong !== null && det.tanggalbuktipotong !== ''?new Date(det.tanggalbuktipotong).getTime() :null;
+                            objDet.nilaippn = DataInvoice9995.nilaippn?DataInvoice9995.nilaippn:0;
+                        }else{
+                            objDet.amount = numConvToValDB(det.amount);
+                            objDet.penyesuaian = numConvToValDB(det.penyesuaian);
+                            objDet.nilaijasa = 0;
+                            objDet.nilaireimbursement = 0;
+                            objDet.nilaibuktipotong = 0;
+                            objDet.nobuktipotong = '';
+                            objDet.tanggalbuktipotong = null;
+                            objDet.nilaippn = 0;
+                        }
+                        
                         objDet.keterangan_penyesuaian = det.ketpenyesuaian;
                         objDet.isdownpayment = "N";//det.isdownpayment;
                         objDet.idinvoice = det.idinvoice !== '' ? det.idinvoice:null;
-                        objDet.idworkorder = idwo;//det.idworkorder !== '' ? det.idworkorder:null;
+                        objDet.idworkorder = idwo;
                         listdetails.push(objDet);
                     }
                 }
             }
             obj.details = listdetails;
+            
             dispatch(actions.submitAddPenerimaanKasBank('',obj,succesHandlerSubmit, errorHandler));
         }
     }
@@ -458,7 +608,13 @@ export default function AddForm(props) {
             text: data.msg
         })
     }
-
+    const handleCopyValue9995 = (value,name, index) => {
+        // const list = [...InputListItem];
+        // list[index][name] = value;
+        let obj = {target:{name:name,value:value}};
+        handleInputChange9995(obj,index);
+        // setInputListItem(list);
+    }
     const handleInputChange9995 = (e, index) => {
         const { name, value } = e.target;
         let valTemp = value;
@@ -487,23 +643,9 @@ export default function AddForm(props) {
             if(name == 'amount' || name == 'nilaibuktipotong'){
                 let nilaireimbursement = DataInvoice9995.nilaireimbursement?parseFloat(DataInvoice9995.nilaireimbursement):0;
                 let nilaippn = DataInvoice9995.nilaippn?parseFloat(DataInvoice9995.nilaippn):0;
-                let nilaibuktipotong = 0;
-                if(name == 'nilaibuktipotong'){
-                    nilaibuktipotong = valPriceTemp;
-                }else{
-                    nilaibuktipotong = list[index]['nilaibuktipotong'] !== ''?list[index]['nilaibuktipotong']:0;
-                }
-                if(new String(nilaibuktipotong).includes(',')){
-                    let splitComma = new String(nilaibuktipotong).split(','); 
-                    let angka = splitComma[0];
-                    let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
-                    nilaibuktipotong = removeFormatRupiah(angka)+'.'+desimal;
-                }else{
-                    nilaibuktipotong = removeFormatRupiah(nilaibuktipotong);
-                }
-                nilaibuktipotong = parseFloat(nilaibuktipotong);
-
-                let totalReimbursement = nilaireimbursement + nilaippn + nilaibuktipotong;
+                let totalinvoice = DataInvoice9995.totalinvoice?parseFloat(DataInvoice9995.totalinvoice):0;
+                let netTotalInvoice = totalinvoice - (nilaireimbursement + nilaippn);
+                let totalReimbursement = nilaireimbursement + nilaippn;
 
                 let nilaitempamount = 0;
                 if(name == 'amount'){
@@ -523,12 +665,58 @@ export default function AddForm(props) {
 
                 let nilaijasa = nilaitempamount - totalReimbursement;
                 list[index]['nilaijasa'] = formatRupiah(new String(nilaijasa).replaceAll('.',','),2);
+
+                let nilaibuktipotong = 0;
+                if(name == 'nilaibuktipotong'){
+                    if(valPriceTemp !== ''){
+                        nilaibuktipotong = valPriceTemp;
+                    }
+                    
+                }else{
+                    let pph = valPPH;
+                    let pphPersen = parseFloat(parseFloat(pph) / 100).toFixed(2);
+                    
+                    let nilaiBP = nilaijasa * pphPersen;
+                    
+                    nilaibuktipotong = nilaiBP;//list[index]['nilaibuktipotong'] !== ''?list[index]['nilaibuktipotong']:0;
+                    nilaibuktipotong = new String(nilaibuktipotong).replaceAll('.',',');
+                }
+                if(new String(nilaibuktipotong).includes(',')){
+                    let splitComma = new String(nilaibuktipotong).split(','); 
+                    let angka = splitComma[0];
+                    let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                    nilaibuktipotong = removeFormatRupiah(angka)+'.'+desimal;
+                }else{
+                    nilaibuktipotong = removeFormatRupiah(nilaibuktipotong);
+                }
+                nilaibuktipotong = parseFloat(nilaibuktipotong);
+                netTotalInvoice = netTotalInvoice - nilaibuktipotong;
+                if(name == 'amount'){
+                    list[index]['nilaibuktipotong'] = formatRupiah(new String(nilaibuktipotong).replaceAll('.',','),2);
+                }
+                // 'penyesuaian':'',
+                // 'ketpenyesuaian':'',
+
+                netTotalInvoice = nilaijasa - netTotalInvoice;
+                let nilaiPenyesuaian = '';
+                let ketPenyesuaian = '';
+                if(netTotalInvoice > 0){
+                    nilaiPenyesuaian = formatRupiah(new String(netTotalInvoice).replaceAll('.',','),2);
+                    ketPenyesuaian = 'Lebih Bayar';
+                }else if(netTotalInvoice < 0){
+                    nilaiPenyesuaian = '('+formatRupiah(new String(Math.abs(netTotalInvoice)).replaceAll('.',','),2)+')';
+                    ketPenyesuaian = 'Kurang Bayar';
+                }
+                list[index]['penyesuaian'] = nilaiPenyesuaian;
+                list[index]['ketpenyesuaian'] = ketPenyesuaian;
+
                 list[index][name] = formatRupiah(valPriceTemp,2);
             }else{
                 list[index][name] = value;
             }
             
         }
+        list[index]['idinvoice'] = InvoiceId9995;
         setInputListItem(list);
     };
 
@@ -642,7 +830,7 @@ export default function AddForm(props) {
                 'nilaireimbursement':'',
                 'nilaibuktipotong':'',
                 'nobuktipotong':'',
-                'tanggalbuktipotong':'',
+                'tanggalbuktipotong':null,
                 'nilaippn':''
             }
         ];
@@ -689,7 +877,7 @@ export default function AddForm(props) {
                         'nilaireimbursement':'',
                         'nilaibuktipotong':'',
                         'nobuktipotong':'',
-                        'tanggalbuktipotong':'',
+                        'tanggalbuktipotong':null,
                         'nilaippn':''
                     }
                 ], []);
@@ -703,9 +891,26 @@ export default function AddForm(props) {
 
     const handleQuickSeacrhINV9995 = (data) =>{
         setShowQuickSearchInvoice9995(false);
-        setInvoiceId9995(data.id);
-        setInputInvoice9995(data.nodocument);
-        setDataInvoice9995(data);
+        let listDoc = [];
+        let list = data.listpenerimaaninvoice?data.listpenerimaaninvoice:[]
+        if(list != null && list != undefined){
+            for(let i=0; i < list.length; i++){
+                let det = list[i];
+                listDoc.push(det.nodocument);
+            }
+        }
+        if(listDoc.length > 0){
+            Swal.fire({
+                icon: 'info',
+                title: 'Oops...',
+                text: "Invoice ini sudah ada pada document "+listDoc.join(',')
+            })
+        }else{
+            setInvoiceId9995(data.id);
+            setInputInvoice9995(data.nodocument);
+            setDataInvoice9995(data);
+        }
+        
     }
 
     const handleQuickSeacrhINV = (data) =>{
@@ -1042,6 +1247,9 @@ export default function AddForm(props) {
                             <div className="invalid-feedback-custom">{ErrSelWO}</div>
                             <div className="invalid-feedback-custom">{ErrInputCatatan}</div>
                             <div className="invalid-feedback-custom">{ErrInputAmount}</div>
+                            <div className="invalid-feedback-custom">{ErrNilaiBuktiPotong}</div>
+                            <div className="invalid-feedback-custom">{ErrNoBuktiPotong}</div>
+                            <div className="invalid-feedback-custom">{ErrTglBuktiPotong}</div>
                             {/* <div className="invalid-feedback-custom">{ErrIsDownPayment}</div> */}
                             {
                                 InputListItem.length == 0?'':
@@ -1290,7 +1498,23 @@ export default function AddForm(props) {
                             <tbody>
                                 <tr>
                                     <td>{'Total'}</td>
-                                    <td>{formatRupiah(new String(values.datainvoice9995.totalinvoice).replaceAll('.',','),2)}</td>
+                                    <td>
+                                    <table>
+                                        <tr>
+                                            <td width={'90%'} style={{fontSize:'17px'}}>
+                                            {formatRupiah(new String(values.datainvoice9995.totalinvoice).replaceAll('.',','),2)}
+                                            </td>
+                                            <td>
+                                            <IconButton color={'primary'}
+                                                onClick={() =>handleCopyValue9995(formatRupiah(new String(values.datainvoice9995.totalinvoice).replaceAll('.',','),2),'amount',0)}
+                                            >
+                                                <FileCopyIcon/>
+                                            </IconButton>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                    </td>
                                     <td>
                                     <Input
                                         name="amount"
@@ -1306,6 +1530,7 @@ export default function AddForm(props) {
                                         // placeholder={i18n.t('label_AMOUNT')}
                                         // style={{width: '25%'}}
                                         // value={values.amount}
+                                        style={{fontSize:'17px'}}
                                         value={InputListItem[0].amount}
                                     />
                                     </td>
@@ -1313,14 +1538,14 @@ export default function AddForm(props) {
                                 </tr>
                                     <tr>
                                     <td>{'Tagihan Pihak Ke-3'}</td>
-                                    <td>{formatRupiah(new String(values.datainvoice9995.nilaireimbursement).replaceAll('.',','),2)}</td>
-                                    <td>{formatRupiah(new String(values.datainvoice9995.nilaireimbursement).replaceAll('.',','),2)}</td>
+                                    <td style={{fontSize:'17px'}}>{formatRupiah(new String(values.datainvoice9995.nilaireimbursement).replaceAll('.',','),2)}</td>
+                                    <td style={{fontSize:'17px'}}>{formatRupiah(new String(values.datainvoice9995.nilaireimbursement).replaceAll('.',','),2)}</td>
                                     </tr>
 
                                     <tr>
                                     <td>{'PPN'}</td>
-                                    <td>{formatRupiah(new String(values.datainvoice9995.nilaippn).replaceAll('.',','),2)}</td>
-                                    <td>{formatRupiah(new String(values.datainvoice9995.nilaippn).replaceAll('.',','),2)}</td>
+                                    <td style={{fontSize:'17px'}}>{formatRupiah(new String(values.datainvoice9995.nilaippn).replaceAll('.',','),2)}</td>
+                                    <td style={{fontSize:'17px'}}>{formatRupiah(new String(values.datainvoice9995.nilaippn).replaceAll('.',','),2)}</td>
                                     </tr>
                                     <tr>
                                     <td>{'Nilai Bukti Potong'}</td>
@@ -1340,6 +1565,7 @@ export default function AddForm(props) {
                                         // placeholder={i18n.t('label_AMOUNT')}
                                         // style={{width: '25%'}}
                                         // value={values.amount}
+                                        style={{fontSize:'17px'}}
                                         value={InputListItem[0].nilaibuktipotong}
                                     />
                                     </td>
@@ -1362,6 +1588,7 @@ export default function AddForm(props) {
                                         // placeholder={i18n.t('label_AMOUNT')}
                                         // style={{width: '25%'}}
                                         // value={values.amount}
+                                        style={{fontSize:'17px'}}
                                         value={InputListItem[0].nobuktipotong}
                                     />
                                     </td>
@@ -1370,36 +1597,52 @@ export default function AddForm(props) {
                                     <td>{'Tanggal Bukti Potong'}</td>
                                     <td>{''}</td>
                                     <td>
-                                    <DatePicker
-                                        name="tanggalbuktipotong"
-                                        // onChange={(val) => {
-                                        //         setFieldValue("startdate", val);
-                                        //     }
-                                        // }
-                                        onChange={val => handleChangeTanggalBuktiPotong(val)}
-                                        onBlur={handleBlur}
-                                        // defaultValue={Date(moment([]))}
-                                        format={formatdate}
-                                        value={InputListItem[0].tanggalbuktipotong}
-                                        // max={new Date()}
-                                        // style={{width: '25%'}}
-                                />
+                                    
+                                    <table>
+                                        <tr>
+                                            <td width={'90%'}>
+                                            <DatePicker
+                                                    name="tanggalbuktipotong"
+                                                    // onChange={(val) => {
+                                                    //         setFieldValue("startdate", val);
+                                                    //     }
+                                                    // }
+                                                    onChange={val => handleChangeTanggalBuktiPotong(val)}
+                                                    onBlur={handleBlur}
+                                                    // defaultValue={Date(moment([]))}
+                                                    format={formatdate}
+                                                    value={InputListItem[0].tanggalbuktipotong}
+                                                    style={{fontSize:'15px'}}
+                                                    // max={new Date()}
+                                                    // style={{width: '25%'}}
+                                            />
+                                            </td>
+                                            <td>
+                                            <IconButton color={'primary'}
+                                                onClick={() =>handleChangeTanggalBuktiPotong(null)}
+                                            >
+                                                <DeleteIcon/>
+                                            </IconButton>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
                                     </td>
                                     </tr>
                                     <tr>
                                     <td>{'Jasa'}</td>
-                                    <td>{formatRupiah(new String(values.datainvoice9995.nilaijasa).replaceAll('.',','),2)}</td>
-                                    <td>{InputListItem[0].nilaijasa}</td>
+                                    <td style={{fontSize:'17px'}}>{formatRupiah(new String(values.datainvoice9995.nilaijasa).replaceAll('.',','),2)}</td>
+                                    <td style={{fontSize:'17px'}}>{InputListItem[0].nilaijasa}</td>
                                     </tr>
                                     <tr>
                                     <td>{'Nilai Penyesuaian'}</td>
                                     <td>{''}</td>
-                                    <td>{InputListItem[0].penyesuaian}</td>
+                                    <td style={{fontSize:'17px'}}>{InputListItem[0].penyesuaian}</td>
                                     </tr>
                                     <tr>
-                                    <td>{'Ket Nilai Penyesuaian'}</td>
+                                    <td>{'Ket Penyesuaian'}</td>
                                     <td>{''}</td>
-                                    <td>{InputListItem[0].ketpenyesuaian}</td>
+                                    <td style={{fontSize:'17px'}}>{InputListItem[0].ketpenyesuaian}</td>
                                     </tr>
                                 
                             </tbody>
