@@ -200,6 +200,12 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuReportStatusInvoice,
                 },
                 {
+                    name: 'Invoice',
+                    path: pathmenu.reportInvoice,
+                    translate: 'Invoice',
+                    permission:permissionmenu.MenuReportStatusInvoice,
+                },
+                {
                     name: 'Kas Bank',
                     path: pathmenu.reportKasBank,
                     translate: 'Kas Bank',

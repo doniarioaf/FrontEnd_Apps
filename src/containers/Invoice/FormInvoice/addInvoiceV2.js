@@ -925,7 +925,7 @@ export default function AddForm(props) {
                             />
 
                             <label className="mt-3 form-label required" htmlFor="invoicenumber">
-                                {i18n.t('No Invoice Reimbursement')}
+                                {i18n.t('No Invoice Tagihan Pihak Ke-3')}
                                 <span style={{color:'red'}}>*</span>
                             </label>
                             <Input
@@ -939,7 +939,7 @@ export default function AddForm(props) {
                                 disabled={true}
                             />
                             <label className="mt-3 form-label" htmlFor="nilaireimbursement">
-                                {'Nilai Reimbursement'}
+                                {'Tagihan Pihak Ke-3'}
                             </label>
                             <Input
                                 name="nilaireimbursement"

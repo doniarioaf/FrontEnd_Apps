@@ -330,14 +330,14 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('No Invoice Reimbursement')}</span>
+                            <span className="col-md-5">{i18n.t('No Invoice Tagihan Pihak Ke-3')}</span>
                             <strong className="col-md-7">
                                 {value.nodocumentreimbursement?value.nodocumentreimbursement:''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Nilai Reimbursement')}</span>
+                            <span className="col-md-5">{i18n.t('Tagihan Pihak Ke-3')}</span>
                             <strong className="col-md-7">
                                 {value.nilaireimbursement?formatRupiah(value.nilaireimbursement,2):''}
                             </strong>

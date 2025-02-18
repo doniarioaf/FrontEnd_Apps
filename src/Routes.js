@@ -281,6 +281,7 @@ const ReportKasBank = lazy(() => import('./containers/Report/Manggala/ReportKasB
 const reportLabaRugi = lazy(() => import('./containers/Report/Manggala/reportLabaRugi'));
 const reportSummaryKegiatanTruck = lazy(() => import('./containers/Report/Manggala/reportSummaryKegiatanTruck'));
 const ReportHistoryTruck = lazy(() => import('./containers/Report/Manggala/ReportHistoryTruck'));
+const ReportInvoice = lazy(() => import('./containers/Report/Manggala/reportInvoice'));
 // List of routes that uses the page layout
 // listed here to Switch between layouts
 // depending on the current pathname
@@ -562,6 +563,7 @@ const Routes = ({ location, ...props }) => {
                             <Route path={pathmenu.reportLabaRugi} component={waitFor(reportLabaRugi)}/>
                             <Route path={pathmenu.reportsummarykegiatantruck} component={waitFor(reportSummaryKegiatanTruck)}/>
                             <Route path={pathmenu.reportHistoryTruck} component={waitFor(ReportHistoryTruck)}/>
+                            <Route path={pathmenu.reportInvoice} component={waitFor(ReportInvoice)}/>
                             
                             {/* <Route path={pathmenu.menucustomers} component={waitFor(menuCustomer)}/>
                             <Route path={pathmenu.detailcustomers+'/:id'} component={waitFor(detailCustomer)}/>
