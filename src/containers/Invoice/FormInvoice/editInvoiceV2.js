@@ -286,7 +286,11 @@ export default function AddForm(props) {
 
     const handleInputNoFakturPajak = (data) =>{
         let val = data.target.value;
-        setInputNoFakturPajak(val);
+        let rgx = /^[0-9\.]+$/; //hanya angka dan titik
+        let ismatch = new String(val).match(rgx); 
+        if(ismatch !== null){
+            setInputNoFakturPajak(val);
+        }
     }
 
     const handleInputRefNo = (data) =>{
@@ -961,34 +965,7 @@ export default function AddForm(props) {
 
                             <div className="mt-2 col-lg-6 ft-detail mb-5">
                             
-                            <label className="mt-3 form-label required" htmlFor="invoicenumber">
-                                {i18n.t('No Invoice Jasa')}
-                                <span style={{color:'red'}}>*</span>
-                            </label>
-                            <Input
-                                name="invoicenumberjasa"
-                                type="text"
-                                id="invoicenumberjasa"
-                                maxLength={50}
-                                // onChange={val => handleInputInvoiceNumber(val)}
-                                onBlur={handleBlur}
-                                value={values.invoicenumberjasa}
-                                disabled={true}
-                            />
-
-                            <label className="mt-3 form-label" htmlFor="nilaijasa">
-                                {'Nilai Jasa'}
-                            </label>
-                            <Input
-                                name="nilaijasa"
-                                type="text"
-                                id="nilaijasa"
-                                maxLength={200}
-                                onChange={val => handleInputNilaiJasa(val)}
-                                onBlur={handleBlur}
-                                value={values.nilaijasa}
-                                disabled={values.wo == ''}
-                            />
+                            
 
                             <label className="mt-3 form-label required" htmlFor="invoicenumber">
                                 {i18n.t('No Invoice Tagihan Pihak Ke-3')}
@@ -1015,6 +992,35 @@ export default function AddForm(props) {
                                 onChange={val => handleInputNilaiReimbursement(val)}
                                 onBlur={handleBlur}
                                 value={values.nilaireimbursement}
+                                disabled={values.wo == ''}
+                            />
+
+                            <label className="mt-3 form-label required" htmlFor="invoicenumber">
+                                {i18n.t('No Invoice Jasa')}
+                                <span style={{color:'red'}}>*</span>
+                            </label>
+                            <Input
+                                name="invoicenumberjasa"
+                                type="text"
+                                id="invoicenumberjasa"
+                                maxLength={50}
+                                // onChange={val => handleInputInvoiceNumber(val)}
+                                onBlur={handleBlur}
+                                value={values.invoicenumberjasa}
+                                disabled={true}
+                            />
+
+                            <label className="mt-3 form-label" htmlFor="nilaijasa">
+                                {'Nilai Jasa'}
+                            </label>
+                            <Input
+                                name="nilaijasa"
+                                type="text"
+                                id="nilaijasa"
+                                maxLength={200}
+                                onChange={val => handleInputNilaiJasa(val)}
+                                onBlur={handleBlur}
+                                value={values.nilaijasa}
                                 disabled={values.wo == ''}
                             />
 

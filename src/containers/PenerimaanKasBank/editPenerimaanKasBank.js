@@ -714,7 +714,7 @@ export default function AddForm(props) {
                 let splitComma = new String(value).split(','); 
                 let angka = splitComma[0];
                 let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
-                valPriceTemp = removeFormatRupiah(angka)+','+desimal;
+                valPriceTemp = removeFormatRupiah(angka)+'.'+desimal;
             }else{
                 valPriceTemp = removeFormatRupiah(value);
             }
@@ -744,34 +744,44 @@ export default function AddForm(props) {
                 let nilaijasa = nilaitempamount - totalReimbursement;
                 list[index]['nilaijasa'] = formatRupiah(new String(nilaijasa).replaceAll('.',','),2);
 
+                // let nilaibuktipotong = 0;
+                // if(name == 'nilaibuktipotong'){
+                //     if(valPriceTemp !== ''){
+                //         nilaibuktipotong = valPriceTemp;
+                //     }
+                    
+                // }else{
+                //     let pph = valPPH;
+                //     let pphPersen = parseFloat(parseFloat(pph) / 100).toFixed(2);
+                    
+                //     let nilaiBP = nilaijasa * pphPersen;
+                    
+                //     nilaibuktipotong = nilaiBP;//list[index]['nilaibuktipotong'] !== ''?list[index]['nilaibuktipotong']:0;
+                //     nilaibuktipotong = new String(nilaibuktipotong).replaceAll('.',',');
+                // }
+                // if(new String(nilaibuktipotong).includes(',')){
+                //     let splitComma = new String(nilaibuktipotong).split(','); 
+                //     let angka = splitComma[0];
+                //     let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                //     nilaibuktipotong = removeFormatRupiah(angka)+'.'+desimal;
+                // }else{
+                //     nilaibuktipotong = removeFormatRupiah(nilaibuktipotong);
+                // }
+                // nilaibuktipotong = parseFloat(nilaibuktipotong);
                 let nilaibuktipotong = 0;
                 if(name == 'nilaibuktipotong'){
                     if(valPriceTemp !== ''){
                         nilaibuktipotong = valPriceTemp;
                     }
                     
-                }else{
-                    let pph = valPPH;
-                    let pphPersen = parseFloat(parseFloat(pph) / 100).toFixed(2);
-                    
-                    let nilaiBP = nilaijasa * pphPersen;
-                    
-                    nilaibuktipotong = nilaiBP;//list[index]['nilaibuktipotong'] !== ''?list[index]['nilaibuktipotong']:0;
-                    nilaibuktipotong = new String(nilaibuktipotong).replaceAll('.',',');
-                }
-                if(new String(nilaibuktipotong).includes(',')){
-                    let splitComma = new String(nilaibuktipotong).split(','); 
-                    let angka = splitComma[0];
-                    let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
-                    nilaibuktipotong = removeFormatRupiah(angka)+'.'+desimal;
-                }else{
+                }else {
+                    nilaibuktipotong = list[index]['nilaibuktipotong'] !== ''?list[index]['nilaibuktipotong']:0;
                     nilaibuktipotong = removeFormatRupiah(nilaibuktipotong);
                 }
-                nilaibuktipotong = parseFloat(nilaibuktipotong);
                 netTotalInvoice = netTotalInvoice - nilaibuktipotong;
-                if(name == 'amount'){
-                    list[index]['nilaibuktipotong'] = formatRupiah(new String(nilaibuktipotong).replaceAll('.',','),2);
-                }
+                // if(name == 'amount'){
+                //     list[index]['nilaibuktipotong'] = formatRupiah(new String(nilaibuktipotong).replaceAll('.',','),2);
+                // }
                 // 'penyesuaian':'',
                 // 'ketpenyesuaian':'',
 
@@ -788,7 +798,7 @@ export default function AddForm(props) {
                 list[index]['penyesuaian'] = nilaiPenyesuaian;
                 list[index]['ketpenyesuaian'] = ketPenyesuaian;
 
-                list[index][name] = formatRupiah(valPriceTemp,2);
+                list[index][name] = formatRupiah(new String(valPriceTemp).replaceAll('.',','),2);
             }else{
                 list[index][name] = value;
             }
@@ -948,6 +958,16 @@ export default function AddForm(props) {
             setInvoiceId9995(data.id);
             setInputInvoice9995(data.nodocument);
             setDataInvoice9995(data);
+
+            const list = [...InputListItem];
+            if(list.length > 0){
+                let pph = valPPH;
+                let pphPersen = parseFloat(parseFloat(pph) / 100).toFixed(2);
+                let invnilaijasa = data.nilaijasa?parseFloat(data.nilaijasa):0;
+                let nilaiBP = invnilaijasa * pphPersen;
+                list[0]['nilaibuktipotong'] = formatRupiah(new String(nilaiBP).replaceAll('.',','),2);
+                setInputListItem(list);   
+            }
         }
         
     }
