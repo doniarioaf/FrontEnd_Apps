@@ -417,23 +417,23 @@ export default function AddForm(props) {
                     }
                     if(SelJenisTransaksi == '9995'){
                         if((det.nilaibuktipotong !== '' && parseFloat(removeFormatRupiah(det.nilaibuktipotong)) > 0) || det.nobuktipotong !== '' || (det.tanggalbuktipotong !== '' && det.tanggalbuktipotong !== null) ){
-                            if(det.nobuktipotong == ''){
-                                setErrNoBuktiPotong(i18n.t('No Bukti Potong')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
-                            }
+                            // if(det.nobuktipotong == ''){
+                            //     setErrNoBuktiPotong(i18n.t('No Bukti Potong')+' '+i18n.t('label_REQUIRED'));
+                            //     flag = false;
+                            // }
 
-                            if(det.nilaibuktipotong == ''){
-                                setErrNoBuktiPotong(i18n.t('Nilai Bukti Potong')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
-                            }else if(parseFloat(removeFormatRupiah(det.nilaibuktipotong)) <= 0){
-                                setErrNilaiBuktiPotong(i18n.t('Nilai Bukti Potong')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
-                            }
+                            // if(det.nilaibuktipotong == ''){
+                            //     setErrNoBuktiPotong(i18n.t('Nilai Bukti Potong')+' '+i18n.t('label_REQUIRED'));
+                            //     flag = false;
+                            // }else if(parseFloat(removeFormatRupiah(det.nilaibuktipotong)) <= 0){
+                            //     setErrNilaiBuktiPotong(i18n.t('Nilai Bukti Potong')+' '+i18n.t('label_REQUIRED'));
+                            //     flag = false;
+                            // }
 
-                            if(det.tanggalbuktipotong == '' || det.tanggalbuktipotong == null){
-                                setErrTglBuktiPotong(i18n.t('Tanggal Bukti Potong')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
-                            }
+                            // if(det.tanggalbuktipotong == '' || det.tanggalbuktipotong == null){
+                            //     setErrTglBuktiPotong(i18n.t('Tanggal Bukti Potong')+' '+i18n.t('label_REQUIRED'));
+                            //     flag = false;
+                            // }
                         }
                     }
 

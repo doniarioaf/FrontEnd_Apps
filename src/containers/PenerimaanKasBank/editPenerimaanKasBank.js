@@ -201,7 +201,7 @@ export default function AddForm(props) {
                         penyesuaian = det.penyesuaian ? det.penyesuaian:0;
                     }
                     
-                    listitems.push({ idcoa:(det.coacode?det.coacode:''),catatan: det.catatan,amount:numToMoney(parseFloat(det.amount)),isdownpayment:det.isdownpayment ,idinvoice:(det.idinvoice?det.idinvoice:""),nodocinv:(det.nodocinvoice?det.nodocinvoice:""),idworkorder:(det.idworkorder?det.idworkorder:''),nodocwo:(det.nodocworkorder?det.nodocworkorder:""),penyesuaian:(penyesuaian ? formatRupiah(parseFloat(new String(penyesuaian).replaceAll('.',',')),2):0),ketpenyesuaian:det.keterangan_penyesuaian,nilaijasa:(det.nilaijasa?formatRupiah(new String(det.nilaijasa).replaceAll('.',','),2):0) ,nilaireimbursement:(det.nilaireimbursement?formatRupiah(new String(det.nilaireimbursement).replaceAll('.',','),2):0),nilaibuktipotong:(det.nilaibuktipotong?formatRupiah(new String(det.nilaibuktipotong).replaceAll('.',','),2):0),nobuktipotong:(det.nobuktipotong),tanggalbuktipotong:(det.tanggalbuktipotong?new Date(det.tanggalbuktipotong):''),nilaippn:(det.nilaippn?formatRupiah(new String(det.nilaippn).replaceAll('.',','),2):0)});
+                    listitems.push({ idcoa:(det.coacode?det.coacode:''),catatan: det.catatan,amount:numToMoney(parseFloat(det.amount)),isdownpayment:det.isdownpayment ,idinvoice:(det.idinvoice?det.idinvoice:""),nodocinv:(det.nodocinvoice?det.nodocinvoice:""),idworkorder:(det.idworkorder?det.idworkorder:''),nodocwo:(det.nodocworkorder?det.nodocworkorder:""),penyesuaian:(penyesuaian ? formatRupiah(parseFloat(new String(penyesuaian).replaceAll('.',',')),2):0),ketpenyesuaian:det.keterangan_penyesuaian,nilaijasa:(det.nilaijasa?formatRupiah(new String(det.nilaijasa).replaceAll('.',','),2):0) ,nilaireimbursement:(det.nilaireimbursement?formatRupiah(new String(det.nilaireimbursement).replaceAll('.',','),2):0),nilaibuktipotong:(det.nilaibuktipotong?formatRupiah(new String(det.nilaibuktipotong).replaceAll('.',','),2):0),nobuktipotong:(det.nobuktipotong),tanggalbuktipotong:(det.tanggalbuktipotong?new Date(det.tanggalbuktipotong):null),nilaippn:(det.nilaippn?formatRupiah(new String(det.nilaippn).replaceAll('.',','),2):0)});
                 }
             }
             if(isCustomerBaru){
@@ -489,23 +489,23 @@ export default function AddForm(props) {
                     }
                     if(SelJenisTransaksi == '9995'){
                         if((det.nilaibuktipotong !== '' && parseFloat(removeFormatRupiah(det.nilaibuktipotong)) > 0) || det.nobuktipotong !== '' || (det.tanggalbuktipotong !== '' && det.tanggalbuktipotong !== null) ){
-                            if(det.nobuktipotong == ''){
-                                setErrNoBuktiPotong(i18n.t('No Bukti Potong')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
-                            }
+                            // if(det.nobuktipotong == ''){
+                            //     setErrNoBuktiPotong(i18n.t('No Bukti Potong')+' '+i18n.t('label_REQUIRED'));
+                            //     flag = false;
+                            // }
 
-                            if(det.nilaibuktipotong == ''){
-                                setErrNoBuktiPotong(i18n.t('Nilai Bukti Potong')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
-                            }else if(parseFloat(removeFormatRupiah(det.nilaibuktipotong)) <= 0){
-                                setErrNilaiBuktiPotong(i18n.t('Nilai Bukti Potong')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
-                            }
+                            // if(det.nilaibuktipotong == ''){
+                            //     setErrNoBuktiPotong(i18n.t('Nilai Bukti Potong')+' '+i18n.t('label_REQUIRED'));
+                            //     flag = false;
+                            // }else if(parseFloat(removeFormatRupiah(det.nilaibuktipotong)) <= 0){
+                            //     setErrNilaiBuktiPotong(i18n.t('Nilai Bukti Potong')+' '+i18n.t('label_REQUIRED'));
+                            //     flag = false;
+                            // }
 
-                            if(det.tanggalbuktipotong == '' || det.tanggalbuktipotong == null){
-                                setErrTglBuktiPotong(i18n.t('Tanggal Bukti Potong')+' '+i18n.t('label_REQUIRED'));
-                                flag = false;
-                            }
+                            // if(det.tanggalbuktipotong == '' || det.tanggalbuktipotong == null){
+                            //     setErrTglBuktiPotong(i18n.t('Tanggal Bukti Potong')+' '+i18n.t('label_REQUIRED'));
+                            //     flag = false;
+                            // }
                         }
                     }
 
