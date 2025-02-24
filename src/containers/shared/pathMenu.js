@@ -128,3 +128,4 @@ export const reportKasBank = `/report/kasbank`;
 export const reportLabaRugi = `/report/labarugi`;
 export const reportsummarykegiatantruck = `/report/summarykegiatantruck`;
 export const reportHistoryTruck = `/report/historytruck`;
+export const reportInvoice = `/report/invoice`;

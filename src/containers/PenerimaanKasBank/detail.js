@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,numToMoneyWithAfterCommaZero,reloadToHomeNotAuthorize } from '../shared/globalFunc';
+  import { formatRupiah, isGetPermissions,numToMoney,numToMoneyWithAfterCommaZero,reloadToHomeNotAuthorize } from '../shared/globalFunc';
   import { editPenerimaanKasBank_Permission,deletePenerimaanKasBank_Permission,MenuPenerimaanKasBank} from '../shared/permissionMenu';
   import moment                       from "moment/moment";
   import '../CSS/table.css';
@@ -48,7 +48,7 @@ import React, {useState,
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
 
-    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:"",penyesuaian:"",ketpenyesuaian:""}]);
+    const [InputListItem, setInputListItem] = useState([{ idcoa:"",catatan: "",amount:"",isdownpayment:"",idinvoice:"",nodocinv:"",idworkorder:"",nodocwo:"",penyesuaian:"",ketpenyesuaian:"",nilaijasa:"",nilaireimbursement:"",nilaibuktipotong:"",nobuktipotong:"",tanggalbuktipotong:null,nilaippn:""}]);
 
     const classes = useStyles();
     const [open, setOpen] = useState(false);
@@ -101,7 +101,7 @@ import React, {useState,
         if(data.data.details){
             for(let i=0; i < data.data.details.length; i++){
                 let det = data.data.details[i];
-                listitems.push({ idcoa:det.coaname,catatan: det.catatan,amount:det.amount,isdownpayment:(det.isdownpayment == 'Y'?'Yes':'No'),idinvoice:det.idinvoice,nodocinv:det.nodocinvoice,idworkorder:det.idworkorder,nodocwo:det.nodocworkorder,penyesuaian:(det.penyesuaian ?det.penyesuaian:0),ketpenyesuaian:det.keterangan_penyesuaian});
+                listitems.push({ idcoa:det.coaname,catatan: det.catatan,amount:det.amount,isdownpayment:(det.isdownpayment == 'Y'?'Yes':'No'),idinvoice:det.idinvoice,nodocinv:det.nodocinvoice,idworkorder:det.idworkorder,nodocwo:det.nodocworkorder,penyesuaian:(det.penyesuaian ?det.penyesuaian:0),ketpenyesuaian:det.keterangan_penyesuaian,nilaijasa:(det.nilaijasa?formatRupiah(new String(det.nilaijasa).replaceAll('.',','),2):0) ,nilaireimbursement:(det.nilaireimbursement?formatRupiah(new String(det.nilaireimbursement).replaceAll('.',','),2):0),nilaibuktipotong:(det.nilaibuktipotong?formatRupiah(new String(det.nilaibuktipotong).replaceAll('.',','),2):0),nobuktipotong:(det.nobuktipotong),tanggalbuktipotong:(det.tanggalbuktipotong?det.tanggalbuktipotong:''),nilaippn:(det.nilaippn?formatRupiah(new String(det.nilaippn).replaceAll('.',','),2):0)});
             }
         }
         setInputListItem(listitems);
@@ -162,6 +162,17 @@ import React, {useState,
             title: 'Oops...',
             text: error.msg
         })
+    }
+
+    const getNilaiPenyesuain = (nilai) => {
+        if(nilai !== null && nilai !== ''){
+            if(parseFloat(nilai) > 0){
+                return formatRupiah(new String(nilai).replaceAll('.',','),2);
+            }else if(parseFloat(nilai) < 0){
+                return '('+formatRupiah(new String(nilai).replaceAll('.',','),2)+')';
+            }
+        }
+        return '';
     }
 
     return (
@@ -271,7 +282,7 @@ import React, {useState,
             </CardBody>
 
             {
-                <table id="tablegrid">
+                <table id="tablegrid" hidden={value.details?(value.details.length > 0? value.details[0].coacode == '9995':true):true}>
                     <tr>
                         <th>{i18n.t('Transaksi')}</th>
                         {/* <th>{i18n.t('label_NOTE')}</th> */}
@@ -301,6 +312,72 @@ import React, {useState,
                                 )
                             })
                         }
+                    </tbody>
+                </table>
+            }
+
+            {
+                <table id="tablegrid" hidden={value.details?(value.details.length>0?value.details[0].coacode !== '9995':true):true}>
+                    <tr>
+                    <th>{i18n.t('No Invoice')}{' : '}{value.details?value.details[0].nodocinvoice:''}</th>
+                    <th>{i18n.t('Invoice')}</th>
+                    <th>{i18n.t('Terima')}</th>
+                    </tr>
+                    <tbody>
+                    <tr>
+                        <td>{'Total'}</td>
+                        <td>{value.details?(value.details.length > 0? formatRupiah(new String(value.details[0].invtotalinvoice).replaceAll('.',','),2):''):''}</td>
+                        <td>{value.details?(value.details.length > 0?formatRupiah(new String(value.details[0].amount).replaceAll('.',','),2):''):''}</td>
+                    </tr>
+
+                    <tr>
+                        <td>{'Tagihan Pihak Ke-3'}</td>
+                        <td>{value.details?(value.details.length > 0?formatRupiah(new String(value.details[0].invnilaireimbursement).replaceAll('.',','),2):''):''}</td>
+                        <td>{value.details?(value.details.length > 0?formatRupiah(new String(value.details[0].nilaireimbursement).replaceAll('.',','),2):''):''}</td>
+                    </tr>
+
+                    <tr>
+                        <td>{'PPN'}</td>
+                        <td>{value.details?(value.details.length > 0?formatRupiah(new String(value.details[0].invnilaippn).replaceAll('.',','),2):''):''}</td>
+                        <td>{value.details?(value.details.length > 0?formatRupiah(new String(value.details[0].nilaippn).replaceAll('.',','),2):''):''}</td>
+                    </tr>
+
+                    <tr>
+                        <td>{'Nilai Bukti Potong'}</td>
+                        <td>{''}</td>
+                        <td>{value.details?(value.details.length > 0?formatRupiah(new String(value.details[0].nilaibuktipotong).replaceAll('.',','),2):''):''}</td>
+                    </tr>
+
+                    <tr>
+                        <td>{'Nomor Bukti Potong'}</td>
+                        <td>{''}</td>
+                        <td>{value.details?(value.details.length > 0?value.details[0].nobuktipotong:''):''}</td>
+                    </tr>
+
+                    <tr>
+                        <td>{'Tanggal Bukti Potong'}</td>
+                        <td>{''}</td>
+                        <td>{value.details? (value.details.length > 0? (value.details[0].tanggalbuktipotong? moment (new Date(value.details[0].tanggalbuktipotong)).format(formatdate):''):''):''}</td>
+                    </tr>
+
+                    <tr>
+                        <td>{'Jasa'}</td>
+                        <td>{value.details?(value.details.length > 0?formatRupiah(new String(value.details[0].invnilaijasa).replaceAll('.',','),2):''):''}</td>
+                        <td>{value.details?(value.details.length > 0?formatRupiah(new String(value.details[0].nilaijasa).replaceAll('.',','),2):''):''}</td>
+                    </tr>
+
+                    <tr>
+                        <td>{'Nilai Penyesuaian'}</td>
+                        <td>{''}</td>
+                        <td>{value.details?(value.details.length > 0?getNilaiPenyesuain(value.details[0].penyesuaian):''):''}</td>
+                    </tr>
+
+                    <tr>
+                        <td>{'Ket Penyesuaian'}</td>
+                        <td>{''}</td>
+                        <td>{value.details?(value.details.length > 0?value.details[0].keterangan_penyesuaian:''):''}</td>
+                    </tr>
+                        
                     </tbody>
                 </table>
             }
