@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { MenuStockAdjusment, deleteStockAdjusment_Permission, editStockAdjusment_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime } from '../../shared/constantValue';
@@ -274,8 +274,8 @@ import React, {useState,
                                         <td>{x.categoryProductName}</td>
                                         <td hidden={value.type ?(value.type == 'H'?true:false):''}>{x.stocktime}</td>
                                         <td>{x.qty}</td>
-                                        <td>{x.price?numToMoney(x.price):0}</td>
-                                        <td>{x.subtotalprice?numToMoney(x.subtotalprice):0}</td>
+                                        <td>{x.price?formatRupiah(new String(x.price).replaceAll('.',','),2):0}</td>
+                                        <td>{x.subtotalprice?formatRupiah(new String(x.subtotalprice).replaceAll('.',',')):0}</td>
                                     </tr>
                                 )
                             })
