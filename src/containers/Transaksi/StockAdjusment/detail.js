@@ -133,6 +133,25 @@ import React, {useState,
         })
     }
 
+    const downloadExcel = () => {
+        setLoading(true);
+        dispatch(actions.getStockAdjusmentData( {url:'/printexcel/'+id,type:'GETFILE',typefile:'application/vnd.ms-excel'},successHandlerExcel, errorHandler));
+    }
+    
+    function successHandlerExcel(data,propsdata) {
+        var blob = new Blob([data],{ type: 'application/vnd.ms-excel'});
+        var dataUrl = URL.createObjectURL(blob);
+        var fileLink = document.createElement('a');
+        fileLink.href = dataUrl;
+
+        // it forces the name of the downloaded file
+        // fileLink.download = 'Invoice.xlsx';
+        fileLink.download = "StockAdjusment-"+value.nodocument+".xlsx";//'Invoice-'+moment(new Date()).format(formatdateYYYYMMDD)+'-'+value.nodocument+'.xlsx';
+        fileLink.click();
+        fileLink.remove();
+        setLoading(false);
+    }
+
     function errorHandler(error,propsdata) {
         setLoading(false);
         Swal.fire({
@@ -306,6 +325,7 @@ import React, {useState,
                         </div>)
                         :(<div>
                             <MenuItem hidden={!isGetPermissions(MenuStockAdjusment,'TRANSACTION')}  onClick={() => history.push(pathmenu.printstockadjusmentstockmati+'/'+id)}>{i18n.t('Print')}</MenuItem>
+                            {/* <MenuItem hidden={!isGetPermissions(MenuStockAdjusment,'TRANSACTION')}  onClick={() => downloadExcel()}>{i18n.t('Print Excel')}</MenuItem> */}
                             <MenuItem hidden={!isGetPermissions(editStockAdjusment_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editstockadjusment+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteStockAdjusment_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={!isGetPermissions(MenuPurchaseReceive,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Nota')}</MenuItem> */}

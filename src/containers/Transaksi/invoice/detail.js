@@ -135,23 +135,23 @@ import React, {useState,
     }
 
     const downloadExcel = () => {
-            setLoading(true);
-            dispatch(actions.getInvoiceData( {url:'/printexcel/'+id,type:'GETFILE',typefile:'application/vnd.ms-excel'},successHandlerExcel, errorHandler));
-        }
+        setLoading(true);
+        dispatch(actions.getInvoiceData( {url:'/printexcel/'+id,type:'GETFILE',typefile:'application/vnd.ms-excel'},successHandlerExcel, errorHandler));
+    }
     
-        function successHandlerExcel(data,propsdata) {
-            var blob = new Blob([data],{ type: 'application/vnd.ms-excel'});
-            var dataUrl = URL.createObjectURL(blob);
-            var fileLink = document.createElement('a');
-            fileLink.href = dataUrl;
-    
-            // it forces the name of the downloaded file
-            // fileLink.download = 'Invoice.xlsx';
-            fileLink.download = 'Invoice-'+moment(new Date()).format(formatdateYYYYMMDD)+'-'+value.nodocument+'.xlsx';
-            fileLink.click();
-            fileLink.remove();
-            setLoading(false);
-        }
+    function successHandlerExcel(data,propsdata) {
+        var blob = new Blob([data],{ type: 'application/vnd.ms-excel'});
+        var dataUrl = URL.createObjectURL(blob);
+        var fileLink = document.createElement('a');
+        fileLink.href = dataUrl;
+
+        // it forces the name of the downloaded file
+        // fileLink.download = 'Invoice.xlsx';
+        fileLink.download = 'Invoice-'+moment(new Date()).format(formatdateYYYYMMDD)+'-'+value.nodocument+'.xlsx';
+        fileLink.click();
+        fileLink.remove();
+        setLoading(false);
+    }
     
 
     function errorHandler(error,propsdata) {

@@ -688,12 +688,26 @@ export function* getStockAdjusmentSaga(action) {
     let payload = action.param.payload?action.param.payload:'';
     let type = action.param.type?action.param.type:'GET';
     let propsdata = action.param.propsdata?action.param.propsdata:'';
+    let typefile = action.param.typefile?action.param.typefile:'';
     try {
         if(type == 'GET'){
             const response = yield axios.get(baseStockAdjusmentURL(url)).then(response => response.data);
             action.successHandler(response,propsdata);
         }else if(type == 'POST'){
             const response = yield axios.post(baseStockAdjusmentURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'GETFILE'){
+            let resType = '';
+            if(typefile  === 'application/vnd.ms-powerpoint' || typefile === 'application/pdf' || typefile === 'application/vnd.ms-excel' || typefile === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+                resType = 'arraybuffer';
+            }
+            const response = yield axios.get(baseStockAdjusmentURL(url), {
+                //arraybuffer
+                responseType: resType,
+                headers: {
+                    Accept: typefile,
+                },
+            }).then(response => response.data);
             action.successHandler(response,propsdata);
         }
         
