@@ -2,6 +2,8 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 // import roboto from '../../../../components/';
 import roboto from '../../../../components/Fonts/Roboto/Roboto-Bold.ttf';
+import robotoitalic from '../../../../components/Fonts/Roboto/Roboto-BoldItalic.ttf';
+import robotononbolditalic from '../../../../components/Fonts/Roboto/Roboto-Italic.ttf';
 import { desimal00, desimal000, formatRupiah, numToMoney, terbilangRupiah } from '../../../shared/globalFunc';
 // import { addKurungBukaPadaValue } from '../utilityPurchaseReceive';
 
@@ -21,42 +23,42 @@ const styles = StyleSheet.create({
     },
     width:{
         widthno:20,
-        widthnamabarang:80,
+        widthnamabarang:90,
         widthukuran:45,
         widthgram:45,
         widthkuantitas:50,
-        widthharga:58,
+        widthharga:47,
         widthjumlah:90,
         widthweightkg:48,
         widthnoofbox:48,
         no:'5%',
-        namabarang:'16%',
+        namabarang:'18%',
         ukuran:'9%',
         gram:'10%',
         kuantitas:'11%',
-        harga:'12%',
+        harga:'10%',
         jumlah:'18%',
         weightkg:'10%',
         noofbox:'9%',
 
-        widthattnandcountryorigin:100,
+        widthattnandcountryorigin:110,
         widthcodeandcountryfinal:90,
         widthflightnoandcollie:50,
         widthabwandnettokg:96,
         widthpackinglistnoanddate:148,
-        attnandcountryorigin:"21%",
+        attnandcountryorigin:"23%",
         codeandcountryfinal:"19%",
         flightnoandcollie:"11%",
         abwandnettokg:"19%",
-        packinglistnoanddate:"30%",
+        packinglistnoanddate:"28%",
 
         // widthno+widthnamabarang+widthukuran+widthgram
         widthtotal:190,
-        total:"40%",
+        total:"42%",
 
         // widthno+widthnamabarang+widthukuran+widthgram+widthkuantitas+widthweightkg+widthnoofbox
         widthkurs:190,
-        kurs:"70%",
+        kurs:"72%",
 
     },
     tableNoBorder: {
@@ -152,7 +154,8 @@ const setItems = (value) =>{
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.namabarang, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthnamabarang, maxWidth: styles.width.widthnamabarang, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.productName}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthnamabarang, maxWidth: styles.width.widthnamabarang, textAlign:'center', marginTop: '5px', fontSize: 9 }]}>{det.productName}</Text>
+                    {/* <Text style={[styles.tableCell, { width: styles.width.widthnamabarang, maxWidth: styles.width.widthnamabarang, textAlign:'center', marginTop: '5px', fontSize: 9 }]}>{"SPRILLIA MANTIS"}</Text> */}
                 </View>
             );
             rowItem.push(
@@ -182,6 +185,7 @@ const setItems = (value) =>{
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.harga, height: "25px" }]}>
+                    {/* <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{'500.000,00'}</Text> */}
                     <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?desimal00(formatRupiah(new String(det.price).replaceAll('.',','),2)):0}</Text>
                 </View>
             );
@@ -198,7 +202,7 @@ const setItems = (value) =>{
         
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.total, height: "25px" }]}>
-                <Text style={[styles.tableCell, { fontFamily: 'roboto',width: styles.width.widthtotal, maxWidth: styles.width.widthtotal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{'Total'}</Text>
+                <Text style={[styles.tableCell, { fontFamily: 'robotoitalic',width: styles.width.widthtotal, maxWidth: styles.width.widthtotal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{'Total'}</Text>
             </View>
         );
         rowItem.push(
@@ -232,7 +236,7 @@ const setItems = (value) =>{
         rowItem = [];
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.kurs, height: "25px" }]}>
-                <Text style={[styles.tableCell, {fontFamily: 'roboto', width: styles.width.widthkurs, maxWidth: styles.width.widthkurs, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{'Kurs'}</Text>
+                <Text style={[styles.tableCell, {fontFamily: 'robotoitalic', width: styles.width.widthkurs, maxWidth: styles.width.widthkurs, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{'Kurs'}</Text>
             </View>
         );
         rowItem.push(
@@ -251,7 +255,7 @@ const setItems = (value) =>{
         rowItem = [];
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.kurs, height: "25px" }]}>
-                <Text style={[styles.tableCell, { fontFamily: 'roboto',width: styles.width.widthkurs, maxWidth: styles.width.widthkurs, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{'Total In IDR'}</Text>
+                <Text style={[styles.tableCell, { fontFamily: 'robotoitalic',width: styles.width.widthkurs, maxWidth: styles.width.widthkurs, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{'Total In IDR'}</Text>
             </View>
         );
         rowItem.push(
@@ -290,6 +294,9 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
         
     useEffect(() => {
         Font.register({ family: 'roboto', fonts: [{ src: roboto }] });
+        Font.register({ family: 'robotoitalic', fonts: [{ src: robotoitalic }] });
+        Font.register({ family: 'robotononbolditalic', fonts: [{ src: robotononbolditalic }] });
+        
         setIsReady(true);
     }, [IsReady])
 
@@ -377,19 +384,19 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                             <View style={[styles.table,{marginTop:'0px'}]}>
                             
                             <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.attnandcountryorigin, height: "25px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthattnandcountryorigin, maxWidth: styles.width.widthattnandcountryorigin,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Attn"}</Text>
+                            <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.attnandcountryorigin, height: "25px" }]}>
+                                <Text style={[styles.tableCell, { width: styles.width.widthattnandcountryorigin, maxWidth: styles.width.widthattnandcountryorigin,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig}]}>{"Attn."}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.codeandcountryfinal, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.codeandcountryfinal, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthcodeandcountryfinal, maxWidth: styles.width.widthcodeandcountryfinal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Code"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.flightnoandcollie, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.flightnoandcollie, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthflightnoandcollie, maxWidth: styles.width.widthflightnoandcollie, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Flight No"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.abwandnettokg, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.abwandnettokg, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"ABW"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.packinglistnoanddate, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.packinglistnoanddate, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Packing List No"}</Text>
                             </View>
                             </View>
@@ -413,19 +420,19 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                             </View>
 
                             <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.attnandcountryorigin, height: "38px" }]}>
+                            <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.attnandcountryorigin, height: "38px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthattnandcountryorigin, maxWidth: styles.width.widthattnandcountryorigin,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Country Of Origin"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.codeandcountryfinal, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthcodeandcountryfinal, maxWidth: styles.width.widthcodeandcountryfinal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Country Of \n"}{"Final Dest"}</Text>
+                            <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.codeandcountryfinal, height: "38px" }]}>
+                                <Text style={[styles.tableCell, { width: styles.width.widthcodeandcountryfinal, maxWidth: styles.width.widthcodeandcountryfinal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Country Of \n"}{"Final Dest."}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.flightnoandcollie, height: "38px" }]}>
+                            <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.flightnoandcollie, height: "38px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthflightnoandcollie, maxWidth: styles.width.widthflightnoandcollie, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Collie"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.abwandnettokg, height: "38px" }]}>
+                            <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.abwandnettokg, height: "38px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Netto Kg"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.packinglistnoanddate, height: "38px" }]}>
+                            <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.packinglistnoanddate, height: "38px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Packing List Date"}</Text>
                             </View>
                             </View>
@@ -465,10 +472,10 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
 
                             <View style={styles.tableRow}>
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.no, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthno, maxWidth: styles.width.widthno, marginTop: '5px', fontSize: fontSizeBig }]}>{"No"}</Text>
+                                <Text style={[styles.tableCell, {width: styles.width.widthno, maxWidth: styles.width.widthno, marginTop: '5px', fontSize: fontSizeBig }]}>{"No"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.namabarang, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthnamabarang, maxWidth: styles.width.widthnamabarang, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Product Name"}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthnamabarang, maxWidth: styles.width.widthnamabarang, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Description \n"}{"Of Goods"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.ukuran, height: "38px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthukuran, maxWidth: styles.width.widthukuran, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Size"}</Text>
@@ -483,7 +490,7 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Weight Kg"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.noofbox, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"No. Of\n"}{"Box"}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"No. Of\n"}{"Boxes"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.harga, height: "38px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Price"}</Text>
@@ -500,7 +507,7 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
 
                             <View style={[styles.table]}>
                             <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, { width:"52%", height: "90px" }]}>
+                            <View style={[styles.tableColWidth, {fontFamily:'robotononbolditalic', width:"52%", height: "90px" }]}>
                                 <Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '5px', fontSize: fontSizeBig }]}>{"Remarks"}</Text>
                                 <Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '1px', fontSize: fontSizeBig }]}>{"Bank Account:"}</Text>
                                 <Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.bankCompany:''}</Text>
@@ -512,8 +519,8 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                             <View style={{ flexDirection: 'row',paddingTop:'78px' }}>
                                 
 
-                                <View style={{ flexDirection: 'row-reverse', marginLeft: '40%' }}>
-                                <Text style={{ fontSize: 7,marginRight:'1px' }}>{'Print By : '+(valuedata != null?valuedata.namaUser+', '+valuedata.currdatetime:'')}</Text>
+                                <View style={{fontFamily:'robotononbolditalic', flexDirection: 'row-reverse', marginLeft: '40%' }}>
+                                <Text style={{ fontSize: 7,marginRight:'1px' }}>{'Printed By : '+(valuedata != null?valuedata.namaUser+', '+valuedata.currdatetime:'')}</Text>
                                     {/* <Text style={{ fontSize: 7 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text> */}
                                 </View>
                             </View>
@@ -530,7 +537,7 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                             </View>
                             </View>
                             </View>
-                            <Text style={{textAlign:'right',marginRight:"2px",fontSize:7}}>{"Edit:"}{(valuedata != null?valuedata.countEdit:'')}{"  Print:"}{(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}</Text>
+                            <Text style={{fontFamily:'robotononbolditalic',textAlign:'right',marginRight:"2px",fontSize:7}}>{"Edit:"}{(valuedata != null?valuedata.countEdit:'')}{"  Print:"}{(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}</Text>
 
                         </View>
                     :
