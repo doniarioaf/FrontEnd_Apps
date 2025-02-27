@@ -624,8 +624,8 @@ export default function AddForm(props) {
                         if(SelJenisTransaksi == '9995'){
                             let penyesuaian = det.penyesuaian;
                             if(new String(penyesuaian).includes('(')){
-                                penyesuaian = penyesuaian.replaceAll('(','');
-                                penyesuaian = penyesuaian.replaceAll(')','');
+                                penyesuaian = new String(penyesuaian).replaceAll('(','');
+                                penyesuaian = new String(penyesuaian).replaceAll(')','');
                                 penyesuaian = '-'+penyesuaian;
                             }
                             objDet.amount = removeFormatRupiah(det.amount);
