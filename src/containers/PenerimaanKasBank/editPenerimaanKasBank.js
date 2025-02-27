@@ -623,7 +623,7 @@ export default function AddForm(props) {
                         objDet.catatan = det.catatan;
                         if(SelJenisTransaksi == '9995'){
                             let penyesuaian = det.penyesuaian;
-                            if(penyesuaian.includes('(')){
+                            if(new String(penyesuaian).includes('(')){
                                 penyesuaian = penyesuaian.replaceAll('(','');
                                 penyesuaian = penyesuaian.replaceAll(')','');
                                 penyesuaian = '-'+penyesuaian;
