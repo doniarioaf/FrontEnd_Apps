@@ -1275,7 +1275,7 @@ export default function AddForm(props) {
                             {/* <div className="invalid-feedback-custom">{ErrIsDownPayment}</div> */}
                             {
                                 InputListItem.length == 0?'':
-                                <table id="tablegrid" hidden={values.jenistransaksi !== 'LAINNYA'}>
+                                <table id="tablegrid" hidden={values.SelReceiveFrom == 'CUSTOMER'? values.jenistransaksi !== 'LAINNYA':false}>
                                     <tr>
                                         <th>{i18n.t('Transaksi')}</th>
                                         {/* <th>{i18n.t('label_NOTE')}</th> */}
