@@ -96,7 +96,7 @@ const handleMenu = () => {
                     name: 'Cargo',
                     path: pathmenu.menucargo,
                     translate: 'Cargo',
-                    permission:permissionmenu.MenuDeposit,
+                    permission:permissionmenu.MenuCargo,
                 },
                 {
                     name: 'Lprn Tagihan Cargo',
@@ -151,7 +151,7 @@ const handleMenu = () => {
                     name: 'Input Penerimaan Barang',
                     path: pathmenu.menudraftpurchasereceive,
                     translate: 'Input Penerimaan Barang',
-                    permission:permissionmenu.MenuPurchaseReceive,
+                    permission:permissionmenu.MenuDraftPurchaseReceive,
                 },
                 {
                     name: 'Nota Pembelian',
@@ -216,7 +216,7 @@ const handleMenu = () => {
                     name: 'PriceList Harian',
                     path: pathmenu.menupricelist,
                     translate: 'PriceList Harian',
-                    permission:permissionmenu.MenuProduct,
+                    permission:permissionmenu.MenuPriceList,
                 },
                 {
                     name: 'Packing List',
@@ -228,7 +228,7 @@ const handleMenu = () => {
                     name: 'Invoice',
                     path: pathmenu.menuinvoice,
                     translate: 'Invoice',
-                    permission:permissionmenu.MenuStockAdjusment,
+                    permission:permissionmenu.MenuInvoice,
                 },
                 {
                     name: 'Lprn Penjualan',
