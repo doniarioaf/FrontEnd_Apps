@@ -355,7 +355,7 @@ export default function EditDraftPurchaseReceive(props) {
                 let listfilteroutput = listfilteroutputHidup.filter(output => output.boxsequence == boxseq);
                 for(let x =0; x < listfilteroutput.length; x++){
                     let det = listfilteroutput[x];
-                    let kilo = det.kilo?desimal000(formatRupiah(new String(det.kilo).replaceAll('.',','),3),{isShow000:false}):'';
+                    let kilo = det.kilo?desimal000(new String(det.kilo).replaceAll('.',','),{isShow000:false}):'';
                     temp.push(
                         {
                             'idproduct': det.idproduct,

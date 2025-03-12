@@ -115,6 +115,29 @@ const styles = StyleSheet.create({
     title: { fontFamily: 'roboto', fontWeight: 600 },
 });
 
+const calculateQtyItems = (list) =>{
+    if(list != null && list.length > 0){
+        let qty = 0;
+        for(let i=0; i < list.length; i++){
+            let det = list[i];
+            qty += det.ekor?parseInt(det.ekor):0;
+        }
+        return qty;
+    }
+    return 0;
+}
+
+const calculateQtyItemsKg = (list) =>{
+    if(list != null && list.length > 0){
+        let qtykg = 0;
+        for(let i=0; i < list.length; i++){
+            let det = list[i];
+            qtykg += det.kilo?parseFloat(det.kilo):0;
+        }
+        return qtykg;
+    }
+    return 0;
+}
 const setItems = (items) =>{
     
     if(items != undefined && items != null){
@@ -140,16 +163,19 @@ const setItems = (items) =>{
             let qtyHidup = '-';
             let qtyMati = '-';
             let totalQtyHidupMati = 0;
-            let listfilteroutputHidup = listfilteroutput.filter(output => output.type == 'H' && output.idcategoryproduct == det.idcategoryproduct);
-            // console.log('det.idcategoryproduct '+det.idcategoryproduct+' '+qtyHidup);
+            // let listfilteroutputHidup = listfilteroutput.filter(output => output.type == 'H' && output.idcategoryproduct == det.idcategoryproduct);
+            let listfilteroutputHidup = listfilteroutput.filter(output => output.type == 'H' && output.idproduct == det.idproduct && output.idcategoryproduct == det.idcategoryproduct);
             if(listfilteroutputHidup.length > 0){
-                qtyHidup = listfilteroutputHidup[0].ekor;
+                // qtyHidup = listfilteroutputHidup[0].ekor;
+                qtyHidup = calculateQtyItems(listfilteroutputHidup);
                 
                 totalQtyHidupMati = totalQtyHidupMati + parseInt(qtyHidup);
             }
-            let listfilteroutputMati = listfilteroutput.filter(output => output.type == 'M' && output.idcategoryproduct == det.idcategoryproduct);
+            // let listfilteroutputMati = listfilteroutput.filter(output => output.type == 'M' && output.idcategoryproduct == det.idcategoryproduct);
+            let listfilteroutputMati = listfilteroutput.filter(output => output.type == 'M' && output.idproduct == det.idproduct && output.idcategoryproduct == det.idcategoryproduct);
             if(listfilteroutputMati.length > 0){
-                qtyMati = listfilteroutputMati[0].ekor;
+                // qtyMati = listfilteroutputMati[0].ekor;
+                qtyMati = calculateQtyItems(listfilteroutputMati);
                 totalQtyHidupMati = totalQtyHidupMati + parseInt(qtyMati);
             }
             if(qtyHidup !== '-'){
@@ -158,8 +184,11 @@ const setItems = (items) =>{
             if(qtyMati !== '-'){
                 totalmati = totalmati + parseInt(qtyMati);
             }
+            let itemKG = 0;
             if(det.kilo){
-                totalKilo = totalKilo + parseFloat(det.kilo);
+                itemKG = calculateQtyItemsKg(listfilteroutputHidup);
+                // totalKilo = totalKilo + parseFloat(det.kilo);
+                totalKilo = totalKilo + itemKG;
             }
             totalTotal = totalTotal + totalQtyHidupMati;
             
@@ -190,7 +219,7 @@ const setItems = (items) =>{
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.kilo, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthkilo, maxWidth: styles.width.widthkilo, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.kilo?desimal000(formatRupiah(new String(det.kilo).replaceAll('.',','),3),{isShow000:false}):0}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthkilo, maxWidth: styles.width.widthkilo, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{itemKG?desimal000(formatRupiah(new String(itemKG).replaceAll('.',','),3),{isShow000:false}):0}</Text>
                 </View>
             );
             rowItem.push(
