@@ -1,10 +1,8 @@
 {
   "name": "angle",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Angle - Bootstrap Admin Template",
-  "author": "@themicon_co",
-  "license": "https://wrapbootstrap.com/help/licenses",
-  "private": true,
+  "author": "BizzApps",
   "homepage": ".",
   "scripts": {
     "start": "react-app-rewired start",
@@ -25,6 +23,10 @@
     "not ie <= 11",
     "not op_mini all"
   ],
+  "engines": {
+    "node": ">=14.20.0",
+    "npm": ">=6.14.8"
+  },
   "dependencies": {
     "@devexpress/dx-react-core": "^2.7.6",
     "@devexpress/dx-react-grid": "^2.7.6",
