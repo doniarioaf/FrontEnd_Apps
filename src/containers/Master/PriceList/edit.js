@@ -349,7 +349,7 @@ export default function EditPriceList(props) {
                                             textField={'label'}
                                             valueField={'value'}
                                             // style={{width: '25%'}}
-                                            // disabled={values.isdisabledcountry}
+                                            disabled={true}
                                             value={values.customer}
                                         />
                                         <div className="invalid-feedback-custom">{ErrSelCustomer}</div>

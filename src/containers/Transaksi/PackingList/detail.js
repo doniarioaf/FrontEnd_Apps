@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { MenuPackingList, deletePackingList_Permission, editPackingList_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
@@ -118,6 +118,38 @@ import React, {useState,
             //   Swal.fire('Changes are not saved', '', 'info')
             }
           })
+    }
+
+    const updatePrice = () => {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                setLoading(true);
+                dispatch(actions.getPackingListData( {url:'/updateprice/'+id,type:'GET'},succesHandlerSubmitUpdatePrice, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+        
+    }
+    const succesHandlerSubmitUpdatePrice = (data) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(0);
+            }
+        })
     }
 
     const succesHandlerSubmit = (data) => {
@@ -259,7 +291,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Netto')}</span>
                                 <strong className="col-md-7">
-                                {value.netto ?numToMoney(value.netto):''}
+                                {value.netto ?formatRupiah(new String(value.netto).replaceAll('.',','),1):''}
                                 </strong>
                             </div>
 
@@ -366,6 +398,7 @@ import React, {useState,
                         :(<div>
                             <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => history.push(pathmenu.printpdfpackinglist+'/'+id)}>{i18n.t('PDF Packing List')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => downloadExcelPL()}>{i18n.t('Excel Packing List')}</MenuItem>
+                            <MenuItem hidden={value.isalreadyupdateprice != null && value.isalreadyupdateprice != undefined? (isGetPermissions(editPackingList_Permission,'TRANSACTION')?value.isalreadyupdateprice: true):true}  onClick={() => updatePrice()}>{i18n.t('Update Price')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editPackingList_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpackinglist+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deletePackingList_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={!isGetPermissions(MenuPurchaseReceive,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Nota')}</MenuItem> */}

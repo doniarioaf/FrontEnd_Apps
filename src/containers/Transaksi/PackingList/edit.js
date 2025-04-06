@@ -98,7 +98,7 @@ export default function EditPackingList(props) {
         setInputAttention(det.attention);
         setInputFlightNumber(det.flightnumber);
         setInputAwbNumber(det.awbnumber);
-        setNetto(det.netto?formatRupiah(det.netto,2):0);
+        setNetto(det.netto?formatRupiah(det.netto,1):0);
         setKoli(det.koli?det.koli:0);
         setPriceList({id:det.idpricelist});
         let listItem = det.items.reduce((obj, el) => [
@@ -496,9 +496,9 @@ export default function EditPackingList(props) {
             }else{
                 valTemp = removeFormatRupiah(netto);
             }
-            totalnetto += parseFloat(netto);
+            totalnetto += parseFloat(valTemp);
         }
-        return formatRupiah(totalnetto,2);
+        return formatRupiah(new String(totalnetto).replaceAll(".",','),1);
     }
 
     const handleRemoveItems = index => {

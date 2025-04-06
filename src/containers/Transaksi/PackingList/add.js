@@ -432,7 +432,7 @@ export default function AddPackingList(props) {
             }
             totalnetto += parseFloat(valTemp);
         }
-        return formatRupiah(totalnetto,2);
+        return formatRupiah(new String(totalnetto).replaceAll(".",','),1);
     }
 
     const handleRemoveItems = index => {
