@@ -213,7 +213,7 @@ const setItems = (value) =>{
         );
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.noofbox, height: "25px" }]}>
-                <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{listfilteroutput.length}</Text>
+                <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{listfilteroutput.filter(output => output.box !== '').length}</Text>
             </View>
         );
         rowItem.push(

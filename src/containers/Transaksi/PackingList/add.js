@@ -137,11 +137,11 @@ export default function AddPackingList(props) {
                 // }else{
                 //     listCatogry.push(keyProd);
                 // }
-                if(det.box == ''){
-                    setErrItems(i18n.t('Box Tidak boleh Kosong'));
-                    flag = false;
-                    break;
-                }
+                // if(det.box == ''){
+                //     setErrItems(i18n.t('Box Tidak boleh Kosong'));
+                //     flag = false;
+                //     break;
+                // }
                 // if(listBox.includes(det.box)){
                 //     setErrItems(i18n.t('Box Tidak boleh sama'));
                 //     flag = false;
@@ -348,6 +348,10 @@ export default function AddPackingList(props) {
             list[index][name] = value;
             setNetto(calculateNetto(list));
             setListItems(list);
+            if(name == 'box'){
+                let arrkoli = list.filter(output => output.box !== '');
+                setKoli(arrkoli.length);
+            }
         }
     }
 
@@ -413,7 +417,7 @@ export default function AddPackingList(props) {
                 'subtotalprice': 0
             }];
         setListItems(list);
-        setKoli(list.length);
+        // setKoli(list.length);
     };
 
     const calculateNetto = (list) => {
@@ -439,7 +443,8 @@ export default function AddPackingList(props) {
         const list = [...ListItems];
         list.splice(index, 1);
         setNetto(calculateNetto(list));
-        setKoli(list.length);
+        let arrkoli = list.filter(output => output.box !== '');
+        setKoli(arrkoli.length);
         setListItems(list);
     };
 
@@ -748,7 +753,7 @@ export default function AddPackingList(props) {
                                                                     onChange={val => handleInputChangeItems(val, i)}
                                                                     // onBlur={handleBlur}
                                                                     value={x.qty}
-                                                                    disabled={x.idcategoryproduct == '' || x.idproduct == '' || x.box == ''}
+                                                                    disabled={x.idcategoryproduct == '' || x.idproduct == ''}
                                                                 /></td>
 
                                                                 <td style={{ width: '9%' }}>
@@ -759,7 +764,7 @@ export default function AddPackingList(props) {
                                                                     onChange={val => handleInputChangeItems(val, i)}
                                                                     // onBlur={handleBlur}
                                                                     value={x.brutoweight}
-                                                                    disabled={x.idcategoryproduct == '' || x.idproduct == '' || x.box == ''}
+                                                                    disabled={x.idcategoryproduct == '' || x.idproduct == ''}
                                                                 /></td>
 
                                                                 <td style={{ width: '10%' }}>
