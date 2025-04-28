@@ -2,6 +2,7 @@ import numeral from 'numeral';
 import * as key from '../../containers/shared/constantKey';
 import CryptoJS from 'crypto-js';
 import * as pathmenu           from './pathMenu';
+import { param } from 'jquery';
 
 export const deleteSessionAndLocalStorage = () =>{
     localStorage.removeItem(key.token);
@@ -397,6 +398,32 @@ export const terbilang = (nilai) =>{
         return numToMoney(parseFloat(angka))+','+desimal;
     }
     return numToMoney(parseFloat(nilai));
+  }
+
+  export const pembulatanNilai = (nilai,param) =>{
+    let down = param.isdown?param.isdown:false;
+    let numberdesimal = param.numberdesimal?param.numberdesimal:'';
+    let pembagian = 10;
+    if(numberdesimal == 2){
+        pembagian = 100;
+    }else if(numberdesimal == 3){
+        pembagian = 1000;
+    }
+    if(new String(nilai).includes(',')){
+        let nilNumber = removeFormatRupiah(nilai);
+        if(down){
+            return Math.floor(parseFloat(nilNumber) * pembagian) / pembagian;
+        }
+        return Math.ceil(parseFloat(nilNumber) * pembagian) / pembagian;
+    }else{
+        if(down){
+            return Math.floor(parseFloat(nilai) * pembagian) / pembagian;
+        }
+        return Math.ceil(parseFloat(nilai) * pembagian) / pembagian;
+    }
+    // dibagi 10, jadinya 1 desimal
+    // dibagi 100, jadinya 2 desimal
+    // dst
   }
 
   export const desimal00 = (nilai) =>{

@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { formatRupiah, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
+import { formatRupiah, numToMoney, pembulatanNilai, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addPackingList_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -293,22 +293,22 @@ export default function AddPackingList(props) {
             
             if(flag) {
                 if (name == 'qty') {
-                    const listTemp = [...ListItems];
-                    let pricetemp = new String(listTemp[index]['itemsprice']) !== '' ? listTemp[index]['itemsprice'] : '0';
-                    let valTemp = '';
-                    if(new String(pricetemp).includes(',')){
-                        let splitComma = new String(pricetemp).split(','); 
-                        let angka = splitComma[0];
-                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
-                        valTemp = removeFormatRupiah(angka)+'.'+desimal;
-                    }else{
-                        valTemp = removeFormatRupiah(pricetemp);
-                    }
-                    let qtyTemp = parseInt(valPriceTemp);
-                    subtotal = parseInt(qtyTemp) * parseFloat(valTemp);
-                    console.log('subtotal ',subtotal);
-                    console.log('subtotal ',formatRupiah(subtotal,2));
-                    list[index]['subtotalprice'] = formatRupiah(subtotal,2);
+                    // const listTemp = [...ListItems];
+                    // let pricetemp = new String(listTemp[index]['itemsprice']) !== '' ? listTemp[index]['itemsprice'] : '0';
+                    // let valTemp = '';
+                    // if(new String(pricetemp).includes(',')){
+                    //     let splitComma = new String(pricetemp).split(','); 
+                    //     let angka = splitComma[0];
+                    //     let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                    //     valTemp = removeFormatRupiah(angka)+'.'+desimal;
+                    // }else{
+                    //     valTemp = removeFormatRupiah(pricetemp);
+                    // }
+                    // let qtyTemp = parseInt(valPriceTemp);
+                    // subtotal = parseInt(qtyTemp) * parseFloat(valTemp);
+                    // console.log('subtotal ',subtotal);
+                    // console.log('subtotal ',formatRupiah(subtotal,2));
+                    // list[index]['subtotalprice'] = formatRupiah(subtotal,2);
                 } else if(name == 'brutoweight'){
                     const listTemp = [...ListItems];
                     // let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
@@ -334,9 +334,24 @@ export default function AddPackingList(props) {
                         valTemp = removeFormatRupiah(value);
                     }
                     let netto = parseFloat(valTemp) - (parseFloat(valTemp) * allowance);
-                    // netto = netto.toFixed(2);
-                    list[index]['nettoweight'] = formatRupiah(netto,2);
-                    // list[index]['subtotalprice'] = subtotal.toFixed(2);
+                    let pembulatannilai = pembulatanNilai(netto,{isdown:false,numberdesimal:1});
+                    
+                    let pricetemp = new String(listTemp[index]['itemsprice']) !== '' ? listTemp[index]['itemsprice'] : '0';
+                    let valPriceTemp = '';
+                    if(new String(pricetemp).includes(',')){
+                        let splitComma = new String(pricetemp).split(','); 
+                        let angka = splitComma[0];
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                        valPriceTemp = removeFormatRupiah(angka)+'.'+desimal;
+                    }else{
+                        valPriceTemp = removeFormatRupiah(pricetemp);
+                    }
+                    subtotal = pembulatannilai * parseFloat(valPriceTemp);
+                    
+                    list[index]['subtotalprice'] = formatRupiah(subtotal,2);
+                    list[index]['nettoweight'] = formatRupiah(new String(pembulatannilai).replaceAll('.',','),1);
+                    
+
                 }
                 //
             }
