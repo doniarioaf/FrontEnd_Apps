@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { MenuInvoice, deleteInvoice_Permission, editInvoice_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
@@ -328,7 +328,7 @@ import React, {useState,
                                         <td>{x.qty}</td>
                                         <td>{x.brutoweight?numToMoney(x.brutoweight):0}</td>
                                         <td>{x.allowance?numToMoney(x.allowance):0}</td>
-                                        <td>{x.nettoweight?numToMoney(x.nettoweight):0}</td>
+                                        <td>{x.nettoweight?formatRupiah(new String(x.nettoweight).replaceAll('.',','),1):0}</td>
                                         <td>{x.price?numToMoney(x.price):0}</td>
                                         <td>{x.totalprice?numToMoney(x.totalprice):0}</td>
                                     </tr>

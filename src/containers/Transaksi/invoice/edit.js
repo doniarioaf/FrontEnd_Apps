@@ -412,7 +412,7 @@ export default function AddPackingList(props) {
                                                         <td>{x.qty}</td>
                                                         <td>{x.brutoweight?numToMoney(x.brutoweight):0}</td>
                                                         <td>{x.allowance?numToMoney(x.allowance):0}</td>
-                                                        <td>{x.nettoweight?numToMoney(x.nettoweight):0}</td>
+                                                        <td>{x.nettoweight?formatRupiah(new String(x.nettoweight).replaceAll('.',','),1):0}</td>
                                                         <td>{x.price?numToMoney(x.price):0}</td>
                                                         <td>{x.totalprice?numToMoney(x.totalprice):0}</td>
                                                     </tr>
