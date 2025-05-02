@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { formatRupiah, numToMoney, pembulatanNilai, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
+import { convertGramToKG, formatRupiah, numToMoney, pembulatanNilai, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addPackingList_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -334,8 +334,11 @@ export default function AddPackingList(props) {
                         valTemp = removeFormatRupiah(value);
                     }
                     let netto = parseFloat(valTemp) - (parseFloat(valTemp) * allowance);
+
                     let pembulatannilai = pembulatanNilai(netto,{isdown:false,numberdesimal:1});
-                    
+                    let valKg = convertGramToKG({nilaigr:pembulatannilai});
+                    valKg = pembulatanNilai(valKg,{isdown:false,numberdesimal:1});
+
                     let pricetemp = new String(listTemp[index]['itemsprice']) !== '' ? listTemp[index]['itemsprice'] : '0';
                     let valPriceTemp = '';
                     if(new String(pricetemp).includes(',')){
@@ -346,12 +349,11 @@ export default function AddPackingList(props) {
                     }else{
                         valPriceTemp = removeFormatRupiah(pricetemp);
                     }
-                    subtotal = pembulatannilai * parseFloat(valPriceTemp);
+                    subtotal = valKg * parseFloat(valPriceTemp);
+                    subtotal = pembulatanNilai(subtotal,{isdown:false,numberdesimal:1});
                     
-                    list[index]['subtotalprice'] = formatRupiah(subtotal,2);
+                    list[index]['subtotalprice'] = formatRupiah(new String(subtotal).replaceAll('.',','),1);
                     list[index]['nettoweight'] = formatRupiah(new String(pembulatannilai).replaceAll('.',','),1);
-                    
-
                 }
                 //
             }

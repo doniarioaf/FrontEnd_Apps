@@ -402,7 +402,7 @@ export const terbilang = (nilai) =>{
 
   export const pembulatanNilai = (nilai,param) =>{
     let down = param.isdown?param.isdown:false;
-    let numberdesimal = param.numberdesimal?param.numberdesimal:'';
+    let numberdesimal = param.numberdesimal?param.numberdesimal:0;
     let pembagian = 10;
     if(numberdesimal == 2){
         pembagian = 100;
@@ -410,20 +410,47 @@ export const terbilang = (nilai) =>{
         pembagian = 1000;
     }
     if(new String(nilai).includes(',')){
-        let nilNumber = removeFormatRupiah(nilai);
-        if(down){
-            return Math.floor(parseFloat(nilNumber) * pembagian) / pembagian;
+        let splitComma = new String(nilai).split(','); 
+        let valNilai = nilai;
+        if(splitComma.length > numberdesimal){
+            let start = 0;
+            let end = numberdesimal+1;
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(start,end):'';
+            valNilai = splitComma[0]+","+desimal;
         }
-        return Math.ceil(parseFloat(nilNumber) * pembagian) / pembagian;
+        let nilNumber = removeFormatRupiah(valNilai);
+        // if(down){
+        //     return Math.floor(parseFloat(nilNumber) * pembagian) / pembagian;
+        // }
+        // return Math.ceil(parseFloat(nilNumber) * pembagian) / pembagian;
+        return Math.round(parseFloat(nilNumber) * pembagian) / pembagian;
     }else{
-        if(down){
-            return Math.floor(parseFloat(nilai) * pembagian) / pembagian;
+        let splitComma = new String(nilai).split('.'); 
+        let valNilai = nilai;
+        if(splitComma.length > numberdesimal){
+            let start = 0;
+            let end = numberdesimal+1;
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(start,end):'';
+            valNilai = splitComma[0]+"."+desimal;
         }
-        return Math.ceil(parseFloat(nilai) * pembagian) / pembagian;
+        // if(down){
+        //     return Math.floor(parseFloat(valNilai) * pembagian) / pembagian;
+        // }
+        // return Math.ceil(parseFloat(valNilai) * pembagian) / pembagian;
+        return Math.round(parseFloat(valNilai) * pembagian) / pembagian;
     }
     // dibagi 10, jadinya 1 desimal
     // dibagi 100, jadinya 2 desimal
     // dst
+  }
+
+  export const convertGramToKG = (param) =>{
+    let nilaigr = param.nilaigr?param.nilaigr:'';
+    if(nilaigr !== ''){
+        return parseFloat(nilaigr) / 1000;
+    }
+    return 0;
+
   }
 
   export const desimal00 = (nilai) =>{

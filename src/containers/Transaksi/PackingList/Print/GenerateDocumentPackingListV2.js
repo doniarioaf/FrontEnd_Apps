@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 // import roboto from '../../../../components/';
 import roboto from '../../../../components/Fonts/Roboto/Roboto-Bold.ttf';
-import { desimal00, desimal000, formatRupiah, numToMoney, terbilangRupiah } from '../../../shared/globalFunc';
+import { convertGramToKG, desimal00, desimal000, formatRupiah, numToMoney, pembulatanNilai, terbilangRupiah } from '../../../shared/globalFunc';
 // import { addKurungBukaPadaValue } from '../utilityPurchaseReceive';
 
 // import logo from "img/logo.png";
@@ -122,6 +122,28 @@ const styles = StyleSheet.create({
     title: { fontFamily: 'roboto', fontWeight: 600 },
 });
 
+const convertkg = (value) =>{
+    let totalnetto = value;
+        totalnetto = convertGramToKG({nilaigr:totalnetto});
+        totalnetto = pembulatanNilai(totalnetto,{isdown:false,numberdesimal:1});
+
+    return totalnetto;
+}
+
+const calcNettoHeader = (value) =>{
+    let items = value.items;
+    let listfilteroutput = items;
+    let totalnetto = 0;
+    for(let i=0; i < listfilteroutput.length; i++){
+        let det = listfilteroutput[i];
+        let nettoweight = det.nettoweight?det.nettoweight:0;
+            nettoweight = convertkg(nettoweight);
+
+        //kenapa totalan netto tidak ambil dari value.netto / total netto header karena ketika gr convert ke kg terjadi pembulatan sehingga ketika netto header di convert ke kg menjadi tidak sama desimal nya
+        totalnetto += nettoweight;
+    }
+    return totalnetto;
+}
 
 const setItems = (value) =>{
     
@@ -129,11 +151,15 @@ const setItems = (value) =>{
     // let charges = value.charges
     // let inventori = value.inventori
     if(items != undefined && items != null){
+        
+        let totalnetto = 0;//value.netto?value.netto:0;
+        // totalnetto = convertkg(totalnetto);
+
         let listRow = [];
         let totalQty = 0;
         let totalSubtotalPrice = 0;
         let no = 1;
-
+        
         let listfilteroutput = items;//.filter(output => output.qtynota > 0 && output.type == 'H');
         console.log('listfilteroutput ',listfilteroutput);
         // let letListDone = [];
@@ -145,6 +171,12 @@ const setItems = (value) =>{
             totalSubtotalPrice += parseFloat(totalprice);
             let rowItem = [];
             
+            let nettoweight = det.nettoweight?det.nettoweight:0;
+            nettoweight = convertkg(nettoweight);
+
+            //kenapa totalan netto tidak ambil dari value.netto / total netto header karena ketika gr convert ke kg terjadi pembulatan sehingga ketika netto header di convert ke kg menjadi tidak sama desimal nya
+            totalnetto += nettoweight;
+
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.no, height: "25px" }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthno, maxWidth: styles.width.widthno, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{no}</Text>
@@ -172,7 +204,7 @@ const setItems = (value) =>{
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.weightkg, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.nettoweight?desimal000(formatRupiah(new String(det.nettoweight).replaceAll('.',','),3),{isShow000:true})  :''}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(nettoweight).replaceAll('.',','),1)}</Text>
                 </View>
             );
             rowItem.push(
@@ -187,7 +219,8 @@ const setItems = (value) =>{
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.totalprice?desimal00(formatRupiah(new String(det.totalprice).replaceAll('.',','),2)):0}</Text>
+                    {/* <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.totalprice?desimal00(formatRupiah(new String(det.totalprice).replaceAll('.',','),2)):0}</Text> */}
+                    <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.totalprice?formatRupiah(new String(det.totalprice).replaceAll('.',','),1):0}</Text>
                 </View>
             );
             
@@ -208,7 +241,9 @@ const setItems = (value) =>{
         );
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.weightkg, height: "25px" }]}>
-                <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{value.netto?desimal000(formatRupiah(new String(value.netto).replaceAll('.',','),3),{isShow000:true}):''}</Text>
+                {/* <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{value.netto?desimal000(formatRupiah(new String(value.netto).replaceAll('.',','),3),{isShow000:true}):''}</Text> */}
+                <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(totalnetto).replaceAll('.',','),1)}</Text>
+                
             </View>
         );
         rowItem.push(
@@ -223,7 +258,8 @@ const setItems = (value) =>{
         );
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: "25px" }]}>
-                <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{desimal00(formatRupiah(new String(totalSubtotalPrice).replaceAll('.',','),2))}</Text>
+                {/* <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{desimal00(formatRupiah(new String(totalSubtotalPrice).replaceAll('.',','),2))}</Text> */}
+                <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(totalSubtotalPrice).replaceAll('.',','),1)}</Text>
             </View>
         );
         
@@ -403,7 +439,7 @@ const GenerateDocumentPackingListV2 = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: styles.width.widthflightnoandcollie, maxWidth: styles.width.widthflightnoandcollie, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.koli:''}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.abwandnettokg, height: "25px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?desimal000(formatRupiah(new String(valuedata.netto).replaceAll('.',','),3),{isShow000:true}) :''}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?calcNettoHeader(valuedata):[]}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.packinglistnoanddate, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.date:''}</Text>
