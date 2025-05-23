@@ -133,6 +133,7 @@ const menuInternalUser = lazy(() => import('./containers/Admin/InternalUser'));
 const addInternalUser = lazy(() => import('./containers/Admin/InternalUser/addFormInternalUser'));
 const detailInternalUser = lazy(() => import('./containers/Admin/InternalUser/detail'));
 const editInternalUser = lazy(() => import('./containers/Admin/InternalUser/editFormInternalUser'));
+const changePasswordForm = lazy(() => import('./containers/Admin/InternalUser/changePasswordForm'));
 
 
 const menuUserMobile = lazy(() => import('./containers/Admin/UserMobile'));
@@ -399,6 +400,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.addinternaluser} component={waitFor(addInternalUser)} />
                                         <Route path={pathmenu.detailinternaluser + '/:id'} component={waitFor(detailInternalUser)} />
                                         <Route path={pathmenu.editinternaluser + '/:id'} component={waitFor(editInternalUser)} />
+                                        <Route path={pathmenu.changePasswordInternalUser + '/:id'} component={waitFor(changePasswordForm)} />
 
                                         <Route path={pathmenu.menuusermobile} component={waitFor(menuUserMobile)} />
                                         <Route path={pathmenu.addusermobile} component={waitFor(addUserMobile)} />

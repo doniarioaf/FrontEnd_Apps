@@ -14,6 +14,7 @@ export const menuInternalUser = `/user/internaluser`;
 export const addinternaluser = `/user/add/internaluser`;
 export const detailinternaluser = `/user/detail/internaluser`;
 export const editinternaluser = `/user/edit/internaluser`;
+export const changePasswordInternalUser = `/user/changePassword/internaluser`;
 export const menuusermobile = `/user/usermobile`;
 export const addusermobile = `/user/add/usermobile`;
 export const detailusermobile = `/user/detail/usermobile`;
