@@ -163,7 +163,7 @@ export default function ChangeFormInternalUser(props) {
                         <form className="mb-6" onSubmit={handleSubmit}  name="FormAddUser">
                             <ContentWrapper>
                             <div className="content-heading"  >
-                            <span>{i18n.t('label_CHANGE_PASSWORD')}</span>
+                            <span>{i18n.t('Ubah Password')}</span>
                             </div>
 
                             <div className="row mt-2">

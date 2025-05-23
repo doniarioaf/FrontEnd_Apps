@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import "react-widgets/dist/css/react-widgets.css"
 import CryptoJS from 'crypto-js';
 import * as key from '../../../containers/shared/constantKey';
+import { dataLoginEnc } from '../../shared/processInfoLogin';
 
 export default function FormLogin(props) {
     const { i18n } = useTranslation('translations');
@@ -127,6 +128,7 @@ export default function FormLogin(props) {
                 }
             })
         } else {
+            dataLoginEnc(data.dataresponse,{username:user});
             history.push('/home');
         }
     }

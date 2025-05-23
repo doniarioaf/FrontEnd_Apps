@@ -43,6 +43,7 @@ export function* loginUserSaga(action) {
         let obj = new Object();
         obj.flag = flag;
         obj.msg = message;
+        obj.dataresponse = response.data;
         
         action.successHandler(obj,propsdata);
     }catch (error) {

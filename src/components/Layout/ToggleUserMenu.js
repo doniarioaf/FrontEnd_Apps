@@ -9,8 +9,22 @@ import MenuItem                   from '@material-ui/core/MenuItem';
 import MenuList                   from '@material-ui/core/MenuList';
 import {useSelector, useDispatch} from 'react-redux';
 import { withRouter ,useHistory } from 'react-router-dom';
+import KeyIcon                    from '@material-ui/icons/VpnKey';
+import LogoutIcon                 from '@material-ui/icons/MeetingRoom';
+import ChangePassworddDialog from './ChangePasswordDialog';
+import Dialog                       from '@material-ui/core/Dialog';
+import styled                       from "styled-components";
 import * as actions                 from '../../store/actions';
-// import {deleteSessionAndLocalStorage} from '../../containers/shared/globalFunc';
+import {Loading}                    from '../../components/Common/Loading';
+import Swal             from "sweetalert2";
+import { isGetPermissions } from '../../containers/shared/globalFunc';
+import { changePasswordInternalUser_user_Permission } from '../../containers/shared/permissionMenu';
+
+const StyledDialog = styled(Dialog)`
+  & > .MuiDialog-container > .MuiPaper-root {
+    height: 500px;
+  }
+`;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,7 +47,9 @@ const useStyles = makeStyles((theme) => ({
 function MenuListComposition(props) {
     const classes = useStyles();
     const history = useHistory();
+    const [changepassword, setShowChangePassword] = useState(false);
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const anchorRef = useRef(null);
     const dispatch = useDispatch();
     // const username = 'hahaha';
@@ -57,6 +73,25 @@ function MenuListComposition(props) {
         }
     }
 
+    const handleChangePassword = (event) => {
+        setShowChangePassword(true);
+        // dispatch(actions.createChangePasswordUserWebOTP(successHandler,errorHandler));
+        
+    };
+
+    const successHandlerConfirmPW = (data) =>{
+        setShowChangePassword(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Sukses'
+        }).then(res => {            
+            // window.location.reload(true);
+            history.push('/');
+        });
+        setLoading(false);
+    }
+
     function handleLogout() {
         history.push('/');
         // deleteSessionAndLocalStorage();
@@ -76,6 +111,15 @@ function MenuListComposition(props) {
         }
     }, []);
 
+    const errorHandler = (data) => {
+        setLoading(false);
+        setShowChangePassword(false);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: data
+        })
+      }
     return (
         <div className={classes.root}>
             <Button
@@ -107,7 +151,11 @@ function MenuListComposition(props) {
                                     {i18n.t('label_CHANGE_PASSWORD')}</MenuItem>
                                     <MenuItem onClick={handleLogout}><LogoutIcon
                                         className={classes.svgIcon}/>{i18n.t('label_LOGOUT')}</MenuItem> */}
-                                        <MenuItem onClick={handleLogout}>{'Logout'}</MenuItem>
+                                        <MenuItem onClick={handleChangePassword} hidden={!isGetPermissions(changePasswordInternalUser_user_Permission,'TRANSACTION')} ><KeyIcon className={classes.svgIcon}/>
+                                        {'Ubah Password'}</MenuItem>
+                                        <MenuItem onClick={handleLogout}>
+                                        <LogoutIcon
+                                        className={classes.svgIcon}/>{'Logout'}</MenuItem>
                                 </MenuList>
                             </ClickAwayListener>
                         </Paper>
@@ -116,6 +164,24 @@ function MenuListComposition(props) {
                 )}
                 
             </Popper>
+
+            <StyledDialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                maxWidth="sm"
+                fullWidth={true}
+                style={{height: '80vh'}}
+                open={changepassword}
+                >
+                <ChangePassworddDialog
+                    showflag = {setShowChangePassword}
+                    errorHandler = {errorHandler}
+                    successHandlerConfirmPW = {successHandlerConfirmPW}
+                    setloading = {setLoading}
+                />
+                {loading && <Loading/>}
+            </StyledDialog>
+
         </div>
 
 

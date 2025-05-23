@@ -14,6 +14,7 @@ export const addInternalUser_Permission = ['READ_USER','CREATE_USER'];
 export const editInternalUser_Permission = ['READ_USER','EDIT_USER'];
 export const deleteInternalUser_Permission = ['DELETE_USER'];
 export const changePasswordInternalUser_Permission = ['READ_USER','EDIT_CHANGE_PASSWORD_USER'];
+export const changePasswordInternalUser_user_Permission = ['EDIT_CHANGE_PASSWORD_USER'];
 
 export const addUserMobile_Permission = ['READ_USER_MOBILE','CREATE_USER_MOBILE'];
 export const editUserMobile_Permission = ['READ_USER_MOBILE','EDIT_USER_MOBILE'];
