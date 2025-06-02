@@ -4,7 +4,9 @@ import {
     PagingState,
     IntegratedPaging,
     EditingState,
-    TableColumnVisibility
+    TableColumnVisibility,
+    FilteringState,
+    IntegratedFiltering,
 }                                   from '@devexpress/dx-react-grid';
 import {
     Grid,
@@ -60,6 +62,10 @@ const Command = ({id, onExecute}) => {
             onExecute={onExecute}
         />
     );
+};
+
+const FilterIcon = ({type, ...restProps}) => {
+    return <TableFilterRow.Icon type={type} {...restProps} />;
 };
 
 const GridListPermissions = props => {
@@ -143,6 +149,10 @@ const GridListPermissions = props => {
         );
     };
 
+    const FilterCell = propsparam => {
+            return <TableFilterRow.Cell {...propsparam} />;
+        };
+
     return (
         <Paper style={{position: 'relative'}}>
             <Grid
@@ -158,8 +168,8 @@ const GridListPermissions = props => {
                     pageSize={pageSize}
                     onPageSizeChange={setPageSize}
                 />
-                {/* <FilteringState defaultFilters={[]}/>
-                <IntegratedFiltering/> */}
+                <FilteringState defaultFilters={[]}/>
+                <IntegratedFiltering/>
                 {/* <SortingState
                     sorting={sorting}
                     onSortingChange={setSorting}
@@ -177,12 +187,12 @@ const GridListPermissions = props => {
                 <TableColumnVisibility
                     hiddenColumnNames={hiddenColumnNames}
                 />
-                {/* <TableFilterRow
+                <TableFilterRow
                     showFilterSelector
                     cellComponent={FilterCell}
                     iconComponent={FilterIcon}
                     messages={filterRowMessages}
-                /> */}
+                />
                 <TableEditRow/>
                 <TableEditColumn
                     showAddCommand
