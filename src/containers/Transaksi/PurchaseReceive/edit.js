@@ -789,6 +789,11 @@ export default function EditPurchaseReceive(props) {
         dispatch(actions.getPurchaseReceiveData({ url: '/searchvendor?idvendor=' + id }, successHandlerVendor, errorHandler));
     }
     function successHandlerVendor(data, propsdata) {
+        let usedDeposit = 0;
+        if(propsdata.detail){
+            let dateDet = propsdata.detail ?propsdata.detail:null;
+            usedDeposit = dateDet.setor?parseFloat(dateDet.setor):0;
+        }
 
         const theDataProd = data.data.categoryproductOpt.reduce((obj, el) => [
             ...obj,
@@ -798,8 +803,10 @@ export default function EditPurchaseReceive(props) {
                 'data': el
             }
         ], []);
+        let sisaDeposit = data.data.sisaDeposit ? data.data.sisaDeposit : 0;
+        sisaDeposit = sisaDeposit + usedDeposit;
         setListCategoryProduct(theDataProd);
-        setSisaDeposit(data.data.sisaDeposit ? data.data.sisaDeposit : 0);
+        setSisaDeposit(sisaDeposit);
 
         const theDataDraftPR = data.data.draftPurchaseReceiveOpt.reduce((obj, el) => [
             ...obj,
@@ -1066,7 +1073,7 @@ export default function EditPurchaseReceive(props) {
                                             textField={'label'}
                                             valueField={'value'}
                                             // style={{width: '25%'}}
-                                            // disabled={values.isdisabledcountry}
+                                            disabled={true}
                                             value={values.area}
                                         />
                                         <div className="invalid-feedback-custom">{ErrSelArea}</div>

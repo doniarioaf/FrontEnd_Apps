@@ -157,7 +157,7 @@ export default function AddPurchaseReceive(props) {
                         setSelDraftPurchaseReceive(iddraft);
                         let listfilteroutput = theDataVendor.filter(output => output.value == idvendor);
                         if(listfilteroutput.length > 0){
-                            changeVendor(listfilteroutput[0],theDataCharge);
+                            changeVendor(listfilteroutput[0],theDataCharge,[],theDataArea);
                         }else{
                             //kemungkinan di master vendor nya sudah di delete
                             setLoading(false);
@@ -874,9 +874,9 @@ export default function AddPurchaseReceive(props) {
         setLoading(false);
     }
     const handleChangeVendor = (data) => {
-        changeVendor(data,ListItemsPurchaseReceiveBiaya,ListItemsInventori);
+        changeVendor(data,ListItemsPurchaseReceiveBiaya,ListItemsInventori,ListArea);
     }
-    const changeVendor = (data,paramlistcharge,paramlistinventori) => {
+    const changeVendor = (data,paramlistcharge,paramlistinventori,paramlistarea) => {
         
         let id = data?.value ? data.value : '';
         setSelVendor(id);
@@ -898,6 +898,14 @@ export default function AddPurchaseReceive(props) {
         setInputFlightNo('');
         setInputSMU('');
         setIdDraftPR('');
+
+        let idarea = valdata.idarea?valdata.idarea:'';
+        let listfilteroutputarea = paramlistarea.filter(output => output.value == idarea);
+        if(listfilteroutputarea.length > 0){
+            setSelArea(idarea);
+        }else{
+            setSelArea('');
+        }
 
         setLoading(true);
         let listCharge = setPriceBoxOngkosByVendor(paramlistcharge, valdata.pricebox, valdata.priceongkos);
