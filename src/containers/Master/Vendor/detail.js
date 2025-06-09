@@ -205,6 +205,13 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Area')}</span>
+                            <strong className="col-md-7">
+                                {value.areaName?value.areaName:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Type')}</span>
                             <strong className="col-md-7">
                                 {value.type?value.type:''}

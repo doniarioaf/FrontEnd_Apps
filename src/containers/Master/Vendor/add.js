@@ -63,6 +63,10 @@ export default function AddVendor(props) {
     const [ListVendorBroker, setListVendorBroker] = useState([]);
     const [SelVendorBroker, setSelVendorBroker] = useState('nodata');
 
+    const [ListArea, setListArea] = useState([]);
+    const [SelArea, setSelArea] = useState('');
+    const [ErrSelArea, setErrSelArea] = useState('');
+
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getVendorData({ url: '/template' }, successHandler, errorHandler));
@@ -105,6 +109,15 @@ export default function AddVendor(props) {
             });
             
             setListVendorBroker(theDataVendBroker);
+
+            let dataArea = data.data.areaOpt.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        value: el.id,
+                        label: el.nama ,
+                    }
+                ], []);
+            setListArea(dataArea);
             
         }
         setLoading(false);
@@ -117,6 +130,7 @@ export default function AddVendor(props) {
         setErrInputAlias('');
         setErrSelType('');
         setErrSelVendorParent('');
+        setErrSelArea('');
         if (values.nama == '') {
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
@@ -128,6 +142,10 @@ export default function AddVendor(props) {
 
         if (SelType == '') {
             setErrSelType(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+        if (SelArea == '') {
+            setErrSelArea(i18n.t('label_REQUIRED'));
             flag = false;
         }
         if(!CheckIsParent && SelType !== 'BROKER'){
@@ -183,6 +201,7 @@ export default function AddVendor(props) {
                 idvendorbroker = SelVendorBroker !== '' && SelVendorBroker !== 'nodata'?SelVendorBroker:null;
             }
             obj.idvendorbroker = idvendorbroker;
+            obj.idarea = SelArea;
             dispatch(actions.submitVendorData({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -254,6 +273,10 @@ export default function AddVendor(props) {
         let id = data?.value ? data.value : '';
         setSelVendorBroker(id);
     }
+    const handleChangeArea = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelArea(id);
+    }
     return (
         <Formik
             initialValues={
@@ -273,7 +296,8 @@ export default function AddVendor(props) {
                     value1: InputValue1,
                     isparent: CheckIsParent,
                     vendorparent:SelVendorParent,
-                    vendorbroker:SelVendorBroker
+                    vendorbroker:SelVendorBroker,
+                    area:SelArea
                 }
             }
             validate={values => {
@@ -356,6 +380,26 @@ export default function AddVendor(props) {
                                             value={values.alias}
                                         />
                                         <div className="invalid-feedback-custom">{ErrInputAlias}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="area">
+                                            {i18n.t('Area')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <DropdownList
+                                            name="area"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeArea(val)}
+                                            onBlur={val => setFieldTouched("area", val?.value ? val.value : '')}
+                                            data={ListArea}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.area}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrSelArea}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="type">
                                             {i18n.t('Type')}
