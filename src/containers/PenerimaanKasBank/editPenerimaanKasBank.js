@@ -206,6 +206,8 @@ export default function AddForm(props) {
             }
             if(isCustomerBaru){
                 setSelJenisTransaksi('9995');
+            }else{
+                setSelJenisTransaksi('LAINNYA');
             }
             
             if(listitems.length > 0){
