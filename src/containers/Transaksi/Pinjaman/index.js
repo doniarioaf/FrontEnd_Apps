@@ -1,0 +1,219 @@
+import React, { useState, useEffect } from 'react';
+import { Container, Card, CardBody } from 'reactstrap';
+import { useTranslation } from 'react-i18next';
+import Grid from '../../../components/TableGrid';
+import ContentWrapper from '../../../components/Layout/ContentWrapper';
+import ContentHeading from '../../../components/Layout/ContentHeading';
+import { useDispatch } from 'react-redux';
+import Swal from 'sweetalert2';
+import * as actions from '../../../store/actions';
+import * as pathmenu from '../../shared/pathMenu';
+import { reloadToHomeNotAuthorize, isGetPermissions, firstAndLastDateInMonth } from '../../shared/globalFunc';
+import { MenuPinjaman, addPinjaman_Permission } from '../../shared/permissionMenu';
+import { useHistory } from 'react-router-dom';
+import { DatePicker,DropdownList } from 'react-widgets';
+import { formatdate } from '../../shared/constantValue';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets-moment';
+import "react-widgets/dist/css/react-widgets.css";
+import SearchIcon from '@material-ui/icons/Search';
+import { IconButton } from '@material-ui/core';
+
+const PinjamanIndex = () => {
+    reloadToHomeNotAuthorize(MenuPinjaman, 'READ');
+    momentLocalizer();
+    const history = useHistory();
+    const [rows, setRows] = useState([]);
+    const [t, i18n] = useTranslation('translations');
+    const [columns] = useState([
+        { name: 'id', title: 'id' },
+        {name:'nodocument', title: 'No Document'},
+        { name: 'vendor', title: i18n.t('Vendor') },
+        { name: 'status', title: i18n.t('Status') },
+        { name: 'transdate', title: i18n.t('Date') },
+    ]);
+    const [tableColumnExtensions] = useState([]);
+    const [loading, setLoading] = useState(false);
+    let getdate = firstAndLastDateInMonth();
+    const [from, setFrom] = useState(getdate.first);
+    const [to, setTo] = useState(getdate.last);
+
+    const [ListIsActive, setListIsActive] = useState([{value:'Y',label:'Aktif'},{value:'N',label:'Non Aktif'}]);
+    const [SelIsActive, setSelIsActive] = useState('Y');
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        setLoading(true);
+        let obj = new Object();
+        obj.from = from.getTime();
+        obj.to = to.getTime();
+        obj.idvendor = null;
+        obj.isactive = SelIsActive;
+        dispatch(actions.getPinjamanData({ url: '/list', type: 'POST', payload: obj }, successHandler, errorHandler));
+    }, []);
+
+    function successHandler(data, propsdata) {
+        if (data.data) {
+            const theData = data.data.reduce((obj, el) => [
+                ...obj,
+                {
+                    'id': el.id,
+                    'nodocument':el.nodocument,
+                    'vendor': el.vendorName+' ('+el.vendorAlias+')',
+                    'status':el.isactive?'Aktif':'Non Aktif',
+                    'transdate': el.date ? moment(el.date).format(formatdate) : '',
+                }
+            ], []);
+            setRows(theData);
+        }
+        setLoading(false);
+    }
+
+    function errorHandler(error, propsdata) {
+        setLoading(false);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: '' + error
+        })
+    }
+
+    const handleChangeStatus = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelIsActive(id);
+    }
+
+    function onClickAdd() {
+        history.push(pathmenu.addpinjaman);
+    }
+    function onClickView(id) {
+        history.push(pathmenu.detailpinjaman + '/' + id);
+    }
+
+    const handleChangeFrom = (data) => {
+        //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
+        if (data !== null) {
+            setFrom(moment(data, formatdate).toDate())
+        } else {
+            setFrom(null)
+        }
+    }
+
+    const handleChangeTO = (data) => {
+        //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
+        if (data !== null) {
+            setTo(moment(data, formatdate).toDate())
+        } else {
+            setTo(null)
+        }
+    }
+
+    function onClickSearch() {
+        if (from != null && to != null) {
+            setLoading(true);
+            let obj = new Object();
+            obj.from = from.getTime();
+            obj.to = to.getTime();
+            obj.idvendor = null;
+            obj.isactive = SelIsActive;
+            dispatch(actions.getPinjamanData({ url: '/list', type: 'POST', payload: obj }, successHandler, errorHandler));
+        }
+
+    }
+
+    return (
+        <ContentWrapper>
+            <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuPinjaman} label={'Pinjaman'} labeldefault={'Pinjaman'} />
+            <Container fluid>
+                <table>
+                    <th>{'From'}</th>
+                    <th style={{ paddingLeft: '10px' }}>{'To'}</th>
+                    <th style={{ paddingLeft: '10px' }}>{'Status'}</th>
+                    <tbody>
+                        <tr>
+                            <td><DatePicker
+                                name="from"
+                                // onChange={(val) => {
+                                //         setFieldValue("startdate", val);
+                                //     }
+                                // }
+                                onChange={val => handleChangeFrom(val)}
+                                // onBlur={handleBlur}
+                                // defaultValue={Date(moment([]))}
+                                format={formatdate}
+                                value={from}
+                            // max={new Date()}
+                            // style={{width: '25%'}}
+                            /></td>
+                            <td style={{ paddingLeft: '10px' }}>
+                                <DatePicker
+                                    name="to"
+                                    // onChange={(val) => {
+                                    //         setFieldValue("startdate", val);
+                                    //     }
+                                    // }
+                                    onChange={val => handleChangeTO(val)}
+                                    // onBlur={handleBlur}
+                                    // defaultValue={Date(moment([]))}
+                                    format={formatdate}
+                                    value={to}
+                                // max={new Date()}
+                                // style={{width: '25%'}}
+                                />
+                            </td>
+                            <td style={{ paddingLeft: '10px',width:'130px' }}>
+                                <DropdownList
+                                    name="SelIsActive"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeStatus(val)}
+                                    // onBlur={val => setFieldTouched("shownol", val?.value ? val.value : '')}
+                                    data={ListIsActive}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={SelIsActive}
+                                />
+                            </td>
+                            <td>
+                                <IconButton color={'primary'}
+                                    onClick={() => onClickSearch()}
+                                >
+                                    <SearchIcon />
+                                </IconButton>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+
+                <Card>
+                    <CardBody>
+                        <Container fluid className="center-parent">
+                            <div className="table-responsive">
+                                <Grid
+                                    rows={rows}
+                                    columns={columns}
+                                    totalCounts={rows.length}
+                                    loading={loading}
+                                    columnextension={tableColumnExtensions}
+                                    permissionadd={!isGetPermissions(addPinjaman_Permission, 'TRANSACTION')}
+                                    onclickadd={onClickAdd}
+                                    permissionview={!isGetPermissions(MenuPinjaman, 'READ')}
+                                    onclickview={onClickView}
+                                    listfilterdisabled={['transdate']}
+                                />
+                            </div>
+                        </Container>
+                    </CardBody>
+                </Card>
+            </Container>
+        </ContentWrapper>
+
+    );
+};
+export default PinjamanIndex;

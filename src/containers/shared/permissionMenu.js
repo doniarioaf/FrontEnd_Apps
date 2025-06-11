@@ -96,6 +96,9 @@ export const addKomisi_Permission = ['READ_KOMISI','CREATE_KOMISI'];
 export const editKomisi_Permission = ['READ_KOMISI','EDIT_KOMISI'];
 export const deleteKomisi_Permission = ['DELETE_KOMISI'];
 
+export const addPinjaman_Permission = ['READ_PINJAMAN','CREATE_PINJAMAN'];
+export const editPinjaman_Permission = ['READ_PINJAMAN','EDIT_PINJAMAN'];
+export const deletePinjaman_Permission = ['DELETE_PINJAMAN'];
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
@@ -133,3 +136,4 @@ export const MenuReportKartuDeposit = ['READ_REPORT_KARTUDEPOSIT'];
 export const MenuReportKartuStock = ['READ_REPORT_KARTUSTOCK'];
 export const MenuKomisi = ['READ_KOMISI'];
 export const MenuReportKomisi = ['READ_REPORT_KOMISI'];
+export const MenuPinjaman = ['READ_PINJAMAN'];

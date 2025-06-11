@@ -257,6 +257,11 @@ const reportKomisi = lazy(() => import('./containers/Report/reportKomisi'));
 const printDraftPr = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive/print'));
 const printStockAdjusmentUdangMati = lazy(() => import('./containers/Transaksi/StockAdjusment/print'));
 
+const menuPinjaman = lazy(() => import('./containers/Transaksi/Pinjaman'));
+const addPinjaman = lazy(() => import('./containers/Transaksi/Pinjaman/add'));
+const detailPinjaman = lazy(() => import('./containers/Transaksi/Pinjaman/detail'));
+const editPinjaman = lazy(() => import('./containers/Transaksi/Pinjaman/edit'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -523,7 +528,11 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.menuReportKomisi} component={waitFor(reportKomisi)} />
                                         <Route path={pathmenu.printdraftpurchasereceive+ '/:id'} component={waitFor(printDraftPr)} />
                                         <Route path={pathmenu.printstockadjusmentstockmati+ '/:id'} component={waitFor(printStockAdjusmentUdangMati)} />
-                                        
+
+                                        <Route path={pathmenu.menuPinjaman} component={waitFor(menuPinjaman)} />
+                                        <Route path={pathmenu.addpinjaman} component={waitFor(addPinjaman)} />
+                                        <Route path={pathmenu.detailpinjaman+ '/:id'} component={waitFor(detailPinjaman)} />
+                                        <Route path={pathmenu.editpinjaman+ '/:id'} component={waitFor(editPinjaman)} />
                                         
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
 

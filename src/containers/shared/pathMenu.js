@@ -114,3 +114,7 @@ export const detailkomisi = `/form/detail/komisi`;
 export const editbayarkomisi = `/form/editbayar/komisi`;
 export const printkomisi = `/form/print/komisi`;
 export const menuReportKomisi = `/reportKomisi`;
+export const menuPinjaman = `/pinjaman`;
+export const addpinjaman = `/form/add/pinjaman`;
+export const detailpinjaman = `/form/detail/pinjaman`;
+export const editpinjaman = `/form/edit/pinjaman`;

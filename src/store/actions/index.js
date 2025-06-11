@@ -77,5 +77,7 @@ export {
     getPelunasanPiutangData,
     submitPelunasanPiutang,
     getKomisiData,
-    submitKomisi
+    submitKomisi,
+    getPinjamanData,
+    submitPinjaman
 } from './admin';

@@ -589,3 +589,21 @@ export const submitKomisi = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getPinjamanData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PINJAMANA_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitPinjaman = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PINJAMAN,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

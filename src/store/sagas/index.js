@@ -73,7 +73,9 @@ import {
     submitPelunasanPiutangSaga,
     submitDeleteUserAppsSaga,
     submitKomisiSaga,
-    getKomisiDataSaga
+    getKomisiDataSaga,
+    submitPinjamanSaga,
+    getPinjamanDataSaga
 } from './admin';
 
 
@@ -151,5 +153,7 @@ export function* watchAdmin() {
         takeEvery(actions.SUBMIT_DELETE_ROLE, submitDeleteRoleSaga),
         takeEvery(actions.SUBMIT_KOMISI, submitKomisiSaga),
         takeEvery(actions.GET_KOMISI_DATA, getKomisiDataSaga),
+        takeEvery(actions.SUBMIT_PINJAMAN, submitPinjamanSaga),
+        takeEvery(actions.GET_PINJAMANA_DATA, getPinjamanDataSaga),
     ]);
 }

@@ -33,3 +33,4 @@ export const basePelunasanHutangURL = param => `${baseApiURL}/pelusanhutang${par
 export const baseCargoURL = param => `${baseApiURL}/cargo${param}`;
 export const basePelunasanPiutangURL = param => `${baseApiURL}/pelunasanpiutang${param}`;
 export const baseKomisiURL = param => `${baseApiURL}/komisi${param}`;
+export const basePinjamanURL = param => `${baseApiURL}/pinjaman${param}`;
