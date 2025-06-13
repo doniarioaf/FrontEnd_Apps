@@ -54,13 +54,16 @@ export default function AddPurchaseReceive(props) {
     const [ListItemsPurchaseReceive, setListItemsPurchaseReceive] = useState([]);
     const [ListItemsPurchaseReceiveMati, setListItemsPurchaseReceiveMati] = useState([]);
     const [ListItemsPurchaseReceiveBiaya, setListItemsPurchaseReceiveBiaya] = useState([]);
+    const [ListItemsPurchaseReceivePenguranganBiaya, setListItemsPurchaseReceivePenguranganBiaya] = useState([]);
     const [ListProduct, setListProduct] = useState([]);
     const [ListCategoryProduct, setListCategoryProduct] = useState([]);
 
     const [InputTotalPrice, setInputTotalPrice] = useState(0);
     const [IsDefaultSetorTotalPrice, setIsDefaultSetorTotalPrice] = useState(true);
     const [InputSetor, setInputSetor] = useState(0);
+    const [InputSetorPinjaman, setInputSetorPinjaman] = useState(0);
     const [SisaDeposit, setSisaDeposit] = useState(0);
+    const [SisaPinjaman, setSisaPinjaman] = useState(0);
     const [TambahDeposit, setTambahDeposit] = useState(0);
     const [IsTambahDeposit, setIsTambahDeposit] = useState(false);
 
@@ -118,12 +121,17 @@ export default function AddPurchaseReceive(props) {
                 {
                     'idcharge': el.id,
                     'namabiaya': el.nama,
+                    'namabiayacustom': el.nama,
                     'qty': el.nama == 'SETOR' ? 1 : 0,
                     'price': 0,
                     'subtotal': 0
                 }
             ], []);
-            setListItemsPurchaseReceiveBiaya(theDataCharge);
+            let listPenambahanBiaya = theDataCharge.filter(output => output.namabiaya == 'BOX' || output.namabiaya == 'BOAT' || output.namabiaya == 'BANTUAN');
+            setListItemsPurchaseReceiveBiaya(listPenambahanBiaya);
+
+            let listPenguranganBiaya = theDataCharge.filter(output => output.namabiaya == 'ONGKOS' || output.namabiaya == 'SETOR' || output.namabiaya == 'SETORPINJAMAN');
+            setListItemsPurchaseReceivePenguranganBiaya(listPenguranganBiaya);
 
             const theDataInventori = data.data.inventoriOpt.reduce((obj, el) => [
                 ...obj,
@@ -316,8 +324,11 @@ export default function AddPurchaseReceive(props) {
             //ada perubahan bisnis, di awal setor digunakan bisa full payment lewat deposit atau hanya sebagian lewat deposit.
             // sekarang full payment lewat deposit, jika kurang maka kekurangan itu dibayar lewat transfer
             let sisadeposit = values.sisadeposit;
+            let sisapinjaman = values.sisapinjaman;
             let totalprice = new String(values.totalprice).replaceAll('.', '') !== '' ? new String(values.totalprice).replaceAll('.', '') : 0;
-            let setor = calculateSetor(totalprice,sisadeposit);
+            let objCalc = calculateSetor(totalprice,sisadeposit,sisapinjaman);
+            let setor = objCalc.setordeposit;
+            let setorPinjaman = objCalc.setorpinjaman;
 
             let obj = new Object();
             obj.idvendor = SelVendor;
@@ -332,6 +343,7 @@ export default function AddPurchaseReceive(props) {
             obj.accountnamebank = values.accnamabank;
             obj.totalprice = totalprice;//new String(values.totalprice).replaceAll('.', '') !== '' ? new String(values.totalprice).replaceAll('.', '') : 0;
             obj.setor = setor;//new String(values.setor).replaceAll('.', '') !== '' ? new String(values.setor).replaceAll('.', '') : 0;
+            obj.setor_pinjaman = setorPinjaman;
             obj.isdefaultvaluesetor = IsDefaultSetorTotalPrice;
             obj.tambahdeposit = new String(values.tambahdeposit).replaceAll('.', '') !== '' ? new String(values.tambahdeposit).replaceAll('.', '') : 0;
             let items = [];
@@ -391,12 +403,19 @@ export default function AddPurchaseReceive(props) {
             if (ListItemsPurchaseReceiveBiaya.length > 0) {
                 for (let i = 0; i < ListItemsPurchaseReceiveBiaya.length; i++) {
                     let el = ListItemsPurchaseReceiveBiaya[i];
+                    let namaCharge = null;
+                    if(el.namabiayacustom !== ''){
+                        if(new String(el.namabiayacustom).toLowerCase() !== new String(el.namabiaya).toLowerCase()){
+                            namaCharge = el.namabiayacustom;
+                        }
+                    }
                     charges.push(
                         {
                             'idcharge': el.idcharge,
                             'qty': el.qty,
                             'price': new String(el.price).replaceAll('.', '') !== '' ? new String(el.price).replaceAll('.', '') : '0',
-                            'subtotalprice': new String(el.subtotal).replaceAll('.', '') !== '' ? new String(el.subtotal).replaceAll('.', '') : '0'
+                            'subtotalprice': new String(el.subtotal).replaceAll('.', '') !== '' ? new String(el.subtotal).replaceAll('.', '') : '0',
+                            'chargenamecustom':namaCharge
                         }
                     );
                 }
@@ -585,8 +604,11 @@ export default function AddPurchaseReceive(props) {
                 list[index]['subtotalprice'] = subtotal;
                 
                 let indexTotal = list.findIndex(obj => obj.idproduct == 'TOTAL');
-                
-                let objPrice = calculateTotalPrice(list, ListItemsPurchaseReceiveBiaya, ListItemsInventori);
+                let listCharge = [...ListItemsPurchaseReceiveBiaya];
+                for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+                    listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+                }
+                let objPrice = calculateTotalPrice(list, listCharge, ListItemsInventori);
                 let totalPrice = objPrice.totalPrice;
                 let totalPriceItemHidup = objPrice.totalPriceItemHidup;
                 let totalqty = objPrice.totalqty;
@@ -641,13 +663,91 @@ export default function AddPurchaseReceive(props) {
 
 
         }
+        if (name == 'namabiaya') {
+            const list = [...ListItemsPurchaseReceiveBiaya];
+            list[index]['namabiayacustom'] = value;
+            setListItemsPurchaseReceiveBiaya(list);
+            flag =false;
+        }
         if (flag) {
             const list = [...ListItemsPurchaseReceiveBiaya];
+            const listTemp = [...ListItemsPurchaseReceiveBiaya];
             let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
+            listTemp[index][name] = valPrice;
+            listTemp[index]['subtotal'] = subtotal;
+
             list[index][name] = valPrice;
             list[index]['subtotal'] = subtotal;
+            
             setListItemsPurchaseReceiveBiaya(list);
-            let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, list, ListItemsInventori);
+            
+            let listCharge = listTemp;
+            for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+                listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+            }
+            let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, listCharge, ListItemsInventori);
+            let totalPrice = objPrice.totalPrice;
+            let totalPriceItemHidup = objPrice.totalPriceItemHidup;
+            setInputTotalPrice(totalPrice);
+            // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
+            setorValue(totalPrice, IsDefaultSetorTotalPrice);
+        }
+
+    }
+
+    const handleInputChangePenguranganBiaya = (e, index) => {
+        const { name, value } = e.target;
+        let flag = true;
+        let subtotal = 0;
+        if (name == 'qty' || name == 'price') {
+            let valPriceTemp = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
+
+            if (isNaN(valPriceTemp) && valPriceTemp !== '') {
+                flag = false;
+            } else {
+                const listTemp = [...ListItemsPurchaseReceivePenguranganBiaya];
+
+                if (name == 'qty') {
+                    let namaBiaya = listTemp[index]['namabiaya'];
+                    if (namaBiaya == 'SETOR' && valPriceTemp !== '') {
+                        if (parseInt(valPriceTemp) > 1) {
+                            flag = false;
+                        }
+                    }
+                    if (flag) {
+                        let pricetemp = new String(listTemp[index]['price']).replaceAll('.', '') !== '' ? new String(listTemp[index]['price']).replaceAll('.', '') : '0';
+                        subtotal = parseInt(valPriceTemp) * parseFloat(pricetemp);
+                    }
+                } else if (name == 'price') {
+                    let qtyemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
+                    subtotal = parseInt(qtyemp) * parseFloat(valPriceTemp);
+                }
+            }
+
+
+        }
+        if (name == 'namabiaya') {
+            const list = [...ListItemsPurchaseReceivePenguranganBiaya];
+            list[index]['namabiayacustom'] = value;
+            setListItemsPurchaseReceivePenguranganBiaya(list);
+            flag =false;
+        }
+        if (flag) {
+            const list = [...ListItemsPurchaseReceivePenguranganBiaya];
+            const listTemp = [...ListItemsPurchaseReceivePenguranganBiaya];
+            let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
+            listTemp[index][name] = valPrice;
+            listTemp[index]['subtotal'] = subtotal;
+
+            list[index][name] = valPrice;
+            list[index]['subtotal'] = subtotal;
+            setListItemsPurchaseReceivePenguranganBiaya(list);
+
+            let listCharge = [...ListItemsPurchaseReceiveBiaya];
+            for(let i=0; i < listTemp.length; i++){
+                listCharge.push(listTemp[i]);
+            }
+            let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, listCharge, ListItemsInventori);
             let totalPrice = objPrice.totalPrice;
             let totalPriceItemHidup = objPrice.totalPriceItemHidup;
             setInputTotalPrice(totalPrice);
@@ -700,7 +800,12 @@ export default function AddPurchaseReceive(props) {
             list[index]['subtotalprice'] = subtotal;
             setListItemsInventori(list);
 
-            let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, ListItemsPurchaseReceiveBiaya, list);
+            let listCharge = [...ListItemsPurchaseReceiveBiaya];
+            for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+                listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+            }
+
+            let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, listCharge, list);
             let totalPrice = objPrice.totalPrice;
             let totalPriceItemHidup = objPrice.totalPriceItemHidup;
             setInputTotalPrice(totalPrice);
@@ -715,7 +820,11 @@ export default function AddPurchaseReceive(props) {
         setListItemsInventori(list);
     };
     const handleChangeDraftPR = (data) => {
-        changeDraftPR(data,ListItemsPurchaseReceiveBiaya,ListItemsInventori);
+        let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        }
+        changeDraftPR(data,listCharge,ListItemsInventori);
     }
     const changeDraftPR = (data,paramlistcharge,paramlistinventori) => {
         let id = data?.value ? data.value : '';
@@ -741,7 +850,14 @@ export default function AddPurchaseReceive(props) {
         }
 
         let listCharge = setPriceBox(paramlistcharge, qtyBox);
-        setListItemsPurchaseReceiveBiaya(listCharge);
+
+        let listPenambahanBiaya = listCharge.filter(output => output.namabiaya == 'BOX' || output.namabiaya == 'BOAT' || output.namabiaya == 'BANTUAN');
+        setListItemsPurchaseReceiveBiaya(listPenambahanBiaya);
+
+        let listPenguranganBiaya = listCharge.filter(output => output.namabiaya == 'ONGKOS' || output.namabiaya == 'SETOR' || output.namabiaya == 'SETORPINJAMAN');
+        setListItemsPurchaseReceivePenguranganBiaya(listPenguranganBiaya);
+
+        // setListItemsPurchaseReceiveBiaya(listCharge);
 
         let objPrice = calculateTotalPrice([], listCharge, paramlistinventori);
         let totalPrice = objPrice.totalPrice;
@@ -829,7 +945,11 @@ export default function AddPurchaseReceive(props) {
             );
         }
         setListItemsPurchaseReceive(listitemhidup);
-        let objPrice = calculateTotalPrice(listitemhidup, ListItemsPurchaseReceiveBiaya, ListItemsInventori);
+        let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        }
+        let objPrice = calculateTotalPrice(listitemhidup, listCharge, ListItemsInventori);
         let totalPrice = objPrice.totalPrice;
         let totalPriceItemHidup = objPrice.totalPriceItemHidup;
         setInputTotalPrice(totalPrice);
@@ -874,7 +994,11 @@ export default function AddPurchaseReceive(props) {
         setLoading(false);
     }
     const handleChangeVendor = (data) => {
-        changeVendor(data,ListItemsPurchaseReceiveBiaya,ListItemsInventori,ListArea);
+        let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        }
+        changeVendor(data,listCharge,ListItemsInventori,ListArea);
     }
     const changeVendor = (data,paramlistcharge,paramlistinventori,paramlistarea) => {
         
@@ -883,6 +1007,7 @@ export default function AddPurchaseReceive(props) {
 
         let valdata = data?.data ? data.data : '';
         setInputSetor(0);
+        setInputSetorPinjaman(0);
 
         setListCategoryProduct([]);
         setListItemsPurchaseReceive([]);
@@ -909,7 +1034,12 @@ export default function AddPurchaseReceive(props) {
 
         setLoading(true);
         let listCharge = setPriceBoxOngkosByVendor(paramlistcharge, valdata.pricebox, valdata.priceongkos);
-        setListItemsPurchaseReceiveBiaya(listCharge);
+        let listPenambahanBiaya = listCharge.filter(output => output.namabiaya == 'BOX' || output.namabiaya == 'BOAT' || output.namabiaya == 'BANTUAN');
+        setListItemsPurchaseReceiveBiaya(listPenambahanBiaya);
+
+        let listPenguranganBiaya = listCharge.filter(output => output.namabiaya == 'ONGKOS' || output.namabiaya == 'SETOR' || output.namabiaya == 'SETORPINJAMAN');
+        setListItemsPurchaseReceivePenguranganBiaya(listPenguranganBiaya);
+        // setListItemsPurchaseReceiveBiaya(listCharge);
         let objPrice = calculateTotalPrice([], listCharge, []);
         let totalPrice = objPrice.totalPrice;
         let totalPriceItemHidup = objPrice.totalPriceItemHidup;
@@ -936,6 +1066,7 @@ export default function AddPurchaseReceive(props) {
         ], []);
         setListCategoryProduct(theDataProd);
         setSisaDeposit(data.data.sisaDeposit ? data.data.sisaDeposit : 0);
+        setSisaPinjaman(data.data.sisaPinjaman ? data.data.sisaPinjaman : 0);
         
 
         const theDataDraftPR = data.data.draftPurchaseReceiveOpt.reduce((obj, el) => [
@@ -1029,7 +1160,11 @@ export default function AddPurchaseReceive(props) {
         list.splice(index, 1);
         let indexTotal = list.findIndex(obj => obj.idproduct == 'TOTAL');
         
-        let objPrice =calculateTotalPrice(list, ListItemsPurchaseReceiveBiaya, ListItemsInventori);
+        let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        }
+        let objPrice =calculateTotalPrice(list, listCharge, ListItemsInventori);
         let totalPrice = objPrice.totalPrice;
         let totalPriceItemHidup = objPrice.totalPriceItemHidup;
         list[indexTotal]['subtotalprice'] = totalPriceItemHidup;
@@ -1067,8 +1202,12 @@ export default function AddPurchaseReceive(props) {
         const list = [...ListItemsInventori];
         list.splice(index, 1);
         setListItemsInventori(list);
+        let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        }
 
-        let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, ListItemsPurchaseReceiveBiaya, list);
+        let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, listCharge, list);
         let totalPrice = objPrice.totalPrice;
         let totalPriceItemHidup = objPrice.totalPriceItemHidup;
         setInputTotalPrice(totalPrice);
@@ -1093,9 +1232,36 @@ export default function AddPurchaseReceive(props) {
 
     const handleRemoveBiaya = index => {
         const list = [...ListItemsPurchaseReceiveBiaya];
+        const listTemp = [...ListItemsPurchaseReceiveBiaya];
+
         list.splice(index, 1);
+        listTemp.splice(index, 1);
         setListItemsPurchaseReceiveBiaya(list);
-        let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, list, ListItemsInventori);
+
+        let listCharge = listTemp;
+        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        }
+        let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, listCharge, ListItemsInventori);
+        let totalPrice = objPrice.totalPrice;
+        let totalPriceItemHidup = objPrice.totalPriceItemHidup;
+        setInputTotalPrice(totalPrice);
+        // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(list,totalPrice));
+        setorValue(totalPrice, IsDefaultSetorTotalPrice);
+    };
+
+    const handleRemovePenguranganBiaya = index => {
+        const list = [...ListItemsPurchaseReceivePenguranganBiaya];
+        const listTemp = [...ListItemsPurchaseReceivePenguranganBiaya];
+        list.splice(index, 1);
+        listTemp.splice(index, 1);
+        setListItemsPurchaseReceivePenguranganBiaya(list);
+
+        let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        for(let i=0; i < listTemp.length; i++){
+            listCharge.push(listTemp[i]);
+        }
+        let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, listCharge, ListItemsInventori);
         let totalPrice = objPrice.totalPrice;
         let totalPriceItemHidup = objPrice.totalPriceItemHidup;
         setInputTotalPrice(totalPrice);
@@ -1130,6 +1296,8 @@ export default function AddPurchaseReceive(props) {
                     notes: InputNotes,
                     totalprice: InputTotalPrice,
                     isdefaultsetortotalprice: IsDefaultSetorTotalPrice,
+                    setorpinjaman: InputSetorPinjaman,
+                    sisapinjaman: SisaPinjaman,
                     setor: InputSetor,
                     sisadeposit: SisaDeposit,
                     istambahdeposit: IsTambahDeposit,
@@ -1299,6 +1467,88 @@ export default function AddPurchaseReceive(props) {
                                         />
                                         <div className="invalid-feedback-custom">{ErrSelDraftPurchaseReceive}</div>
 
+                                        {
+                                            values.istambahdeposit ?
+                                                <table width={'100%'}>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <label className="mt-3 form-label required" htmlFor="sisadeposit">
+                                                                    {i18n.t('Sisa Deposit')}
+                                                                </label>
+                                                                <Input
+                                                                    name="sisadeposit"
+                                                                    type="text"
+                                                                    id="sisadeposit"
+                                                                    maxLength={100}
+
+                                                                    onChange={handleChange}
+                                                                    // onChange={val => handleInputNama(val)}
+                                                                    onBlur={handleBlur}
+                                                                    value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
+                                                                    disabled={true}
+                                                                />
+                                                            </td>
+                                                            <td>
+                                                                <label className="mt-3 form-label required" htmlFor="tambahdeposit">
+                                                                    {i18n.t('Tambah Deposit')}
+                                                                </label>
+                                                                <Input
+                                                                    name="tambahdeposit"
+                                                                    type="text"
+                                                                    id="tambahdeposit"
+                                                                    maxLength={100}
+
+                                                                    onChange={handleChange}
+                                                                    // onChange={val => handleInputNama(val)}
+                                                                    onBlur={handleBlur}
+                                                                    value={new String(values.tambahdeposit).replaceAll(".", "") !== '' ? numToMoney(parseFloat(new String(values.tambahdeposit).replaceAll(".", ""))) : ''}
+                                                                    disabled={false}
+                                                                    style={{ borderColor: 'red' }}
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                :
+                                                <div>
+                                                    <label className="mt-3 form-label required" htmlFor="sisadeposit">
+                                                        {i18n.t('Sisa Deposit')}
+                                                    </label>
+                                                    <Input
+
+                                                        name="sisadeposit"
+                                                        type="text"
+                                                        id="sisadeposit"
+                                                        maxLength={100}
+
+                                                        onChange={handleChange}
+                                                        // onChange={val => handleInputNama(val)}
+                                                        onBlur={handleBlur}
+                                                        value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
+                                                        disabled={true}
+                                                    />
+                                                </div>
+                                        }
+
+                            
+                                        <label className="mt-3 form-label required" htmlFor="sisapinjaman">
+                                            {i18n.t('Sisa Pinjaman')}
+                                        </label>
+                                        <Input
+
+                                            name="sisapinjaman"
+                                            type="text"
+                                            id="sisapinjaman"
+                                            maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.sisapinjaman !== '' ? numToMoney(values.sisapinjaman) : ''}
+                                            disabled={true}
+                                        />
+
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
@@ -1398,70 +1648,7 @@ export default function AddPurchaseReceive(props) {
                                             value={values.notes2}
                                             disabled={values.draftpurchasereceive !== '' && values.draftpurchasereceive !== 'nodata'}
                                         />
-                                        {
-                                            values.istambahdeposit ?
-                                                <table width={'100%'}>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <label className="mt-3 form-label required" htmlFor="sisadeposit">
-                                                                    {i18n.t('Sisa Deposit')}
-                                                                </label>
-                                                                <Input
-                                                                    name="sisadeposit"
-                                                                    type="text"
-                                                                    id="sisadeposit"
-                                                                    maxLength={100}
-
-                                                                    onChange={handleChange}
-                                                                    // onChange={val => handleInputNama(val)}
-                                                                    onBlur={handleBlur}
-                                                                    value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
-                                                                    disabled={true}
-                                                                />
-                                                            </td>
-                                                            <td>
-                                                                <label className="mt-3 form-label required" htmlFor="tambahdeposit">
-                                                                    {i18n.t('Tambah Deposit')}
-                                                                </label>
-                                                                <Input
-                                                                    name="tambahdeposit"
-                                                                    type="text"
-                                                                    id="tambahdeposit"
-                                                                    maxLength={100}
-
-                                                                    onChange={handleChange}
-                                                                    // onChange={val => handleInputNama(val)}
-                                                                    onBlur={handleBlur}
-                                                                    value={new String(values.tambahdeposit).replaceAll(".", "") !== '' ? numToMoney(parseFloat(new String(values.tambahdeposit).replaceAll(".", ""))) : ''}
-                                                                    disabled={false}
-                                                                    style={{ borderColor: 'red' }}
-                                                                />
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                :
-                                                <div>
-                                                    <label className="mt-3 form-label required" htmlFor="sisadeposit">
-                                                        {i18n.t('Sisa Deposit')}
-                                                    </label>
-                                                    <Input
-
-                                                        name="sisadeposit"
-                                                        type="text"
-                                                        id="sisadeposit"
-                                                        maxLength={100}
-
-                                                        onChange={handleChange}
-                                                        // onChange={val => handleInputNama(val)}
-                                                        onBlur={handleBlur}
-                                                        value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
-                                                        disabled={true}
-                                                    />
-                                                </div>
-                                        }
-
+                                        
 
                                         <label className="mt-3 form-label required" htmlFor="totalprice">
                                             {i18n.t('Total Nota')}
@@ -1527,7 +1714,7 @@ export default function AddPurchaseReceive(props) {
                                             onChange={handleChange}
                                             // onChange={val => handleInputNama(val)}
                                             onBlur={handleBlur}
-                                            value={calculateTransfer(values.totalprice,values.sisadeposit)?numToMoney(calculateTransfer(values.totalprice,values.sisadeposit)):0}
+                                            value={calculateTransfer(values.totalprice,values.sisadeposit,values.sisapinjaman)?numToMoney(calculateTransfer(values.totalprice,values.sisadeposit,values.sisapinjaman)):0}
                                             disabled={true}
                                         />
                                     </div>
@@ -1814,7 +2001,7 @@ export default function AddPurchaseReceive(props) {
                                 {
                                     // ListItemsPurchaseReceiveBiaya.length == 0?'':
                                     <div className="row justify-content-center">
-                                        <h4>{'Input Biaya'}</h4>
+                                        <h4>{'Input Penambahan Biaya'}</h4>
                                         <table id="tablegrid">
                                             <tbody>
                                                 <tr>
@@ -1851,8 +2038,9 @@ export default function AddPurchaseReceive(props) {
                                                                     id="namabiaya"
                                                                     // onChange={val => handleInputChangeBiaya(val,i)}
                                                                     // onBlur={handleBlur}
-                                                                    value={x.namabiaya}
-                                                                    disabled={true}
+                                                                    value={x.namabiayacustom}
+                                                                    onChange={val => handleInputChangeBiaya(val, i)}
+                                                                    disabled={x.namabiaya == 'BOAT' || x.namabiaya == 'BANTUAN'?false:true}
                                                                 /></td>
                                                                 <td><Input
                                                                     name="qty"
@@ -1869,6 +2057,90 @@ export default function AddPurchaseReceive(props) {
                                                                         type="text"
                                                                         id="price"
                                                                         onChange={val => handleInputChangeBiaya(val, i)}
+                                                                        onBlur={handleBlur}
+                                                                        value={x.price !== '' ? numToMoney(parseFloat(x.price)) : ''}
+                                                                        disabled={x.namabiaya == 'BOX' || x.namabiaya == 'ONGKOS'}
+                                                                    /></td>
+
+                                                                <td style={{ width: '15%' }}>
+                                                                    <Input
+                                                                        name="subtotal"
+                                                                        type="text"
+                                                                        id="subtotal"
+                                                                        // onChange={val => handleInputChangePrice(val,i)}
+                                                                        onBlur={handleBlur}
+                                                                        value={x.subtotal !== '' ? numToMoney(parseFloat(x.subtotal)) : ''}
+                                                                        disabled={true}
+                                                                    /></td>
+
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+
+                                {
+                                    // ListItemsPurchaseReceiveBiaya.length == 0?'':
+                                    <div className="row justify-content-center">
+                                        <h4>{'Input Pengurangan Biaya'}</h4>
+                                        <table id="tablegrid">
+                                            <tbody>
+                                                <tr>
+                                                    <th>
+                                                        {/* <IconButton 
+                                            style={{color:'white'}}
+                                                onClick={() => handleAddBiaya()}
+                                            >
+                                                <AddIcon style={{ fontSize: 25 }}/>
+                                            </IconButton> */}
+                                                    </th>
+                                                    <th >{i18n.t('Nama')}</th>
+                                                    <th >{i18n.t('Qty')}</th>
+                                                    <th >{i18n.t('Price')}</th>
+                                                    <th >{i18n.t('Subtotal Price')}</th>
+                                                </tr>
+                                                {
+                                                    ListItemsPurchaseReceivePenguranganBiaya.map((x, i) => {
+                                                        return (
+                                                            <tr>
+                                                                <td >
+                                                                    <IconButton
+                                                                        color={'primary'}
+                                                                        // style={{color:'white'}}
+                                                                        onClick={() => handleRemovePenguranganBiaya(i)}
+                                                                    // hidden={showplusdebit}
+                                                                    >
+                                                                        <DeleteIcon style={{ fontSize: 18 }} />
+                                                                    </IconButton>
+                                                                </td>
+                                                                <td><Input
+                                                                    name="namabiaya"
+                                                                    type="text"
+                                                                    id="namabiaya"
+                                                                    // onChange={val => handleInputChangeBiaya(val,i)}
+                                                                    // onBlur={handleBlur}
+                                                                    value={x.namabiayacustom}
+                                                                    onChange={val => handleInputChangePenguranganBiaya(val, i)}
+                                                                    disabled={x.namabiaya == 'BOAT' || x.namabiaya == 'BANTUAN'?false:true}
+                                                                /></td>
+                                                                <td><Input
+                                                                    name="qty"
+                                                                    type="text"
+                                                                    id="qty"
+                                                                    onChange={val => handleInputChangePenguranganBiaya(val, i)}
+                                                                    onBlur={handleBlur}
+                                                                    value={x.qty}
+                                                                /></td>
+
+                                                                <td style={{ width: '15%' }}>
+                                                                    <Input
+                                                                        name="price"
+                                                                        type="text"
+                                                                        id="price"
+                                                                        onChange={val => handleInputChangePenguranganBiaya(val, i)}
                                                                         onBlur={handleBlur}
                                                                         value={x.price !== '' ? numToMoney(parseFloat(x.price)) : ''}
                                                                         disabled={x.namabiaya == 'BOX' || x.namabiaya == 'ONGKOS'}

@@ -1,12 +1,17 @@
-export const calculateSetor = (totalnota, sisadeposit)  =>{
+export const calculateSetor = (totalnota, sisadeposit,sisapinjaman)  =>{
     let setor = 0;
+    let setorPinjaman = 0;
     let tempTotalNota  = 0;
     let tempSisaDeposit  = 0;
+    let tempSisaPinjaman  = 0;
     if(totalnota != null && totalnota != undefined && totalnota !== ''){
         tempTotalNota = totalnota;
     }
     if(sisadeposit != null && sisadeposit != undefined && sisadeposit !== ''){
         tempSisaDeposit = sisadeposit;
+    }
+    if(sisapinjaman != null && sisapinjaman != undefined && sisapinjaman !== ''){
+        tempSisaPinjaman = sisapinjaman;
     }
     if(tempSisaDeposit < 1){
         setor = 0;
@@ -15,23 +20,49 @@ export const calculateSetor = (totalnota, sisadeposit)  =>{
     }else if(tempTotalNota > tempSisaDeposit){
         setor = tempSisaDeposit;
     }
-    return setor;
+
+    //Pinjaman
+    tempTotalNota = tempTotalNota - setor;
+    if(tempSisaPinjaman < 1){
+        setorPinjaman = 0;
+    }else if(tempSisaPinjaman >= tempTotalNota){
+        setorPinjaman = tempTotalNota;
+    }else if(tempTotalNota > tempSisaPinjaman){
+        setorPinjaman = tempSisaPinjaman;
+    }
+
+    // return setor;
+    return {setordeposit:setor,setorpinjaman:setorPinjaman};
 }
 
-export const calculateTransfer = (totalnota, sisadeposit)  =>{
+export const calculateTransfer = (totalnota, sisadeposit, sisapinjaman)  =>{
     let transfer = 0;
     let tempTotalNota  = 0;
     let tempSisaDeposit  = 0;
+    let tempSisaPinjaman  = 0;
     if(totalnota != null && totalnota != undefined && totalnota !== ''){
         tempTotalNota = totalnota;
     }
     if(sisadeposit != null && sisadeposit != undefined && sisadeposit !== ''){
         tempSisaDeposit = sisadeposit;
     }
+    if(sisapinjaman != null && sisapinjaman != undefined && sisapinjaman !== ''){
+        tempSisaPinjaman = sisapinjaman;
+    }
     if(tempSisaDeposit <= 0){
         transfer = tempTotalNota;
     }else if(tempTotalNota > tempSisaDeposit){
         transfer = tempTotalNota - tempSisaDeposit;
+    }
+
+    //pinjaman
+    if(transfer > 0){
+        if(tempSisaPinjaman > 0){
+            transfer = transfer - tempSisaPinjaman;
+            if(transfer < 0){
+                transfer = 0;
+            }
+        }
     }
     return transfer;
 }

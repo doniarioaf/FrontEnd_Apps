@@ -60,7 +60,9 @@ export default function EditPurchaseReceive(props) {
     const [InputTotalPrice, setInputTotalPrice] = useState(0);
     const [IsDefaultSetorTotalPrice, setIsDefaultSetorTotalPrice] = useState(true);
     const [InputSetor, setInputSetor] = useState(0);
+    const [InputSetorPinjaman, setInputSetorPinjaman] = useState(0);
     const [SisaDeposit, setSisaDeposit] = useState(0);
+    const [SisaPinjaman, setSisaPinjaman] = useState(0);
     const [TambahDeposit, setTambahDeposit] = useState(0);
     const [IsTambahDeposit, setIsTambahDeposit] = useState(false);
 
@@ -117,6 +119,7 @@ export default function EditPurchaseReceive(props) {
                 {
                     'idcharge': el.id,
                     'namabiaya': el.nama,
+                    'namabiayacustom': el.nama,
                     'qty': el.nama == 'SETOR' ? 1 : 0,
                     'price': 0,
                     'subtotal': 0
@@ -162,15 +165,19 @@ export default function EditPurchaseReceive(props) {
         setInputFlightNo(det.flightno?det.flightno:'');
         setInputSMU(det.smu?det.smu:'');
         let sisaDeposit = det.sisaDeposit ? det.sisaDeposit : 0;
+        let sisaPinjaman = det.sisaPinjaman ? det.sisaPinjaman : 0;
         let setor = det.setor ? det.setor : 0;
+        let setorPinjaman = det.setor_pinjaman ? det.setor_pinjaman : 0;
         let totalSisaDeposit = parseFloat(sisaDeposit) + parseFloat(setor);
+        let totalSisaPinjaman = parseFloat(sisaPinjaman) + parseFloat(setorPinjaman);
         let totalprice = det.totalprice ? det.totalprice : 0;
-        let transfer = totalprice - setor; 
+        let transfer = totalprice - (setor + setorPinjaman); 
         setSisaDeposit(totalSisaDeposit);
+        setSisaPinjaman(totalSisaPinjaman);
         setInputTotalPrice(totalprice);
         setInputSetor(setor);
         setIsDefaultSetorTotalPrice(det.isdefaultvaluesetor);
-        setInputTransfer(transfer);
+        // setInputTransfer(transfer);
 
         let listfilteroutputHidup = det.items.filter(output => output.type == 'H');
         let listfilteroutputMati = det.items.filter(output => output.type == 'M');
@@ -246,6 +253,7 @@ export default function EditPurchaseReceive(props) {
             {
                 'idcharge': el.idcharge,
                 'namabiaya': el.chargename,
+                'namabiayacustom': el.chargenamecustom?el.chargenamecustom:el.chargename,
                 'qty': el.qty ? el.qty : 0,
                 'price': el.price ? el.price : 0,
                 'subtotal': el.subtotalprice ? el.subtotalprice : 0
@@ -382,8 +390,11 @@ export default function EditPurchaseReceive(props) {
             setLoading(true);
 
             let sisadeposit = values.sisadeposit;
+            let sisapinjaman = values.sisapinjaman;
             let totalprice = new String(values.totalprice).replaceAll('.', '') !== '' ? new String(values.totalprice).replaceAll('.', '') : 0;
-            let setor = calculateSetor(totalprice,sisadeposit);
+            let objCalc = calculateSetor(totalprice,sisadeposit,sisapinjaman);
+            let setor = objCalc.setordeposit;
+            let setorPinjaman = objCalc.setorpinjaman;
 
             let obj = new Object();
             obj.idvendor = SelVendor;
@@ -398,6 +409,7 @@ export default function EditPurchaseReceive(props) {
             obj.accountnamebank = values.accnamabank;
             obj.totalprice = totalprice;//new String(values.totalprice).replaceAll('.', '') !== '' ? new String(values.totalprice).replaceAll('.', '') : 0;
             obj.setor = setor;//new String(values.setor).replaceAll('.', '') !== '' ? new String(values.setor).replaceAll('.', '') : 0;
+            obj.setor_pinjaman = setorPinjaman;
             obj.isdefaultvaluesetor = IsDefaultSetorTotalPrice;
             obj.tambahdeposit = new String(values.tambahdeposit).replaceAll('.', '') !== '' ? new String(values.tambahdeposit).replaceAll('.', '') : 0;
             let items = [];
@@ -457,12 +469,19 @@ export default function EditPurchaseReceive(props) {
             if (ListItemsPurchaseReceiveBiaya.length > 0) {
                 for (let i = 0; i < ListItemsPurchaseReceiveBiaya.length; i++) {
                     let el = ListItemsPurchaseReceiveBiaya[i];
+                    let namaCharge = null;
+                    if(el.namabiayacustom !== ''){
+                        if(new String(el.namabiayacustom).toLowerCase() !== new String(el.namabiaya).toLowerCase()){
+                            namaCharge = el.namabiayacustom;
+                        }
+                    }
                     charges.push(
                         {
                             'idcharge': el.idcharge,
                             'qty': el.qty,
                             'price': new String(el.price).replaceAll('.', '') !== '' ? new String(el.price).replaceAll('.', '') : '0',
-                            'subtotalprice': new String(el.subtotal).replaceAll('.', '') !== '' ? new String(el.subtotal).replaceAll('.', '') : '0'
+                            'subtotalprice': new String(el.subtotal).replaceAll('.', '') !== '' ? new String(el.subtotal).replaceAll('.', '') : '0',
+                            'chargenamecustom':namaCharge
                         }
                     );
                 }
@@ -680,6 +699,12 @@ export default function EditPurchaseReceive(props) {
 
 
         }
+         if (name == 'namabiaya') {
+            const list = [...ListItemsPurchaseReceiveBiaya];
+            list[index]['namabiayacustom'] = value;
+            setListItemsPurchaseReceiveBiaya(list);
+            flag =false;
+        }
         if (flag) {
             const list = [...ListItemsPurchaseReceiveBiaya];
             let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
@@ -761,6 +786,7 @@ export default function EditPurchaseReceive(props) {
         let valdata = data?.data ? data.data : '';
         
         setInputSetor(0);
+        setInputSetorPinjaman(0);
 
         setListCategoryProduct([]);
         setListItemsPurchaseReceive([]);
@@ -789,10 +815,16 @@ export default function EditPurchaseReceive(props) {
         dispatch(actions.getPurchaseReceiveData({ url: '/searchvendor?idvendor=' + id }, successHandlerVendor, errorHandler));
     }
     function successHandlerVendor(data, propsdata) {
+
+        //penggunaan usedDeposit ini harus di cek lagi, sementara dibiarin karena vendor nya disabled atau tidak bisa diubah
+        //jika bisa diubah, harusnya usedDeposit di tambahkan ke sisa deposit ke vendor yg sama atau sub dari vendor parent(jika vendor parent)
+        //jika tidak bisa tertambah  ke deposit vendor yang lain
         let usedDeposit = 0;
+        let usedPinjaman = 0;
         if(propsdata.detail){
             let dateDet = propsdata.detail ?propsdata.detail:null;
             usedDeposit = dateDet.setor?parseFloat(dateDet.setor):0;
+            usedPinjaman = dateDet.setor_pinjaman?parseFloat(dateDet.setor_pinjaman):0;
         }
 
         const theDataProd = data.data.categoryproductOpt.reduce((obj, el) => [
@@ -807,6 +839,12 @@ export default function EditPurchaseReceive(props) {
         sisaDeposit = sisaDeposit + usedDeposit;
         setListCategoryProduct(theDataProd);
         setSisaDeposit(sisaDeposit);
+
+        let sisaPinjaman = data.data.sisaPinjaman ? data.data.sisaPinjaman : 0;
+        sisaPinjaman = sisaPinjaman + usedPinjaman;
+
+        setSisaPinjaman(sisaPinjaman);
+        
 
         const theDataDraftPR = data.data.draftPurchaseReceiveOpt.reduce((obj, el) => [
             ...obj,
@@ -984,6 +1022,8 @@ export default function EditPurchaseReceive(props) {
                     notes: InputNotes,
                     totalprice: InputTotalPrice,
                     isdefaultsetortotalprice: IsDefaultSetorTotalPrice,
+                    setorpinjaman: InputSetorPinjaman,
+                    sisapinjaman: SisaPinjaman,
                     setor: InputSetor,
                     sisadeposit: SisaDeposit,
                     istambahdeposit: IsTambahDeposit,
@@ -1152,6 +1192,87 @@ export default function EditPurchaseReceive(props) {
                                             disabled={true}
                                         />
 
+                                        {
+                                            values.istambahdeposit ?
+                                                <table width={'100%'}>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <label className="mt-3 form-label required" htmlFor="sisadeposit">
+                                                                    {i18n.t('Sisa Deposit')}
+                                                                </label>
+                                                                <Input
+                                                                    name="sisadeposit"
+                                                                    type="text"
+                                                                    id="sisadeposit"
+                                                                    maxLength={100}
+
+                                                                    onChange={handleChange}
+                                                                    // onChange={val => handleInputNama(val)}
+                                                                    onBlur={handleBlur}
+                                                                    value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
+                                                                    disabled={true}
+                                                                />
+                                                            </td>
+                                                            <td>
+                                                                <label className="mt-3 form-label required" htmlFor="tambahdeposit">
+                                                                    {i18n.t('Tambah Deposit')}
+                                                                </label>
+                                                                <Input
+                                                                    name="tambahdeposit"
+                                                                    type="text"
+                                                                    id="tambahdeposit"
+                                                                    maxLength={100}
+
+                                                                    onChange={handleChange}
+                                                                    // onChange={val => handleInputNama(val)}
+                                                                    onBlur={handleBlur}
+                                                                    value={new String(values.tambahdeposit).replaceAll(".", "") !== '' ? numToMoney(parseFloat(new String(values.tambahdeposit).replaceAll(".", ""))) : ''}
+                                                                    disabled={false}
+                                                                    style={{ borderColor: 'red' }}
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                :
+                                                <div>
+                                                    <label className="mt-3 form-label required" htmlFor="sisadeposit">
+                                                        {i18n.t('Sisa Deposit')}
+                                                    </label>
+                                                    <Input
+
+                                                        name="sisadeposit"
+                                                        type="text"
+                                                        id="sisadeposit"
+                                                        maxLength={100}
+
+                                                        onChange={handleChange}
+                                                        // onChange={val => handleInputNama(val)}
+                                                        onBlur={handleBlur}
+                                                        value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
+                                                        disabled={true}
+                                                    />
+                                                </div>
+                                        }
+
+                                        <label className="mt-3 form-label required" htmlFor="sisapinjaman">
+                                            {i18n.t('Sisa Pinjaman')}
+                                        </label>
+                                        <Input
+
+                                            name="sisapinjaman"
+                                            type="text"
+                                            id="sisapinjaman"
+                                            maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.sisapinjaman !== '' ? numToMoney(values.sisapinjaman) : ''}
+                                            disabled={true}
+                                        />
+
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
@@ -1235,69 +1356,7 @@ export default function EditPurchaseReceive(props) {
                                             value={values.notes2}
                                             disabled={values.draftpurchasereceive !== '' && values.draftpurchasereceive !== 'nodata'}
                                         />
-                                        {
-                                            values.istambahdeposit ?
-                                                <table width={'100%'}>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <label className="mt-3 form-label required" htmlFor="sisadeposit">
-                                                                    {i18n.t('Sisa Deposit')}
-                                                                </label>
-                                                                <Input
-                                                                    name="sisadeposit"
-                                                                    type="text"
-                                                                    id="sisadeposit"
-                                                                    maxLength={100}
-
-                                                                    onChange={handleChange}
-                                                                    // onChange={val => handleInputNama(val)}
-                                                                    onBlur={handleBlur}
-                                                                    value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
-                                                                    disabled={true}
-                                                                />
-                                                            </td>
-                                                            <td>
-                                                                <label className="mt-3 form-label required" htmlFor="tambahdeposit">
-                                                                    {i18n.t('Tambah Deposit')}
-                                                                </label>
-                                                                <Input
-                                                                    name="tambahdeposit"
-                                                                    type="text"
-                                                                    id="tambahdeposit"
-                                                                    maxLength={100}
-
-                                                                    onChange={handleChange}
-                                                                    // onChange={val => handleInputNama(val)}
-                                                                    onBlur={handleBlur}
-                                                                    value={new String(values.tambahdeposit).replaceAll(".", "") !== '' ? numToMoney(parseFloat(new String(values.tambahdeposit).replaceAll(".", ""))) : ''}
-                                                                    disabled={false}
-                                                                    style={{ borderColor: 'red' }}
-                                                                />
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                :
-                                                <div>
-                                                    <label className="mt-3 form-label required" htmlFor="sisadeposit">
-                                                        {i18n.t('Sisa Deposit')}
-                                                    </label>
-                                                    <Input
-
-                                                        name="sisadeposit"
-                                                        type="text"
-                                                        id="sisadeposit"
-                                                        maxLength={100}
-
-                                                        onChange={handleChange}
-                                                        // onChange={val => handleInputNama(val)}
-                                                        onBlur={handleBlur}
-                                                        value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
-                                                        disabled={true}
-                                                    />
-                                                </div>
-                                        }
+                                        
 
 
                                         <label className="mt-3 form-label required" htmlFor="totalprice">
@@ -1328,7 +1387,7 @@ export default function EditPurchaseReceive(props) {
                                             onChange={handleChange}
                                             // onChange={val => handleInputNama(val)}
                                             onBlur={handleBlur}
-                                            value={calculateTransfer(values.totalprice,values.sisadeposit)?numToMoney(calculateTransfer(values.totalprice,values.sisadeposit)):0}
+                                            value={calculateTransfer(values.totalprice,values.sisadeposit,values.sisapinjaman)?numToMoney(calculateTransfer(values.totalprice,values.sisadeposit,values.sisapinjaman)):0}
                                             disabled={true}
                                         />
                                         {/* <label className="mt-3 form-label required" htmlFor="totalprice">
@@ -1674,8 +1733,9 @@ export default function EditPurchaseReceive(props) {
                                                                     id="namabiaya"
                                                                     // onChange={val => handleInputChangeBiaya(val,i)}
                                                                     // onBlur={handleBlur}
-                                                                    value={x.namabiaya}
-                                                                    disabled={true}
+                                                                    value={x.namabiayacustom}
+                                                                    onChange={val => handleInputChangeBiaya(val, i)}
+                                                                    disabled={x.namabiaya == 'BOAT' || x.namabiaya == 'BANTUAN'?false:true}
                                                                 /></td>
                                                                 <td><Input
                                                                     name="qty"

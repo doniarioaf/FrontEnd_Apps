@@ -98,7 +98,8 @@ import React, {useState,
         let det = data.data;
         let totalprice = det.totalprice?det.totalprice:0;
         let setor = det.setor?det.setor:0;
-        let transfer = parseFloat(totalprice) - parseFloat(setor);
+        let setorPinjaman = det.setor_pinjaman?det.setor_pinjaman:0;
+        let transfer = parseFloat(totalprice) - (parseFloat(setor) + parseFloat(setorPinjaman));
         if(transfer < 1){
             transfer = 0;
         }
@@ -417,7 +418,7 @@ import React, {useState,
                             ListItemBiaya.map((x, i) => {
                                 return (
                                     <tr>
-                                        <td>{x.chargename}</td>
+                                        <td>{x.chargenamecustom?x.chargenamecustom :x.chargename}</td>
                                         <td>{x.qty}</td>
                                         <td>{x.price?numToMoney(x.price):0}</td>
                                         <td>{x.subtotalprice?numToMoney(x.subtotalprice):0}</td>
