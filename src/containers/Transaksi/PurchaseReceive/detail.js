@@ -57,6 +57,7 @@ import React, {useState,
     const [ListItemHidup, setListItemHidup] = useState([]);
     const [ListItemMati, setListItemMati] = useState([]);
     const [ListItemBiaya, setListItemBiaya] = useState([]);
+    const [ListItemPenguranganBiaya, setListItemPenguranganBiaya] = useState([]);
     const [ListItemInventori, setListItemInventori] = useState([]);
 
     const handleToggle = (flag) => {
@@ -109,9 +110,14 @@ import React, {useState,
         let listItems = det.items?det.items:[];
         let listfilteroutputHidup = listItems.filter(output => output.type == 'H');
         let listfilteroutputMati = listItems.filter(output => output.type == 'M');
+        let listCharge = det.charges?det.charges:[];
+        let listPenambahanBiaya = listCharge.filter(output => output.chargename == 'BOX' || output.chargename == 'BOAT' || output.chargename == 'BANTUAN');
+        let listPenguranganBiaya = listCharge.filter(output => output.chargename == 'ONGKOS' || output.chargename == 'SETOR' || output.chargename == 'SETORPINJAMAN');
+
         setListItemHidup(listfilteroutputHidup);
         setListItemMati(listfilteroutputMati);
-        setListItemBiaya(det.charges?det.charges:[]);
+        setListItemBiaya(listPenambahanBiaya);
+        setListItemPenguranganBiaya(listPenguranganBiaya);
         setListItemInventori(det.inventori?det.inventori:[]);
         setLoading(false);
     }
@@ -405,7 +411,7 @@ import React, {useState,
 
             {
                 <div className="row justify-content-center">
-                    <h4>{'Biaya'}</h4>
+                    <h4>{'Penambahan Biaya'}</h4>
                     <table id="tablegrid">
                     <tbody>
                         <tr>
@@ -416,6 +422,34 @@ import React, {useState,
                         </tr>
                         {
                             ListItemBiaya.map((x, i) => {
+                                return (
+                                    <tr>
+                                        <td>{x.chargenamecustom?x.chargenamecustom :x.chargename}</td>
+                                        <td>{x.qty}</td>
+                                        <td>{x.price?numToMoney(x.price):0}</td>
+                                        <td>{x.subtotalprice?numToMoney(x.subtotalprice):0}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                    </table>
+                </div>
+            }
+
+            {
+                <div className="row justify-content-center">
+                    <h4>{'Pengurangan Biaya'}</h4>
+                    <table id="tablegrid">
+                    <tbody>
+                        <tr>
+                        <th >{i18n.t('Nama')}</th>
+                        <th >{i18n.t('Qty')}</th>
+                        <th >{i18n.t('Price')}</th>
+                        <th >{i18n.t('Subtotal Price')}</th>
+                        </tr>
+                        {
+                            ListItemPenguranganBiaya.map((x, i) => {
                                 return (
                                     <tr>
                                         <td>{x.chargenamecustom?x.chargenamecustom :x.chargename}</td>

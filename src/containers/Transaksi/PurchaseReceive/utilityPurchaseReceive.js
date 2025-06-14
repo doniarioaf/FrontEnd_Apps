@@ -22,14 +22,14 @@ export const calculateSetor = (totalnota, sisadeposit,sisapinjaman)  =>{
     }
 
     //Pinjaman
-    tempTotalNota = tempTotalNota - setor;
-    if(tempSisaPinjaman < 1){
-        setorPinjaman = 0;
-    }else if(tempSisaPinjaman >= tempTotalNota){
-        setorPinjaman = tempTotalNota;
-    }else if(tempTotalNota > tempSisaPinjaman){
-        setorPinjaman = tempSisaPinjaman;
-    }
+    // tempTotalNota = tempTotalNota - setor;
+    // if(tempSisaPinjaman < 1){
+    //     setorPinjaman = 0;
+    // }else if(tempSisaPinjaman >= tempTotalNota){
+    //     setorPinjaman = tempTotalNota;
+    // }else if(tempTotalNota > tempSisaPinjaman){
+    //     setorPinjaman = tempSisaPinjaman;
+    // }
 
     // return setor;
     return {setordeposit:setor,setorpinjaman:setorPinjaman};
@@ -56,14 +56,14 @@ export const calculateTransfer = (totalnota, sisadeposit, sisapinjaman)  =>{
     }
 
     //pinjaman
-    if(transfer > 0){
-        if(tempSisaPinjaman > 0){
-            transfer = transfer - tempSisaPinjaman;
-            if(transfer < 0){
-                transfer = 0;
-            }
-        }
-    }
+    // if(transfer > 0){
+    //     if(tempSisaPinjaman > 0){
+    //         transfer = transfer - tempSisaPinjaman;
+    //         if(transfer < 0){
+    //             transfer = 0;
+    //         }
+    //     }
+    // }
     return transfer;
 }
 
@@ -95,7 +95,9 @@ export const calculateTotalPrice = (listitems, listbiaya, listinventori)  =>{
      * BANTUAN = + totaprice
      * ONGKOS = - totaprice
      * SETOR = - totaprice
+     * SETORPINJAMAN = - totaprice
      */
+    console.log('totalPrice ',totalPrice);
     if(listbiaya != null && listbiaya.length > 0){
         for(let i=0; i < listbiaya.length > 0; i++){
             let det = listbiaya[i];
@@ -109,6 +111,7 @@ export const calculateTotalPrice = (listitems, listbiaya, listinventori)  =>{
             }
         }
     }
+    console.log('totalPrice ',totalPrice);
 
     if(listinventori != null && listinventori.length > 0){
         for(let i=0; i < listinventori.length > 0; i++){

@@ -328,7 +328,7 @@ export default function AddPurchaseReceive(props) {
             let totalprice = new String(values.totalprice).replaceAll('.', '') !== '' ? new String(values.totalprice).replaceAll('.', '') : 0;
             let objCalc = calculateSetor(totalprice,sisadeposit,sisapinjaman);
             let setor = objCalc.setordeposit;
-            let setorPinjaman = objCalc.setorpinjaman;
+            let setorPinjaman = 0;//objCalc.setorpinjaman;
 
             let obj = new Object();
             obj.idvendor = SelVendor;
@@ -343,7 +343,7 @@ export default function AddPurchaseReceive(props) {
             obj.accountnamebank = values.accnamabank;
             obj.totalprice = totalprice;//new String(values.totalprice).replaceAll('.', '') !== '' ? new String(values.totalprice).replaceAll('.', '') : 0;
             obj.setor = setor;//new String(values.setor).replaceAll('.', '') !== '' ? new String(values.setor).replaceAll('.', '') : 0;
-            obj.setor_pinjaman = setorPinjaman;
+            
             obj.isdefaultvaluesetor = IsDefaultSetorTotalPrice;
             obj.tambahdeposit = new String(values.tambahdeposit).replaceAll('.', '') !== '' ? new String(values.tambahdeposit).replaceAll('.', '') : 0;
             let items = [];
@@ -400,14 +400,21 @@ export default function AddPurchaseReceive(props) {
             obj.items = items;
 
             let charges = [];
-            if (ListItemsPurchaseReceiveBiaya.length > 0) {
-                for (let i = 0; i < ListItemsPurchaseReceiveBiaya.length; i++) {
-                    let el = ListItemsPurchaseReceiveBiaya[i];
+            let listCharge = [...ListItemsPurchaseReceiveBiaya];
+            for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+                listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+            }
+            if (listCharge.length > 0) {
+                for (let i = 0; i < listCharge.length; i++) {
+                    let el = listCharge[i];
                     let namaCharge = null;
                     if(el.namabiayacustom !== ''){
                         if(new String(el.namabiayacustom).toLowerCase() !== new String(el.namabiaya).toLowerCase()){
                             namaCharge = el.namabiayacustom;
                         }
+                    }
+                    if(el.namabiaya == 'SETORPINJAMAN'){
+                        setorPinjaman = new String(el.subtotal).replaceAll('.', '') !== '' ? new String(el.subtotal).replaceAll('.', '') : '0';
                     }
                     charges.push(
                         {
@@ -419,7 +426,8 @@ export default function AddPurchaseReceive(props) {
                         }
                     );
                 }
-            }
+            };
+            obj.setor_pinjaman = setorPinjaman;
             obj.charges = charges;
 
             let inventori = [];
