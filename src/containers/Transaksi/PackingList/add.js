@@ -581,7 +581,7 @@ export default function AddPackingList(props) {
                                         />
                                         <div className="invalid-feedback-custom">{ErrSelCustomer}</div>
 
-                                        <label className="mt-3 form-label required" htmlFor="city">
+                                        {/* <label className="mt-3 form-label required" htmlFor="city">
                                             {i18n.t('City')}
                                         </label>
                                         <Input
@@ -595,12 +595,12 @@ export default function AddPackingList(props) {
                                             // onChange={val => handleInputNama(val)}
                                             onBlur={handleBlur}
                                             value={values.city}
-                                        />
+                                        /> */}
 
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
-                                        <label className="mt-3 form-label required" htmlFor="attention">
+                                        {/* <label className="mt-3 form-label required" htmlFor="attention">
                                             {i18n.t('Attention')}
                                         </label>
                                         <Input
@@ -614,7 +614,7 @@ export default function AddPackingList(props) {
                                             // onChange={val => handleInputNama(val)}
                                             onBlur={handleBlur}
                                             value={values.attention}
-                                        />
+                                        /> */}
 
                                         <label className="mt-3 form-label required" htmlFor="flightnumber">
                                             {i18n.t('Flight Number')}

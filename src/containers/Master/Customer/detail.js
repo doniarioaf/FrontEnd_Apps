@@ -210,6 +210,13 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('City')}</span>
+                            <strong className="col-md-7">
+                                {value.city?value.city:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Phone Number')}</span>
                             <strong className="col-md-7">
                                 {value.phonenumber?value.phonenumber:''}

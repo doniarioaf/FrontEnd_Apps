@@ -39,6 +39,8 @@ export default function AddCustomer(props) {
     const [InputPhoneNumber, setInputPhoneNumber] = useState('');
     const [InputAttention, setInputAttention] = useState('');
 
+    const [InputCity, setInputCity] = useState('');
+
     const checkColumnMandatory = (values) => {
         let flag = true;
         setErrInputNama('');
@@ -86,6 +88,7 @@ export default function AddCustomer(props) {
             obj.grup = values.grup;
             obj.phonenumber = values.phonenumber;
             obj.attention = values.attention;
+            obj.city = values.city;
             dispatch(actions.submitCustomerData({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -129,7 +132,8 @@ export default function AddCustomer(props) {
                     address: InputAddress,
                     grup:InputGrup,
                     phonenumber:InputPhoneNumber,
-                    attention:InputAttention
+                    attention:InputAttention,
+                    city:InputCity
                 }
             }
             validate={values => {
@@ -143,6 +147,7 @@ export default function AddCustomer(props) {
                 setInputGrup(values.grup);
                 setInputPhoneNumber(values.phonenumber);
                 setInputAttention(values.attention);
+                setInputCity(values.city);
                 return errors;
             }}
             enableReinitialize="true"
@@ -255,6 +260,19 @@ export default function AddCustomer(props) {
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                        <label className="mt-3 form-label required" htmlFor="city">
+                                            {i18n.t('City')}
+                                        </label>
+                                        <Input
+                                            name="city"
+                                            type="text"
+                                            id="city"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.city}
+                                        />
+
+
                                     <label className="mt-3 form-label required" htmlFor="phonenumber">
                                             {i18n.t('Phone Number')}
                                         </label>

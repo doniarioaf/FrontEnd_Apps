@@ -39,6 +39,8 @@ export default function EditCustomer(props) {
     const [InputPhoneNumber, setInputPhoneNumber] = useState('');
     const [InputAttention, setInputAttention] = useState('');
 
+    const [InputCity, setInputCity] = useState('');
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -57,6 +59,7 @@ export default function EditCustomer(props) {
         setInputGrup(val.grup);
         setInputPhoneNumber(val.phonenumber);
         setInputAttention(val.attention);
+        setInputCity(val.city);
         setLoading(false);
     }
 
@@ -107,6 +110,7 @@ export default function EditCustomer(props) {
             obj.grup = values.grup;
             obj.phonenumber = values.phonenumber;
             obj.attention = values.attention;
+            obj.city = values.city;
             dispatch(actions.submitCustomerData({ url: '/' + id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -150,7 +154,8 @@ export default function EditCustomer(props) {
                     address: InputAddress,
                     grup:InputGrup,
                     phonenumber:InputPhoneNumber,
-                    attention:InputAttention
+                    attention:InputAttention,
+                    city:InputCity
                 }
             }
             validate={values => {
@@ -164,6 +169,7 @@ export default function EditCustomer(props) {
                 setInputGrup(values.grup);
                 setInputPhoneNumber(values.phonenumber);
                 setInputAttention(values.attention);
+                setInputCity(values.city);
                 return errors;
             }}
             enableReinitialize="true"
@@ -274,6 +280,18 @@ export default function EditCustomer(props) {
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                        <label className="mt-3 form-label required" htmlFor="city">
+                                            {i18n.t('City')}
+                                        </label>
+                                        <Input
+                                            name="city"
+                                            type="text"
+                                            id="city"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.city}
+                                        />
+
                                         <label className="mt-3 form-label required" htmlFor="phonenumber">
                                             {i18n.t('Phone Number')}
                                         </label>
