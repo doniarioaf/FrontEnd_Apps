@@ -182,6 +182,13 @@ import React, {useState,
                     (
                         <section>
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_FOR_CATEGORY')}</span>
+                            <strong className="col-md-7">
+                                {value.forcategory?value.forcategory:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_NAME')}</span>
                             <strong className="col-md-7">
                                 {value.nama?value.nama:''}

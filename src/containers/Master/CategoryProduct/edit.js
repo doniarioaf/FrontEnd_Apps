@@ -13,6 +13,7 @@ import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { editCategoryProduct_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import momentLocalizer from 'react-widgets-moment';
+import { DropdownList } from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 
 export default function EditCategoryProduct(props) {
@@ -35,6 +36,10 @@ export default function EditCategoryProduct(props) {
     const [InputWeightTo, setInputWeightTo] = useState('');
     const [InputJumlahItemsPerKoli, setInputJumlahItemsPerKoli] = useState('');
 
+    const [ListForCategory, setListForCategory] = useState([{'value':'VENDOR','label':'Vendor'},{'value':'CUSTOMER','label':'Customer'}]);
+    const [SelForCategory, setSelForCategory] = useState('');
+    const [ErrSelForCategory, setErrSelForCategory] = useState('');
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -49,6 +54,7 @@ export default function EditCategoryProduct(props) {
         setInputWeightFrom(val.weightfromingram);
         setInputWeightTo(val.weighttoingram);
         setInputJumlahItemsPerKoli(val.jumlahitemsperkoli);
+        setSelForCategory(val.forcategory)
         setLoading(false);
     }
 
@@ -57,6 +63,7 @@ export default function EditCategoryProduct(props) {
         setErrInputNama('');
         setErrInputSize('');
         setErrInputWeight('');
+        setErrSelForCategory('');
         if (values.nama == '') {
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
@@ -69,7 +76,16 @@ export default function EditCategoryProduct(props) {
             setErrInputWeight(i18n.t('label_REQUIRED'));
             flag = false;
         }
+        if(SelForCategory == ''){
+            setErrSelForCategory(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
         return flag;
+    }
+
+    const handleChangeForCategory = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelForCategory(id);
     }
 
     const succesHandlerSubmit = (data, propsdata) => {
@@ -95,6 +111,7 @@ export default function EditCategoryProduct(props) {
             obj.weightfromingram = values.weightfrom !== '' ? values.weightfrom : 0;
             obj.weighttoingram = values.weightto !== '' ? values.weightto : 0;
             obj.jumlahitemsperkoli = values.jumlahitemsperkoli !== '' ? values.jumlahitemsperkoli : 0;
+            obj.forcategory = SelForCategory;
             dispatch(actions.submitCategoryProductData({ url: '/' + id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -135,6 +152,7 @@ export default function EditCategoryProduct(props) {
                     weightfrom: InputWeightFrom,
                     weightto: InputWeightTo,
                     jumlahitemsperkoli: InputJumlahItemsPerKoli,
+                    forcategory:SelForCategory
                 }
             }
             validate={values => {
@@ -171,6 +189,24 @@ export default function EditCategoryProduct(props) {
 
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                        <label className="mt-3 form-label required" htmlFor="forcategory">
+                                            {i18n.t('label_FOR_CATEGORY')}
+                                        </label>
+                                        <span style={{ color: 'red' }}>*</span>
+
+                                        <DropdownList
+                                            name="forcategory"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeForCategory(val)}
+                                            onBlur={val => setFieldTouched("forcategory", val?.value ? val.value : '')}
+                                            data={ListForCategory}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            value={values.forcategory}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrSelForCategory}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="nama">
                                             {i18n.t('label_NAME')}

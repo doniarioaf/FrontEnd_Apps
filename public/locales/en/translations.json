@@ -128,6 +128,7 @@
   "label_RECEIVE_FROM":"Receive From",
   "label_ACC_NO":"Account Number Bank",
   "label_ACC_NAME":"Account Name Bank",
+  "label_FOR_CATEGORY":"For Category",
   "validation": {
     "employeemanggala":{
       "noidentitas":{
