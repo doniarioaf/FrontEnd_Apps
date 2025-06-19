@@ -157,6 +157,7 @@ export default function AddPackingList(props) {
         setInputCustomer(val.customerName+'/'+val.customerALias);
         setInputCustomerAddress(val.customerAddress);
         setInputAttention(val.attention);
+        setInputPhone(val.customerPhone?val.customerPhone:'');
 
         setLoading(true);
         dispatch(actions.getInvoiceData({ url: '/getpackinglist/'+id }, successHandlerPackingList, errorHandler));
@@ -280,7 +281,7 @@ export default function AddPackingList(props) {
                                         // onChange={val => handleInputNama(val)}
                                         onBlur={handleBlur}
                                         value={values.phone}
-                                        // disabled={true}
+                                        disabled={true}
                                     />
 
                                     <label className="mt-3 form-label required" htmlFor="kurs">

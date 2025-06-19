@@ -291,7 +291,7 @@ export default function AddPackingList(props) {
                                         // onChange={val => handleInputNama(val)}
                                         onBlur={handleBlur}
                                         value={values.phone}
-                                        // disabled={true}
+                                        disabled={true}
                                     />
 
                                     <label className="mt-3 form-label required" htmlFor="kurs">

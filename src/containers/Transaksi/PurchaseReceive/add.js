@@ -350,7 +350,8 @@ export default function AddPurchaseReceive(props) {
             if (ListItemsPurchaseReceive.length > 0) {
                 for (let i = 0; i < ListItemsPurchaseReceive.length; i++) {
                     let el = ListItemsPurchaseReceive[i];
-                    if (parseInt(el.qty) > 0 && el.idproduct !== 'TOTAL') {
+                    // if (parseInt(el.qty) > 0 && el.idproduct !== 'TOTAL') {
+                    if (el.idproduct !== 'TOTAL') {
                         items.push(
                             {
                                 'idproduct': el.idproduct,
@@ -381,6 +382,7 @@ export default function AddPurchaseReceive(props) {
                 for (let i = 0; i < ListItemsPurchaseReceiveMati.length; i++) {
                     let el = ListItemsPurchaseReceiveMati[i];
                     if (parseInt(el.qtymati) > 0) {
+                    // if (true) {
                         items.push(
                             {
                                 'idproduct': el.idproduct,
@@ -900,9 +902,9 @@ export default function AddPurchaseReceive(props) {
         for(let i =0; i < listfilteroutputHidup.length; i++){
             let el = listfilteroutputHidup[i];
             let ekor = el.ekor?parseInt(el.ekor):0;
-            if(ekor <= 0){
-                continue;
-            }
+            // if(ekor <= 0){
+            //     continue;
+            // }
 
             
             let idcategoryproduct = el.idcategoryproduct;

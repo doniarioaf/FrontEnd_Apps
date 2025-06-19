@@ -389,17 +389,36 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
 
                             <View style={[styles.tableNoBorder]}>
                             <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, { borderLeft:1,borderTop:1,width:"58%", height: "70px" }]}>
+                            <View style={[styles.tableColWidth, { borderLeft:1,borderTop:1,width:"58%", height: "85px" }]}>
                                 <Text style={[styles.tableCell, { fontFamily: 'roboto',width: 10, maxWidth: 10, marginTop: '5px', fontSize: fontSizeBig }]}>
                                     {"To:"}
                                 </Text>
                                 <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '5px', fontSize: fontSizeMedium }]}>
                                     {valuedata != null?valuedata.packinglist.customerName:''}
                                 </Text>
-                                <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '5px', fontSize: fontSizeBig }]}>
+                                <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '3px', fontSize: fontSizeMedium }]}>
+                                    {valuedata != null?valuedata.packinglist.customerAddress:''}
+                                </Text>
+                                <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '3px', fontSize: fontSizeMedium }]}>
+                                    {valuedata != null?valuedata.packinglist.customerPhone:''}
+                                </Text>
+                                <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '3px', fontSize: fontSizeBig }]}>
                                     {valuedata != null?valuedata.packinglist.city:''}
                                 </Text>
                             </View>
+
+                            {/* <View style={[styles.tableColWidth, { borderLeft:1,borderTop:1,width:"58%", height: "70px" }]}>
+                                <Text style={[styles.tableCell, { fontFamily: 'roboto',width: 10, maxWidth: 10, marginTop: '5px', fontSize: fontSizeBig }]}>
+                                    {"To:"}
+                                </Text>
+                                <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '5px', fontSize: fontSizeMedium }]}>
+                                    {valuedata != null?valuedata.packinglist.customerName:''}
+                                </Text>
+                                <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '3px', fontSize: fontSizeBig }]}>
+                                    {valuedata != null?valuedata.packinglist.city:''}
+                                </Text>
+                            </View> */}
+
                             <View style={[styles.tableColWidthNoBorder, { borderBottom:0,borderTop:0,width:"47%", height: "70px" }]}>
                                 <Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '5px', fontSize: fontSizeBig }]}>{""}</Text>
                             </View>
@@ -474,7 +493,7 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
 
                             <View style={styles.tableRow}>
                             <View style={[styles.tableColWidth, { width:styles.width.attnandcountryorigin, height: "25px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthattnandcountryorigin, maxWidth: styles.width.widthattnandcountryorigin,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"CENGKARENG"}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthattnandcountryorigin, maxWidth: styles.width.widthattnandcountryorigin,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.countryOfOrigin:''}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.codeandcountryfinal, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthcodeandcountryfinal, maxWidth: styles.width.widthcodeandcountryfinal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{getCodeAndCountryDest(valuedata != null?valuedata.packinglist:null).destination}</Text>
