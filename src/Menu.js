@@ -203,7 +203,7 @@ const handleMenu = () => {
                     name: 'Invoice',
                     path: pathmenu.reportInvoice,
                     translate: 'Invoice',
-                    permission:permissionmenu.MenuReportStatusInvoice,
+                    permission:permissionmenu.MenuReportInvoice,
                 },
                 {
                     name: 'Kas Bank',
