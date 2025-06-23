@@ -409,6 +409,7 @@ export const terbilang = (nilai) =>{
     }else if(numberdesimal == 3){
         pembagian = 1000;
     }
+    
     if(new String(nilai).includes(',')){
         let splitComma = new String(nilai).split(','); 
         let valNilai = nilai;
@@ -437,6 +438,7 @@ export const terbilang = (nilai) =>{
         //     return Math.floor(parseFloat(valNilai) * pembagian) / pembagian;
         // }
         // return Math.ceil(parseFloat(valNilai) * pembagian) / pembagian;
+        
         return Math.round(parseFloat(valNilai) * pembagian) / pembagian;
     }
     // dibagi 10, jadinya 1 desimal

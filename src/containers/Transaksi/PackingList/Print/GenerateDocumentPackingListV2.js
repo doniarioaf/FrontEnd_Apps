@@ -21,22 +21,24 @@ const styles = StyleSheet.create({
     },
     width:{
         widthno:20,
+        
         widthnamabarang:80,
         widthukuran:45,
         widthgram:45,
         widthkuantitas:50,
         widthharga:58,
         widthjumlah:90,
-        widthweightkg:48,
+        widthweightkg:80,
         widthnoofbox:48,
         no:'5%',
+        
         namabarang:'16%',
         ukuran:'9%',
         gram:'10%',
         kuantitas:'11%',
         harga:'12%',
         jumlah:'18%',
-        weightkg:'10%',
+        weightkg:'15%',
         noofbox:'9%',
 
         widthattnandcountryorigin:100,
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
 
         // widthno+widthnamabarang+widthukuran+widthgram
         widthtotal:190,
-        total:"40%",
+        total:"44%",
 
         // widthno+widthnamabarang+widthukuran+widthgram+widthkuantitas+widthweightkg+widthnoofbox
         widthkurs:190,
@@ -174,14 +176,22 @@ const setItems = (value) =>{
             let nettoweight = det.nettoweight?det.nettoweight:0;
             nettoweight = convertkg(nettoweight);
 
+            console.log('nettoweight ',nettoweight);
+
             //kenapa totalan netto tidak ambil dari value.netto / total netto header karena ketika gr convert ke kg terjadi pembulatan sehingga ketika netto header di convert ke kg menjadi tidak sama desimal nya
             totalnetto += nettoweight;
 
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.no, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthno, maxWidth: styles.width.widthno, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{no}</Text>
+                <View style={[styles.tableColWidth, { width:styles.width.noofbox, height: "25px" }]}>
+                    <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.box}</Text>
                 </View>
             );
+
+            // rowItem.push(
+            //     <View style={[styles.tableColWidth, { width:styles.width.no, height: "25px" }]}>
+            //         <Text style={[styles.tableCell, { width: styles.width.widthno, maxWidth: styles.width.widthno, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{no}</Text>
+            //     </View>
+            // );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.namabarang, height: "25px" }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthnamabarang, maxWidth: styles.width.widthnamabarang, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.productName}</Text>
@@ -207,11 +217,7 @@ const setItems = (value) =>{
                     <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(nettoweight).replaceAll('.',','),1)}</Text>
                 </View>
             );
-            rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.noofbox, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.box}</Text>
-                </View>
-            );
+            
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.harga, height: "25px" }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?desimal00(formatRupiah(new String(det.price).replaceAll('.',','),2)):0}</Text>
@@ -246,11 +252,11 @@ const setItems = (value) =>{
                 
             </View>
         );
-        rowItem.push(
-            <View style={[styles.tableColWidth, { width:styles.width.noofbox, height: "25px" }]}>
-                <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{listfilteroutput.filter(output => output.box !== '').length}</Text>
-            </View>
-        );
+        // rowItem.push(
+        //     <View style={[styles.tableColWidth, { width:styles.width.noofbox, height: "25px" }]}>
+        //         <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{listfilteroutput.filter(output => output.box !== '').length}</Text>
+        //     </View>
+        // );
         rowItem.push(
             <View style={[styles.tableColWidth, { borderRight:0,width:styles.width.harga, height: "25px" }]}>
                 <Text style={[styles.tableCell, {  width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{'USD'}</Text>
@@ -448,9 +454,12 @@ const GenerateDocumentPackingListV2 = ({ valuedata }) => {
                             </View>
 
                             <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.no, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthno, maxWidth: styles.width.widthno, marginTop: '5px', fontSize: fontSizeBig }]}>{"No"}</Text>
+                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.noofbox, height: "38px" }]}>
+                                <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"No. Of\n"}{"Box"}</Text>
                             </View>
+                            {/* <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.no, height: "38px" }]}>
+                                <Text style={[styles.tableCell, { width: styles.width.widthno, maxWidth: styles.width.widthno, marginTop: '5px', fontSize: fontSizeBig }]}>{"No"}</Text>
+                            </View> */}
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.namabarang, height: "38px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthnamabarang, maxWidth: styles.width.widthnamabarang, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Product Name"}</Text>
                             </View>
@@ -466,9 +475,7 @@ const GenerateDocumentPackingListV2 = ({ valuedata }) => {
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.weightkg, height: "38px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Weight Kg"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.noofbox, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"No. Of\n"}{"Box"}</Text>
-                            </View>
+                            
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.harga, height: "38px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Price"}</Text>
                             </View>
