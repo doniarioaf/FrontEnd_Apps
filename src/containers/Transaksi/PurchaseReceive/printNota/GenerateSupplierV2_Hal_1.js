@@ -343,7 +343,7 @@ const setItems = (value) =>{
         
         listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
 
-        let listfilteroutputcharges = charges.filter(output => output.qty > 0);
+        let listfilteroutputcharges = charges.filter(output => output.qty > 0 && output.chargename !== 'SETORPINJAMAN');
         for(let i=0; i < listfilteroutputcharges.length; i++){
             let det = listfilteroutputcharges[i];
             rowItem = [];
