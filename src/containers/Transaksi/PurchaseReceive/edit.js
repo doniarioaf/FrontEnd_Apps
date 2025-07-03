@@ -587,6 +587,7 @@ export default function EditPurchaseReceive(props) {
         const { name, value } = e.target;
         let flag = true;
         let subtotal = 0;
+        let subtotalMati = 0;
         if (name == 'qty' || name == 'qtynota' || name == 'qtybonus' || name == 'qtymati' || name == 'itemsprice') {
             let valPriceTemp = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
             if (isNaN(valPriceTemp) && valPriceTemp !== '' && name !== 'qtybonus') {
@@ -634,6 +635,9 @@ export default function EditPurchaseReceive(props) {
                 } else if (name == 'itemsprice') {
                     let listTemp = [];
                     let qtytemp = 0;
+
+                    let listTempMati = [];
+                    let qtytempMati = 0;
                     if (type == 'H') {
                         listTemp = [...ListItemsPurchaseReceive];
                         // qtytemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
@@ -647,6 +651,39 @@ export default function EditPurchaseReceive(props) {
                     let totalQty = parseInt(qtytemp) + parseInt(qtybonustemp);
 
                     subtotal = parseInt(valPriceTemp) * parseFloat(totalQty);
+
+                    
+                    if (type == 'H') {
+                        listTempMati = [...ListItemsPurchaseReceiveMati];
+                        let idproductHidup = listTemp[index]['idproduct'];
+                        let idcategoryproductHidup = listTemp[index]['idcategoryproduct'];
+
+                        let indexMati = listTempMati.findIndex(obj => obj.idproduct == idproductHidup && obj.idcategoryproduct == idcategoryproductHidup);
+                        if(indexMati !== null && indexMati !== undefined && indexMati > -1){
+                            qtytempMati = new String(listTempMati[indexMati]['qtymati']).replaceAll('.', '') !== '' ? new String(listTempMati[indexMati]['qtymati']).replaceAll('.', '') : '0';
+                            qtybonustemp = new String(listTempMati[indexMati]['qtybonus']).replaceAll('.', '') !== '' ? new String(listTempMati[indexMati]['qtybonus']).replaceAll('.', '') : '0';
+                            totalQty = parseInt(qtytempMati) + parseInt(qtybonustemp);
+
+                            subtotalMati = parseInt(valPriceTemp) * parseFloat(totalQty);
+                        }
+                        
+                    }
+
+                    // let listTemp = [];
+                    // let qtytemp = 0;
+                    // if (type == 'H') {
+                    //     listTemp = [...ListItemsPurchaseReceive];
+                    //     // qtytemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
+                    //     qtytemp = new String(listTemp[index]['qtynota']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qtynota']).replaceAll('.', '') : '0';
+                    // } else {
+                    //     listTemp = [...ListItemsPurchaseReceiveMati];
+                    //     qtytemp = new String(listTemp[index]['qtymati']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qtymati']).replaceAll('.', '') : '0';
+                    // }
+
+                    // let qtybonustemp = new String(listTemp[index]['qtybonus']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qtybonus']).replaceAll('.', '') : '0';
+                    // let totalQty = parseInt(qtytemp) + parseInt(qtybonustemp);
+
+                    // subtotal = parseInt(valPriceTemp) * parseFloat(totalQty);
                 }
                 //
             }
@@ -676,6 +713,17 @@ export default function EditPurchaseReceive(props) {
                 // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
                 setorValue(totalPrice, IsDefaultSetorTotalPrice);
                 setListItemsPurchaseReceive(list);
+
+                const listMati = [...ListItemsPurchaseReceiveMati];
+                let idproductHidup = list[index]['idproduct'];
+                let idcategoryproductHidup = list[index]['idcategoryproduct'];
+                let indexMati = listMati.findIndex(obj => obj.idproduct == idproductHidup && obj.idcategoryproduct == idcategoryproductHidup);
+                if(indexMati !== null && indexMati !== undefined && indexMati > -1){
+                    listMati[indexMati][name] = valPrice;
+                    listMati[indexMati]['subtotalprice'] = subtotalMati;
+                    setListItemsPurchaseReceiveMati(listMati);
+                }
+
             } else if (type == 'M') {
                 const list = [...ListItemsPurchaseReceiveMati];
                 let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';

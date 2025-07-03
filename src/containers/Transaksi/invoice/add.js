@@ -31,7 +31,7 @@ export default function AddPackingList(props) {
     const [SelPackingList, setSelPackingList] = useState("");
     const [ErrSelPackingList, setErrSelPackingList] = useState("");
 
-    const [TransDate, setTransDate] = useState(null);
+    const [TransDate, setTransDate] = useState(new Date());
     const [ErrTransDate, setErrTransDate] = useState("");
 
     const [InputCustomer, setInputCustomer] = useState("");
@@ -152,7 +152,7 @@ export default function AddPackingList(props) {
         let val = data?.data ? data.data : [];
         setSelPackingList(id);
         setListItems([]);
-        setTransDate(val.date?new Date(val.date):null);
+        // setTransDate(val.date?new Date(val.date):null);
         setInputCustomerID(val.idcustomer);
         setInputCustomer(val.customerName+'/'+val.customerALias);
         setInputCustomerAddress(val.customerAddress);
@@ -199,6 +199,16 @@ export default function AddPackingList(props) {
         }
         if (flag) {
             setInputKurs(formatRupiah(valPriceTemp,2));
+        }
+    }
+
+    const handleChangeTransDate = (data) => {
+        //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
+        if (data !== null) {
+            let datetrans = moment(data, formatdate).toDate();
+            setTransDate(datetrans)
+        } else {
+            setTransDate(null)
         }
     }
     
@@ -314,10 +324,10 @@ export default function AddPackingList(props) {
 
                                         <DatePicker
                                             name="transdate"
-                                            // onChange={val => handleChangeTransDate(val)}
+                                            onChange={val => handleChangeTransDate(val)}
                                             format={formatdate}
                                             value={values.transdate}
-                                            disabled={true}
+                                            disabled={false}
                                         />
                                         <div className="invalid-feedback-custom">{ErrTransDate}</div>
 
