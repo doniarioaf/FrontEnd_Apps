@@ -17,7 +17,7 @@ import "react-widgets/dist/css/react-widgets.css";
 
 import { PDFViewer } from '@react-pdf/renderer';
 import PdfDocumentSupplier from './PdfDocumentSupplier';
-import PdfDocumentSupplierTwoPage from './PdfDocumentSupplierTwoPage';
+import PdfDocumentSupplierLegal from './PdfDocumentSupplierLegal';
 import PdfDocumentPajak from './PdfDocumentPajak';
 // import PdfDocumentPajak from './PdfDocumentPajak';
 
@@ -95,13 +95,14 @@ export default function PrintNota(props) {
                 totalData = totalData + listfilteroutput.length;
             }
             if(charges){
-                let listfilteroutputcharges = charges.filter(output => output.qty > 0);
+                let listfilteroutputcharges = charges.filter(output => output.qty > 0 && output.chargename !== 'SETORPINJAMAN');
                 totalData = totalData + listfilteroutputcharges.length;
             }
             if(inventori){
                 let listfilteroutputinventori = inventori.filter(output => output.qty > 0);
                 totalData = totalData + listfilteroutputinventori.length;
             }
+            
             if(totalData > 10){
                 dettemp.totalpage = 2; 
             }else{
@@ -137,7 +138,7 @@ export default function PrintNota(props) {
             if(value.totalpage == 1){
                 return <PdfDocumentSupplier data={value} />
             }else{
-                return <PdfDocumentSupplierTwoPage data={value} />
+                return <PdfDocumentSupplierLegal data={value} />
             }
             
         }else if(printType == 'PAJAK'){

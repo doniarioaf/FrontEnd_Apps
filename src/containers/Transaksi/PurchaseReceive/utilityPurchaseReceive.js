@@ -35,24 +35,30 @@ export const calculateSetor = (totalnota, sisadeposit,sisapinjaman)  =>{
     return {setordeposit:setor,setorpinjaman:setorPinjaman};
 }
 
-export const calculateTransfer = (totalnota, sisadeposit, sisapinjaman)  =>{
+export const calculateTransfer = (totalnota, sisadeposit, nilaiSetorPinjaman)  =>{
     let transfer = 0;
     let tempTotalNota  = 0;
     let tempSisaDeposit  = 0;
-    let tempSisaPinjaman  = 0;
+    let tempNilaiSetorPinjaman  = 0;
     if(totalnota != null && totalnota != undefined && totalnota !== ''){
         tempTotalNota = totalnota;
     }
     if(sisadeposit != null && sisadeposit != undefined && sisadeposit !== ''){
         tempSisaDeposit = sisadeposit;
     }
-    if(sisapinjaman != null && sisapinjaman != undefined && sisapinjaman !== ''){
-        tempSisaPinjaman = sisapinjaman;
+    if(nilaiSetorPinjaman != null && nilaiSetorPinjaman != undefined && nilaiSetorPinjaman !== ''){
+        tempNilaiSetorPinjaman = nilaiSetorPinjaman;
     }
+    // console.log('tempTotalNota A '+tempTotalNota);
+    // console.log('tempNilaiSetorPinjaman A '+tempNilaiSetorPinjaman);
+    // tempTotalNota = tempTotalNota - tempNilaiSetorPinjaman;
+    // console.log('tempTotalNota B '+tempTotalNota);
+    if(tempTotalNota > 0){
     if(tempSisaDeposit <= 0){
         transfer = tempTotalNota;
     }else if(tempTotalNota > tempSisaDeposit){
         transfer = tempTotalNota - tempSisaDeposit;
+    }
     }
 
     //pinjaman

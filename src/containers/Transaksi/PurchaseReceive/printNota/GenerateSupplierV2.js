@@ -7,7 +7,8 @@ import { addKurungBukaPadaValue } from '../utilityPurchaseReceive';
 
 // import logo from "img/logo.png";
 
-const fontSizeBig = 10;
+const heightRow = "19px";
+const fontSizeBig = 8;
 const fontSizeMedium = 8;
 const fontSizeSmall = 0;
 
@@ -158,10 +159,20 @@ const lsitTambahDP = (value) =>{
     let deposits = value.deposits;
     let totalprice = parseFloat(value.totalprice);
     let saldoDP = value.saldoDepositBeforeNotaSubmit?value.saldoDepositBeforeNotaSubmit:0;
+    let setorDeposit = parseFloat(value.setor);
+    saldoDP = saldoDP + setorDeposit;
     let sisaDP = 0;
     let totalDP = parseFloat(saldoDP);
     let list = [];
     let setorPinjaman = value.setorPinjaman?value.setorPinjaman:0;
+    let nilaiNota = totalprice - setorPinjaman;
+    let transfer = getTransfer(value);
+
+    let saldoAkhirPinjaman = value.saldoPinjaman?value.saldoPinjaman:0;
+    let saldoPinjaman = value.saldoPinjaman?value.saldoPinjaman:0;
+    saldoPinjaman = saldoPinjaman + setorPinjaman;
+
+
     let listRow1 = [<View style={{flexDirection:'row'}}>
                 <View style={[{ width:"68%", height: "20px",paddingLeft:'4px' }]}>
                 <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{""}</Text>
@@ -172,23 +183,34 @@ const lsitTambahDP = (value) =>{
                 </View>
 
                 <View style={[{ width:"18%", height: "20px" }]}>
-                <Text style={[ { width: 94, maxWidth: 94,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{value.totalprice?desimal00(formatRupiah(new String(value.totalprice).replaceAll('.',','),2),{isShow000:false}):''}</Text>
+                <Text style={[ { width: 94, maxWidth: 94,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{nilaiNota?desimal00(formatRupiah(new String(nilaiNota).replaceAll('.',','),2),{isShow000:false}):''}</Text>
                 </View>
 
                 </View>];
-    let viewSetorPinjaman = <View style={[{ width:"34%", height: "20px",paddingLeft:'4px' }]}>
-                    <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Setor Pinjaman "}{desimal00(formatRupiah(new String(setorPinjaman).replaceAll('.',','),2)) }</Text>
+    let viewSaldoPinjaman = <View style={[{ width:"34%", height: "17px",paddingLeft:'7px' }]}>
+        <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Saldo Pinjaman "}{desimal00(formatRupiah(new String(saldoPinjaman).replaceAll('.',','),2)) }</Text>
+        </View>;
+    let viewSetorPinjaman = <View style={[{ width:"34%", height: "17px",paddingLeft:'7px' }]}>
+                    <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{"Setor Pinjaman "}{desimal00(formatRupiah(new String(setorPinjaman).replaceAll('.',','),2)) }</Text>
                     </View>;
-    let viewSisaPinjaman = (<View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
-                    <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{"Sisa Pinjaman "}{desimal00(formatRupiah(new String(100000000000).replaceAll('.',','),2)) }</Text>
+    let viewSisaPinjaman = (<View style={[{ width:"34%", height: "17px",paddingLeft:'7px' }]}>
+                    <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{"Sisa Pinjaman "}{desimal00(formatRupiah(new String(saldoAkhirPinjaman).replaceAll('.',','),2)) }</Text>
                     </View>);                    
+    let tempViewSaldoPinjaman = viewSaldoPinjaman;
     let tempViewSetorPinjaman = viewSetorPinjaman;
     let tempViewSisaPinjaman = viewSisaPinjaman;
-    // if(deposits == null || deposits == undefined){
-    //     tempViewSisaPinjaman = viewSisaPinjaman;
-    // }else if(deposits.length > 0){
-    //     tempViewSisaPinjaman = viewSisaPinjaman;
-    // }
+
+     let viewLabelTransfer = <View  style={[{ width:"14%", height: "20px"}]}>
+            <Text style={[ { width: 75, maxWidth: 75,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Transfer "}</Text>
+            </View>;
+    let viewValueTransfer = <View style={[{ width:"18%", height: "20px" }]}>
+            <Text style={[ { width: 94, maxWidth: 94,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{desimal00(formatRupiah(new String(transfer).replaceAll('.',','),2)) }</Text>
+            </View>; 
+   if(transfer == 0){
+        viewLabelTransfer = null;
+        viewValueTransfer = null;
+   }
+   
     list.push(
         <View style={{display:'table',width:'auto'}}>
             {listRow1}
@@ -197,15 +219,9 @@ const lsitTambahDP = (value) =>{
             <View style={[{ width:"34%", height: "20px",paddingLeft:'4px' }]}>
             <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Saldo DP "}{desimal00(formatRupiah(new String(saldoDP).replaceAll('.',','),2)) }</Text>
             </View>
-            {tempViewSetorPinjaman}
-            <View style={[{ width:"14%", height: "20px" }]}>
-            <Text style={[ { width: 75, maxWidth: 75,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Transfer "}</Text>
-            </View>
-
-            <View style={[{ width:"18%", height: "20px" }]}>
-            <Text style={[ { width: 94, maxWidth: 94,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{desimal00(formatRupiah(new String(getTransfer(value)).replaceAll('.',','),2)) }</Text>
-            </View>
-
+            {tempViewSaldoPinjaman}
+            {viewLabelTransfer}
+            {viewValueTransfer}
             </View>
         </View>
     );
@@ -222,30 +238,79 @@ const lsitTambahDP = (value) =>{
                         <View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
                         <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '1px', fontSize: fontSizeBig }]}>{"Tambah DP "}{desimal00(formatRupiah(new String(amount).replaceAll('.',','),2))}{' ('+det.date+')'}</Text>
                         </View>
+                        {tempViewSetorPinjaman}
+                    </View>
+                </View>
+                
+            );
+            tempViewSetorPinjaman = null;
+            }else if(i == 1){
+                list.push(
+                <View style={{display:'table',width:'auto'}}>
+                    <View style={{flexDirection:'row'}}>
+                        <View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
+                        <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '1px', fontSize: fontSizeBig }]}>{"Tambah DP "}{desimal00(formatRupiah(new String(amount).replaceAll('.',','),2))}{' ('+det.date+')'}</Text>
+                        </View>
                         {tempViewSisaPinjaman}
                     </View>
                 </View>
+                
             );
             tempViewSisaPinjaman = null;
             }else{
                 list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}>{"Tambah DP : "}{desimal00(formatRupiah(new String(amount).replaceAll('.',','),2))}{' ('+det.date+')'}</Text>);
             }            
-        }
-        
-        
+        }   
     }
-    // if(totalDP > totalprice ){
-        // sisaDP = totalprice - totalDP;
-    // }
+    if(setorPinjaman > 0){
+    // if(false){
+        list.push(
+        <View style={{display:'table',width:'auto'}}>
+             <View style={{flexDirection:'row'}}>
+            <View style={[{ width:"34%", height: heightRow,paddingLeft:'4px' }]}>
+            <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '1px', fontSize: fontSizeBig }]}>{"Total Invoice - Setoran Pinjaman"}</Text>
+            </View>
+            {tempViewSetorPinjaman !== null?tempViewSetorPinjaman:tempViewSisaPinjaman}
+            </View>
+
+            <View style={{flexDirection:'row'}}>
+            <View style={[{ width:"34%", height: heightRow,paddingLeft:'4px' }]}>
+            <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '1px', fontSize: fontSizeBig }]}>{desimal00(formatRupiah(new String(totalprice).replaceAll('.',','),2))}{" - "}{desimal00(formatRupiah(new String(setorPinjaman).replaceAll('.',','),2))}{" = "}{desimal00(formatRupiah(new String(nilaiNota).replaceAll('.',','),2))}</Text>
+            </View>
+            {tempViewSetorPinjaman !== null?tempViewSisaPinjaman:null}
+            </View>
+        </View>
+        );
+        tempViewSetorPinjaman = null;
+        tempViewSisaPinjaman = null;
+    }
+    
     sisaDP = totalDP - totalprice;
-    if(tempViewSisaPinjaman !== null){
+    if(tempViewSetorPinjaman !== null && tempViewSisaPinjaman !== null){
         list.push(
         <View style={{display:'table',width:'auto'}}>
             <View style={{flexDirection:'row'}}>
                 <View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
                 <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{"Sisa DP "}{desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2))}</Text>
                 </View>
+                {tempViewSetorPinjaman}
+            </View>
+            <View style={{flexDirection:'row'}}>
+                <View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
+                <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{""}</Text>
+                </View>
                 {tempViewSisaPinjaman}
+            </View>
+        </View>
+    );
+    }else if(tempViewSetorPinjaman !== null || tempViewSisaPinjaman !== null){
+        list.push(
+        <View style={{display:'table',width:'auto'}}>
+            <View style={{flexDirection:'row'}}>
+                <View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
+                <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{"Sisa DP "}{desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2))}</Text>
+                </View>
+                {tempViewSetorPinjaman !== null?tempViewSetorPinjaman:tempViewSisaPinjaman}
             </View>
         </View>
     );
@@ -325,37 +390,37 @@ const setItems = (value) =>{
             }
             
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.no, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.no, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthno, maxWidth: styles.width.widthno, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{no}</Text>
                 </View>
             );
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.namabarang, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.namabarang, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthnamabarang, maxWidth: styles.width.widthnamabarang, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.productName}</Text>
                 </View>
             );
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.ukuran, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.ukuran, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthukuran, maxWidth: styles.width.widthukuran, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.size}</Text>
                 </View>
             );
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.gram, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.gram, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthgram, maxWidth: styles.width.widthgram, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.weightfrom+' - '+det.weightto}</Text>
                 </View>
             );
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{qtyHidup}</Text>
                 </View>
             );
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.harga, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.harga, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?desimal00(formatRupiah(new String(det.price).replaceAll('.',','),2)):0}</Text>
                 </View>
             );
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.subtotalprice?desimal00(formatRupiah(new String(det.subtotalprice).replaceAll('.',','),2)):0}</Text>
                 </View>
             );
@@ -365,22 +430,22 @@ const setItems = (value) =>{
         }
         let rowItem = [];
         rowItem.push(
-            <View style={[styles.tableColWidth, { width:styles.width.chargeandinventori, height: "25px" }]}>
+            <View style={[styles.tableColWidth, { width:styles.width.chargeandinventori, height: heightRow }]}>
                 <Text style={[styles.tableCell, { width: styles.width.widthchargeandinventori, maxWidth: styles.width.widthchargeandinventori, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
             </View>
         );
         rowItem.push(
-            <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: "25px" }]}>
+            <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: heightRow }]}>
                 <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{totalQty}</Text>
             </View>
         );
         rowItem.push(
-            <View style={[styles.tableColWidth, { width:styles.width.harga, height: "25px" }]}>
+            <View style={[styles.tableColWidth, { width:styles.width.harga, height: heightRow }]}>
                 <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{''}</Text>
             </View>
         );
         rowItem.push(
-            <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: "25px" }]}>
+            <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: heightRow }]}>
                 <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{desimal00(formatRupiah(new String(totalSubtotalPrice).replaceAll('.',','),2),{isShow000:false})}</Text>
             </View>
         );
@@ -392,22 +457,22 @@ const setItems = (value) =>{
             let det = listfilteroutputcharges[i];
             rowItem = [];
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.chargeandinventori, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.chargeandinventori, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthchargeandinventori, maxWidth: styles.width.widthchargeandinventori, textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{det.chargename}</Text>
                 </View>
             );
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.qty}</Text>
                 </View>
             );
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.harga, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.harga, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?desimal00(formatRupiah(new String(det.price).replaceAll('.',','),2)):0}</Text>
                 </View>
             );
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.subtotalprice?addKurungBukaPadaValue(det.chargename,desimal00(formatRupiah(new String(det.subtotalprice).replaceAll('.',','),2))):0}</Text>
                 </View>
             );
@@ -420,22 +485,22 @@ const setItems = (value) =>{
             let det = listfilteroutputinventori[i];
             rowItem = [];
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.chargeandinventori, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.chargeandinventori, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthchargeandinventori, maxWidth: styles.width.widthchargeandinventori, textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{det.inventoriname}</Text>
                 </View>
             );
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.qty}</Text>
                 </View>
             );
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.harga, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.harga, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?desimal00(formatRupiah(new String(det.price).replaceAll('.',','),2)):0}</Text>
                 </View>
             );
             rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: "25px" }]}>
+                <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: heightRow }]}>
                     <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.subtotalprice?addKurungBukaPadaValue(det.chargename,desimal00(formatRupiah(new String(det.subtotalprice).replaceAll('.',','),2))):0}</Text>
                 </View>
             );
@@ -487,7 +552,7 @@ const GeneratePurchaseReceiveSupplier = ({ valuedata }) => {
 
                             <View style={{ flexDirection: 'row',paddingTop:'20px'}}>
                             <View style={{ flexDirection: 'row-reverse' }}>
-                                <Image source={"img/logoheaderpdf.png"} style={{width:'200px',height:'100px'}}/>
+                                <Image source={"img/logoheaderpdf.png"} style={{width:'200px',height:'80px'}}/>
                             </View>
 
                             <View style={{ flexDirection: 'row-reverse', paddingTop: '0px' }}>
@@ -533,56 +598,56 @@ const GeneratePurchaseReceiveSupplier = ({ valuedata }) => {
                             
                             <View style={[styles.table,{marginTop:'0px'}]}>
                             <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.flightno, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.flightno, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthflightno, maxWidth: styles.width.widthflightno,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Flight No."}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.smuno, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.smuno, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthsmuno, maxWidth: styles.width.widthsmuno, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"SMU No."}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.koli, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.koli, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthkoli, maxWidth: styles.width.widthkoli, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Collie"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.prno, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.prno, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthprno, maxWidth: styles.width.widthprno, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Invoice No."}</Text>
                             </View>
                             </View>
 
                             <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, { width:styles.width.flightno, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, { width:styles.width.flightno, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthflightno, maxWidth: styles.width.widthflightno,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.flightno:''}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { width:styles.width.smuno, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, { width:styles.width.smuno, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthsmuno, maxWidth: styles.width.widthsmuno, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.noSMU:''}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { width:styles.width.koli, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, { width:styles.width.koli, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthkoli, maxWidth: styles.width.widthkoli, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?getValueChargesBox(valuedata.charges):''}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, { width:styles.width.prno, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, { width:styles.width.prno, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthprno, maxWidth: styles.width.widthprno, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.nodocument:''}</Text>
                             </View>
                             </View>
 
                             <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.no, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.no, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthno, maxWidth: styles.width.widthno, marginTop: '5px', fontSize: fontSizeBig }]}>{"No"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.namabarang, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.namabarang, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthnamabarang, maxWidth: styles.width.widthnamabarang, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Nama Barang"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.ukuran, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.ukuran, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthukuran, maxWidth: styles.width.widthukuran, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Ukuran"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.gram, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.gram, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthgram, maxWidth: styles.width.widthgram, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Gram"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.kuantitas, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.kuantitas, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Kuantitas"}</Text>
                             </View>
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.harga, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.harga, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthkilo, maxWidth: styles.width.widthharga, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Harga"}</Text>
                             </View>
 
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.jumlah, height: "25px" }]}>
+                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.jumlah, height: heightRow }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthmati, maxWidth: styles.width.widthjumlah,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Jumlah"}</Text>
                             </View>
 

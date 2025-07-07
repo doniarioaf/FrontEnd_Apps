@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { MenuPurchaseReceive, deletePurchaseReceive_Permission, editPurchaseReceive_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime } from '../../shared/constantValue';
@@ -298,7 +298,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Total')}</span>
                                 <strong className="col-md-7">
-                                {value.totalprice ?numToMoney(value.totalprice):''}
+                                {value.totalprice ?formatRupiah(new String(value.totalprice - value.setor_pinjaman).replaceAll('.',',')):''}
                                 </strong>
                             </div>
 

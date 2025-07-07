@@ -412,7 +412,7 @@ export default function EditPurchaseReceive(props) {
             obj.bank = values.bank;
             obj.accountnobank = values.accnobank;
             obj.accountnamebank = values.accnamabank;
-            obj.totalprice = totalprice;//new String(values.totalprice).replaceAll('.', '') !== '' ? new String(values.totalprice).replaceAll('.', '') : 0;
+            // obj.totalprice = totalprice;
             obj.setor = setor;//new String(values.setor).replaceAll('.', '') !== '' ? new String(values.setor).replaceAll('.', '') : 0;
             
             obj.isdefaultvaluesetor = IsDefaultSetorTotalPrice;
@@ -501,6 +501,7 @@ export default function EditPurchaseReceive(props) {
                 }
             }
             obj.charges = charges;
+            obj.totalprice = parseFloat(totalprice) + parseFloat(setorPinjaman);
             obj.setor_pinjaman = setorPinjaman;
 
             let inventori = [];

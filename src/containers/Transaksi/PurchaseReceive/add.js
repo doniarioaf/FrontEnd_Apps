@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addPurchaseReceive_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -341,7 +341,7 @@ export default function AddPurchaseReceive(props) {
             obj.bank = values.bank;
             obj.accountnobank = values.accnobank;
             obj.accountnamebank = values.accnamabank;
-            obj.totalprice = totalprice;//new String(values.totalprice).replaceAll('.', '') !== '' ? new String(values.totalprice).replaceAll('.', '') : 0;
+            // obj.totalprice = totalprice;
             obj.setor = setor;//new String(values.setor).replaceAll('.', '') !== '' ? new String(values.setor).replaceAll('.', '') : 0;
             
             obj.isdefaultvaluesetor = IsDefaultSetorTotalPrice;
@@ -429,6 +429,7 @@ export default function AddPurchaseReceive(props) {
                     );
                 }
             };
+            obj.totalprice = parseFloat(totalprice) + parseFloat(setorPinjaman);
             obj.setor_pinjaman = setorPinjaman;
             obj.charges = charges;
 
@@ -449,6 +450,7 @@ export default function AddPurchaseReceive(props) {
             obj.inventori = inventori;
             obj.iddraftpurchasereceive = SelDraftPurchaseReceive == 'nodata' || SelDraftPurchaseReceive == ''?null:SelDraftPurchaseReceive;
             obj.idarea = SelArea;
+            // console.log('obj ',obj);
             dispatch(actions.submitPurchaseReceiveData({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -608,7 +610,8 @@ export default function AddPurchaseReceive(props) {
 
                     if (type == 'H') {
                         listTempMati = [...ListItemsPurchaseReceiveMati];
-                        
+                        let idproductHidup = listTemp[index]['idproduct'];
+                        let idcategoryproductHidup = listTemp[index]['idcategoryproduct'];
                         let indexMati = listTempMati.findIndex(obj => obj.idproduct == idproductHidup && obj.idcategoryproduct == idcategoryproductHidup);
                         if(indexMati !== null && indexMati !== undefined && indexMati > -1){
                             qtytempMati = new String(listTempMati[indexMati]['qtymati']).replaceAll('.', '') !== '' ? new String(listTempMati[indexMati]['qtymati']).replaceAll('.', '') : '0';
@@ -751,7 +754,13 @@ export default function AddPurchaseReceive(props) {
         }
 
     }
-
+    const getValueSetorPinjaman = () => {
+        let listPenguranganBiaya = ListItemsPurchaseReceivePenguranganBiaya.filter(output => output.namabiaya == 'SETORPINJAMAN');
+        if(listPenguranganBiaya.length > 0){
+            return listPenguranganBiaya[0].subtotal?parseFloat(removeFormatRupiah(listPenguranganBiaya[0].subtotal)):0;
+        }
+        return 0;
+    }
     const handleInputChangePenguranganBiaya = (e, index) => {
         const { name, value } = e.target;
         let flag = true;
@@ -1771,7 +1780,7 @@ export default function AddPurchaseReceive(props) {
                                             onChange={handleChange}
                                             // onChange={val => handleInputNama(val)}
                                             onBlur={handleBlur}
-                                            value={calculateTransfer(values.totalprice,values.sisadeposit,values.sisapinjaman)?numToMoney(calculateTransfer(values.totalprice,values.sisadeposit,values.sisapinjaman)):0}
+                                            value={calculateTransfer(values.totalprice,values.sisadeposit,getValueSetorPinjaman())?numToMoney(calculateTransfer(values.totalprice,values.sisadeposit,getValueSetorPinjaman())):0}
                                             disabled={true}
                                         />
                                     </div>
