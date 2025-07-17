@@ -12,7 +12,7 @@ import { useHistory } from 'react-router-dom';
 import { formatRupiah, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addInvoice_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
-// import moment from 'moment';
+import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import { DatePicker, DropdownList } from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";

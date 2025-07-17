@@ -47,6 +47,7 @@ import React, {useState,
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
+    const [TotalAmount, setTotalAmount] = useState(0);
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
@@ -98,6 +99,15 @@ import React, {useState,
         let packinglist = det.packinglist;
         let listItems = packinglist.items?packinglist.items:[];
         setListItem(listItems);
+        if(listItems.length > 0){
+            let totalamount = 0;
+            for(let i=0; i < listItems.length; i++){
+                let det = listItems[i];
+                let totalprice = det.totalprice?det.totalprice:0;
+                totalamount += parseFloat(totalprice);
+            }
+            setTotalAmount(totalamount.toFixed(2));
+        }
         setLoading(false);
     }
 
@@ -121,6 +131,44 @@ import React, {useState,
           })
     }
 
+    const submitHandlerRecalculate = () => {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                setLoading(true);
+                let obj = new Object();
+                obj.date = null;
+                obj.kurs = null;
+                obj.idpackinglist = null;
+                obj.phone = null;
+                obj.totalamount = TotalAmount;
+                dispatch(actions.submitInvoice({ url: '/recalculate/'+id, payload: obj, type: 'EDIT' }, succesHandlerSubmitRefresh, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+        
+    }
+
+    const succesHandlerSubmitRefresh = (data) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(0);
+            }
+        })
+    }
     const succesHandlerSubmit = (data) => {
         setLoading(false);
         Swal.fire({
@@ -363,6 +411,7 @@ import React, {useState,
                             <MenuItem hidden={!isGetPermissions(MenuInvoice,'TRANSACTION')}  onClick={() => history.push(pathmenu.printpdfinvoice+'/'+id)}>{i18n.t('PDF Invoice')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(MenuInvoice,'TRANSACTION')}  onClick={() => downloadExcel()}>{i18n.t('Excel Invoice')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editInvoice_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editinvoice+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editInvoice_Permission,'TRANSACTION') == false?(value !== null?!value.ispackinglistupdate:true) :true}  onClick={() => submitHandlerRecalculate()}>{i18n.t('Recalculate')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteInvoice_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={!isGetPermissions(MenuPurchaseReceive,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Nota')}</MenuItem> */}
                             
