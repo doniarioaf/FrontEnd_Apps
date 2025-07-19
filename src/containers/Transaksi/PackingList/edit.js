@@ -54,6 +54,10 @@ export default function EditPackingList(props) {
     const [ListProduct, setListProduct] = useState([]);
     // const [ListCategoryProduct, setListCategoryProduct] = useState([]);
 
+    const [ListVendor, setListVendor] = useState([]);
+    const [SelVendor, setSelVendor] = useState("");
+    const [ErrSelVendor, setErrSelVendor] = useState("");
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -83,6 +87,16 @@ export default function EditPackingList(props) {
                 }
             ], []);
             setListCustomer(theDataProd);
+
+            theDataProd = data.data.vendorOpt.reduce((obj, el) => [
+                ...obj,
+                {
+                    'value': el.id,
+                    'label': el.nama+' / '+el.alias,
+                    'data': el
+                }
+            ], []);
+            setListVendor(theDataProd);
         }
         dispatch(actions.getPackingListData({ url: '/'+id }, successHandlerDetail, errorHandler));
 
@@ -93,6 +107,7 @@ export default function EditPackingList(props) {
         let det = data.data;
         let transDate = det.date?new Date(det.date):null;
         setTransDate(transDate);
+        setSelVendor(det.idvendor);
         setSelCustomer(det.idcustomer);
         setInputCity(det.city);
         setInputAttention(det.attention);
@@ -163,6 +178,7 @@ export default function EditPackingList(props) {
         let flag = true;
         setErrTransDate('');
         setErrSelCustomer('');
+        setErrSelVendor('');
         setErrItems('')
 
         let listCatogry = [];
@@ -209,6 +225,11 @@ export default function EditPackingList(props) {
 
         if (SelCustomer == '') {
             setErrSelCustomer(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+
+        if (SelVendor == '') {
+            setErrSelVendor(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
@@ -262,7 +283,7 @@ export default function EditPackingList(props) {
                 ], []);
             }
             obj.items = items;
-            
+            obj.idvendor = SelVendor;
             dispatch(actions.submitPackingList({ url: '/'+id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -542,6 +563,11 @@ export default function EditPackingList(props) {
 
     }
 
+    const handleChangeVendor = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelVendor(id);
+    }
+    
     const msgInfo = (text) => {
     
         Swal.fire({
@@ -577,6 +603,7 @@ export default function EditPackingList(props) {
                     awbnumber: InputAwbNumber,
                     netto: Netto,
                     koli: Koli,
+                    vendor:SelVendor,
                 }
             }
             validate={values => {
@@ -625,6 +652,27 @@ export default function EditPackingList(props) {
                                         disabled={true}
                                     />
                                     <div className="invalid-feedback-custom">{ErrTransDate}</div>
+
+                                    <label className="mt-3 form-label required" htmlFor="vendor">
+                                        {i18n.t('Vendor')}
+                                    </label>
+                                    <span style={{ color: 'red' }}>*</span>
+
+                                    <DropdownList
+                                        name="vendor"
+                                        filter='contains'
+                                        placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                        onChange={val => handleChangeVendor(val)}
+                                        onBlur={val => setFieldTouched("vendor", val?.value ? val.value : '')}
+                                        data={ListVendor}
+                                        textField={'label'}
+                                        valueField={'value'}
+                                        // style={{width: '25%'}}
+                                        // disabled={values.isdisabledcountry}
+                                        value={values.vendor}
+                                    />
+                                    <div className="invalid-feedback-custom">{ErrSelVendor}</div>
 
 
                                         <label className="mt-3 form-label required" htmlFor="customer">

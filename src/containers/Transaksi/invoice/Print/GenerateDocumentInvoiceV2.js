@@ -391,19 +391,19 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                             <View style={styles.tableRow}>
                             <View style={[styles.tableColWidth, { borderLeft:1,borderTop:1,width:"58%", height: "85px" }]}>
                                 <Text style={[styles.tableCell, { fontFamily: 'roboto',width: 10, maxWidth: 10, marginTop: '5px', fontSize: fontSizeBig }]}>
-                                    {"To:"}
+                                    {"To: "}{valuedata != null?valuedata.packinglist.vendorName:''}
                                 </Text>
                                 <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '5px', fontSize: fontSizeMedium }]}>
-                                    {valuedata != null?valuedata.packinglist.customerName:''}
+                                    {valuedata != null?valuedata.packinglist.vendorAddress1:''}
                                 </Text>
                                 <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '3px', fontSize: fontSizeMedium }]}>
-                                    {valuedata != null?valuedata.packinglist.customerAddress:''}
+                                    {valuedata != null?valuedata.packinglist.vendorAddress2:''}
                                 </Text>
                                 <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '3px', fontSize: fontSizeMedium }]}>
-                                    {valuedata != null?valuedata.packinglist.customerPhone:''}
+                                    {valuedata != null?'NPWP : '+valuedata.packinglist.vendorNpwp:''}
                                 </Text>
-                                <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '3px', fontSize: fontSizeBig }]}>
-                                    {valuedata != null?valuedata.packinglist.city:''}
+                                <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '3px', fontSize: fontSizeMedium }]}>
+                                    {valuedata != null?'Phone : '+valuedata.packinglist.vendorPhone:''}
                                 </Text>
                             </View>
 
@@ -448,7 +448,7 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: styles.width.widthflightnoandcollie, maxWidth: styles.width.widthflightnoandcollie, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Flight No"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.abwandnettokg, height: "25px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"ABW"}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"AWB"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.packinglistnoanddate, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Packing List No"}</Text>
@@ -466,7 +466,7 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: styles.width.widthflightnoandcollie, maxWidth: styles.width.widthflightnoandcollie, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.packinglist.flightnumber:''}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.abwandnettokg, height: "25px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.packinglist.awbnumber:''}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.packinglist.awbnumber+' '+valuedata.packinglist.codeGrupcustomer:''}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.packinglistnoanddate, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.packinglist.nodocument:''}</Text>
@@ -475,13 +475,15 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
 
                             <View style={styles.tableRow}>
                             <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.attnandcountryorigin, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthattnandcountryorigin, maxWidth: styles.width.widthattnandcountryorigin,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Country Of Origin"}</Text>
+                                {/* <Text style={[styles.tableCell, { width: styles.width.widthattnandcountryorigin, maxWidth: styles.width.widthattnandcountryorigin,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Country Of Origin"}</Text> */}
+                                <Text style={[styles.tableCell, { width: styles.width.widthattnandcountryorigin, maxWidth: styles.width.widthattnandcountryorigin,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Invoice Number"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.codeandcountryfinal, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthcodeandcountryfinal, maxWidth: styles.width.widthcodeandcountryfinal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Country Of \n"}{"Final Dest."}</Text>
+                                {/* <Text style={[styles.tableCell, { width: styles.width.widthcodeandcountryfinal, maxWidth: styles.width.widthcodeandcountryfinal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Country Of \n"}{"Final Dest."}</Text> */}
+                                <Text style={[styles.tableCell, { width: styles.width.widthcodeandcountryfinal, maxWidth: styles.width.widthcodeandcountryfinal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Invoice Date"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.flightnoandcollie, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthflightnoandcollie, maxWidth: styles.width.widthflightnoandcollie, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Collie"}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthflightnoandcollie, maxWidth: styles.width.widthflightnoandcollie, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Boxes"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.abwandnettokg, height: "38px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Netto Kg"}</Text>
@@ -493,10 +495,12 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
 
                             <View style={styles.tableRow}>
                             <View style={[styles.tableColWidth, { width:styles.width.attnandcountryorigin, height: "25px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthattnandcountryorigin, maxWidth: styles.width.widthattnandcountryorigin,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.countryOfOrigin:''}</Text>
+                                {/* <Text style={[styles.tableCell, { width: styles.width.widthattnandcountryorigin, maxWidth: styles.width.widthattnandcountryorigin,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.countryOfOrigin:''}</Text> */}
+                                <Text style={[styles.tableCell, { width: styles.width.widthattnandcountryorigin, maxWidth: styles.width.widthattnandcountryorigin,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.nodocument:''}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.codeandcountryfinal, height: "25px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthcodeandcountryfinal, maxWidth: styles.width.widthcodeandcountryfinal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{getCodeAndCountryDest(valuedata != null?valuedata.packinglist:null).destination}</Text>
+                                {/* <Text style={[styles.tableCell, { width: styles.width.widthcodeandcountryfinal, maxWidth: styles.width.widthcodeandcountryfinal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{getCodeAndCountryDest(valuedata != null?valuedata.packinglist:null).destination}</Text> */}
+                                <Text style={[styles.tableCell, { width: styles.width.widthcodeandcountryfinal, maxWidth: styles.width.widthcodeandcountryfinal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.date:null}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.flightnoandcollie, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthflightnoandcollie, maxWidth: styles.width.widthflightnoandcollie, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.packinglist.koli:''}</Text>

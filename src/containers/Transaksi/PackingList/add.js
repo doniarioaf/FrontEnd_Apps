@@ -54,6 +54,10 @@ export default function AddPackingList(props) {
     const [ListProduct, setListProduct] = useState([]);
     // const [ListCategoryProduct, setListCategoryProduct] = useState([]);
 
+    const [ListVendor, setListVendor] = useState([]);
+    const [SelVendor, setSelVendor] = useState("");
+    const [ErrSelVendor, setErrSelVendor] = useState("");
+
 
     useEffect(() => {
         setLoading(true);
@@ -82,6 +86,16 @@ export default function AddPackingList(props) {
                 }
             ], []);
             setListCustomer(theDataProd);
+
+            theDataProd = data.data.vendorOpt.reduce((obj, el) => [
+                ...obj,
+                {
+                    'value': el.id,
+                    'label': el.nama+' / '+el.alias,
+                    'data': el
+                }
+            ], []);
+            setListVendor(theDataProd);
         }
 
         // dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + TransDate.getTime() }, successHandlerPriceList, errorHandler));
@@ -117,6 +131,7 @@ export default function AddPackingList(props) {
         let flag = true;
         setErrTransDate('');
         setErrSelCustomer('');
+        setErrSelVendor('');
         setErrItems('')
 
         let listCatogry = [];
@@ -163,6 +178,11 @@ export default function AddPackingList(props) {
 
         if (SelCustomer == '') {
             setErrSelCustomer(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+
+        if (SelVendor == '') {
+            setErrSelVendor(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
@@ -215,7 +235,7 @@ export default function AddPackingList(props) {
                 ], []);
             }
             obj.items = items;
-            
+            obj.idvendor = SelVendor;
             dispatch(actions.submitPackingList({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -476,6 +496,11 @@ export default function AddPackingList(props) {
         dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + TransDate.getTime()+'&idcustomer='+id }, successHandlerPriceList, errorHandler));
     }
 
+    const handleChangeVendor = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelVendor(id);
+    }
+
     const msgInfo = (text) => {
     
         Swal.fire({
@@ -511,6 +536,7 @@ export default function AddPackingList(props) {
                     awbnumber: InputAwbNumber,
                     netto: Netto,
                     koli: Koli,
+                    vendor:SelVendor,
                 }
             }
             validate={values => {
@@ -559,6 +585,26 @@ export default function AddPackingList(props) {
                                     />
                                     <div className="invalid-feedback-custom">{ErrTransDate}</div>
 
+                                        <label className="mt-3 form-label required" htmlFor="vendor">
+                                            {i18n.t('Vendor')}
+                                        </label>
+                                        <span style={{ color: 'red' }}>*</span>
+
+                                        <DropdownList
+                                            name="vendor"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeVendor(val)}
+                                            onBlur={val => setFieldTouched("vendor", val?.value ? val.value : '')}
+                                            data={ListVendor}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.vendor}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrSelVendor}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="customer">
                                             {i18n.t('Customer')}
@@ -580,6 +626,8 @@ export default function AddPackingList(props) {
                                             value={values.customer}
                                         />
                                         <div className="invalid-feedback-custom">{ErrSelCustomer}</div>
+
+
 
                                         {/* <label className="mt-3 form-label required" htmlFor="city">
                                             {i18n.t('City')}

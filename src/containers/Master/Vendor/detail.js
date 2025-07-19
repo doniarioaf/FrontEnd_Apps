@@ -217,6 +217,33 @@ import React, {useState,
                                 {value.type?value.type:''}
                             </strong>
                             </div>
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_ADDRESS')+' 1'}</span>
+                            <strong className="col-md-7">
+                                {value.address1?value.address1:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_ADDRESS')+' 2'}</span>
+                            <strong className="col-md-7">
+                                {value.address2?value.address2:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('NPWP')}</span>
+                            <strong className="col-md-7">
+                                {value.npwp?value.npwp:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Phone')}</span>
+                            <strong className="col-md-7">
+                                {value.phone?value.phone:''}
+                            </strong>
+                            </div>
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Bank')}</span>

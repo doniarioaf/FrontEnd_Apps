@@ -66,6 +66,11 @@ export default function EditVendor(props) {
     const [SelArea, setSelArea] = useState('');
     const [ErrSelArea, setErrSelArea] = useState('');
 
+    const [InputAddress1, setInputAddress1] = useState('');
+    const [InputAddress2, setInputAddress2] = useState('');
+    const [InputNpwp, setInputNpwp] = useState('');
+    const [InputPhone, setInputPhone] = useState('');
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -101,6 +106,11 @@ export default function EditVendor(props) {
         setCheckIsParent(val.isparent);
         setSelVendorParent(val.idvendorparent?val.idvendorparent:'');
         setSelVendorBroker(val.idvendorbroker?val.idvendorbroker:'nodata');
+
+        setInputAddress1(val.address1 ? val.address1 : '');
+        setInputAddress2(val.address2 ? val.address2 : '');
+        setInputNpwp(val.npwp ? val.npwp : '');
+        setInputPhone(val.phone ? val.phone : '');
 
         let selectedData = [];
         let VendorNotInlcueCategoryProd = [];
@@ -240,6 +250,10 @@ export default function EditVendor(props) {
             }
             obj.idvendorbroker = idvendorbroker;
             obj.idarea = SelArea;
+            obj.address1 = values.address1;
+            obj.address2 = values.address2;
+            obj.npwp = values.npwp;
+            obj.phone = values.phone;
             dispatch(actions.submitVendorData({ url: '/' + id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -333,7 +347,11 @@ export default function EditVendor(props) {
                     isparent: CheckIsParent,
                     vendorparent:SelVendorParent,
                     vendorbroker:SelVendorBroker,
-                    area:SelArea
+                    area:SelArea,
+                    address1:InputAddress1,
+                    address2:InputAddress2,
+                    npwp:InputNpwp,
+                    phone:InputPhone,
                 }
             }
             validate={values => {
@@ -351,6 +369,10 @@ export default function EditVendor(props) {
                 setInputProfit(values.profit);
                 setInputValue1(values.value1);
                 setValueOngkos(values.packing, values.kurir, values.komisi, values.profit, values.value1);
+                setInputAddress1(values.address1);
+                setInputAddress2(values.address2);
+                setInputNpwp(values.npwp);
+                setInputPhone(values.phone);
                 return errors;
             }}
             enableReinitialize="true"
@@ -569,6 +591,59 @@ export default function EditVendor(props) {
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                        <label className="mt-3 form-label required" htmlFor="address1">
+                                            {i18n.t('label_ADDRESS')+' 1'}
+                                        </label>
+                                        <Input
+                                            name="address1"
+                                            type="text"
+                                            id="address1"
+                                            // maxLength={150}
+
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.address1}
+                                        />
+                                        <label className="mt-3 form-label required" htmlFor="address1">
+                                            {i18n.t('label_ADDRESS')+' 2'}
+                                        </label>
+                                        <Input
+                                            name="address2"
+                                            type="text"
+                                            id="address2"
+                                            // maxLength={150}
+
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.address2}
+                                        />
+
+                                        <label className="mt-3 form-label required" htmlFor="phone">
+                                            {i18n.t('Phone')}
+                                        </label>
+                                        <Input
+                                            name="phone"
+                                            type="text"
+                                            id="phone"
+                                            // maxLength={150}
+
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.phone}
+                                        />
+                                        <label className="mt-3 form-label required" htmlFor="npwp">
+                                            {i18n.t('NPWP')}
+                                        </label>
+                                        <Input
+                                            name="npwp"
+                                            type="text"
+                                            id="npwp"
+                                            // maxLength={150}
+
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.npwp}
+                                        />
                                         <label className="mt-3 form-label required" htmlFor="bankname">
                                             {i18n.t('Bank')}
                                             {/* <span style={{color:'red'}}>*</span> */}
