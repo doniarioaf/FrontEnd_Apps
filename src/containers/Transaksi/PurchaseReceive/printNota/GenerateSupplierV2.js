@@ -458,7 +458,7 @@ const setItems = (value) =>{
             rowItem = [];
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.chargeandinventori, height: heightRow }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthchargeandinventori, maxWidth: styles.width.widthchargeandinventori, textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{det.chargename}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthchargeandinventori, maxWidth: styles.width.widthchargeandinventori, textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{det.chargenamecustom?det.chargenamecustom :det.chargename}</Text>
                 </View>
             );
             rowItem.push(
@@ -658,7 +658,9 @@ const GeneratePurchaseReceiveSupplier = ({ valuedata }) => {
 
                             <View style={[styles.table]}>
                             <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, { width:"100%", height: "150px" }]}>
+                            {/* <View style={[styles.tableColWidth, { width:"100%", height:(valuedata != null ? valuedata.sizeHeightBoxInfoDPDLL : "150px") }]}> */}
+                            {/* Height dihapus agar fleksibel */}
+                            <View style={[styles.tableColWidth, { width:"100%"}]}>
                                 {lsitTambahDP(valuedata != null ? valuedata : [])}
                                 <Text style={[styles.tableCell, { fontFamily: 'roboto',width: 200, maxWidth: 200, marginTop: '1px', fontSize: fontSizeBig }]}>{"Keterangan: "}</Text>
                                 <Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}>{valuedata != null ? valuedata.notes : ''}</Text>

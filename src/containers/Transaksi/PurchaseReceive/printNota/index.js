@@ -109,6 +109,14 @@ export default function PrintNota(props) {
                 dettemp.totalpage = 1; 
             }
 
+            let sizeHeightBoxInfoDPDLL = 150;
+            let setorPinjaman = det.setorPinjaman?det.setorPinjaman:0;
+            if(setorPinjaman > 0){
+                sizeHeightBoxInfoDPDLL = 180;
+            }
+
+            sizeHeightBoxInfoDPDLL = sizeHeightBoxInfoDPDLL+"px";
+            dettemp.sizeHeightBoxInfoDPDLL = sizeHeightBoxInfoDPDLL;
             setValue(dettemp);
 
             setTimeout(() => {
