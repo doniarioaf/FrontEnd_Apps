@@ -2010,7 +2010,7 @@ export default function EditPurchaseReceive(props) {
                                                                     id="namabiaya"
                                                                     // onChange={val => handleInputChangeBiaya(val,i)}
                                                                     // onBlur={handleBlur}
-                                                                    value={x.namabiayacustom}
+                                                                    value={x.namabiayacustom == 'SETORPINJAMAN'?'SETOR PINJAMAN':x.namabiayacustom}
                                                                     onChange={val => handleInputChangePenguranganBiaya(val, i)}
                                                                     disabled={x.namabiaya == 'BOAT' || x.namabiaya == 'BANTUAN'?false:true}
                                                                 /></td>

@@ -20,8 +20,8 @@ const MappingStockIndex = () => {
     const [columns] = useState([
         {name: 'id', title: 'id'},
         // {name: 'code', title: i18n.t('Code')},
-        {name: 'categoryproduct', title: i18n.t('Category Product')},
-        {name: 'categoryproductmapping', title: i18n.t('Category Product (Mapping)')},
+        {name: 'categoryproduct', title: i18n.t('Category Product Vendor')},
+        {name: 'categoryproductmapping', title: i18n.t('Category Product Customer')},
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);

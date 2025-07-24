@@ -424,7 +424,7 @@ import React, {useState,
                             ListItemBiaya.map((x, i) => {
                                 return (
                                     <tr>
-                                        <td>{x.chargenamecustom?x.chargenamecustom :x.chargename}</td>
+                                        <td>{x.chargenamecustom?x.chargenamecustom :(x.chargename == 'SETORPINJAMAN'?'SETOR PINJAMAN':x.chargename)}</td>
                                         <td>{x.qty}</td>
                                         <td>{x.price?numToMoney(x.price):0}</td>
                                         <td>{x.subtotalprice?numToMoney(x.subtotalprice):0}</td>
