@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
         widthukuran:45,
         widthgram:45,
         widthkuantitas:50,
-        widthharga:47,
-        widthjumlah:90,
+        widthharga:60,
+        widthjumlah:72,
         widthweightkg:48,
         widthnoofbox:48,
         no:'5%',
@@ -36,8 +36,8 @@ const styles = StyleSheet.create({
         ukuran:'9%',
         gram:'10%',
         kuantitas:'11%',
-        harga:'10%',
-        jumlah:'18%',
+        harga:'13%',
+        jumlah:'15%',
         weightkg:'10%',
         noofbox:'9%',
 
@@ -400,10 +400,10 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                                     {valuedata != null?valuedata.packinglist.vendorAddress2:''}
                                 </Text>
                                 <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '3px', fontSize: fontSizeMedium }]}>
-                                    {valuedata != null?'NPWP : '+valuedata.packinglist.vendorNpwp:''}
+                                    {valuedata != null?'NPWP : '+(valuedata.packinglist.vendorNpwp?valuedata.packinglist.vendorNpwp:''):''}
                                 </Text>
                                 <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '3px', fontSize: fontSizeMedium }]}>
-                                    {valuedata != null?'Phone : '+valuedata.packinglist.vendorPhone:''}
+                                    {valuedata != null?'Phone : '+(valuedata.packinglist.vendorPhone?valuedata.packinglist.vendorPhone:''):''}
                                 </Text>
                             </View>
 
@@ -542,7 +542,7 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: styles.width.widthgram, maxWidth: styles.width.widthgram, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Gram"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.kuantitas, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Qty"}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Qty (Pcs)"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.weightkg, height: "38px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Weight Kg"}</Text>
@@ -551,7 +551,7 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"No. Of\n"}{"Boxes"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.harga, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Price"}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Unit Price\n"}{"(USD)"}</Text>
                             </View>
 
                             <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.jumlah, height: "38px" }]}>
