@@ -263,6 +263,7 @@ const lsitTambahDP = (value) =>{
         }   
     }
     if(setorPinjaman > 0){
+        totalprice = totalprice - setorPinjaman;
     // if(false){
         list.push(
         <View style={{display:'table',width:'auto'}}>
@@ -329,7 +330,7 @@ const setUdangMati = (items) =>{
         if(listfilteroutput.length > 0){
             for(let i=0; i < listfilteroutput.length; i++){
                 let det = listfilteroutput[i];
-                list.push(det.size+det.qty);
+                list.push(det.size+'('+det.qty+')');
             }
             
             return <Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}>{'Udang Mati '+list.join()}</Text>
