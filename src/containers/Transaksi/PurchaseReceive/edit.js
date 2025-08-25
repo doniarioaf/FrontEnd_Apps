@@ -452,7 +452,7 @@ export default function EditPurchaseReceive(props) {
 
                 for (let i = 0; i < ListItemsPurchaseReceiveMati.length; i++) {
                     let el = ListItemsPurchaseReceiveMati[i];
-                    if (parseInt(el.qtymati) > 0) {
+                    // if (parseInt(el.qtymati) > 0) {
                     // if (true) {
                         items.push(
                             {
@@ -466,7 +466,7 @@ export default function EditPurchaseReceive(props) {
                                 'type': 'M'
                             }
                         );
-                    }
+                    // }
                 }
 
             }

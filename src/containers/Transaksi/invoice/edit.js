@@ -38,6 +38,7 @@ export default function AddPackingList(props) {
     const [InputCustomerID, setInputCustomerID] = useState("");
     const [InputCustomerAddress, setInputCustomerAddress] = useState("");
     const [InputPhone, setInputPhone] = useState("");
+    const [InputVendorUPI, setInputVendorUPI] = useState("");
     const [InputAttention, setInputAttention] = useState("");
     const [InputKurs, setInputKurs] = useState(1);
     const [ErrInputKurs, setErrInputKurs] = useState("");
@@ -69,6 +70,7 @@ export default function AddPackingList(props) {
         setInputCustomer(packinglist.customerName+'/'+packinglist.customerAlias);
         setInputCustomerAddress(packinglist.customerAddress);
         setInputAttention(packinglist.attention);
+        setInputVendorUPI(packinglist.vendorAlias?packinglist.vendorAlias:'')
         setLoading(false);
     }
     // function successHandler(data, propsdata) {
@@ -219,6 +221,7 @@ export default function AddPackingList(props) {
                     transdate: TransDate,
                     kurs: InputKurs,
                     phone: InputPhone,
+                    VendorUPI:InputVendorUPI,
                     customer: InputCustomer,
                     address: InputCustomerAddress,
                     attention: InputAttention,
@@ -291,6 +294,23 @@ export default function AddPackingList(props) {
                                         // onChange={val => handleInputNama(val)}
                                         onBlur={handleBlur}
                                         value={values.phone}
+                                        disabled={true}
+                                    />
+
+                                    <label className="mt-3 form-label required" htmlFor="VendorUPI">
+                                        {i18n.t('Vendor UPI')}
+                                    </label>
+                                    <Input
+
+                                        name="VendorUPI"
+                                        type="text"
+                                        id="VendorUPI"
+                                        // maxLength={100}
+
+                                        // onChange={handleChange}
+                                        // onChange={val => handleInputNama(val)}
+                                        // onBlur={handleBlur}
+                                        value={values.VendorUPI}
                                         disabled={true}
                                     />
 

@@ -165,6 +165,7 @@ export default function AddPurchaseReceive(props) {
                         setSelDraftPurchaseReceive(iddraft);
                         let listfilteroutput = theDataVendor.filter(output => output.value == idvendor);
                         if(listfilteroutput.length > 0){
+                            sessionStorage.setItem('notapembelianvendor',idvendor);
                             changeVendor(listfilteroutput[0],theDataCharge,[],theDataArea);
                         }else{
                             //kemungkinan di master vendor nya sudah di delete
@@ -381,7 +382,7 @@ export default function AddPurchaseReceive(props) {
 
                 for (let i = 0; i < ListItemsPurchaseReceiveMati.length; i++) {
                     let el = ListItemsPurchaseReceiveMati[i];
-                    if (parseInt(el.qtymati) > 0) {
+                    // if (parseInt(el.qtymati) > 0) {
                     // if (true) {
                         items.push(
                             {
@@ -395,7 +396,7 @@ export default function AddPurchaseReceive(props) {
                                 'type': 'M'
                             }
                         );
-                    }
+                    // }
                 }
 
             }
@@ -947,24 +948,52 @@ export default function AddPurchaseReceive(props) {
         
     }
     function successHandlerItemDraft(data, propsdata) {
+        //sessionStorage.setItem('notapembelianvendor',idvendor);
+        let idvendor = sessionStorage.getItem('notapembelianvendor');
         let listItems = data.data;
+        if(idvendor !== null && idvendor !== undefined && idvendor !== ''){
+            dispatch(actions.getPurchaseReceiveData({ url: '/getlastdocitem/' + idvendor,propsdata:{listItems:listItems} }, successHandlerLastDocItem, errorHandler));
+        }else{
+            setItemDraft(listItems,null);
+
+            setLoading(false);
+        }
+        
+    }
+    function successHandlerLastDocItem(data, propsdata) {
+        let listItems = propsdata.listItems;
+        setItemDraft(listItems,(data.data.items?data.data.items:null));
+        setLoading(false);
+    }
+
+    function setItemDraft(listItems, valuelastdoc) {
         let listfilteroutputHidup = listItems.filter(output => output.type == 'H');
         let listfilteroutputMati = listItems.filter(output => output.type == 'M');
-
         let arrDistinctCP = [];
         let listitemhidup = [];
         let totalQty = 0;
         let totalQtyNota = 0;
+        let priceLastDocHidup = 0;
+        let priceLastDocMati = 0;
         for(let i =0; i < listfilteroutputHidup.length; i++){
+            priceLastDocHidup = 0;
             let el = listfilteroutputHidup[i];
             let ekor = el.ekor?parseInt(el.ekor):0;
             // if(ekor <= 0){
             //     continue;
             // }
 
-            
             let idcategoryproduct = el.idcategoryproduct;
+            
             if(arrDistinctCP.indexOf(idcategoryproduct) == -1){
+                if(valuelastdoc !== null){
+                let filteroutputLastDocHidup = valuelastdoc.filter(output => output.type == 'H' && output.idproduct == el.idproduct && output.idcategoryproduct == idcategoryproduct);
+                
+                if(filteroutputLastDocHidup.length > 0){
+                    priceLastDocHidup = filteroutputLastDocHidup[0].price;
+                    }
+                }
+
                 let listfilteroutput = listfilteroutputHidup.filter(output => output.idcategoryproduct == idcategoryproduct);
                 let totalekor = 0;
                 let totalkg = 0;
@@ -988,13 +1017,24 @@ export default function AddPurchaseReceive(props) {
                         'qtybonus': 0,
                         'qtynota': totalekor,
                         'qtymati': 0,
-                        'itemsprice': 0,
-                        'subtotalprice': 0
+                        'itemsprice': priceLastDocHidup,
+                        'subtotalprice': (priceLastDocHidup * totalekor)
                     }
                 );
                 arrDistinctCP.push(idcategoryproduct);
             }
         }
+        
+        
+
+        let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        }
+        let objPrice = calculateTotalPrice(listitemhidup, listCharge, ListItemsInventori);
+        let totalPrice = objPrice.totalPrice;
+        let totalPriceItemHidup = objPrice.totalPriceItemHidup;
+
         if(listitemhidup.length > 0){
             listitemhidup.push(
                 {
@@ -1006,18 +1046,12 @@ export default function AddPurchaseReceive(props) {
                     'qtynota': totalQtyNota,
                     'qtymati': 0,
                     'itemsprice': 0,
-                    'subtotalprice': 0
+                    'subtotalprice': totalPriceItemHidup
                 }
             );
         }
         setListItemsPurchaseReceive(listitemhidup);
-        let listCharge = [...ListItemsPurchaseReceiveBiaya];
-        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
-            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
-        }
-        let objPrice = calculateTotalPrice(listitemhidup, listCharge, ListItemsInventori);
-        let totalPrice = objPrice.totalPrice;
-        let totalPriceItemHidup = objPrice.totalPriceItemHidup;
+
         setInputTotalPrice(totalPrice);
         if (IsDefaultSetorTotalPrice) {
             setInputSetor(totalPrice);
@@ -1026,9 +1060,18 @@ export default function AddPurchaseReceive(props) {
         arrDistinctCP = [];
         let listitemmati = [];
         for(let i =0; i < listfilteroutputMati.length; i++){
+            priceLastDocMati = 0;
             let el = listfilteroutputMati[i];
             let idcategoryproduct = el.idcategoryproduct;
             if(arrDistinctCP.indexOf(idcategoryproduct) == -1){
+                if(valuelastdoc !== null){
+                let filteroutputLastDocMati = valuelastdoc.filter(output => output.type == 'M' && output.idproduct == el.idproduct && output.idcategoryproduct == idcategoryproduct);
+                
+                if(filteroutputLastDocMati.length > 0){
+                    priceLastDocMati = filteroutputLastDocMati[0].price;
+                    }
+                }
+
                 let listfilteroutput = listfilteroutputMati.filter(output => output.idcategoryproduct == idcategoryproduct);
                 let totalekor = 0;
                 let totalkg = 0;
@@ -1048,17 +1091,16 @@ export default function AddPurchaseReceive(props) {
                         'qty': 0,
                         'qtybonus': 0,
                         'qtymati': totalekor,
-                        'itemsprice': 0,
-                        'subtotalprice': 0
+                        'itemsprice': priceLastDocMati,
+                        'subtotalprice': (priceLastDocMati * totalekor)
                     }
                 );
                 arrDistinctCP.push(idcategoryproduct);
             }
         }
         setListItemsPurchaseReceiveMati(listitemmati);
-
-        setLoading(false);
     }
+
     const handleChangeVendor = (data) => {
         let listCharge = [...ListItemsPurchaseReceiveBiaya];
         for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){

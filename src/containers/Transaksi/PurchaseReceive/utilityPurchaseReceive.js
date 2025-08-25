@@ -103,7 +103,7 @@ export const calculateTotalPrice = (listitems, listbiaya, listinventori)  =>{
      * SETOR = - totaprice
      * SETORPINJAMAN = - totaprice
      */
-    console.log('totalPrice ',totalPrice);
+    // console.log('totalPrice ',totalPrice);
     if(listbiaya != null && listbiaya.length > 0){
         for(let i=0; i < listbiaya.length > 0; i++){
             let det = listbiaya[i];
@@ -117,7 +117,7 @@ export const calculateTotalPrice = (listitems, listbiaya, listinventori)  =>{
             }
         }
     }
-    console.log('totalPrice ',totalPrice);
+    // console.log('totalPrice ',totalPrice);
 
     if(listinventori != null && listinventori.length > 0){
         for(let i=0; i < listinventori.length > 0; i++){

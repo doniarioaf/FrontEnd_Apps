@@ -254,7 +254,7 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Vendor')}</span>
+                            <span className="col-md-5">{i18n.t('Vendor UPI')}</span>
                                 <strong className="col-md-7">
                                 {value.vendorName ?value.vendorName+'/'+value.vendorAlias:''}
                                 </strong>
@@ -355,10 +355,10 @@ import React, {useState,
                         <th >{i18n.t('Product')}</th>
                         <th >{i18n.t('Category Product')}</th>
                         <th >{i18n.t('Qty')}</th>
-                        <th >{i18n.t('Bruto Weight')}</th>
-                        <th >{i18n.t('Allowance')}</th>
-                        <th >{i18n.t('Netto Weight')}</th>
-                        <th >{i18n.t('Price')}</th>
+                        <th >{i18n.t('Bruto Weight(Gr)')}</th>
+                        <th >{i18n.t('Allowance(%)')}</th>
+                        <th >{i18n.t('Netto Weight(Kg)')}</th>
+                        <th >{i18n.t('Price(USD)')}</th>
                         <th >{i18n.t('Subtotal Price')}</th>
                         </tr>
                         {

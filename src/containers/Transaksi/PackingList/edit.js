@@ -422,7 +422,7 @@ export default function EditPackingList(props) {
                 subtotal = pembulatanNilai(subtotal,{isdown:false,numberdesimal:1});
 
                 list[index]['subtotalprice'] = formatRupiah(new String(subtotal).replaceAll('.',','),1);
-                list[index]['nettoweight'] = formatRupiah(new String(pembulatannilai).replaceAll('.',','),1);
+                list[index]['nettoweight'] = formatRupiah(new String(valKg).replaceAll('.',','),1);
                 // list[index]['subtotalprice'] = subtotal.toFixed(2);
             }
                 // if (name == 'qty') {
@@ -654,7 +654,7 @@ export default function EditPackingList(props) {
                                     <div className="invalid-feedback-custom">{ErrTransDate}</div>
 
                                     <label className="mt-3 form-label required" htmlFor="vendor">
-                                        {i18n.t('Vendor')}
+                                        {i18n.t('Vendor UPI')}
                                     </label>
                                     <span style={{ color: 'red' }}>*</span>
 
@@ -822,10 +822,10 @@ export default function EditPackingList(props) {
                                                     <th >{i18n.t('Product')}</th>
                                                     <th >{i18n.t('Category Product')}</th>
                                                     <th >{i18n.t('Qty')}</th>
-                                                    <th >{i18n.t('Bruto Weight')}</th>
-                                                    <th >{i18n.t('Allowance')}</th>
-                                                    <th >{i18n.t('Netto Weight')}</th>
-                                                    <th >{i18n.t('Price')}</th>
+                                                    <th >{i18n.t('Bruto Weight(Gr)')}</th>
+                                                    <th >{i18n.t('Allowance(%)')}</th>
+                                                    <th >{i18n.t('Netto Weight(Kg)')}</th>
+                                                    <th >{i18n.t('Price(USD)')}</th>
                                                     <th >{i18n.t('Subtotal Price')}</th>
                                                 </tr>
                                                 {
