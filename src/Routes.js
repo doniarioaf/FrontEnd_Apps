@@ -263,6 +263,8 @@ const addPinjaman = lazy(() => import('./containers/Transaksi/Pinjaman/add'));
 const detailPinjaman = lazy(() => import('./containers/Transaksi/Pinjaman/detail'));
 const editPinjaman = lazy(() => import('./containers/Transaksi/Pinjaman/edit'));
 
+const cancelPackingList = lazy(() => import('./containers/Transaksi/PackingList/cancelPackingList'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -535,6 +537,8 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.addpinjaman} component={waitFor(addPinjaman)} />
                                         <Route path={pathmenu.detailpinjaman+ '/:id'} component={waitFor(detailPinjaman)} />
                                         <Route path={pathmenu.editpinjaman+ '/:id'} component={waitFor(editPinjaman)} />
+
+                                        <Route path={pathmenu.cancelpackinglist+ '/:id'} component={waitFor(cancelPackingList)} />
                                         
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
 

@@ -79,5 +79,7 @@ export {
     getKomisiData,
     submitKomisi,
     getPinjamanData,
-    submitPinjaman
+    submitPinjaman,
+    getCancelPackingListData,
+    submitCancelPackingList
 } from './admin';

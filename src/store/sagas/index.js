@@ -75,7 +75,9 @@ import {
     submitKomisiSaga,
     getKomisiDataSaga,
     submitPinjamanSaga,
-    getPinjamanDataSaga
+    getPinjamanDataSaga,
+    getCancelPackingListDataSaga,
+    submitCancelPackingListSaga
 } from './admin';
 
 
@@ -155,5 +157,7 @@ export function* watchAdmin() {
         takeEvery(actions.GET_KOMISI_DATA, getKomisiDataSaga),
         takeEvery(actions.SUBMIT_PINJAMAN, submitPinjamanSaga),
         takeEvery(actions.GET_PINJAMANA_DATA, getPinjamanDataSaga),
+        takeEvery(actions.GET_CANCELPACKINGLIST_DATA, getCancelPackingListDataSaga),
+        takeEvery(actions.SUBMIT_CANCELPACKINGLIST, submitCancelPackingListSaga),
     ]);
 }

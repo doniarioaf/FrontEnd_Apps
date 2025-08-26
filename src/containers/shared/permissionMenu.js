@@ -100,6 +100,8 @@ export const addPinjaman_Permission = ['READ_PINJAMAN','CREATE_PINJAMAN'];
 export const editPinjaman_Permission = ['READ_PINJAMAN','EDIT_PINJAMAN'];
 export const deletePinjaman_Permission = ['DELETE_PINJAMAN'];
 
+export const cancelPackingList_Permission = ['CREATE_CANCELPACKINGLIST'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];

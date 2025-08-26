@@ -607,3 +607,21 @@ export const submitPinjaman = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getCancelPackingListData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_CANCELPACKINGLIST_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitCancelPackingList = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_CANCELPACKINGLIST,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

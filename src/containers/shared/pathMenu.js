@@ -119,3 +119,4 @@ export const menuPinjaman = `/pinjaman`;
 export const addpinjaman = `/form/add/pinjaman`;
 export const detailpinjaman = `/form/detail/pinjaman`;
 export const editpinjaman = `/form/edit/pinjaman`;
+export const cancelpackinglist = `/form/cancel/packinglist`;

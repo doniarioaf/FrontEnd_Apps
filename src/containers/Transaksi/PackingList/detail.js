@@ -25,7 +25,7 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
   import { formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { MenuPackingList, deletePackingList_Permission, editPackingList_Permission } from '../../shared/permissionMenu';
+  import { MenuPackingList, cancelPackingList_Permission, deletePackingList_Permission, editPackingList_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
   import '../../CSS/table.css';
@@ -407,6 +407,7 @@ import React, {useState,
                             <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => downloadExcelPL()}>{i18n.t('Excel Packing List')}</MenuItem>
                             <MenuItem hidden={value.isalreadyupdateprice != null && value.isalreadyupdateprice != undefined? (isGetPermissions(editPackingList_Permission,'TRANSACTION')?value.isalreadyupdateprice: true):true}  onClick={() => updatePrice()}>{i18n.t('Update Price')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editPackingList_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpackinglist+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(cancelPackingList_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.cancelpackinglist+'/'+id)}>{i18n.t('Cancel Packing List')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deletePackingList_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={!isGetPermissions(MenuPurchaseReceive,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Nota')}</MenuItem> */}
                             
