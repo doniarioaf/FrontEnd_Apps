@@ -237,6 +237,12 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuPackingList,
                 },
                 {
+                    name: 'Cancel Packing List',
+                    path: pathmenu.menucancelpackinglist,
+                    translate: 'Packing List',
+                    permission:permissionmenu.MenuPackingList,
+                },
+                {
                     name: 'Invoice',
                     path: pathmenu.menuinvoice,
                     translate: 'Invoice',
