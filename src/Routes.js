@@ -266,6 +266,8 @@ const editPinjaman = lazy(() => import('./containers/Transaksi/Pinjaman/edit'));
 const cancelPackingList = lazy(() => import('./containers/Transaksi/PackingList/cancelPackingList'));
 
 const menuCancelPackingList = lazy(() => import('./containers/Transaksi/CancelPackingList'));
+const detailCancelPackingList = lazy(() => import('./containers/Transaksi/CancelPackingList/detail'));
+const editCancelPackingList = lazy(() => import('./containers/Transaksi/CancelPackingList/edit'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -542,6 +544,8 @@ const Routes = ({ location, ...props }) => {
 
                                         <Route path={pathmenu.cancelpackinglist+ '/:id'} component={waitFor(cancelPackingList)} />
                                         <Route path={pathmenu.menucancelpackinglist} component={waitFor(menuCancelPackingList)} />
+                                        <Route path={pathmenu.detailcancelpackinglist+ '/:id'} component={waitFor(detailCancelPackingList)} />
+                                        <Route path={pathmenu.editcancelpackinglist+ '/:id'} component={waitFor(editCancelPackingList)} />
                                         
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
 

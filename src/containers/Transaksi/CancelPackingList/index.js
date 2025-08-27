@@ -76,7 +76,7 @@ const CancelPackingListIndex = () => {
         // history.push(pathmenu.addpackinglist);
     }
     function onClickView(id) {
-        // history.push(pathmenu.detailpackinglist + '/' + id);
+        history.push(pathmenu.detailcancelpackinglist + '/' + id);
     }
 
     const handleChangeFrom = (data) => {

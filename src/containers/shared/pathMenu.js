@@ -121,3 +121,5 @@ export const detailpinjaman = `/form/detail/pinjaman`;
 export const editpinjaman = `/form/edit/pinjaman`;
 export const cancelpackinglist = `/form/cancel/packinglist`;
 export const menucancelpackinglist = `/cancelpackinglist`;
+export const detailcancelpackinglist = `/form/detail/cancelpackinglist`;
+export const editcancelpackinglist = `/form/edit/cancelpackinglist`;
