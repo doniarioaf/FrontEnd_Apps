@@ -240,7 +240,13 @@ const handleMenu = () => {
                     name: 'Cancel Packing List',
                     path: pathmenu.menucancelpackinglist,
                     translate: 'Packing List',
-                    permission:permissionmenu.MenuPackingList,
+                    permission:permissionmenu.MenuCancelPackingList,
+                },
+                {
+                    name: 'Lprn Cancel Packing List',
+                    path: pathmenu.menuReportCancelPackingList,
+                    translate: 'Lprn Penjualan',
+                    permission:permissionmenu.MenuReportCancelPackingList,
                 },
                 {
                     name: 'Invoice',

@@ -123,3 +123,4 @@ export const cancelpackinglist = `/form/cancel/packinglist`;
 export const menucancelpackinglist = `/cancelpackinglist`;
 export const detailcancelpackinglist = `/form/detail/cancelpackinglist`;
 export const editcancelpackinglist = `/form/edit/cancelpackinglist`;
+export const menuReportCancelPackingList = `/reportCancelPackingList`;

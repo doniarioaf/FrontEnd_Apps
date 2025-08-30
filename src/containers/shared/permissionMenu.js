@@ -101,6 +101,7 @@ export const editPinjaman_Permission = ['READ_PINJAMAN','EDIT_PINJAMAN'];
 export const deletePinjaman_Permission = ['DELETE_PINJAMAN'];
 
 export const cancelPackingList_Permission = ['CREATE_CANCELPACKINGLIST'];
+export const editcancelPackingList_Permission = ['EDIT_CANCELPACKINGLIST'];
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
@@ -140,3 +141,5 @@ export const MenuReportKartuStock = ['READ_REPORT_KARTUSTOCK'];
 export const MenuKomisi = ['READ_KOMISI'];
 export const MenuReportKomisi = ['READ_REPORT_KOMISI'];
 export const MenuPinjaman = ['READ_PINJAMAN'];
+export const MenuCancelPackingList = ['READ_CANCELPACKINGLIST'];
+export const MenuReportCancelPackingList = ['READ_REPORT_CANCELPACKINGLIST'];
