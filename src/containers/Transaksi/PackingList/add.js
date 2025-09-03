@@ -356,7 +356,7 @@ export default function AddPackingList(props) {
                     let netto = parseFloat(valTemp) - (parseFloat(valTemp) * allowance);
                     let pembulatannilai = pembulatanNilai(netto,{isdown:false,numberdesimal:1});
                     let valKg = convertGramToKG({nilaigr:pembulatannilai});
-                    valKg = pembulatanNilai(valKg,{isdown:false,numberdesimal:1});
+                    // valKg = pembulatanNilai(valKg,{isdown:false,numberdesimal:1});
 
                     let pricetemp = new String(listTemp[index]['itemsprice']) !== '' ? listTemp[index]['itemsprice'] : '0';
                     let valPriceTemp = '';

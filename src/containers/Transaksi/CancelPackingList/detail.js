@@ -55,6 +55,7 @@ import React, {useState,
     const id = props.match.params.id;
 
     const [ListItem, setListItem] = useState([]);
+    const [ListItemPL, setListItemPL] = useState([]);
 
     const handleToggle = (flag) => {
         setOpen((prevOpen) => !prevOpen);
@@ -96,7 +97,9 @@ import React, {useState,
         setValue(det);
 
         let listItems = det.items?det.items:[];
+        let listItemsPL = det.itemsPL?det.itemsPL:[];
         setListItem(listItems);
+        setListItemPL(listItemsPL)
         setLoading(false);
     }
 
@@ -303,7 +306,45 @@ import React, {useState,
 
             {
                 <div className="row justify-content-center">
-                    <h4>{'Item'}</h4>
+                    <h4>{'Items Packing List'}</h4>
+                    <table id="tablegrid">
+                    <tbody>
+                        <tr>
+                        <th >{i18n.t('Box')}</th>
+                        <th >{i18n.t('Product')}</th>
+                        <th >{i18n.t('Category Product')}</th>
+                        <th >{i18n.t('Qty')}</th>
+                        <th >{i18n.t('Bruto Weight(Gr)')}</th>
+                        <th >{i18n.t('Allowance(%)')}</th>
+                        <th >{i18n.t('Netto Weight(Kg)')}</th>
+                        <th >{i18n.t('Price(USD)')}</th>
+                        <th >{i18n.t('Subtotal Price')}</th>
+                        </tr>
+                        {
+                            ListItemPL.map((x, i) => {
+                                return (
+                                    <tr>
+                                        <td>{x.box}</td>
+                                        <td>{x.productName}</td>
+                                        <td>{x.categoryProductName +' ('+x.categoryProductSize+') ('+x.categoryJumlahitemsperkoli+')'}</td>
+                                        <td>{x.qty}</td>
+                                        <td>{x.brutoweight?numToMoney(x.brutoweight):0}</td>
+                                        <td>{x.allowance?numToMoney(x.allowance):0}</td>
+                                        <td>{x.nettoweight?formatRupiah(new String(x.nettoweight).replaceAll('.',','),1):0}</td>
+                                        <td>{x.price?numToMoney(x.price):0}</td>
+                                        <td>{x.totalprice?formatRupiah(new String(x.totalprice).replaceAll('.',','),1):0}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                    </table>
+                </div>
+            }
+
+            {
+                <div className="row justify-content-center">
+                    <h4>{'Item Udang Mati'}</h4>
                     <table id="tablegrid">
                     <tbody>
                         <tr>

@@ -220,7 +220,13 @@ const lsitTambahDP = (value) =>{
             <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Saldo DP "}{desimal00(formatRupiah(new String(saldoDP).replaceAll('.',','),2)) }</Text>
             </View>; 
     let viewTambahDPIndex0 = null;
-    if(saldoDP <= 0){
+
+    let showLabelDP = true;
+    if(setorDeposit <= 0){
+        showLabelDP = false;
+    }
+
+    if(saldoDP <= 0 && setorDeposit <= 0){
         viewSaldoDP = null;   
     }
     let indexDep = 0;
@@ -325,7 +331,7 @@ const lsitTambahDP = (value) =>{
         <View style={{display:'table',width:'auto'}}>
             <View style={{flexDirection:'row'}}>
                 <View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
-                <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{sisaDP > 0?"Sisa DP "+desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2)):null}</Text>
+                <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{showLabelDP ?"Sisa DP "+desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2)):null}</Text>
                 </View>
                 {tempViewSetorPinjaman}
             </View>
@@ -342,14 +348,14 @@ const lsitTambahDP = (value) =>{
         <View style={{display:'table',width:'auto'}}>
             <View style={{flexDirection:'row'}}>
                 <View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
-                <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{sisaDP > 0? "Sisa DP "+desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2)):null}</Text>
+                <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{showLabelDP ? "Sisa DP "+desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2)):null}</Text>
                 </View>
                 {tempViewSetorPinjaman !== null?tempViewSetorPinjaman:tempViewSisaPinjaman}
             </View>
         </View>
     );
     }else{
-        list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}> {sisaDP > 0? "Sisa DP : "+desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2)) :null}  </Text>);
+        list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}> {showLabelDP ? "Sisa DP : "+desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2)) :null}  </Text>);
     }
     
     
