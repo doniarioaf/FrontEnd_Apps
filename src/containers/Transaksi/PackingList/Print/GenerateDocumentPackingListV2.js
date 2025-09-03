@@ -139,7 +139,7 @@ const calcNettoHeader = (value) =>{
     for(let i=0; i < listfilteroutput.length; i++){
         let det = listfilteroutput[i];
         let nettoweight = det.nettoweight?det.nettoweight:0;
-            nettoweight = convertkg(nettoweight);
+            // nettoweight = convertkg(nettoweight);
 
         //kenapa totalan netto tidak ambil dari value.netto / total netto header karena ketika gr convert ke kg terjadi pembulatan sehingga ketika netto header di convert ke kg menjadi tidak sama desimal nya
         totalnetto += nettoweight;
@@ -174,7 +174,7 @@ const setItems = (value) =>{
             let rowItem = [];
             
             let nettoweight = det.nettoweight?det.nettoweight:0;
-            nettoweight = convertkg(nettoweight);
+            // nettoweight = convertkg(nettoweight);
 
             console.log('nettoweight ',nettoweight);
 
@@ -214,7 +214,7 @@ const setItems = (value) =>{
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.weightkg, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(nettoweight).replaceAll('.',','),1)}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(nettoweight).replaceAll('.',','),4)}</Text>
                 </View>
             );
             
@@ -248,7 +248,7 @@ const setItems = (value) =>{
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.weightkg, height: "25px" }]}>
                 {/* <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{value.netto?desimal000(formatRupiah(new String(value.netto).replaceAll('.',','),3),{isShow000:true}):''}</Text> */}
-                <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(totalnetto).replaceAll('.',','),1)}</Text>
+                <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(totalnetto).replaceAll('.',','),4)}</Text>
                 
             </View>
         );
@@ -446,7 +446,7 @@ const GenerateDocumentPackingListV2 = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: styles.width.widthflightnoandcollie, maxWidth: styles.width.widthflightnoandcollie, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.koli:''}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.abwandnettokg, height: "25px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?calcNettoHeader(valuedata):[]}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?formatRupiah(new String(calcNettoHeader(valuedata)).replaceAll('.',','),4):[]}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.packinglistnoanddate, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.date:''}</Text>

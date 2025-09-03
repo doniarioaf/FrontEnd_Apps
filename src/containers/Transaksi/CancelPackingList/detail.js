@@ -330,7 +330,7 @@ import React, {useState,
                                         <td>{x.qty}</td>
                                         <td>{x.brutoweight?numToMoney(x.brutoweight):0}</td>
                                         <td>{x.allowance?numToMoney(x.allowance):0}</td>
-                                        <td>{x.nettoweight?formatRupiah(new String(x.nettoweight).replaceAll('.',','),1):0}</td>
+                                        <td>{x.nettoweight?formatRupiah(new String(x.nettoweight).replaceAll('.',','),4):0}</td>
                                         <td>{x.price?numToMoney(x.price):0}</td>
                                         <td>{x.totalprice?formatRupiah(new String(x.totalprice).replaceAll('.',','),1):0}</td>
                                     </tr>
