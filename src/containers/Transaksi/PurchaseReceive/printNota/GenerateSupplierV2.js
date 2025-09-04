@@ -325,7 +325,7 @@ const lsitTambahDP = (value) =>{
         tempViewSisaPinjaman = null;
     }
     
-    sisaDP = totalDP - nilaiNota;
+    sisaDP = totalDP - (nilaiNota - transfer);
     if(tempViewSetorPinjaman !== null && tempViewSisaPinjaman !== null){
         list.push(
         <View style={{display:'table',width:'auto'}}>
