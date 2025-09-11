@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { convertGramToKG, formatRupiah, numToMoney, pembulatanNilai, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
+import { convertGramToKG, formatRupiah, numToMoney, pembulatanNilai, reloadToHomeNotAuthorize, removeFormatRupiah, roundCeiling } from '../../shared/globalFunc';
 import { editPackingList_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -21,7 +21,7 @@ import '../../CSS/table.css';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
-import { calcNettoWeight } from './add';
+import { calcNettoWeight, calculateNetto } from './add';
 
 export default function EditPackingList(props) {
     reloadToHomeNotAuthorize(editPackingList_Permission, 'TRANSACTION');
@@ -125,7 +125,7 @@ export default function EditPackingList(props) {
                 'idcategoryproduct': el.idcategoryproduct,
                 'categoryproductname': '',
                 'qty': el.qty,
-                'brutoweight': el.brutoweight?formatRupiah(el.brutoweight,2):0,
+                'brutoweight': el.brutoweight?el.brutoweight:0,
                 'allowance': el.allowance?formatRupiah(el.allowance,2):0,
                 'nettoweight': el.nettoweight?formatRupiah(new String(el.nettoweight).replaceAll('.',','),4):0,
                 'itemsprice': el.brutoweight?formatRupiah(el.price,2):0,
@@ -423,7 +423,7 @@ export default function EditPackingList(props) {
                     valPriceTemp = removeFormatRupiah(pricetemp);
                 }
                 subtotal = valKg * parseFloat(valPriceTemp);
-                subtotal = pembulatanNilai(subtotal,{isdown:false,numberdesimal:1});
+                subtotal = roundCeiling(subtotal,1);//pembulatanNilai(subtotal,{isdown:false,numberdesimal:1});
 
                 list[index]['subtotalprice'] = formatRupiah(new String(subtotal).replaceAll('.',','),1);
                 list[index]['nettoweight'] = formatRupiah(new String(valKg).replaceAll('.',','),4);
@@ -533,24 +533,25 @@ export default function EditPackingList(props) {
         // setKoli(list.length);
     };
 
-    const calculateNetto = (list) => {
-        let totalnetto = 0;
-        for(let i =0; i < list.length; i++){
-            let det = list[i];
-            let netto = det.nettoweight?det.nettoweight:0;
-            let valTemp = '';
-            if(new String(netto).includes(',')){
-                let splitComma = new String(netto).split(','); 
-                let angka = splitComma[0];
-                let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
-                valTemp = removeFormatRupiah(angka)+'.'+desimal;
-            }else{
-                valTemp = removeFormatRupiah(netto);
-            }
-            totalnetto += parseFloat(valTemp);
-        }
-        return formatRupiah(new String(totalnetto).replaceAll(".",','),1);
-    }
+    // const calculateNetto = (list) => {
+    //     let totalnetto = 0;
+    //     for(let i =0; i < list.length; i++){
+    //         let det = list[i];
+    //         let netto = det.nettoweight?det.nettoweight:0;
+    //         let valTemp = '';
+    //         if(new String(netto).includes(',')){
+    //             let splitComma = new String(netto).split(','); 
+    //             let angka = splitComma[0];
+    //             let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+    //             valTemp = removeFormatRupiah(angka)+'.'+desimal;
+    //         }else{
+    //             valTemp = removeFormatRupiah(netto);
+    //         }
+    //         totalnetto += parseFloat(valTemp);
+    //     }
+    //     // console.log('totalnetto ',totalnetto);
+    //     return formatRupiah(new String(totalnetto).replaceAll(".",','),1);
+    // }
 
     const handleRemoveItems = index => {
         const list = [...ListItems];

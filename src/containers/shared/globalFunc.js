@@ -446,6 +446,11 @@ export const terbilang = (nilai) =>{
     // dst
   }
 
+  export const roundCeiling = (value, decimals = 0) => {
+    const factor = Math.pow(10, decimals);
+    return Math.ceil(value * factor) / factor;
+    }
+
   export const convertGramToKG = (param) =>{
     let nilaigr = param.nilaigr?param.nilaigr:'';
     if(nilaigr !== ''){

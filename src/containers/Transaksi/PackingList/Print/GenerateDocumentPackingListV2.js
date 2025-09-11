@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 // import roboto from '../../../../components/';
 import roboto from '../../../../components/Fonts/Roboto/Roboto-Bold.ttf';
-import { convertGramToKG, desimal00, desimal000, formatRupiah, numToMoney, pembulatanNilai, terbilangRupiah } from '../../../shared/globalFunc';
+import { convertGramToKG, desimal00, desimal000, formatRupiah, numToMoney, pembulatanNilai, roundCeiling, terbilangRupiah } from '../../../shared/globalFunc';
 // import { addKurungBukaPadaValue } from '../utilityPurchaseReceive';
 
 // import logo from "img/logo.png";
@@ -22,23 +22,23 @@ const styles = StyleSheet.create({
     width:{
         widthno:20,
         
-        widthnamabarang:80,
+        widthnamabarang:93,
         widthukuran:45,
         widthgram:45,
         widthkuantitas:50,
         widthharga:58,
         widthjumlah:90,
-        widthweightkg:80,
+        widthweightkg:55,
         widthnoofbox:48,
         no:'5%',
         
-        namabarang:'16%',
+        namabarang:'20%',
         ukuran:'9%',
         gram:'10%',
         kuantitas:'11%',
         harga:'12%',
         jumlah:'18%',
-        weightkg:'15%',
+        weightkg:'11%',
         noofbox:'9%',
 
         widthattnandcountryorigin:100,
@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
         packinglistnoanddate:"30%",
 
         // widthno+widthnamabarang+widthukuran+widthgram
-        widthtotal:190,
-        total:"44%",
+        widthtotal:200,
+        total:"48%",
 
         // widthno+widthnamabarang+widthukuran+widthgram+widthkuantitas+widthweightkg+widthnoofbox
         widthkurs:190,
@@ -147,6 +147,21 @@ const calcNettoHeader = (value) =>{
     return totalnetto;
 }
 
+// const calcNettoHeaderRoundCeiling = (value) =>{
+//     let items = value.items;
+//     let listfilteroutput = items;
+//     let totalnetto = 0;
+//     for(let i=0; i < listfilteroutput.length; i++){
+//         let det = listfilteroutput[i];
+//         let nettoweight = det.nettoweight?det.nettoweight:0;
+//             nettoweight = roundCeiling(nettoweight,1);
+
+//         //kenapa totalan netto tidak ambil dari value.netto / total netto header karena ketika gr convert ke kg terjadi pembulatan sehingga ketika netto header di convert ke kg menjadi tidak sama desimal nya
+//         totalnetto += nettoweight;
+//     }
+//     return totalnetto;
+// }
+
 const setItems = (value) =>{
     
     let items = value.items;
@@ -175,6 +190,7 @@ const setItems = (value) =>{
             
             let nettoweight = det.nettoweight?det.nettoweight:0;
             // nettoweight = convertkg(nettoweight);
+            // nettoweight = roundCeiling(nettoweight,1);
 
             console.log('nettoweight ',nettoweight);
 
@@ -214,7 +230,7 @@ const setItems = (value) =>{
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.weightkg, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(nettoweight).replaceAll('.',','),4)}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(nettoweight).replaceAll('.',','),1)}</Text>
                 </View>
             );
             
@@ -248,7 +264,7 @@ const setItems = (value) =>{
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.weightkg, height: "25px" }]}>
                 {/* <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{value.netto?desimal000(formatRupiah(new String(value.netto).replaceAll('.',','),3),{isShow000:true}):''}</Text> */}
-                <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(totalnetto).replaceAll('.',','),4)}</Text>
+                <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(totalnetto).replaceAll('.',','),1)}</Text>
                 
             </View>
         );
@@ -446,7 +462,7 @@ const GenerateDocumentPackingListV2 = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: styles.width.widthflightnoandcollie, maxWidth: styles.width.widthflightnoandcollie, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.koli:''}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.abwandnettokg, height: "25px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?formatRupiah(new String(calcNettoHeader(valuedata)).replaceAll('.',','),4):[]}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?formatRupiah(new String(calcNettoHeader(valuedata)).replaceAll('.',','),1):[]}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.packinglistnoanddate, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.date:''}</Text>
