@@ -447,9 +447,11 @@ export const terbilang = (nilai) =>{
   }
 
   export const roundCeiling = (value, decimals = 0) => {
+    // ga usah bingung sama penamaan ceiling, tadinya ceiling diganti halfup, biar ga ribet
     const factor = Math.pow(10, decimals);
-    return Math.ceil(value * factor) / factor;
-    }
+    // tambahkan 0.5 lalu floor → hasilnya seperti HALF_UP
+    return Math.floor(value * factor + 0.5) / factor;
+}
 
   export const convertGramToKG = (param) =>{
     let nilaigr = param.nilaigr?param.nilaigr:'';
