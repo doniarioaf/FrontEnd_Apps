@@ -608,10 +608,10 @@ const GeneratePurchaseReceiveSupplier = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { fontFamily: 'roboto',width: 10, maxWidth: 10, marginTop: '5px', fontSize: fontSizeBig }]}>
                                     {"Kepada Yth:"}
                                 </Text>
-                                <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '5px', fontSize: fontSizeBig }]}>
+                                <Text style={[styles.tableCell, { width: 200, maxWidth: 200, marginTop: '5px', fontSize: fontSizeBig }]}>
                                     {valuedata != null?valuedata.vendorNama+' / '+valuedata.vendorAlias:''}
                                 </Text>
-                                <Text style={[styles.tableCell, { width: 10, maxWidth: 10, marginTop: '5px', fontSize: fontSizeBig }]}>
+                                <Text style={[styles.tableCell, { width: 200, maxWidth: 200, marginTop: '5px', fontSize: fontSizeBig }]}>
                                     {valuedata != null?valuedata.namaArea:''}
                                 </Text>
                             </View>
