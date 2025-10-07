@@ -78,12 +78,12 @@ export default function EditStockAdjusment(props) {
                 {
                     'idinvoice':el.idinvoice,
                     'nodocument': el.nodocumentInvoice,
-                    'amount': el.amountInvoice?formatRupiah(new String(el.amountInvoice).replaceAll('.',','),2):'',
+                    'amount': el.amountInvoice?formatRupiah(new String(el.amountInvoice).replaceAll('.',','),2):0,
                     'amountrp': formatRupiah(new String(amountRp).replaceAll('.',','),2),
-                    'outstanding': el.outstandingInvoice?formatRupiah(new String(el.outstandingInvoice).replaceAll('.',','),2):'',
-                    'biayabebanudangmati': el.biayabebanudangmati?formatRupiah(new String(el.biayabebanudangmati).replaceAll('.',','),2):'',
-                    'biayabank': el.biayabank?formatRupiah(new String(el.biayabank).replaceAll('.',','),2):'',
-                    'pembayaran': el.pembayaran?formatRupiah(new String(el.pembayaran).replaceAll('.',','),2):'',
+                    'outstanding': el.outstandingInvoice?formatRupiah(new String(el.outstandingInvoice).replaceAll('.',','),2):0,
+                    'biayabebanudangmati': el.biayabebanudangmati?formatRupiah(new String(el.biayabebanudangmati).replaceAll('.',','),2):0,
+                    'biayabank': el.biayabank?formatRupiah(new String(el.biayabank).replaceAll('.',','),2):0,
+                    'pembayaran': el.pembayaran?formatRupiah(new String(el.pembayaran).replaceAll('.',','),2):0,
                     'pembayaranrp': formatRupiah(new String(pembayaranRp).replaceAll('.',','),2),
                     'metodepembayaran': el.metodepembayaran,
                 }
@@ -114,7 +114,8 @@ export default function EditStockAdjusment(props) {
         setErrInputKurs('');
         setErrItems('')
 
-        if (ListItems.length > 0) {
+        let listitem = ListItems.filter(output => output.nodocument !== 'TOTAL');
+        if (listitem.length > 0) {
             for (let i = 0; i < ListItems.length; i++) {
                 let det = ListItems[i];
                 
@@ -145,8 +146,7 @@ export default function EditStockAdjusment(props) {
                     flag = false;
                     break;
                 }
-                console.log('totalPembayaran ',totalPembayaran);
-                console.log('outstanding ',outstanding);
+                
                 if (totalPembayaran > outstanding) {
                     setErrItems(i18n.t('Pembayaran '+det.nodocument+' Lebih besar dari nilai outstanding ($'+formatRupiah(outstanding)+')' ));
                     flag = false;
@@ -196,8 +196,9 @@ export default function EditStockAdjusment(props) {
             obj.date = TransDate.getTime();
             obj.kurs = removeFormatRupiah(values.kurs) !== '' ? removeFormatRupiah(values.kurs) : '0';
             let items = [];
-            if (ListItems.length > 0) {
-                let listitem = ListItems.filter(output => output.nodocument !== 'TOTAL');
+            let listitem = ListItems.filter(output => output.nodocument !== 'TOTAL');
+            if (listitem.length > 0) {
+                
                 items = listitem.reduce((obj, el) => [
                     ...obj,
                     {
@@ -367,6 +368,12 @@ export default function EditStockAdjusment(props) {
                 valPrice = removeFormatRupiah(valPrice) !== ''?removeFormatRupiah(valPrice):0
                 list[i]['pembayaranrp'] = formatRupiah(new String(parseFloat(valPrice) * parseFloat(valKurs)).replaceAll('.',','),2);
             }
+            let indexTotal = list.findIndex(obj => obj.nodocument == 'TOTAL');
+            let calc = calculateTotal(list);
+            list[indexTotal]['biayabebanudangmati'] = calc.totalbiayaudangmati;
+            list[indexTotal]['biayabank'] = calc.totalbiayabank;
+            list[indexTotal]['pembayaran'] = calc.totalpembayaran;
+            list[indexTotal]['pembayaranrp'] = calc.totalpembayaranrp;
             setListItems(list);
         }
     }

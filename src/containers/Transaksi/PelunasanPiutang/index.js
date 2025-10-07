@@ -44,19 +44,21 @@ const PelunasanPiutangIndex = () => {
         const [columnspiutang] = useState([
             { name: 'id', title: 'id' },
             { name: 'nodoc', title: i18n.t('No Document') },
+            { name: 'nodocpl', title: i18n.t('No Packing List') },
             { name: 'customer', title: i18n.t('Customer') },
             { name: 'transdate', title: i18n.t('Tanggal') },
             { name: 'amount', title: i18n.t('Amount($)') },
-            { name: 'amountRp', title: i18n.t('Amount(Rp)') },
+            // { name: 'amountRp', title: i18n.t('Amount(Rp)') },
             { name: 'outstanding', title: i18n.t('Outstanding($)') },
         ]);
         const [columns] = useState([
             { name: 'id', title: 'id' },
             { name: 'nodoc', title: i18n.t('No Document') },
+            { name: 'nodocpl', title: i18n.t('No Packing List') },
             { name: 'customer', title: i18n.t('Customer') },
             { name: 'transdate', title: i18n.t('Tanggal') },
             { name: 'amount', title: i18n.t('Amount($)') },
-            { name: 'amountRp', title: i18n.t('Amount(Rp)') },
+            // { name: 'amountRp', title: i18n.t('Amount(Rp)') },
         ]);
         const [tableColumnExtensions] = useState([]);
         const [loading, setLoading] = useState(false);
@@ -100,6 +102,7 @@ const PelunasanPiutangIndex = () => {
                     {
                         'id': el.id,
                         'nodoc': el.nodocument,
+                        'nodocpl': el.nodocumentPL,
                         'customer': el.customerName,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
                         'amount': el.amount?formatRupiah((el.amount?new String(el.amount).replaceAll('.',','):''),2):0,
@@ -119,6 +122,7 @@ const PelunasanPiutangIndex = () => {
                     {
                         'id': el.id,
                         'nodoc': el.nodocument,
+                        'nodocpl': el.nodocumentPL,
                         'customer': el.customerName,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
                         'amount': el.amount?formatRupiah((el.amount?new String(el.amount).replaceAll('.',','):''),2):0,
@@ -164,6 +168,7 @@ const PelunasanPiutangIndex = () => {
                     {
                         'id': el.id,
                         'nodoc': el.nodocument,
+                        'nodocpl': el.noDocumentPL,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
                         'customer': el.customerName,
                         'amount': el.amountInvoice?formatRupiah((el.amountInvoice?new String(el.amountInvoice).replaceAll('.',','):''),2):0,

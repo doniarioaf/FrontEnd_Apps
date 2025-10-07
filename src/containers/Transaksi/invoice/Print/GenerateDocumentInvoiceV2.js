@@ -437,7 +437,7 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                             
                             <View style={[styles.table,{marginTop:'0px'}]}>
                             
-                            <View style={styles.tableRow}>
+                            {/* <View style={styles.tableRow}>
                             <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.attnandcountryorigin, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthattnandcountryorigin, maxWidth: styles.width.widthattnandcountryorigin,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig}]}>{"Attn."}</Text>
                             </View>
@@ -453,9 +453,9 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                             <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.packinglistnoanddate, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Packing List No"}</Text>
                             </View>
-                            </View>
+                            </View> */}
 
-                            <View style={styles.tableRow}>
+                            {/* <View style={styles.tableRow}>
                             <View style={[styles.tableColWidth, { width:styles.width.attnandcountryorigin, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthattnandcountryorigin, maxWidth: styles.width.widthattnandcountryorigin,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.packinglist.attention:''}</Text>
                             </View>
@@ -471,7 +471,7 @@ const GenerateDocumentInvoiceV2 = ({ valuedata }) => {
                             <View style={[styles.tableColWidth, { width:styles.width.packinglistnoanddate, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.packinglist.nodocument:''}</Text>
                             </View>
-                            </View>
+                            </View> */}
 
                             <View style={styles.tableRow}>
                             <View style={[styles.tableColWidth, { fontFamily: 'robotoitalic',backgroundColor:'#bcd6ed',width:styles.width.attnandcountryorigin, height: "38px" }]}>
