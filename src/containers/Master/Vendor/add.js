@@ -17,6 +17,33 @@ import momentLocalizer from 'react-widgets-moment';
 import "react-widgets/dist/css/react-widgets.css";
 import Select from 'react-select';
 
+// pilih vendor tipe udang : komisi tdk bs diinput
+    // pilih vendor tipe upi atau tipe  cargo : pricebox, packing  , kurir, komisi, profit, value1 gak bs diinput
+    // vendor tipe broker hanya bisa input komisi
+    export const validasiType = (id,input) => {
+        // true = tidak bisa input, false = bisa input
+        //{value:'UDANG',label:'Udang'},{value:'CARGO',label:'Cargo'},{value:'UPI',label:'UPI'},{value:'BROKER',label:'Broker'}
+        if(id == 'UDANG'){
+            if(input == 'KOMISI'){
+                return true;
+            }
+        }else if(id == 'CARGO' || id == 'UPI'){
+            if(input == 'PRICEBOX' || input == 'PACKING' || input == 'KURIR' || input == 'KOMISI' || input == 'PROFIT' || input == 'VALUE1'){
+                return true;
+            }
+        }else if(id == 'BROKER'){
+            if(input == 'KOMISI'){
+                return false;
+            }else{
+                return true;
+            }
+        }else if(id == ''){
+            return true;
+        }
+
+        return false;
+    }
+
 export default function AddVendor(props) {
     reloadToHomeNotAuthorize(addVendor_Permission, 'TRANSACTION');
     const { i18n } = useTranslation('translations');
@@ -126,7 +153,6 @@ export default function AddVendor(props) {
         }
         setLoading(false);
     }
-
 
     const checkColumnMandatory = (values) => {
         let flag = true;
@@ -268,9 +294,21 @@ export default function AddVendor(props) {
 
     }
 
+
+    function setKosongInputanType(){
+        setInputPricebox('');
+        setInputPacking('');
+        setInputKurir('');
+        setInputKomisi('');
+        setInputProfit('');
+        setInputValue1('');
+    }
+
+
     const handleChangeType = (data) => {
         let id = data?.value ? data.value : '';
         setSelType(id);
+        setKosongInputanType();
     }
 
     const handleChangeVendorParent = (data) => {
@@ -437,6 +475,8 @@ export default function AddVendor(props) {
                                         />
                                         <div className="invalid-feedback-custom">{ErrSelType}</div>
 
+                                       
+
                                         <label className="mt-3 form-label required" htmlFor="pricebox">
                                             {i18n.t('Price Box')}
                                             <span style={{ color: 'red' }}>*</span>
@@ -448,6 +488,7 @@ export default function AddVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.pricebox !== '' ? numToMoney(parseFloat(new String(values.pricebox).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'PRICEBOX')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="packing">
@@ -460,8 +501,10 @@ export default function AddVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.packing !== '' ? numToMoney(parseFloat(new String(values.packing).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'PACKING')}
                                         />
 
+ 
                                         <label className="mt-3 form-label required" htmlFor="kurir">
                                             {i18n.t('Kurir')}
                                         </label>
@@ -472,6 +515,7 @@ export default function AddVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.kurir !== '' ? numToMoney(parseFloat(new String(values.kurir).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'KURIR')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="komisi">
@@ -484,6 +528,7 @@ export default function AddVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.komisi !== '' ? numToMoney(parseFloat(new String(values.komisi).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'KOMISI')}
                                         />
 
                                         <FormGroup check style={{marginTop:'20px'}}>
@@ -662,6 +707,7 @@ export default function AddVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.profit !== '' ? numToMoney(parseFloat(new String(values.profit).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'PROFIT')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="value1">
@@ -674,6 +720,7 @@ export default function AddVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.value1 !== '' ? numToMoney(parseFloat(new String(values.value1).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'VALUE1')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="priceongkos">

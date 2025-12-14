@@ -16,6 +16,7 @@ import momentLocalizer from 'react-widgets-moment';
 import { DropdownList } from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import Select from 'react-select';
+import { validasiType } from './add';
 
 export default function EditVendor(props) {
     reloadToHomeNotAuthorize(editVendor_Permission, 'TRANSACTION');
@@ -311,9 +312,21 @@ export default function EditVendor(props) {
         setInputPriceOngkos(ongkos);
 
     }
+
+    function setKosongInputanType(){
+        setInputPricebox('');
+        setInputPacking('');
+        setInputKurir('');
+        setInputKomisi('');
+        setInputProfit('');
+        setInputValue1('');
+    }
+
+
     const handleChangeType = (data) => {
         let id = data?.value ? data.value : '';
         setSelType(id);
+        setKosongInputanType();
     }
     const handleChangeVendorParent = (data) => {
         let id = data?.value ? data.value : '';
@@ -497,6 +510,7 @@ export default function EditVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.pricebox !== '' ? numToMoney(parseFloat(new String(values.pricebox).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'PRICEBOX')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="packing">
@@ -509,6 +523,7 @@ export default function EditVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.packing !== '' ? numToMoney(parseFloat(new String(values.packing).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'PACKING')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="kurir">
@@ -521,6 +536,7 @@ export default function EditVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.kurir !== '' ? numToMoney(parseFloat(new String(values.kurir).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'KURIR')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="komisi">
@@ -533,6 +549,7 @@ export default function EditVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.komisi !== '' ? numToMoney(parseFloat(new String(values.komisi).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'KOMISI')}
                                         />
 
                                         <FormGroup check style={{marginTop:'20px'}}>
@@ -710,6 +727,7 @@ export default function EditVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.profit !== '' ? numToMoney(parseFloat(new String(values.profit).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'PROFIT')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="value1">
@@ -722,6 +740,7 @@ export default function EditVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.value1 !== '' ? numToMoney(parseFloat(new String(values.value1).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'VALUE1')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="priceongkos">

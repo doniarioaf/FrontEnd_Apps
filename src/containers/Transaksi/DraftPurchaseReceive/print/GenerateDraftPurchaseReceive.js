@@ -338,10 +338,16 @@ const GenerateDraftPurchaseReceive = ({ valuedata }) => {
                             </View>
 
                             <Text style={[styles.tableCell, {width: 10, maxWidth: 10, marginTop: '5px', fontSize: fontSizeBig }]}>
-                                
                                <Text style={{fontFamily: 'roboto'}}>{'SPB Date :                                                                   '}</Text> {valuedata != null?valuedata.date:''}
                             </Text>
+                            <Text style={[styles.tableCell, {width: 10, maxWidth: 10, marginTop: '0px', fontSize: fontSizeBig }]}>
+                               <Text style={{fontFamily: 'roboto'}}>{'Arrival Time :                                                            '}</Text> {valuedata != null?valuedata.arriveltime:''}
+                            </Text>
                                 
+                            <Text style={[styles.tableCell, {width: 10, maxWidth: 10, marginTop: '0px', fontSize: fontSizeBig }]}>
+                               <Text style={{fontFamily: 'roboto'}}>{'Receive Time :                                                        '}</Text> {valuedata != null?valuedata.receivetime:''}
+                            </Text>
+
                             </View>
                             
                             </View>
@@ -352,7 +358,7 @@ const GenerateDraftPurchaseReceive = ({ valuedata }) => {
                             </View>
 
                             
-                            <View style={[styles.table,{marginTop:'0px'}]}>
+                            <View style={[styles.table,{marginTop:'25px'}]}>
                             <View style={styles.tableRow}>
                             <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.flightno, height: "25px" }]}>
                                 <Text style={[styles.tableCell, { width: styles.width.widthflightno, maxWidth: styles.width.widthflightno,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Flight No."}</Text>

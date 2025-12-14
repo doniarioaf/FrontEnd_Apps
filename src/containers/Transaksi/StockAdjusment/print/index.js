@@ -120,7 +120,7 @@ export default function PrintDraftPR(props) {
     return (
             <div>
                 <ContentWrapper>
-                    <ContentHeading history={history} link={pathmenu.printstockadjusmentstockmati + '/' + id} label={'Print Udang Mati'} labeldefault={'Print Udang Mati'} />
+                    <ContentHeading history={history} link={pathmenu.printstockadjusmentstockmati + '/' + id} label={'Print Stock Adjusment'} labeldefault={'Print Stock Adjusment'} />
                     <Container fluid>
                         <Card>
                             <CardBody>

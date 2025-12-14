@@ -392,7 +392,7 @@ const setItems = (value) =>{
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.subtotalprice?addKurungBukaPadaValue(det.chargename,desimal00(formatRupiah(new String(det.subtotalprice).replaceAll('.',','),2))):0}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.subtotalprice?'('+desimal00(formatRupiah(new String(det.subtotalprice).replaceAll('.',','),2))+')':0}</Text>
                 </View>
             );
             

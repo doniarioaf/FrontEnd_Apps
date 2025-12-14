@@ -76,6 +76,14 @@ const styles = StyleSheet.create({
         borderRightWidth: 0,
         borderBottomWidth: 0
     },
+    tableHidup: {
+        display: "table",
+        width: "300px",
+        borderStyle: "solid",
+        borderWidth: 1,
+        borderRightWidth: 0,
+        borderBottomWidth: 0
+    },
     tableRow: {
         margin: "auto",
         flexDirection: "row"
@@ -114,15 +122,99 @@ const styles = StyleSheet.create({
         fontSize: fontSizeMedium,
         maxWidth: "98%"
     },
+
+    tableCellHidup: {
+        // margin: "auto", 
+        marginLeft: 3,
+        marginTop: 5,
+        fontSize: fontSizeMedium,
+        maxWidth: "20%"
+    },
     title: { fontFamily: 'roboto', fontWeight: 600 },
 });
 
+const setItemsHidupAllCP = (items, valueheader) =>{
+    if(items != undefined && items != null){
+        let listRow = [];
+        let listCP = valueheader.listcp?valueheader.listcp:[];
+        
+        let jarakPer1Persen = 5;
+
+        let timeNumber = 13;
+        
+        let qtyNumber = 50;
+        let qtyPersen = qtyNumber+"%";
+
+        let totalNumber = (100 - timeNumber) - (qtyNumber * listCP.length);
+        let widthtotal = jarakPer1Persen * totalNumber;
+
+        let rowItem = [];      
+
+        rowItem.push(
+        <View style={[styles.tableColWidth, { width:qtyPersen, height: "25px" }]}>
+            <Text style={[styles.tableCellHidup, { fontFamily: 'roboto',width: widthtotal, maxWidth: widthtotal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{'Category Product'}</Text>
+        </View>
+        );
+
+        rowItem.push(
+        <View style={[styles.tableColWidth, { width:qtyPersen, height: "25px" }]}>
+            <Text style={[styles.tableCellHidup, { fontFamily: 'roboto',width: widthtotal, maxWidth: widthtotal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{'Qty'}</Text>
+        </View>
+        );
+
+        listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
+        let listfilteroutput = items;
+        let totalCP = 0;
+        for(let i=0; i < listCP.length; i++){
+            let det = listCP[i];
+            let idCP = det.id;
+            rowItem = [];
+            rowItem.push(
+            <View style={[styles.tableColWidth, { width:qtyPersen, height: "25px" }]}>
+                <Text style={[styles.tableCellHidup, { width: widthtotal, maxWidth: widthtotal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.size}</Text>
+            </View>
+            );
+
+            let listfilteroutputByID = listfilteroutput.filter(output => output.idcategoryproduct === parseInt(idCP));
+            let qty = 0;
+             if(listfilteroutputByID.length > 0){
+                let detJ = listfilteroutputByID[0];
+                qty = parseInt(detJ.qty)
+                totalCP += qty;
+             }
+            rowItem.push(
+            <View style={[styles.tableColWidth, { width:qtyPersen, height: "25px" }]}>
+                <Text style={[styles.tableCellHidup, { width: widthtotal, maxWidth: widthtotal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{numToMoney(qty)}</Text>
+            </View>
+            );
+            listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
+        };
+        rowItem = [];
+        rowItem.push(
+        <View style={[styles.tableColWidth, { width:qtyPersen, height: "25px" }]}>
+            <Text style={[styles.tableCellHidup, { fontFamily: 'roboto',width: widthtotal, maxWidth: widthtotal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{'Total'}</Text>
+        </View>
+        );
+
+        rowItem.push(
+        <View style={[styles.tableColWidth, { width:qtyPersen, height: "25px" }]}>
+            <Text style={[styles.tableCellHidup, { fontFamily: 'roboto',width: widthtotal, maxWidth: widthtotal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{numToMoney(totalCP)}</Text>
+        </View>
+        );
+
+        listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
+        return listRow;
+    };
+    return null;
+}
 const setItemsAllCP = (items, valueheader) =>{
+    
     if(items != undefined && items != null){
         let listRow = [];
         let distinctID = [];
         let grandTotal = [];
         let listCP = valueheader.listcp?valueheader.listcp:[];
+        let type = valueheader.type;
         let listmappingstock = valueheader.mappingstock?valueheader.mappingstock:[];
         for(let i=0; i < listCP.length; i++){
             let det = listCP[i];
@@ -196,9 +288,7 @@ const setItemsAllCP = (items, valueheader) =>{
                         // }
                         idCP = detCP.id;
 
-                        
-                        let listfilteroutputByID = listfilteroutput.filter(output => output.idcategoryproduct == parseInt(idCP));
-                        
+                        let listfilteroutputByID = listfilteroutput.filter(output => output.idcategoryproduct === parseInt(idCP));
                         if(listfilteroutputByID.length > 0){
                             let detJ = listfilteroutputByID[0];
                             totalQtyRowTime += parseInt(detJ.qty);
@@ -276,6 +366,13 @@ const setItemsAllCP = (items, valueheader) =>{
     return null;
 }
 
+const setItemsCP = (items, valueheader) =>{
+    if(valueheader.type == 'H'){
+        return setItemsHidupAllCP(items,valueheader);
+    }else if(valueheader.type == 'M'){
+        return setItemsAllCP(items,valueheader);
+    }
+}
 const setItems = (items) =>{
     if(items != undefined && items != null){
         let listRow = [];
@@ -465,7 +562,7 @@ const GenerateStockUdangMati = ({ valuedata }) => {
                             <View style={styles.tableRow}>
 
                             <View style={[styles.tableColWidthNoBorder, {  height: "50px",marginBottom:'80px',marginLeft:'100px' }]}>
-                                <Text style={[{ width: styles.width.widthno, maxWidth: styles.width.widthno, marginTop: '5px', fontSize: 18,marginLeft:'10px' }]}>{"Form Udang Mati Di Kolam"}</Text>
+                                <Text style={[{ width: styles.width.widthno, maxWidth: styles.width.widthno, marginTop: '5px', fontSize: 18,marginLeft:'8px' }]}>{valuedata != null?(valuedata.type == "H"?"Form Udang Hidup Di Kolam":"Form Udang Mati Di Kolam"):"Form Udang"}</Text>
 
                             <View style={[styles.tableNoBorder]}>
                             <View style={styles.tableRow}>
@@ -492,10 +589,30 @@ const GenerateStockUdangMati = ({ valuedata }) => {
 
                             </View>
                             
-                            <View style={[styles.table,{marginTop:'0px'}]}>
-                            {/* {setItems(valuedata != null ? valuedata.items : [])} */}
-                            {setItemsAllCP((valuedata != null ? valuedata.items : []),(valuedata != null ? valuedata : []))}
-                            </View>
+                            <Text style={{ fontSize: fontSizeMedium }}>{"Note : "}{valuedata != null ?valuedata.note:""}</Text>
+                            {
+                                valuedata != null ?
+                                valuedata.type == 'M'?
+                                <View style={[styles.table,{marginTop:'0px'}]}>
+                                
+                                {/* {setItems(valuedata != null ? valuedata.items : [])} */}
+                                {setItemsAllCP((valuedata != null ? valuedata.items : []),(valuedata != null ? valuedata : []))}
+                                
+                                </View>
+                                :
+                                
+                                <View style={[styles.tableHidup,{marginTop:'0px'}]}>
+                                
+                                {/* {setItems(valuedata != null ? valuedata.items : [])} */}
+                                {setItemsHidupAllCP((valuedata != null ? valuedata.items : []),(valuedata != null ? valuedata : []))}
+                                
+                                </View>
+
+                                :''
+                            }
+                            {/* <View style={[styles.table,{marginTop:'0px'}]}>
+                            {setItemsCP((valuedata != null ? valuedata.items : []),(valuedata != null ? valuedata : []))}
+                            </View> */}
 
                         </View>
                     :
