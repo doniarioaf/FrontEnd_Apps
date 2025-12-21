@@ -89,10 +89,10 @@ export default function PrintDraftPR(props) {
         setVisible(false);
         localStorage.removeItem('PdfDocument');
         // dispatch(actions.getPurchaseReceiveData({ url: '/printnota/' + id+'/'+SelPrintType }, successHandlerAfterDownload, errorHandler));
-        dispatch(actions.getPackingListData({ url: '/catatdownload/' + id }, successHandlerDownload, errorHandler));
+        dispatch(actions.getDraftPurchaseReceiveData({ url: '/catatdownload/' + id }, successHandlerDownload, errorHandler));
     }
     function successHandlerDownload(data, propsdata){
-        dispatch(actions.getPackingListData( {url:'/print/'+id},successHandlerAfterDownload, errorHandler));
+        dispatch(actions.getDraftPurchaseReceiveData( {url:'/print/'+id},successHandlerAfterDownload, errorHandler));
     }
 
     function successHandlerAfterDownload(data, propsdata) {
@@ -130,8 +130,8 @@ export default function PrintDraftPR(props) {
                                             <div className="App">
                                                 <div className='download-link'>
                                                     {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? 'SuratJalan-' + Value.nodocument : fileName))}>{"Download"}</div> */}
-                                                    <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div>
-                                                    {/* <div onClick={() => handleDownloadPDF()}>{"Download"}</div> */}
+                                                    {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div> */}
+                                                    <div onClick={() => handleDownloadPDF()}>{"Download"}</div>
                                                 </div>
                                                 {/* <div style={{backgroundColor:'#343439',width:'20%',height:'9%',position:'absolute',right:'15px', display: visible ? 'block' : 'none' }}></div> */}
     

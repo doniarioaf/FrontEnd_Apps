@@ -284,7 +284,7 @@ const GenerateDocument = ({ valuedata }) => {
                             <View style={{ flexDirection: 'row',paddingTop:'78px' }}>
                                 <View style={{ flexDirection: 'row-reverse' }}>
                                 {/* <Image source={"img/logoheaderpdf.png"} /> */}
-                                <Text style={{ fontSize: 7 }}>{'Print : '}{(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}</Text>
+                                <Text style={{ fontSize: 7 }}>{'Print : '}{(valuedata != null?(valuedata.countPrint?valuedata.countPrint:0):'')}</Text>
                                     {/* <Text style={[{ fontFamily: 'roboto', fontSize: fontSizeBig, margin: '0 auto', overflow: 'hidden', textOverflow: 'ellipsis', width: 120, maxWidth: 120 }]}>{'Print : 999'}</Text> */}
                                 </View>
 

@@ -67,7 +67,6 @@ export default function PrintNota(props) {
 
     function getData(data){
         let det = data.data;
-
             let dettemp = data.data;
             dettemp.notatype = SelPrintType;
             dettemp.transactiondate = det.transactiondate ? moment(new Date(det.transactiondate)).format(formatdate) : '';

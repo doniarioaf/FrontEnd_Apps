@@ -136,8 +136,8 @@ export default function PrintNotaInvoice(props) {
                                             <div className="App">
                                                 <div className='download-link'>
                                                     {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? 'SuratJalan-' + Value.nodocument : fileName))}>{"Download"}</div> */}
-                                                    <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div>
-                                                    {/* <div onClick={() => handleDownloadPDF()}>{"Download"}</div> */}
+                                                    {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div> */}
+                                                    <div onClick={() => handleDownloadPDF()}>{"Download"}</div>
                                                 </div>
                                                 {/* <div style={{backgroundColor:'#343439',width:'20%',height:'9%',position:'absolute',right:'15px', display: visible ? 'block' : 'none' }}></div> */}
     

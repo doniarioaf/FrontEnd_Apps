@@ -532,7 +532,7 @@ const GenerateDocumentPackingListV2 = ({ valuedata }) => {
                             </View>
                             </View>
                             </View>
-                            <Text style={{textAlign:'right',marginRight:"2px",fontSize:7}}>{"Edit:"}{(valuedata != null?valuedata.countEdit:'')}{"  Print:"}{(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}</Text>
+                            <Text style={{textAlign:'right',marginRight:"2px",fontSize:7}}>{"Edit:"}{(valuedata != null?valuedata.countEdit:'')}{"  Print:"}{(valuedata != null?(valuedata.countPrint?valuedata.countPrint:0):'')}</Text>
 
                         </View>
                     :
