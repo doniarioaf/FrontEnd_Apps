@@ -943,18 +943,19 @@ export default function AddPurchaseReceive(props) {
 
         if(id !== 'nodata'){
             setLoading(true);
-            dispatch(actions.getPurchaseReceiveData({ url: '/getitemdraft/' + id }, successHandlerItemDraft, errorHandler));
+            dispatch(actions.getPurchaseReceiveData({ url: '/getitemdraft/' + id,propsdata:{charges:listCharge} }, successHandlerItemDraft, errorHandler));
         }
         
     }
     function successHandlerItemDraft(data, propsdata) {
         //sessionStorage.setItem('notapembelianvendor',idvendor);
+        let charges = propsdata.charges?propsdata.charges:[];
         let idvendor = sessionStorage.getItem('notapembelianvendor');
         let listItems = data.data;
         if(idvendor !== null && idvendor !== undefined && idvendor !== ''){
-            dispatch(actions.getPurchaseReceiveData({ url: '/getlastdocitem/' + idvendor,propsdata:{listItems:listItems} }, successHandlerLastDocItem, errorHandler));
+            dispatch(actions.getPurchaseReceiveData({ url: '/getlastdocitem/' + idvendor,propsdata:{listItems:listItems,charges:charges} }, successHandlerLastDocItem, errorHandler));
         }else{
-            setItemDraft(listItems,null);
+            setItemDraft(listItems,null,charges);
 
             setLoading(false);
         }
@@ -962,11 +963,12 @@ export default function AddPurchaseReceive(props) {
     }
     function successHandlerLastDocItem(data, propsdata) {
         let listItems = propsdata.listItems;
-        setItemDraft(listItems,(data.data.items?data.data.items:null));
+        let charges = propsdata.charges?propsdata.charges:[];
+        setItemDraft(listItems,(data.data.items?data.data.items:null),charges);
         setLoading(false);
     }
 
-    function setItemDraft(listItems, valuelastdoc) {
+    function setItemDraft(listItems, valuelastdoc,charges) {
         let listfilteroutputHidup = listItems.filter(output => output.type == 'H');
         let listfilteroutputMati = listItems.filter(output => output.type == 'M');
         let arrDistinctCP = [];
@@ -1027,11 +1029,12 @@ export default function AddPurchaseReceive(props) {
         
         
 
-        let listCharge = [...ListItemsPurchaseReceiveBiaya];
-        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
-            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
-        }
-        let objPrice = calculateTotalPrice(listitemhidup, listCharge, ListItemsInventori);
+        // let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        // for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+        //     listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        // }
+        console.log('charges ',charges);
+        let objPrice = calculateTotalPrice(listitemhidup, charges, ListItemsInventori);
         let totalPrice = objPrice.totalPrice;
         let totalPriceItemHidup = objPrice.totalPriceItemHidup;
 
