@@ -143,7 +143,13 @@ import React, {useState,
         for(let i =0; i < listNo.length; i++){
             let boxseq = listNo[i];
             let temp = [];
-            let listfilteroutput = listfilteroutputHidup.filter(output => output.boxsequence == boxseq);
+
+            for(let icp =0; icp < listCP.length; icp++){
+                let el = listCP[icp];
+                let idcategoryproduct = el.idcategoryproduct;
+
+            let listfilteroutput = listfilteroutputHidup.filter(output => output.boxsequence == boxseq && output.idcategoryproduct == idcategoryproduct);
+            if(listfilteroutput.length > 0){
             for(let x =0; x < listfilteroutput.length; x++){
                 let det = listfilteroutput[x];
                 temp.push(
@@ -164,13 +170,34 @@ import React, {useState,
                     }
                 );
             }
-            listitemshidup.push(
+            }else{
+                temp.push(
+                            {
+                                'idproduct': idproduct,
+                                'idcategoryproduct': idcategoryproduct,
+                                'jumlah':'',
+                                'jumlahtype':'EKOR'
+                            }
+                        );
+            
+                        temp.push(
+                            {
+                                'idproduct': idproduct,
+                                'idcategoryproduct': idcategoryproduct,
+                                'jumlah':'',
+                                'jumlahtype':'KG'
+                            }
+                        );
+            }
+            
+        }
+        listitemshidup.push(
                 {
                     'no':boxseq,
                     'items':temp
                 }
             )
-        }
+    }
 
         
         setListItemHidup(listitemshidup);
@@ -187,7 +214,11 @@ import React, {useState,
         for(let i =0; i < listNoMati.length; i++){
             let boxseq = listNoMati[i];
             let temp = [];
-            let listfilteroutput = listfilteroutputMati.filter(output => output.boxsequence == boxseq);
+            for(let icp =0; icp < listCP.length; icp++){
+            let el = listCP[icp];
+            let idcategoryproduct = el.idcategoryproduct;
+            let listfilteroutput = listfilteroutputMati.filter(output => output.boxsequence == boxseq && output.idcategoryproduct == idcategoryproduct);
+            if(listfilteroutput.length > 0){
             for(let x =0; x < listfilteroutput.length; x++){
                 let det = listfilteroutput[x];
                 temp.push(
@@ -198,6 +229,16 @@ import React, {useState,
                     }
                 );
             }
+            }else{
+                temp.push(
+                        {
+                            'idproduct': idproduct,
+                            'idcategoryproduct': idcategoryproduct,
+                            'jumlah':'',
+                        }
+                    );
+            }
+        }
             listitemsMati.push(
                 {
                     'items':temp
