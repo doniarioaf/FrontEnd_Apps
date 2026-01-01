@@ -25,7 +25,7 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
   import { formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { MenuPackingList, cancelPackingList_Permission, deletePackingList_Permission, editPackingList_Permission } from '../../shared/permissionMenu';
+  import { MenuCancelPackingList, MenuPackingList, cancelPackingList_Permission, deletePackingList_Permission, editPackingList_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
   import '../../CSS/table.css';
@@ -389,6 +389,7 @@ import React, {useState,
                             {/* <MenuItem onClick={showQrCode}>{i18n.t('Generate QR Code')}</MenuItem> */}
                         </div>)
                         :(<div>
+                            <MenuItem hidden={!isGetPermissions(MenuCancelPackingList,'TRANSACTION')}  onClick={() => history.push(pathmenu.printpdfcancelpackinglist+'/'+id)}>{i18n.t('Print PDF')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editPackingList_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editcancelpackinglist+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             {/* <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => history.push(pathmenu.printpdfpackinglist+'/'+id)}>{i18n.t('PDF Packing List')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => downloadExcelPL()}>{i18n.t('Excel Packing List')}</MenuItem>
