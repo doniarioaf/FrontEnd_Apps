@@ -162,7 +162,17 @@ const calcNettoHeader = (value) =>{
 //     return totalnetto;
 // }
 
-const setItems = (value) =>{
+const getQtyUdangMati = (value,valueCPL) =>{
+    if(valueCPL.listcancelitem){
+        let listfilteroutput = valueCPL.listcancelitem.filter(output => output.idproduct == value.idproduct && output.idcategoryproduct == value.idcategoryproduct);
+        if(listfilteroutput.length > 0){
+            return ' ('+listfilteroutput[0].qty+')'
+        }
+    }
+
+    return '';
+}
+const setItems = (value,valueCPL) =>{
     
     let items = value.items;
     // let charges = value.charges
@@ -180,8 +190,11 @@ const setItems = (value) =>{
         let listfilteroutput = items;//.filter(output => output.qtynota > 0 && output.type == 'H');
         console.log('listfilteroutput ',listfilteroutput);
         // let letListDone = [];
+        let listIsDoneCP = [];
         for(let i=0; i < listfilteroutput.length; i++){
             let det = listfilteroutput[i];
+            let idproduct = det.idproduct;
+            let idcategoryproduct = det.idcategoryproduct;
             let qty = det.qty?det.qty:0;
             let totalprice = det.totalprice?det.totalprice:0;
             totalQty += parseInt(qty);
@@ -193,6 +206,12 @@ const setItems = (value) =>{
             // nettoweight = roundCeiling(nettoweight,1);
 
             console.log('nettoweight ',nettoweight);
+            let qtyUdangMati = '';
+            if(listIsDoneCP.indexOf(idproduct+idcategoryproduct+'CP') < 0 ){
+                qtyUdangMati = getQtyUdangMati({idproduct:idproduct,idcategoryproduct:idcategoryproduct},valueCPL);
+                listIsDoneCP.push(idproduct+idcategoryproduct+'CP');
+            }
+             
 
             //kenapa totalan netto tidak ambil dari value.netto / total netto header karena ketika gr convert ke kg terjadi pembulatan sehingga ketika netto header di convert ke kg menjadi tidak sama desimal nya
             totalnetto += nettoweight;
@@ -225,7 +244,7 @@ const setItems = (value) =>{
             );
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{qty}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{qty + qtyUdangMati}</Text>
                 </View>
             );
             rowItem.push(
@@ -315,6 +334,7 @@ const GenerateDocumentPdf = ({ valuedata }) => {
 
     const generatePdf = (valueparam) => {
         let valuedata = valueparam.packingList?valueparam.packingList:null;
+        let valueCPL = valueparam;
         return (
             <Fragment>
                 {
@@ -411,7 +431,7 @@ const GenerateDocumentPdf = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"AWB"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.packinglistnoanddate, height: "25px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Packing List No"}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"PL No / CPL No"}</Text>
                             </View>
                             </View>
 
@@ -429,7 +449,7 @@ const GenerateDocumentPdf = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.awbnumber:''}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.packinglistnoanddate, height: "25px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.nodocument:''}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.nodocument+' / '+valueCPL.nodocumentCPL:''}</Text>
                             </View>
                             </View>
 
@@ -447,7 +467,7 @@ const GenerateDocumentPdf = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Netto Kg"}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.packinglistnoanddate, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Packing List Date"}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"PL Date / CPL Date"}</Text>
                             </View>
                             </View>
 
@@ -466,7 +486,7 @@ const GenerateDocumentPdf = ({ valuedata }) => {
                                 <Text style={[styles.tableCell, { width: styles.width.widthabwandnettokg, maxWidth: styles.width.widthabwandnettokg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?formatRupiah(new String(calcNettoHeader(valuedata)).replaceAll('.',','),1):[]}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:styles.width.packinglistnoanddate, height: "25px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.date:''}</Text>
+                                <Text style={[styles.tableCell, { width: styles.width.widthpackinglistnoanddate, maxWidth: styles.width.widthpackinglistnoanddate, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{valuedata != null?valuedata.date+' / '+valueCPL.datecancel:''}</Text>
                             </View>
                             </View>
 
@@ -502,7 +522,7 @@ const GenerateDocumentPdf = ({ valuedata }) => {
                             </View>
 
                             </View>
-                            {setItems(valuedata != null ? valuedata : [])}
+                            {setItems((valuedata != null ? valuedata : []), (valueCPL != null ? valueCPL : []) )}
 
                             </View>
 
@@ -510,6 +530,7 @@ const GenerateDocumentPdf = ({ valuedata }) => {
                             <View style={styles.tableRow}>
                             <View style={[styles.tableColWidth, { width:"52%", height: "90px" }]}>
                                 <Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '5px', fontSize: fontSizeBig }]}>{"Remarks"}</Text>
+                                <Text style={[styles.tableCell, { width: 260, maxWidth: 260, marginTop: '0px', fontSize: fontSizeBig }]}>{valueCPL !== null?valueCPL.keteranganCPL:''}</Text>
                             </View>
                             <View style={[styles.tableColWidth, { width:"48%", height: "90px", paddingLeft:'5px' }]}>
                             <View style={{ flexDirection: 'row',paddingTop:'78px' }}>

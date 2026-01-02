@@ -168,6 +168,24 @@ import React, {useState,
         })
     }
 
+    const downloadExcelCPL = () => {
+            setLoading(true);
+            dispatch(actions.getCancelPackingListData( {url:'/printexcel/'+id,type:'GETFILE',typefile:'application/vnd.ms-excel'},successHandlerExcel, errorHandler));
+        }
+    
+        function successHandlerExcel(data,propsdata) {
+            var blob = new Blob([data],{ type: 'application/vnd.ms-excel'});
+            var dataUrl = URL.createObjectURL(blob);
+            var fileLink = document.createElement('a');
+            fileLink.href = dataUrl;
+    
+            // it forces the name of the downloaded file
+            fileLink.download = 'CancelPackingList-'+moment(new Date()).format(formatdateYYYYMMDD)+'-'+value.nodocument+'.xlsx';
+            fileLink.click();
+            fileLink.remove();
+            setLoading(false);
+        }
+
     function errorHandler(error,propsdata) {
         setLoading(false);
         Swal.fire({
@@ -390,6 +408,7 @@ import React, {useState,
                         </div>)
                         :(<div>
                             <MenuItem hidden={!isGetPermissions(MenuCancelPackingList,'TRANSACTION')}  onClick={() => history.push(pathmenu.printpdfcancelpackinglist+'/'+id)}>{i18n.t('Print PDF')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(MenuCancelPackingList,'TRANSACTION')}  onClick={() => downloadExcelCPL()}>{i18n.t('Excel CPL')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editPackingList_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editcancelpackinglist+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             {/* <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => history.push(pathmenu.printpdfpackinglist+'/'+id)}>{i18n.t('PDF Packing List')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => downloadExcelPL()}>{i18n.t('Excel Packing List')}</MenuItem>

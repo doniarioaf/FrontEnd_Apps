@@ -1,4 +1,5 @@
 export const formatdate = 'DD MMMM YYYY';
+export const formatdateMMM = 'DD MMM YYYY';
 export const formatdatetime = 'DD MMMM YYYY HH:mm:ss';// HH = 24 Jam, hh=12 jam
 export const formatdateDDMMMMYYYY = 'DD MMMM YYYY';
 export const valPageSizes = [50, 80, 100];

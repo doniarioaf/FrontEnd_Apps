@@ -18,7 +18,7 @@ import "react-widgets/dist/css/react-widgets.css";
 import { PDFViewer } from '@react-pdf/renderer';
 import PdfDocument from './PdfDocument';
 
-import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../../shared/constantValue';
+import { formatdate, formatdateMMM, formatdatetime, formatdateYYYYMMDD } from '../../../shared/constantValue';
 import moment from 'moment';
 import '../../PurchaseReceive/printNota/App.css';
 
@@ -53,12 +53,12 @@ export default function PrintCancelPackingList(props) {
     function getData(data){
         let det = data.data;
         let dettemp = data.data;
-        dettemp.datecancel = det.datecancel ? moment(new Date(det.datecancel)).format(formatdate) : '';
+        dettemp.datecancel = det.datecancel ? moment(new Date(det.datecancel)).format(formatdateMMM) : '';
         
 
         let packinglist = dettemp.packingList?dettemp.packingList:null;
         if(packinglist !== null){
-            packinglist.date = packinglist.date ? moment(new Date(packinglist.date)).format(formatdate) : '';
+            packinglist.date = packinglist.date ? moment(new Date(packinglist.date)).format(formatdateMMM) : '';
             packinglist.currdatetime = moment(new Date()).format(formatdatetime);
             dettemp.packingList = packinglist;
 
