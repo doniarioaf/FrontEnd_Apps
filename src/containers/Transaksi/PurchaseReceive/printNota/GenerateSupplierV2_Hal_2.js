@@ -118,17 +118,21 @@ const styles = StyleSheet.create({
     title: { fontFamily: 'roboto', fontWeight: 600 },
 });
 
-const getTransfer = (items) =>{
+const getTransfer = (param) =>{
+    let items = param.value;
+    // let saldoDP = param.saldoDP?param.saldoDP:0;
     let totalprice = items.totalprice?parseFloat(items.totalprice):0;
+    let setorPinjaman = items.setorPinjaman?parseFloat(items.setorPinjaman):0;
+    totalprice = totalprice - setorPinjaman;
     let setor = items.setor?parseFloat(items.setor):0;
-    let deposits = items.deposits;
-    if(deposits){
-        for(let i=0; i < deposits.length; i++){
-            let det = deposits[i];
-            let amount = det.amount?det.amount:0;
-            setor = setor + parseFloat(amount);
-        }
-    }
+    // let deposits = items.deposits;
+    // if(deposits){
+    //     for(let i=0; i < deposits.length; i++){
+    //         let det = deposits[i];
+    //         let amount = det.amount?det.amount:0;
+    //         setor = setor + parseFloat(amount);
+    //     }
+    // }
     let transfer = 0;
     if(totalprice > setor){
         transfer = totalprice - setor;
@@ -154,64 +158,272 @@ const penyesuaianTerbilang = (value) =>{
 
     return list;
 }
+
 const lsitTambahDP = (value) =>{
     let deposits = value.deposits;
     let totalprice = parseFloat(value.totalprice);
     let saldoDP = value.saldoDepositBeforeNotaSubmit?value.saldoDepositBeforeNotaSubmit:0;
+    let setorDeposit = parseFloat(value.setor);
+    saldoDP = saldoDP + setorDeposit;
     let sisaDP = 0;
     let totalDP = parseFloat(saldoDP);
     let list = [];
+    let setorPinjaman = value.setorPinjaman?value.setorPinjaman:0;
+    let nilaiNota = totalprice;
+    let transfer = getTransfer({saldoDP:saldoDP,value:value});
+
+    let saldoAkhirPinjaman = value.saldoPinjaman?value.saldoPinjaman:0;
+    let saldoPinjaman = value.saldoPinjaman?value.saldoPinjaman:0;
+    saldoPinjaman = saldoPinjaman + setorPinjaman;
+
+
+    let listRow1 = [<View style={{flexDirection:'row'}}>
+                <View style={[{ width:"68%", height: "20px",paddingLeft:'4px' }]}>
+                <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{""}</Text>
+                </View>
+
+                <View style={[{ width:"14%", height: "20px" }]}>
+                <Text style={[ { width: 75, maxWidth: 75,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Total"}</Text>
+                </View>
+
+                <View style={[{ width:"18%", height: "20px" }]}>
+                <Text style={[ { width: 94, maxWidth: 94,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{nilaiNota?desimal00(formatRupiah(new String(nilaiNota).replaceAll('.',','),2),{isShow000:false}):''}</Text>
+                </View>
+
+                </View>];
+    let viewSaldoPinjaman = <View style={[{ width:"34%", height: "17px",paddingLeft:'7px' }]}>
+        <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Saldo Pinjaman "}{desimal00(formatRupiah(new String(saldoPinjaman).replaceAll('.',','),2)) }</Text>
+        </View>;
+    let viewSetorPinjaman = <View style={[{ width:"34%", height: "25px",paddingLeft:'7px' }]}>
+                    <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>
+                        {"Setor Pinjaman "}{desimal00(formatRupiah(new String(setorPinjaman).replaceAll('.',','),2)) }{" \n"}
+                        {"Sisa Pinjaman "}{desimal00(formatRupiah(new String(saldoAkhirPinjaman).replaceAll('.',','),2)) }
+
+                    </Text>
+                    </View>;
+    // let viewSisaPinjaman = (<View style={[{ width:"34%", height: "17px",paddingLeft:'7px' }]}>
+    //                 <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{"Sisa Pinjaman "}{desimal00(formatRupiah(new String(saldoAkhirPinjaman).replaceAll('.',','),2)) }</Text>
+    //                 </View>);                    
+    let tempViewSaldoPinjaman = saldoPinjaman > 0?viewSaldoPinjaman:null;
+    let tempViewSetorPinjaman = setorPinjaman > 0?viewSetorPinjaman:null;
+    // let tempViewSisaPinjaman = viewSisaPinjaman;
+    let tempViewSisaPinjaman = null;
+
+     let viewLabelTransfer = <View  style={[{ width:"14%", height: "20px"}]}>
+            <Text style={[ { width: 75, maxWidth: 75,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Transfer "}</Text>
+            </View>;
+    let viewValueTransfer = <View style={[{ width:"18%", height: "20px" }]}>
+            <Text style={[ { width: 94, maxWidth: 94,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{desimal00(formatRupiah(new String(transfer).replaceAll('.',','),2)) }</Text>
+            </View>; 
+            
+   if(transfer == 0){
+        viewLabelTransfer = null;
+        viewValueTransfer = null;
+   }
+   
+   let viewSaldoDP = <View style={[{ width:"34%", height: "20px",paddingLeft:'4px' }]}>
+            <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Saldo DP "}{desimal00(formatRupiah(new String(saldoDP).replaceAll('.',','),2)) }</Text>
+            </View>; 
+    let viewTambahDPIndex0 = null;
+
+    let showLabelDP = true;
+    if(setorDeposit <= 0){
+        showLabelDP = false;
+    }
+
+    if(saldoDP <= 0 && setorDeposit <= 0){
+        viewSaldoDP = null;   
+    }
+    let indexDep = 0;
+    if(viewSaldoDP == null){
+        if(deposits){
+            if(deposits.length > 0){
+                indexDep = 1;
+                let det = deposits[0];
+                let amount = det.amount?det.amount:0;
+                totalDP = totalDP + parseFloat(amount);
+                viewTambahDPIndex0 = <View style={[{ width:"34%", height: "20px",paddingLeft:'4px' }]}>
+                <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Tambah DP "}{desimal00(formatRupiah(new String(amount).replaceAll('.',','),2))}{' ('+det.date+')'}</Text>
+                </View>; 
+            }   
+        }
+    }
+
     list.push(
         <View style={{display:'table',width:'auto'}}>
-            <View style={{flexDirection:'row'}}>
-            <View style={[{ width:"68%", height: "20px",paddingLeft:'4px' }]}>
-            <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{""}</Text>
-            </View>
-
-            <View style={[{ width:"14%", height: "20px" }]}>
-            <Text style={[ { width: 75, maxWidth: 75,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Total"}</Text>
-            </View>
-
-            <View style={[{ width:"18%", height: "20px" }]}>
-            <Text style={[ { width: 94, maxWidth: 94,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{value.totalprice?desimal00(formatRupiah(new String(value.totalprice).replaceAll('.',','),2),{isShow000:false}):''}</Text>
-            </View>
-
-            </View>
+            {listRow1}
 
             <View style={{flexDirection:'row'}}>
-            <View style={[{ width:"68%", height: "20px",paddingLeft:'4px' }]}>
-            <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Saldo DP "}{desimal00(formatRupiah(new String(saldoDP).replaceAll('.',','),2)) }</Text>
-            </View>
-
-            <View style={[{ width:"14%", height: "20px" }]}>
-            <Text style={[ { width: 75, maxWidth: 75,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Transfer "}</Text>
-            </View>
-
-            <View style={[{ width:"18%", height: "20px" }]}>
-            <Text style={[ { width: 94, maxWidth: 94,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{desimal00(formatRupiah(new String(getTransfer(value)).replaceAll('.',','),2)) }</Text>
-            </View>
-
+            {/* <View style={[{ width:"34%", height: "20px",paddingLeft:'4px' }]}>
+            <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{saldoDP > 0?"Saldo DP "+desimal00(formatRupiah(new String(saldoDP).replaceAll('.',','),2)):null }</Text>
+            </View> */}
+            {viewSaldoDP !== null?viewSaldoDP:viewTambahDPIndex0}
+            {tempViewSaldoPinjaman}
+            {viewLabelTransfer}
+            {viewValueTransfer}
             </View>
         </View>
-    )
-
+    );
+    
     if(deposits){
         for(let i=0; i < deposits.length; i++){
             let det = deposits[i];
             let amount = det.amount?det.amount:0;
             totalDP = totalDP + parseFloat(amount);
-            list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}>{"Tambah DP : "}{desimal00(formatRupiah(new String(amount).replaceAll('.',','),2))}{' ('+det.date+')'}</Text>);
-        }
-        
-        
+            
+            if(i == 0){
+                list.push(
+                <View style={{display:'table',width:'auto'}}>
+                    <View style={{flexDirection:'row'}}>
+                        <View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
+                        <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '1px', fontSize: fontSizeBig }]}>{indexDep == 0?"Tambah DP "+desimal00(formatRupiah(new String(amount).replaceAll('.',','),2)) +' ('+det.date+')' :""}</Text>
+                        </View>
+                        {tempViewSetorPinjaman}
+                    </View>
+                </View>
+                
+            );
+            tempViewSetorPinjaman = null;
+            }else if(i == 1){
+                list.push(
+                <View style={{display:'table',width:'auto'}}>
+                    <View style={{flexDirection:'row'}}>
+                        <View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
+                        <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '1px', fontSize: fontSizeBig }]}>{"Tambah DP "}{desimal00(formatRupiah(new String(amount).replaceAll('.',','),2))}{' ('+det.date+')'}</Text>
+                        </View>
+                        {tempViewSisaPinjaman}
+                    </View>
+                </View>
+                
+            );
+            tempViewSisaPinjaman = null;
+            }else{
+                list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}>{"Tambah DP : "}{desimal00(formatRupiah(new String(amount).replaceAll('.',','),2))}{' ('+det.date+')'}</Text>);
+            }            
+        }   
     }
-    // if(totalDP > totalprice ){
-    //     sisaDP = totalprice - totalDP;
-    // }
-    sisaDP = totalDP - totalprice;
-    list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}>{"Sisa DP : "}{desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2))}</Text>);
+    if(setorPinjaman > 0){
+        // totalprice = totalprice - setorPinjaman;
+        nilaiNota = nilaiNota - setorPinjaman;
+    // if(false){
+        list.push(
+        <View style={{display:'table',width:'auto'}}>
+             <View style={{flexDirection:'row'}}>
+            <View style={[{ width:"34%", height: "25px",paddingLeft:'4px' }]}>
+            <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '1px', fontSize: fontSizeBig }]}>
+                {"Total Invoice - Setoran Pinjaman \n"}
+                {desimal00(formatRupiah(new String(totalprice).replaceAll('.',','),2))}{" - "}{desimal00(formatRupiah(new String(setorPinjaman).replaceAll('.',','),2))}{" = "}{desimal00(formatRupiah(new String(nilaiNota).replaceAll('.',','),2))}
+                </Text>
+            </View>
+            {tempViewSetorPinjaman !== null?tempViewSetorPinjaman:tempViewSisaPinjaman}
+            </View>
+
+            {/* <View style={{flexDirection:'row'}}>
+            <View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
+            <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '1px', fontSize: fontSizeBig }]}>{desimal00(formatRupiah(new String(totalprice).replaceAll('.',','),2))}{" - "}{desimal00(formatRupiah(new String(setorPinjaman).replaceAll('.',','),2))}{" = "}{desimal00(formatRupiah(new String(nilaiNota).replaceAll('.',','),2))}</Text>
+            </View>
+            {tempViewSetorPinjaman !== null?tempViewSisaPinjaman:null}
+            </View> */}
+        </View>
+        );
+        tempViewSetorPinjaman = null;
+        tempViewSisaPinjaman = null;
+    }
+    
+    sisaDP = totalDP - (nilaiNota - transfer);
+    if(tempViewSetorPinjaman !== null && tempViewSisaPinjaman !== null){
+        list.push(
+        <View style={{display:'table',width:'auto'}}>
+            <View style={{flexDirection:'row'}}>
+                <View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
+                <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{showLabelDP ?"Sisa DP "+desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2)):null}</Text>
+                </View>
+                {tempViewSetorPinjaman}
+            </View>
+            {/* <View style={{flexDirection:'row'}}>
+                <View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
+                <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{""}</Text>
+                </View>
+                {tempViewSisaPinjaman}
+            </View> */}
+        </View>
+    );
+    }else if(tempViewSetorPinjaman !== null || tempViewSisaPinjaman !== null){
+        list.push(
+        <View style={{display:'table',width:'auto'}}>
+            <View style={{flexDirection:'row'}}>
+                <View style={[{ width:"34%", height: "17px",paddingLeft:'4px' }]}>
+                <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '0px', fontSize: fontSizeBig }]}>{showLabelDP ? "Sisa DP "+desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2)):null}</Text>
+                </View>
+                {tempViewSetorPinjaman !== null?tempViewSetorPinjaman:tempViewSisaPinjaman}
+            </View>
+        </View>
+    );
+    }else{
+        list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}> {showLabelDP ? "Sisa DP : "+desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2)) :null}  </Text>);
+    }
+    
+    
     return list;
 }
+// const lsitTambahDP = (value) =>{
+//     let deposits = value.deposits;
+//     let totalprice = parseFloat(value.totalprice);
+//     let saldoDP = value.saldoDepositBeforeNotaSubmit?value.saldoDepositBeforeNotaSubmit:0;
+//     let sisaDP = 0;
+//     let totalDP = parseFloat(saldoDP);
+//     let list = [];
+//     list.push(
+//         <View style={{display:'table',width:'auto'}}>
+//             <View style={{flexDirection:'row'}}>
+//             <View style={[{ width:"68%", height: "20px",paddingLeft:'4px' }]}>
+//             <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{""}</Text>
+//             </View>
+
+//             <View style={[{ width:"14%", height: "20px" }]}>
+//             <Text style={[ { width: 75, maxWidth: 75,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Total"}</Text>
+//             </View>
+
+//             <View style={[{ width:"18%", height: "20px" }]}>
+//             <Text style={[ { width: 94, maxWidth: 94,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{value.totalprice?desimal00(formatRupiah(new String(value.totalprice).replaceAll('.',','),2),{isShow000:false}):''}</Text>
+//             </View>
+
+//             </View>
+
+//             <View style={{flexDirection:'row'}}>
+//             <View style={[{ width:"68%", height: "20px",paddingLeft:'4px' }]}>
+//             <Text style={[ { width: 200, maxWidth: 200,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Saldo DP "}{desimal00(formatRupiah(new String(saldoDP).replaceAll('.',','),2)) }</Text>
+//             </View>
+
+//             <View style={[{ width:"14%", height: "20px" }]}>
+//             <Text style={[ { width: 75, maxWidth: 75,textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{"Transfer "}</Text>
+//             </View>
+
+//             <View style={[{ width:"18%", height: "20px" }]}>
+//             <Text style={[ { width: 94, maxWidth: 94,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{desimal00(formatRupiah(new String(getTransfer(value)).replaceAll('.',','),2)) }</Text>
+//             </View>
+
+//             </View>
+//         </View>
+//     )
+
+//     if(deposits){
+//         for(let i=0; i < deposits.length; i++){
+//             let det = deposits[i];
+//             let amount = det.amount?det.amount:0;
+//             totalDP = totalDP + parseFloat(amount);
+//             list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}>{"Tambah DP : "}{desimal00(formatRupiah(new String(amount).replaceAll('.',','),2))}{' ('+det.date+')'}</Text>);
+//         }
+        
+        
+//     }
+//     // if(totalDP > totalprice ){
+//     //     sisaDP = totalprice - totalDP;
+//     // }
+//     sisaDP = totalDP - totalprice;
+//     list.push(<Text style={[styles.tableCell, { width: 300, maxWidth: 300, marginTop: '1px', fontSize: fontSizeBig }]}>{"Sisa DP : "}{desimal00(formatRupiah(new String(sisaDP).replaceAll('.',','),2))}</Text>);
+//     return list;
+// }
 
 const setUdangMati = (items) =>{
     if(items != undefined && items != null){

@@ -119,17 +119,21 @@ const styles = StyleSheet.create({
     title: { fontFamily: 'roboto', fontWeight: 600 },
 });
 
-const getTransfer = (items) =>{
+const getTransfer = (param) =>{
+    let items = param.value;
+    // let saldoDP = param.saldoDP?param.saldoDP:0;
     let totalprice = items.totalprice?parseFloat(items.totalprice):0;
+    let setorPinjaman = items.setorPinjaman?parseFloat(items.setorPinjaman):0;
+    totalprice = totalprice - setorPinjaman;
     let setor = items.setor?parseFloat(items.setor):0;
-    let deposits = items.deposits;
-    if(deposits){
-        for(let i=0; i < deposits.length; i++){
-            let det = deposits[i];
-            let amount = det.amount?det.amount:0;
-            setor = setor + parseFloat(amount);
-        }
-    }
+    // let deposits = items.deposits;
+    // if(deposits){
+    //     for(let i=0; i < deposits.length; i++){
+    //         let det = deposits[i];
+    //         let amount = det.amount?det.amount:0;
+    //         setor = setor + parseFloat(amount);
+    //     }
+    // }
     let transfer = 0;
     if(totalprice > setor){
         transfer = totalprice - setor;
@@ -166,7 +170,7 @@ const lsitTambahDP = (value) =>{
     let list = [];
     let setorPinjaman = value.setorPinjaman?value.setorPinjaman:0;
     let nilaiNota = totalprice;
-    let transfer = getTransfer(value);
+    let transfer = getTransfer({saldoDP:saldoDP,value:value});
 
     let saldoAkhirPinjaman = value.saldoPinjaman?value.saldoPinjaman:0;
     let saldoPinjaman = value.saldoPinjaman?value.saldoPinjaman:0;
@@ -211,6 +215,7 @@ const lsitTambahDP = (value) =>{
     let viewValueTransfer = <View style={[{ width:"18%", height: "20px" }]}>
             <Text style={[ { width: 94, maxWidth: 94,textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{desimal00(formatRupiah(new String(transfer).replaceAll('.',','),2)) }</Text>
             </View>; 
+            
    if(transfer == 0){
         viewLabelTransfer = null;
         viewValueTransfer = null;
