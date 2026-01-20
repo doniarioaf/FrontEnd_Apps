@@ -197,6 +197,12 @@ const handleMenu = () => {
                     translate: 'Lprn Kartu Deposit',
                     permission:permissionmenu.MenuReportKomisi,
                 },
+                {
+                    name: 'Integrasi Saldo',
+                    path: pathmenu.integrasiSaldo,
+                    translate: 'Integrasi Saldo',
+                    permission:permissionmenu.MenuDraftPurchaseReceive,
+                },
 
             ]
         },

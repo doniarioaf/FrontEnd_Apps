@@ -125,3 +125,4 @@ export const detailcancelpackinglist = `/form/detail/cancelpackinglist`;
 export const editcancelpackinglist = `/form/edit/cancelpackinglist`;
 export const printpdfcancelpackinglist = `/form/printpdf/cancelpackinglist`;
 export const menuReportCancelPackingList = `/reportCancelPackingList`;
+export const integrasiSaldo = `/integrasiSaldo`;

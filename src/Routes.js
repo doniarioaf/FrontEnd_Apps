@@ -271,6 +271,7 @@ const editCancelPackingList = lazy(() => import('./containers/Transaksi/CancelPa
 const printPdfCancelPackingList = lazy(() => import('./containers/Transaksi/CancelPackingList/print'));
 
 const reportCancelPackingList = lazy(() => import('./containers/Report/reportCancelPackingList'));
+const integrasiSaldo = lazy(() => import('./containers/Transaksi/Integrasi/integrasiSaldo'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -552,6 +553,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.printpdfcancelpackinglist+ '/:id'} component={waitFor(printPdfCancelPackingList)} />
                                         
                                         <Route path={pathmenu.menuReportCancelPackingList} component={waitFor(reportCancelPackingList)} />
+                                        <Route path={pathmenu.integrasiSaldo} component={waitFor(integrasiSaldo)} />
                                         
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
 
