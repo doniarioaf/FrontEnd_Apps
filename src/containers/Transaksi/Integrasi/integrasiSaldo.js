@@ -23,6 +23,7 @@ import { IconButton } from '@material-ui/core';
 const IntegrasiIndex = () => {
     reloadToHomeNotAuthorize(MenuIntegrasi, 'READ');
     momentLocalizer();
+    const { i18n } = useTranslation('translations');
     const history = useHistory();
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const IntegrasiIndex = () => {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: '' + error
+            text: error.msg?error.msg:error
         })
     }
 
@@ -43,7 +44,7 @@ const IntegrasiIndex = () => {
         obj.from = null;
         obj.to = null;
         obj.isall = 'Y';
-        dispatch(actions.submitJournal({ url: '', payload: obj, type: 'INTEGRASI' }, succesHandlerSubmit, errorHandler));
+        dispatch(actions.submitJournal({ url: '/integrasi', payload: obj, type: 'INTEGRASI' }, succesHandlerSubmit, errorHandler));
     }
 
     const succesHandlerSubmit = (data, propsdata) => {

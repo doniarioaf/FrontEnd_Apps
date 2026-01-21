@@ -171,7 +171,7 @@ export default function EditPurchaseReceive(props) {
         let setorPinjaman = det.setor_pinjaman ? det.setor_pinjaman : 0;
         let totalSisaDeposit = parseFloat(sisaDeposit) + parseFloat(setor);
         let totalSisaPinjaman = parseFloat(sisaPinjaman) + parseFloat(setorPinjaman);
-        let totalprice = det.totalprice ? det.totalprice : 0;
+        let totalprice = det.totalprice ? det.totalprice - setorPinjaman: 0;
         let transfer = totalprice - (setor + setorPinjaman); 
         setSisaDeposit(totalSisaDeposit);
         setSisaPinjaman(totalSisaPinjaman);
@@ -992,15 +992,15 @@ export default function EditPurchaseReceive(props) {
                 'data': el
             }
         ], []);
-        let sisaDeposit = data.data.sisaDeposit ? data.data.sisaDeposit : 0;
-        sisaDeposit = sisaDeposit + usedDeposit;
         setListCategoryProduct(theDataProd);
-        setSisaDeposit(sisaDeposit);
 
-        let sisaPinjaman = data.data.sisaPinjaman ? data.data.sisaPinjaman : 0;
-        sisaPinjaman = sisaPinjaman + usedPinjaman;
+        // let sisaDeposit = data.data.sisaDeposit ? data.data.sisaDeposit : 0;
+        // sisaDeposit = sisaDeposit + usedDeposit;
+        // setSisaDeposit(sisaDeposit);
 
-        setSisaPinjaman(sisaPinjaman);
+        // let sisaPinjaman = data.data.sisaPinjaman ? data.data.sisaPinjaman : 0;
+        // sisaPinjaman = sisaPinjaman + usedPinjaman;
+        // setSisaPinjaman(sisaPinjaman);
         
 
         const theDataDraftPR = data.data.draftPurchaseReceiveOpt.reduce((obj, el) => [
