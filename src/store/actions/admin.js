@@ -625,3 +625,12 @@ export const submitCancelPackingList = (param, successHandler, errorHandler) => 
         errorHandler,
     }
 }
+
+export const submitJournal = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_JOURNAL,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

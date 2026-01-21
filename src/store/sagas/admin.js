@@ -16,7 +16,8 @@ import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileU
     baseCargoURL,
     basePelunasanPiutangURL,
     baseKomisiURL,basePinjamanURL,
-    baseCancelPackingListURL} from '../../containers/shared/apiURL';
+    baseCancelPackingListURL,
+    baseJournalURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -1131,6 +1132,29 @@ export function* submitCancelPackingListSaga(action) {
             action.successHandler(response,propsdata);
         }else if(type == 'DELETE'){
             const response = yield axios.delete(baseCancelPackingListURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+
+}
+
+export function* submitJournalSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:[];
+    try {
+        if(type == 'ADD' || type == 'INTEGRASI'){
+            const response = yield axios.post(baseJournalURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'EDIT'){
+            const response = yield axios.put(baseJournalURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'DELETE'){
+            const response = yield axios.delete(baseJournalURL(url)).then(response => response.data);
             action.successHandler(response,propsdata);
         }
         

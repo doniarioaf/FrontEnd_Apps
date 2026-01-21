@@ -143,3 +143,4 @@ export const MenuReportKomisi = ['READ_REPORT_KOMISI'];
 export const MenuPinjaman = ['READ_PINJAMAN'];
 export const MenuCancelPackingList = ['READ_CANCELPACKINGLIST'];
 export const MenuReportCancelPackingList = ['READ_REPORT_CANCELPACKINGLIST'];
+export const MenuIntegrasi = ['CREATE_INTEGRASI'];

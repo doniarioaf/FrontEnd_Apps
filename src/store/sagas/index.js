@@ -79,6 +79,7 @@ import {
     getCancelPackingListDataSaga,
     submitCancelPackingListSaga
 } from './admin';
+import { submitJournal } from '../actions';
 
 
 export function* watchLogin() {
@@ -159,5 +160,6 @@ export function* watchAdmin() {
         takeEvery(actions.GET_PINJAMANA_DATA, getPinjamanDataSaga),
         takeEvery(actions.GET_CANCELPACKINGLIST_DATA, getCancelPackingListDataSaga),
         takeEvery(actions.SUBMIT_CANCELPACKINGLIST, submitCancelPackingListSaga),
+        takeEvery(actions.SUBMIT_JOURNAL, submitJournal),
     ]);
 }

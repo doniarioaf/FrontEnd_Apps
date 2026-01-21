@@ -81,5 +81,6 @@ export {
     getPinjamanData,
     submitPinjaman,
     getCancelPackingListData,
-    submitCancelPackingList
+    submitCancelPackingList,
+    submitJournal
 } from './admin';

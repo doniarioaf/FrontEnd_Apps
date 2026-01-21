@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import * as actions from '../../../store/actions';
 import * as pathmenu from '../../shared/pathMenu';
 import { reloadToHomeNotAuthorize, isGetPermissions, firstAndLastDateInMonth } from '../../shared/globalFunc';
-import { MenuCargo, addCargo_Permission } from '../../shared/permissionMenu';
+import { MenuIntegrasi } from '../../shared/permissionMenu';
 import { useHistory } from 'react-router-dom';
 import { DatePicker } from 'react-widgets';
 import { formatdate } from '../../shared/constantValue';
@@ -21,7 +21,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import { IconButton } from '@material-ui/core';
 
 const IntegrasiIndex = () => {
-    reloadToHomeNotAuthorize(MenuCargo, 'READ');
+    reloadToHomeNotAuthorize(MenuIntegrasi, 'READ');
     momentLocalizer();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
@@ -37,6 +37,46 @@ const IntegrasiIndex = () => {
         })
     }
 
+    const executeSubmit = () => {
+        setLoading(true);
+        let obj = new Object();
+        obj.from = null;
+        obj.to = null;
+        obj.isall = 'Y';
+        dispatch(actions.submitJournal({ url: '', payload: obj, type: 'INTEGRASI' }, succesHandlerSubmit, errorHandler));
+    }
+
+    const succesHandlerSubmit = (data, propsdata) => {
+            setLoading(false);
+            Swal.fire({
+                icon: 'success',
+                title: 'SUCCESS',
+                text: i18n.t('label_SUCCESS')
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // history.goBack();
+                }
+            })
+        }
+
+    const submitHandler = () => {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                executeSubmit();
+                //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+                //   Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
+
     return (
         <ContentWrapper>
             <ContentHeading history={history} removehistorylink={true} link={pathmenu.integrasiSaldo} label={'Integrasi Saldo'} labeldefault={'Integrasi Saldo'} />
@@ -46,7 +86,7 @@ const IntegrasiIndex = () => {
                 // style={{marginLeft:"1%"}}
                 color={'primary'}
                 disabled={loading}
-                // onClick={() => submitHandler(values)}
+                onClick={() => submitHandler()}
             >
                 {'Integrasi'}
             </Button>

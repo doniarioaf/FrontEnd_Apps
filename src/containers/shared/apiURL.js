@@ -35,3 +35,4 @@ export const basePelunasanPiutangURL = param => `${baseApiURL}/pelunasanpiutang$
 export const baseKomisiURL = param => `${baseApiURL}/komisi${param}`;
 export const basePinjamanURL = param => `${baseApiURL}/pinjaman${param}`;
 export const baseCancelPackingListURL = param => `${baseApiURL}/cancelpackinglist${param}`;
+export const baseJournalURL = param => `${baseApiURL}/journal${param}`;
