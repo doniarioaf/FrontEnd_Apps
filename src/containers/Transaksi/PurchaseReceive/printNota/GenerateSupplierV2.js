@@ -165,12 +165,12 @@ const lsitTambahDP = (value) =>{
     let saldoDP = value.saldoDepositBeforeNotaSubmit?value.saldoDepositBeforeNotaSubmit:0;
     let setorDeposit = parseFloat(value.setor);
     saldoDP = saldoDP + setorDeposit;
-    let sisaDP = 0;
+    let sisaDP = saldoDP;
     let totalDP = parseFloat(saldoDP);
     let list = [];
     let setorPinjaman = value.setorPinjaman?value.setorPinjaman:0;
     let nilaiNota = totalprice;
-    let transfer = getTransfer({saldoDP:saldoDP,value:value});
+    let transfer = value.nilaitransfer;// getTransfer({saldoDP:saldoDP,value:value});
 
     let saldoAkhirPinjaman = value.saldoPinjaman?value.saldoPinjaman:0;
     let saldoPinjaman = value.saldoPinjaman?value.saldoPinjaman:0;
@@ -330,7 +330,8 @@ const lsitTambahDP = (value) =>{
         tempViewSisaPinjaman = null;
     }
     
-    sisaDP = totalDP - (nilaiNota - transfer);
+    // sisaDP = totalDP - (nilaiNota - transfer);
+    sisaDP = sisaDP - (nilaiNota - transfer);
     if(tempViewSetorPinjaman !== null && tempViewSisaPinjaman !== null){
         list.push(
         <View style={{display:'table',width:'auto'}}>

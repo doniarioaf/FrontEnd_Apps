@@ -12,7 +12,7 @@ import * as pathmenu from '../../shared/pathMenu';
 import { reloadToHomeNotAuthorize, isGetPermissions, firstAndLastDateInMonth } from '../../shared/globalFunc';
 import { MenuIntegrasi } from '../../shared/permissionMenu';
 import { useHistory } from 'react-router-dom';
-import { DatePicker } from 'react-widgets';
+import { DatePicker, DropdownList } from 'react-widgets';
 import { formatdate } from '../../shared/constantValue';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -28,6 +28,12 @@ const IntegrasiIndex = () => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
+    let getdate = firstAndLastDateInMonth();
+    const [from, setFrom] = useState(getdate.first);
+    const [to, setTo] = useState(getdate.last);
+    const [ListType, setListType] = useState([{label:'Proses Semua',value:'Y'},{label:'Berdasarkan Tanggal',value:'DATE'}]);
+    const [SelType, setSelType] = useState('Y');
+
 
     function errorHandler(error, propsdata) {
         setLoading(false);
@@ -41,10 +47,41 @@ const IntegrasiIndex = () => {
     const executeSubmit = () => {
         setLoading(true);
         let obj = new Object();
-        obj.from = null;
-        obj.to = null;
-        obj.isall = 'Y';
+        if(SelType == 'Y'){
+            obj.from = null;
+            obj.to = null;
+            obj.isall = 'Y';
+        }else{
+            obj.from = from.getTime();
+            obj.to = to.getTime();
+            obj.isall = SelType;
+        }
+        
         dispatch(actions.submitJournal({ url: '/integrasi', payload: obj, type: 'INTEGRASI' }, succesHandlerSubmit, errorHandler));
+    }
+
+    const handleChangeType = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelType(id);
+
+    }
+
+    const handleChangeFrom = (data) => {
+            //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
+        if (data !== null) {
+            setFrom(moment(data, formatdate).toDate())
+        } else {
+            setFrom(null)
+        }
+    }
+
+    const handleChangeTo = (data) => {
+        //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
+        if (data !== null) {
+            setTo(moment(data, formatdate).toDate())
+        } else {
+            setTo(null)
+        }
     }
 
     const succesHandlerSubmit = (data, propsdata) => {
@@ -82,7 +119,50 @@ const IntegrasiIndex = () => {
         <ContentWrapper>
             <ContentHeading history={history} removehistorylink={true} link={pathmenu.integrasiSaldo} label={'Integrasi Saldo'} labeldefault={'Integrasi Saldo'} />
             <Container fluid>
-                <div className="row justify-content-center" >
+                 {/* <table>
+                <th hidden={SelType == 'Y'}>{'From'}</th>
+                <th style={{ paddingLeft: '10px' }} hidden={SelType == 'Y'}>{'To'}</th>
+                <th style={{ paddingLeft: '10px' }}>{'Type'}</th>
+                <tbody>
+                    <tr>
+                    <td hidden={SelType == 'Y'}>
+                        <DatePicker
+                        name="from"
+                        onChange={val => handleChangeFrom(val)}
+                        format={formatdate}
+                        value={from}
+                        /></td>
+                        <td style={{ paddingLeft: '10px' }} hidden={SelType == 'Y'}>
+                            <DatePicker
+                                name="to"
+                                
+                                onChange={val => handleChangeTo(val)}
+                               
+                                format={formatdate}
+                                value={to}
+                            
+                            />
+                        </td> 
+                            <td width={'300px'}>
+                            <div>
+                            <DropdownList
+                                name="SelType"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                onChange={val => handleChangeType(val)}
+                                data={ListType}
+                                textField={'label'}
+                                valueField={'value'}
+                                value={SelType}
+                            />
+                        </div>
+                        </td>
+                    
+                    </tr>
+                </tbody>
+            </table> */}
+                <div className="row justify-content-center" style={{paddingTop:'15px'}}>
                 <Button
                 // style={{marginLeft:"1%"}}
                 color={'primary'}
