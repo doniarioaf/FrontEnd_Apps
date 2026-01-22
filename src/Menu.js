@@ -201,7 +201,7 @@ const handleMenu = () => {
                     name: 'Integrasi Saldo',
                     path: pathmenu.integrasiSaldo,
                     translate: 'Integrasi Saldo',
-                    permission:permissionmenu.MenuDraftPurchaseReceive,
+                    permission:permissionmenu.MenuIntegrasi,
                 },
 
             ]
