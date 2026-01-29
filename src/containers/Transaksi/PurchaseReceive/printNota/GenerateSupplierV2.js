@@ -119,6 +119,20 @@ const styles = StyleSheet.create({
     title: { fontFamily: 'roboto', fontWeight: 600 },
 });
 
+const getTotalValueTambahDP = (deposits) =>{
+    let total = 0;
+    if(deposits != null && deposits != undefined){
+        if(deposits.length > 0){
+            for(let i=0; i < deposits.length; i++){
+                let det = deposits[i];
+                let amount = det.amount?det.amount:0;
+                total = total + amount;
+            }
+        }
+    }
+    return total;
+}
+
 const getTransfer = (param) =>{
     let items = param.value;
     // let saldoDP = param.saldoDP?param.saldoDP:0;
@@ -161,11 +175,12 @@ const penyesuaianTerbilang = (value) =>{
 }
 const lsitTambahDP = (value) =>{
     let deposits = value.deposits;
+    let totalTambahDP = getTotalValueTambahDP(deposits);
     let totalprice = parseFloat(value.totalprice);
     let saldoDP = value.saldoDepositBeforeNotaSubmit?value.saldoDepositBeforeNotaSubmit:0;
     let setorDeposit = parseFloat(value.setor);
-    saldoDP = saldoDP + setorDeposit;
-    let sisaDP = saldoDP;
+    saldoDP = saldoDP + setorDeposit - totalTambahDP;
+    let sisaDP = saldoDP + totalTambahDP;
     let totalDP = parseFloat(saldoDP);
     let list = [];
     let setorPinjaman = value.setorPinjaman?value.setorPinjaman:0;
