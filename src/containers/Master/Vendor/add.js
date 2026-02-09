@@ -98,6 +98,9 @@ export default function AddVendor(props) {
     const [InputNpwp, setInputNpwp] = useState('');
     const [InputPhone, setInputPhone] = useState('');
 
+    const [ListLimitTransaksi, setListLimitTransaksi] = useState([{value:'Y',label:'Yes'},{value:'N',label:'No'}]);
+    const [SelLimitTransaksi, setSelLimitTransaksi] = useState("N");
+
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getVendorData({ url: '/template' }, successHandler, errorHandler));
@@ -236,6 +239,7 @@ export default function AddVendor(props) {
             obj.address2 = values.address2;
             obj.npwp = values.npwp;
             obj.phone = values.phone;
+            obj.limittransaction = SelLimitTransaksi;
             dispatch(actions.submitVendorData({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -304,6 +308,10 @@ export default function AddVendor(props) {
         setInputValue1('');
     }
 
+    const handleChangeLimitTransaksi = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelLimitTransaksi(id);
+    }
 
     const handleChangeType = (data) => {
         let id = data?.value ? data.value : '';
@@ -348,6 +356,7 @@ export default function AddVendor(props) {
                     address2:InputAddress2,
                     npwp:InputNpwp,
                     phone:InputPhone,
+                    LimitTransaksi:SelLimitTransaksi,
                 }
             }
             validate={values => {
@@ -474,6 +483,24 @@ export default function AddVendor(props) {
                                             value={values.type}
                                         />
                                         <div className="invalid-feedback-custom">{ErrSelType}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="LimitTransaksi">
+                                            {i18n.t('Limit Transaction')}
+                                        </label>
+                                        <DropdownList
+                                            name="LimitTransaksi"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeLimitTransaksi(val)}
+                                            onBlur={val => setFieldTouched("LimitTransaksi", val?.value ? val.value : '')}
+                                            data={ListLimitTransaksi}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.LimitTransaksi}
+                                        />
 
                                        
 

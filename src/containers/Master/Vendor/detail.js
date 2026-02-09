@@ -217,6 +217,14 @@ import React, {useState,
                                 {value.type?value.type:''}
                             </strong>
                             </div>
+
+                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Limit Transaction')}</span>
+                            <strong className="col-md-7">
+                                {value.type?(value.limittransaction?'Yes':'No'):''}
+                            </strong>
+                            </div>
+
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_ADDRESS')+' 1'}</span>
                             <strong className="col-md-7">
