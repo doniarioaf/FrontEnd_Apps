@@ -253,6 +253,14 @@ import React, {useState,
                                 </strong>
                             </div>
 
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Catatan')}</span>
+                                <strong className="col-md-7">
+                                {value.catatan}
+                                </strong>
+                            </div>
+
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('File')}</span>
                                 <strong className="col-md-7" onClick={() => downloadFile()} style={{cursor:'pointer',color:'blue'}} >

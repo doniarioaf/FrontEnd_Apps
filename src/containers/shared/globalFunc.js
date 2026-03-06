@@ -208,6 +208,72 @@ export const numToMoney = (amount) =>{
         }
 };
 
+export const numToMoneyNegative = (amount) => {
+     if (amount === null || amount === undefined) return "";
+
+    let value = amount.toString();
+
+    // kondisi sementara
+    if (value === "-" || value === "," || value.endsWith(",")) {
+        return value;
+    }
+
+    // hapus separator ribuan lama
+    value = value.replace(/\./g, "");
+
+    let isNegative = value.startsWith("-");
+    if (isNegative) {
+        value = value.substring(1);
+    }
+
+    let parts = value.split(",");
+
+    let integerPart = parts[0];
+    let decimalPart = parts[1];
+
+    if (!isNaN(integerPart)) {
+        integerPart = parseInt(integerPart || 0)
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    let result = integerPart;
+
+    if (decimalPart !== undefined) {
+        result += "," + decimalPart;
+    }
+
+    if (isNegative) {
+        result = "-" + result;
+    }
+
+    return result;
+};
+
+export const rupiahToNumber = (value) => {
+
+    if (!value) return 0;
+
+    let normalized = value
+        .toString()
+        .replace(/\./g, "")   // hapus ribuan
+        .replace(",", ".");   // ubah desimal
+
+    return parseFloat(normalized);
+};
+
+export const isValidRupiahValue = (value) => {
+    if (!value) return false;
+    //  const regex = /^-?\d{1,3}(\.\d{3})*(,\d+)?$/;
+
+    // if (!regex.test(value)) return false;
+
+    return Number(
+        value.replace(/\./g, "").replace(",", ".")
+    );
+    // const normalized = rupiahToNumber(value);
+    // return !isNaN(normalized);
+};
 export const formatMoney = (amount) => {
     const returnamount = amount;
     amount = amount.replaceAll('.','');

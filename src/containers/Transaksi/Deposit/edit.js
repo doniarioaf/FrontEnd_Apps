@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { isValidRupiahValue, numToMoney, numToMoneyNegative, reloadToHomeNotAuthorize, rupiahToNumber } from '../../shared/globalFunc';
 import { editDeposit_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import momentLocalizer from 'react-widgets-moment';
@@ -41,6 +41,8 @@ export default function EditDeposit(props) {
     const [isSelected, setIsSelected] = useState(false);
     const [ErrUploadFile, setErrUploadFile] = useState("");
 
+    const [InputCatatan, setInputCatatan] = useState('');
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -68,7 +70,9 @@ export default function EditDeposit(props) {
 
         setSelVendor(det.idvendor);
         setInputDepositDate(det.depositdate ? new Date(det.depositdate) : null);
-        setInputAmount(det.amount ? det.amount : 0);
+        let amount = det.amount ? String(det.amount).replaceAll('.',',') : 0;
+        setInputAmount(amount);
+        setInputCatatan(det.catatan);
 
         setLoading(false);
     }
@@ -78,16 +82,26 @@ export default function EditDeposit(props) {
         setErrSelVendor('');
         setErrInputDepositDate('');
         setErrInputAmount('');
+        let isNegative = false;
         if (values.amount == '') {
             setErrInputAmount(i18n.t('label_REQUIRED'));
             flag = false;
-        } else {
-            let amount = parseFloat(new String(values.amount).replaceAll(".", ""));
-            if (amount <= 0) {
-                setErrInputAmount(i18n.t('Amount Harus Lebih besar dari 0'));
+        } else{
+            let flagVal = isValidRupiahValue(values.amount);
+            if(!flagVal){
+                setErrInputAmount(i18n.t('Cek Kembali Nominal'));
                 flag = false;
+            }else{
+                if(rupiahToNumber(values.amount) < 0) isNegative=true;
             }
         }
+        // else {
+        //     let amount = parseFloat(new String(values.amount).replaceAll(".", ""));
+        //     if (amount <= 0) {
+        //         setErrInputAmount(i18n.t('Amount Harus Lebih besar dari 0'));
+        //         flag = false;
+        //     }
+        // }
         if (InputDepositDate == null) {
             setErrInputDepositDate(i18n.t('label_REQUIRED'));
             flag = false;
@@ -133,7 +147,8 @@ export default function EditDeposit(props) {
             let obj = new Object();
             obj.depositdate = new Date(values.depositdate).getTime();
             obj.idvendor = SelVendor;
-            obj.amount = new String(values.amount).replaceAll(".", "") !== '' ? new String(values.amount).replaceAll(".", "") : 0;
+            obj.amount = rupiahToNumber(values.amount);//new String(values.amount).replaceAll(".", "") !== '' ? new String(values.amount).replaceAll(".", "") : 0;
+            obj.catatan = values.catatan;
             dispatch(actions.submitDeposit({ url: '/' + id, payload: obj, type: 'EDIT' }, succesHandlerSubmitData, errorHandler));
         }
     }
@@ -215,11 +230,13 @@ export default function EditDeposit(props) {
                     vendor: SelVendor,
                     depositdate: InputDepositDate,
                     amount: InputAmount,
+                    catatan:InputCatatan
                 }
             }
             validate={values => {
                 const errors = {};
                 setInputAmount(values.amount);
+                setInputCatatan(values.catatan);
                 return errors;
             }}
             enableReinitialize="true"
@@ -295,9 +312,22 @@ export default function EditDeposit(props) {
 
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            value={values.amount !== '' ? numToMoney(parseFloat(new String(values.amount).replaceAll(".", ""))) : ''}
+                                            value={values.amount !== '' ? numToMoneyNegative(new String(values.amount).replaceAll(".", "")) : ''}
+                                            // value={values.amount !== '' ? numToMoney(parseFloat(new String(values.amount).replaceAll(".", ""))) : ''}
                                         />
                                         <div className="invalid-feedback-custom">{ErrInputAmount}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="catatan">
+                                            {i18n.t('Catatan')}
+                                        </label>
+                                        <Input
+                                            name="catatan"
+                                            type="text"
+                                            id="catatan"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.catatan}
+                                        />
 
                                         <label className="mt-3 form-label required" htmlFor="netamount">
                                             {i18n.t('Upload Bukti Setor')}
