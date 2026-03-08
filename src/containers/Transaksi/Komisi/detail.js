@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { formatRupiah, isGetPermissions,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { formatRupiah, isGetPermissions,numToMoneyNegative,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { MenuKomisi, deleteKomisi_Permission, editKomisi_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
@@ -47,6 +47,7 @@ import React, {useState,
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
+    const [TotalKomisi, setTotalKomisi] = useState('');
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
@@ -101,7 +102,7 @@ import React, {useState,
     }
 
     function setLisPR(listpr) {
-        setListItem(listpr.reduce((obj, el) => [
+        let listitem = listpr.reduce((obj, el) => [
             ...obj,
             {
                 'id': el.id,
@@ -112,7 +113,14 @@ import React, {useState,
                 'komisiperkoli': el.komisi?formatRupiah((el.komisi?new String(el.komisi).replaceAll('.',','):''),2):0,
                 'subtotalkomisi': el.subTotalkomisi?formatRupiah((el.subTotalkomisi?new String(el.subTotalkomisi).replaceAll('.',','):''),2):0,
             }
-        ], []));
+        ], []);
+        setListItem(listitem);
+
+        let total = listpr.reduce((sum, item) => {
+        return sum + (item.subTotalkomisi?item.subTotalkomisi:0);
+        }, 0);
+        total = String(total).replaceAll('.',',');
+        setTotalKomisi(total);
     }
 
 
@@ -233,6 +241,13 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('Tanggal')}</span>
                                 <strong className="col-md-7">
                                 {value.date ?moment (new Date(value.date)).format(formatdate):''}
+                                </strong>
+                            </div>
+
+                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Total Komisi')}</span>
+                                <strong className="col-md-7">
+                                {TotalKomisi !== '' && TotalKomisi !== null && TotalKomisi !== undefined?numToMoneyNegative(TotalKomisi):''}
                                 </strong>
                             </div>
 

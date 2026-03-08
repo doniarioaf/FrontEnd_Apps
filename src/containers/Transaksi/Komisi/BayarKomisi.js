@@ -3,13 +3,13 @@ import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import ContentWrapper from '../../../components/Layout/ContentWrapper';
 import ContentHeading from '../../../components/Layout/ContentHeading';
-import { Button } from 'reactstrap';
+import { Button,Input } from 'reactstrap';
 import * as actions from '../../../store/actions';
 import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { formatRupiah, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
+import { formatRupiah, numToMoneyNegative, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addKomisi_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -39,6 +39,8 @@ export default function BayarKomisi(props) {
 
     const [ListMsgError, setListMsgError] = useState([]);
 
+    const [TotalKomisi, setTotalKomisi] = useState("");
+
     const id = props.match.params.id;
     useEffect(() => {
         setLoading(true);
@@ -66,12 +68,16 @@ export default function BayarKomisi(props) {
     function setLisPR(listpr) {
         let list = [];
         let idvendorsbroker = [];
+        let totalKomisi = 0;
         for(let i=0; i < listpr.length; i++){
             let el = listpr[i];
             let idbroker = el.idvendorbroker;
             if(idvendorsbroker.indexOf(idbroker) == -1){
                 idvendorsbroker.push(idbroker);
             }
+            let subtotalKomisi = el.subTotalkomisi?el.subTotalkomisi:0;
+            let subtotalKomisiRupiah = formatRupiah((new String(subtotalKomisi).replaceAll('.',',')),2);
+            totalKomisi = totalKomisi + subtotalKomisi;
             list.push(
                 {
                     'id': el.id,
@@ -81,10 +87,13 @@ export default function BayarKomisi(props) {
                     'transdate': el.date ? moment(el.date).format(formatdate) : '',
                     'koli': el.koli,
                     'komisiperkoli': el.komisi?formatRupiah((el.komisi?new String(el.komisi).replaceAll('.',','):''),2):0,
-                    'subtotalkomisi': el.subTotalkomisi?formatRupiah((el.subTotalkomisi?new String(el.subTotalkomisi).replaceAll('.',','):''),2):0,
+                    'subtotalkomisi': subtotalKomisiRupiah,
+                    'subtotalkomisinominal': subtotalKomisi,
                 }
             );
         }
+        totalKomisi = String(totalKomisi).replaceAll('.',',');
+        setTotalKomisi(totalKomisi);
         setListItems(list);
         setListIdVendorBroker(idvendorsbroker);
         // setListItems(listpr.reduce((obj, el) => [
@@ -285,6 +294,11 @@ export default function BayarKomisi(props) {
         const list = [...ListItems];
         list.splice(index, 1);
         setListItems(list);
+        let total = list.reduce((sum, item) => {
+        return sum + (item.subtotalkomisinominal?item.subtotalkomisinominal:0);
+        }, 0);
+        total = String(total).replaceAll('.',',');
+        setTotalKomisi(total);
     };
 
     const handleChangeTransDate = (data) => {
@@ -312,6 +326,7 @@ export default function BayarKomisi(props) {
             initialValues={
                 {
                     transdate: TransDate,
+                    totalkomisi: TotalKomisi,
                     // kurs: InputKurs,
                 }
             }
@@ -355,6 +370,20 @@ export default function BayarKomisi(props) {
                                         value={values.transdate}
                                     />
                                     <div className="invalid-feedback-custom">{ErrTransDate}</div>
+
+                                    <label className="mt-3 form-label required" htmlFor="amount">
+                                        {i18n.t('Total Komisi')}
+                                    </label>
+                                    <Input
+                                        name="totalkomisi"
+                                        type="text"
+                                        id="totalkomisi"
+                                        disabled={true}
+                                        // onChange={handleChange}
+                                        // onBlur={handleBlur}
+                                        value={values.totalkomisi !== '' ? numToMoneyNegative(new String(values.totalkomisi).replaceAll(".", "")) : ''}
+                                        // value={values.amount !== '' ? numToMoney(parseFloat(new String(values.amount).replaceAll(".", ""))) : ''}
+                                    />
                                 </div>
                                 </div>
 

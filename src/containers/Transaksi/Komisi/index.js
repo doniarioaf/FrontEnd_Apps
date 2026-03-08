@@ -243,8 +243,8 @@ const KomisiIndex = () => {
         if (from != null && to != null) {
             setLoading(true);
             let obj = new Object();
-            obj.from = from.getTime();
-            obj.to = to.getTime();
+            obj.from = fromKomisi.getTime();
+            obj.to = toKomisi.getTime();
             obj.listIdVendor = '';
             obj.idbox = IdBox;
             dispatch(actions.getKomisiData({ url: '/list', type: 'POST', payload: obj }, successHandlerSearchKomisi, errorHandler));

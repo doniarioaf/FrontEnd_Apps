@@ -132,6 +132,7 @@ export default function AddStockAdjusment(props) {
                     flag = false;
                     break;
                 }
+                console.log('det.nodocument ',det.nodocument);
                 console.log('totalPembayaran ',totalPembayaran);
                 console.log('outstanding ',outstanding);
                 if (totalPembayaran > outstanding) {
