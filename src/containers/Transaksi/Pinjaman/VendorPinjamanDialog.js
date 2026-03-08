@@ -24,7 +24,7 @@ function VendorDialog({open, toggle,errorHandler}){
     obj.offset = page * size;
     obj.limit = size;
     obj.search = search ;
-    dispatch(actions.getDepositData({ url: '/listSisaDepositVendor', type: 'POST', payload: obj }, successHandler, errorHandler));
+    dispatch(actions.getPinjamanData({ url: '/listSisaPinjamanVendor', type: 'POST', payload: obj }, successHandler, errorHandler));
   };
 
    function successHandler(data, propsdata) {
@@ -34,7 +34,7 @@ function VendorDialog({open, toggle,errorHandler}){
                 {
                     'id': el.idvendor,
                     'vendorName': el.vendorName+' ('+el.vendorAlias+')',
-                    'sisaDeposit':el.sisaDeposit?numToMoney(el.sisaDeposit):0,
+                    'sisaPinjaman':el.sisaPinjaman?numToMoney(el.sisaPinjaman):0,
                 }
             ], []);
             setVendors(theData);
@@ -67,7 +67,7 @@ function VendorDialog({open, toggle,errorHandler}){
     <Modal isOpen={open} toggle={handleClose} size="lg">
 
       <ModalHeader toggle={handleClose}>
-        List Deposit
+        List Pinjaman
       </ModalHeader>
 
       <ModalBody>
@@ -112,7 +112,7 @@ function VendorDialog({open, toggle,errorHandler}){
           <thead className="table-light">
             <tr>
               <th>Nama Vendor</th>
-              <th width="200">Sisa Deposit</th>
+              <th width="200">Sisa Pinjaman</th>
             </tr>
           </thead>
 
@@ -122,7 +122,7 @@ function VendorDialog({open, toggle,errorHandler}){
               <tr key={v.idvendor}>
                 <td>{v.vendorName}</td>
                 <td className="text-end">
-                  {v.sisaDeposit}
+                  {v.sisaPinjaman}
                 </td>
               </tr>
             ))}

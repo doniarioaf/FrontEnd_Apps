@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Card, CardBody } from 'reactstrap';
 import { useTranslation } from 'react-i18next';
+import VendorDialog from "./VendorPinjamanDialog";
 import Grid from '../../../components/TableGrid';
 import ContentWrapper from '../../../components/Layout/ContentWrapper';
 import ContentHeading from '../../../components/Layout/ContentHeading';
@@ -18,6 +19,7 @@ import momentLocalizer from 'react-widgets-moment';
 import "react-widgets/dist/css/react-widgets.css";
 import SearchIcon from '@material-ui/icons/Search';
 import { IconButton } from '@material-ui/core';
+import ButtonMUI from '@material-ui/core/Button';
 
 const PinjamanIndex = () => {
     reloadToHomeNotAuthorize(MenuPinjaman, 'READ');
@@ -42,7 +44,11 @@ const PinjamanIndex = () => {
     const [SelIsActive, setSelIsActive] = useState('Y');
 
     const dispatch = useDispatch();
-
+    const [openVendor,setOpenVendor] = useState(false);
+    
+    const toggleVendor = ()=>{
+        setOpenVendor(!openVendor);
+    }
     useEffect(() => {
         setLoading(true);
         let obj = new Object();
@@ -72,6 +78,7 @@ const PinjamanIndex = () => {
 
     function errorHandler(error, propsdata) {
         setLoading(false);
+        setOpenVendor(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -125,6 +132,19 @@ const PinjamanIndex = () => {
     return (
         <ContentWrapper>
             <ContentHeading history={history} removehistorylink={true} link={pathmenu.menuPinjaman} label={'Pinjaman'} labeldefault={'Pinjaman'} />
+            <ButtonMUI
+                // ref={anchorRef}
+                color="white"
+                // backgroundColor="primary"
+                // aria-controls={open ? 'menu-list-grow' : undefined}
+                // aria-haspopup="true"
+                onClick={() => setOpenVendor(true)}
+                style={{float: 'right',marginRight:'0.2%',backgroundColor:'#05105d'}}
+            >
+                <span style={{color:'white',fontSize:'13px'}}>
+                {i18n.t('List Pinjaman')}
+                </span>
+            </ButtonMUI>
             <Container fluid>
                 <table>
                     <th>{'From'}</th>
@@ -212,6 +232,12 @@ const PinjamanIndex = () => {
                     </CardBody>
                 </Card>
             </Container>
+
+            <VendorDialog
+                open={openVendor}
+                toggle={toggleVendor}
+                errorHandler={errorHandler}
+            />
         </ContentWrapper>
 
     );

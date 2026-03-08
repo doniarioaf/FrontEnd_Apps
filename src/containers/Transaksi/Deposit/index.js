@@ -92,11 +92,6 @@ const DepositIndex = () => {
         setSelIsActive(id);
     }
 
-    const handleSearch = () =>{
-        setPage(0);
-        // fetchVendor();
-    }
-
     function onClickAdd() {
         history.push(pathmenu.adddeposit);
     }
