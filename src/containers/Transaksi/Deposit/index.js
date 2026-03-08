@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Card, CardBody } from 'reactstrap';
+import { Container, Card, CardBody} from 'reactstrap';
+import VendorDialog from "./VendorDepositDialog";
 import { useTranslation } from 'react-i18next';
 import Grid from '../../../components/TableGrid';
 import ContentWrapper from '../../../components/Layout/ContentWrapper';
@@ -18,6 +19,7 @@ import momentLocalizer from 'react-widgets-moment';
 import "react-widgets/dist/css/react-widgets.css";
 import SearchIcon from '@material-ui/icons/Search';
 import { IconButton } from '@material-ui/core';
+import ButtonMUI from '@material-ui/core/Button';
 
 const DepositIndex = () => {
     reloadToHomeNotAuthorize(MenuDeposit, 'READ');
@@ -42,6 +44,11 @@ const DepositIndex = () => {
     const [SelIsActive, setSelIsActive] = useState('Y');
 
     const dispatch = useDispatch();
+     const [openVendor,setOpenVendor] = useState(false);
+
+    const toggleVendor = ()=>{
+        setOpenVendor(!openVendor);
+    }
 
     useEffect(() => {
         setLoading(true);
@@ -72,6 +79,7 @@ const DepositIndex = () => {
 
     function errorHandler(error, propsdata) {
         setLoading(false);
+        setOpenVendor(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -82,6 +90,11 @@ const DepositIndex = () => {
     const handleChangeStatus = (data) =>{
         let id = data?.value ? data.value : '';
         setSelIsActive(id);
+    }
+
+    const handleSearch = () =>{
+        setPage(0);
+        // fetchVendor();
     }
 
     function onClickAdd() {
@@ -121,10 +134,22 @@ const DepositIndex = () => {
         }
 
     }
-
     return (
         <ContentWrapper>
             <ContentHeading history={history} removehistorylink={true} link={pathmenu.menudeposit} label={'Deposit'} labeldefault={'Deposit'} />
+            <ButtonMUI
+                // ref={anchorRef}
+                color="white"
+                // backgroundColor="primary"
+                // aria-controls={open ? 'menu-list-grow' : undefined}
+                // aria-haspopup="true"
+                onClick={() => setOpenVendor(true)}
+                style={{float: 'right',marginRight:'0.2%',backgroundColor:'#05105d'}}
+            >
+                <span style={{color:'white',fontSize:'13px'}}>
+                {i18n.t('List Deposit')}
+                </span>
+            </ButtonMUI>
             <Container fluid>
                 <table>
                     <th>{'From'}</th>
@@ -212,8 +237,16 @@ const DepositIndex = () => {
                     </CardBody>
                 </Card>
             </Container>
+
+           <VendorDialog
+                open={openVendor}
+                toggle={toggleVendor}
+                errorHandler={errorHandler}
+            />
+
         </ContentWrapper>
 
+        
     );
 };
 export default DepositIndex;
