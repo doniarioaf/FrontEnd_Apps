@@ -46,6 +46,7 @@ const PelunasanPiutangIndex = () => {
             { name: 'nodoc', title: i18n.t('No Document') },
             { name: 'nodocpl', title: i18n.t('No Packing List') },
             { name: 'customer', title: i18n.t('Customer') },
+            { name: 'vendor', title: i18n.t('Vendor') },
             { name: 'transdate', title: i18n.t('Tanggal') },
             { name: 'amount', title: i18n.t('Amount($)') },
             // { name: 'amountRp', title: i18n.t('Amount(Rp)') },
@@ -61,6 +62,14 @@ const PelunasanPiutangIndex = () => {
             // { name: 'amountRp', title: i18n.t('Amount(Rp)') },
         ]);
         const [tableColumnExtensions] = useState([]);
+        const [tableColumnExtensionsPiutang] = useState([
+                { columnName: 'customer', width: '200' },
+                { columnName: 'vendor', width: '300' },
+                { columnName: 'nodoc', width: '200' },
+                { columnName: 'nodocpl', width: '200' },
+                { columnName: 'transdate', width: '150' },
+                { columnName: 'outstanding', width: '150' },
+            ]);
         const [loading, setLoading] = useState(false);
 
         let getdate = firstAndLastDateInMonth();
@@ -103,7 +112,8 @@ const PelunasanPiutangIndex = () => {
                         'id': el.id,
                         'nodoc': el.nodocument,
                         'nodocpl': el.nodocumentPL,
-                        'customer': el.customerName,
+                        'customer': el.customerName+' / '+el.customerAlias,
+                        'vendor': el.vendorName+' / '+el.vendorAlias,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
                         'amount': el.amount?formatRupiah((el.amount?new String(el.amount).replaceAll('.',','):''),2):0,
                         'amountRp': formatRupiah(new String(calculateDolarToRupiah(el.amount,el.kurs)).replaceAll('.',','),2),
@@ -123,7 +133,8 @@ const PelunasanPiutangIndex = () => {
                         'id': el.id,
                         'nodoc': el.nodocument,
                         'nodocpl': el.nodocumentPL,
-                        'customer': el.customerName,
+                        'customer': el.customerName+' / '+el.customerAlias,
+                        'vendor': el.vendorName+' / '+el.vendorAlias,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
                         'amount': el.amount?formatRupiah((el.amount?new String(el.amount).replaceAll('.',','):''),2):0,
                         'amountRp': formatRupiah(new String(calculateDolarToRupiah(el.amount,el.kurs)).replaceAll('.',','),2),
@@ -446,7 +457,7 @@ const PelunasanPiutangIndex = () => {
                                     columns={columnspiutang}
                                     totalCounts={rowspiutang.length}
                                     loading={loading}
-                                    columnextension={tableColumnExtensions}
+                                    columnextension={tableColumnExtensionsPiutang}
                                     selection={selection}
                                     setselection={setSelection}
                                     // permissionadd={!isGetPermissions(addDraftPurchaseReceive_Permission, 'TRANSACTION')}
