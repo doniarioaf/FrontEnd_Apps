@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { formatRupiah, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
+import { formatRupiah, isValidNumber, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { editStockAdjusment_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -171,16 +171,16 @@ export default function EditStockAdjusment(props) {
         setErrItems('')
 
         if (ListItems.length > 0) {
-            for (let i = 0; i < ListItems.length; i++) {
-                let det = ListItems[i];
-                if(det.idproduct !== 'TOTAL'){
-                    if (parseInt(det.qty) <= 0) {
-                        setErrItems(i18n.t('Qty Harus diatas 0'));
-                        flag = false;
-                        break;
-                    }
-                }
-            }
+            // for (let i = 0; i < ListItems.length; i++) {
+            //     let det = ListItems[i];
+            //     if(det.idproduct !== 'TOTAL'){
+            //         if (parseInt(det.qty) <= 0) {
+            //             setErrItems(i18n.t('Qty Harus diatas 0'));
+            //             flag = false;
+            //             break;
+            //         }
+            //     }
+            // }
         } else {
             setErrItems(i18n.t('label_REQUIRED'));
             flag = false;
@@ -328,9 +328,10 @@ export default function EditStockAdjusment(props) {
         let subtotal = 0;
         if (name == 'qty' || name == 'itemsprice') {
             let valPriceTemp = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
-            if (isNaN(valPriceTemp) && valPriceTemp !== '' ) {
-                flag = false;
-            } 
+            flag = isValidNumber(valPriceTemp);
+            // if (isNaN(valPriceTemp) && valPriceTemp !== '' ) {
+            //     flag = false;
+            // } 
             
             if(flag) {
                 if (name == 'qty') {
@@ -338,13 +339,13 @@ export default function EditStockAdjusment(props) {
                     let pricetemp = listTemp[index]['itemsprice'] !== '' ? removeFormatRupiah(listTemp[index]['itemsprice']) : '0';
                     
                     let qtyTemp = parseInt(valPriceTemp)
-                    subtotal = parseInt(qtyTemp) * parseFloat(pricetemp);
+                    subtotal = parseInt(Math.abs(qtyTemp)) * parseFloat(pricetemp);
                 } else if (name == 'itemsprice') {
                     let listTemp = [...ListItems];
                     let qtytemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
                     let totalQty = parseInt(qtytemp) ;
 
-                    subtotal = parseInt(valPriceTemp) * parseFloat(totalQty);
+                    subtotal = parseInt(valPriceTemp) * parseFloat(Math.abs(totalQty));
                 }
                 //
             }
@@ -395,7 +396,7 @@ export default function EditStockAdjusment(props) {
             let totalSubtotalPrice = 0;
             for(let i=0; i < det.length; i++){
                 let val = det[i];
-                let qty = val.qty?val.qty:0;
+                let qty = val.qty?Math.abs(val.qty):0;
                 let priceitem = val.price?val.price:0;
                 let subtotalPrice = parseFloat(qty) * parseFloat(priceitem);
 
@@ -412,7 +413,7 @@ export default function EditStockAdjusment(props) {
         let list = propsdata.list;
         let qty = list[index]['qty'];
         // let price = det.price?det.price:0;
-        let subprice = qty * price;
+        let subprice = Math.abs(qty) * price;
 
         price = formatRupiah(new String(price).replaceAll('.',','),2);
         subprice = formatRupiah(new String(subprice).replaceAll('.',','),2);

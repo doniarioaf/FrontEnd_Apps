@@ -262,6 +262,10 @@ export const rupiahToNumber = (value) => {
     return parseFloat(normalized);
 };
 
+export const isValidNumber = (value) => {
+    const regex = /^-?\d*$/;
+    return regex.test(value);
+    }
 export const isValidRupiahValue = (value) => {
     if (!value) return false;
     //  const regex = /^-?\d{1,3}(\.\d{3})*(,\d+)?$/;

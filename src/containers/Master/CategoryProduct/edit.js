@@ -39,6 +39,8 @@ export default function EditCategoryProduct(props) {
     const [ListForCategory, setListForCategory] = useState([{'value':'VENDOR','label':'Vendor'},{'value':'CUSTOMER','label':'Customer'}]);
     const [SelForCategory, setSelForCategory] = useState('');
     const [ErrSelForCategory, setErrSelForCategory] = useState('');
+    const [InputSequence, setInputSequence] = useState('');
+    const [ErrInputSequence, setErrInputSequence] = useState('');
 
     const id = props.match.params.id;
 
@@ -54,7 +56,8 @@ export default function EditCategoryProduct(props) {
         setInputWeightFrom(val.weightfromingram);
         setInputWeightTo(val.weighttoingram);
         setInputJumlahItemsPerKoli(val.jumlahitemsperkoli);
-        setSelForCategory(val.forcategory)
+        setSelForCategory(val.forcategory);
+        setInputSequence(val.sequence);
         setLoading(false);
     }
 
@@ -64,6 +67,7 @@ export default function EditCategoryProduct(props) {
         setErrInputSize('');
         setErrInputWeight('');
         setErrSelForCategory('');
+        setErrInputSequence('');
         if (values.nama == '') {
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
@@ -74,6 +78,10 @@ export default function EditCategoryProduct(props) {
         }
         if (values.weight == '') {
             setErrInputWeight(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+        if (values.sequence == '') {
+            setErrInputSequence(i18n.t('label_REQUIRED'));
             flag = false;
         }
         if(SelForCategory == ''){
@@ -112,6 +120,7 @@ export default function EditCategoryProduct(props) {
             obj.weighttoingram = values.weightto !== '' ? values.weightto : 0;
             obj.jumlahitemsperkoli = values.jumlahitemsperkoli !== '' ? values.jumlahitemsperkoli : 0;
             obj.forcategory = SelForCategory;
+            obj.sequence = values.sequence !== '' ? values.sequence : 1;
             dispatch(actions.submitCategoryProductData({ url: '/' + id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -151,6 +160,7 @@ export default function EditCategoryProduct(props) {
                     size: InputSize,
                     weightfrom: InputWeightFrom,
                     weightto: InputWeightTo,
+                    sequence:InputSequence,
                     jumlahitemsperkoli: InputJumlahItemsPerKoli,
                     forcategory:SelForCategory
                 }
@@ -161,6 +171,7 @@ export default function EditCategoryProduct(props) {
                 setInputSize(values.size)
                 setInputWeightFrom(values.weightfrom);
                 setInputWeightTo(values.weightto);
+                setInputSequence(values.sequence);
                 setInputJumlahItemsPerKoli(values.jumlahitemsperkoli);
                 return errors;
             }}
@@ -298,6 +309,26 @@ export default function EditCategoryProduct(props) {
                                             onBlur={handleBlur}
                                             value={values.jumlahitemsperkoli}
                                         />
+
+                                        <label className="mt-3 form-label required" htmlFor="sequence">
+                                            {i18n.t('Sequence')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <Input
+                                            name="sequence"
+                                            type="text"
+                                            id="sequence"
+                                            onChange={val => {
+                                                let value = val.target.value;
+                                                if (!isNaN(value) || value == '') {
+                                                    setFieldValue("sequence", value);
+                                                }
+                                            }
+                                            }
+                                            onBlur={handleBlur}
+                                            value={values.sequence}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputSequence}</div>
 
                                     </div>
 

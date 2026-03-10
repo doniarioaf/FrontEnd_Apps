@@ -38,6 +38,8 @@ export default function AddCategoryProduct(props) {
     const [ListForCategory, setListForCategory] = useState([{'value':'VENDOR','label':'Vendor'},{'value':'CUSTOMER','label':'Customer'}]);
     const [SelForCategory, setSelForCategory] = useState('');
     const [ErrSelForCategory, setErrSelForCategory] = useState('');
+    const [InputSequence, setInputSequence] = useState('');
+    const [ErrInputSequence, setErrInputSequence] = useState('');
 
     const checkColumnMandatory = (values) => {
         let flag = true;
@@ -45,6 +47,7 @@ export default function AddCategoryProduct(props) {
         setErrInputSize('');
         setErrInputWeight('');
         setErrSelForCategory('');
+        setErrInputSequence('');
         if (values.nama == '') {
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
@@ -55,6 +58,10 @@ export default function AddCategoryProduct(props) {
         }
         if (values.weight == '') {
             setErrInputWeight(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+        if (values.sequence == '') {
+            setErrInputSequence(i18n.t('label_REQUIRED'));
             flag = false;
         }
         if(SelForCategory == ''){
@@ -92,6 +99,7 @@ export default function AddCategoryProduct(props) {
             obj.weighttoingram = values.weightto !== '' ? values.weightto : 0;
             obj.jumlahitemsperkoli = values.jumlahitemsperkoli !== '' ? values.jumlahitemsperkoli : 0;
             obj.forcategory = SelForCategory;
+            obj.sequence = values.sequence !== '' ? values.sequence : 1;
             dispatch(actions.submitCategoryProductData({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -131,6 +139,7 @@ export default function AddCategoryProduct(props) {
                     size: InputSize,
                     weightfrom: InputWeightFrom,
                     weightto: InputWeightTo,
+                    sequence:InputSequence,
                     jumlahitemsperkoli: InputJumlahItemsPerKoli,
                     forcategory:SelForCategory
                 }
@@ -141,6 +150,7 @@ export default function AddCategoryProduct(props) {
                 setInputSize(values.size)
                 setInputWeightFrom(values.weightfrom);
                 setInputWeightTo(values.weightto);
+                setInputSequence(values.sequence);
                 setInputJumlahItemsPerKoli(values.jumlahitemsperkoli);
                 return errors;
             }}
@@ -280,6 +290,26 @@ export default function AddCategoryProduct(props) {
                                             value={values.jumlahitemsperkoli}
                                         />
                                         {/* <div className="invalid-feedback-custom">{ErrInputWeight}</div> */}
+
+                                        <label className="mt-3 form-label required" htmlFor="sequence">
+                                            {i18n.t('Sequence')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <Input
+                                            name="sequence"
+                                            type="text"
+                                            id="sequence"
+                                            onChange={val => {
+                                                let value = val.target.value;
+                                                if (!isNaN(value) || value == '') {
+                                                    setFieldValue("sequence", value);
+                                                }
+                                            }
+                                            }
+                                            onBlur={handleBlur}
+                                            value={values.sequence}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputSequence}</div>
 
                                     </div>
 
