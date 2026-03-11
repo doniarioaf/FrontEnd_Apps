@@ -1,3 +1,5 @@
+import { numToMoney } from "../../shared/globalFunc";
+
 export const calculateSetor = (totalnota, sisadeposit,sisapinjaman)  =>{
     let setor = 0;
     let setorPinjaman = 0;
@@ -199,3 +201,104 @@ export const addKurungBukaPadaValue = (nama,value)  =>{
     if(nama == 'ONGKOS') { return '('+value+')'}
     return value;
 }
+
+export const totalTableItemMati = (list) => {
+        let totalQty = 0;
+        let totalPrice = 0;
+        if(list != null && list.length > 0){
+            for(let i=0; i < list.length; i++){
+                let det = list[i];
+                totalQty += det.qtymati?parseInt(det.qtymati):0;
+                totalPrice += det.subtotalprice?parseFloat(det.subtotalprice):0;
+            }
+
+            return (
+                <tr>
+                    <td></td>
+                    <td style={{ width: '20%',fontSize:15 }}>{'TOTAL'}</td>
+                    <td style={{ width: '20%' }}></td>
+                    <td style={{ fontSize:15 }}>{totalQty}</td>
+                    <td style={{ width: '15%' }}></td>
+                    <td style={{ width: '15%',fontSize:15 }}>{numToMoney(totalPrice)}</td>
+                    
+                </tr>
+            )
+        }
+
+        return "";
+    }
+
+    export const totalTableBiaya = (list) => {
+        let totalQty = 0;
+        let totalPrice = 0;
+        if(list != null && list.length > 0){
+            for(let i=0; i < list.length; i++){
+                let det = list[i];
+                totalQty += det.qty?parseInt(det.qty):0;
+                totalPrice += det.subtotal?parseFloat(det.subtotal):0;
+            }
+
+            return (
+                <tr>
+                    <td></td>
+                    <td style={{ fontSize:15 }}>{'TOTAL'}</td>
+                    <td style={{ fontSize:15 }}>{totalQty}</td>
+                    <td style={{ width: '15%' }}></td>
+                    <td style={{ width: '15%',fontSize:15 }}>{numToMoney(totalPrice)}</td>
+                    
+                </tr>
+            )
+        }
+
+        return "";
+    }
+
+    export const totalTablePenguranganBiaya = (list) => {
+        let totalQty = 0;
+        let totalPrice = 0;
+        if(list != null && list.length > 0){
+            for(let i=0; i < list.length; i++){
+                let det = list[i];
+                totalQty += det.qty?parseInt(det.qty):0;
+                totalPrice += det.subtotal?parseFloat(det.subtotal):0;
+            }
+
+            return (
+                <tr>
+                    <td></td>
+                    <td style={{ fontSize:15 }}>{'TOTAL'}</td>
+                    <td style={{ fontSize:15 }}>{totalQty}</td>
+                    <td style={{ width: '15%' }}></td>
+                    <td style={{ width: '15%',fontSize:15 }}>{numToMoney(totalPrice)}</td>
+                    
+                </tr>
+            )
+        }
+
+        return "";
+    }
+
+    export const totalTableInventori = (list) => {
+        let totalQty = 0;
+        let totalPrice = 0;
+        if(list != null && list.length > 0){
+            for(let i=0; i < list.length; i++){
+                let det = list[i];
+                totalQty += det.qty?parseInt(det.qty):0;
+                totalPrice += det.subtotalprice?parseFloat(det.subtotalprice):0;
+            }
+
+            return (
+                <tr>
+                    <td></td>
+                    <td style={{ fontSize:15 }}>{'TOTAL'}</td>
+                    <td style={{ fontSize:15 }}>{totalQty}</td>
+                    <td style={{ width: '15%' }}></td>
+                    <td style={{ width: '15%',fontSize:15 }}>{numToMoney(totalPrice)}</td>
+                    
+                </tr>
+            )
+        }
+
+        return "";
+    }

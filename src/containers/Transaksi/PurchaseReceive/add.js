@@ -21,7 +21,7 @@ import '../../CSS/table.css';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
-import { calculateSetor, calculateTotalPrice, calculateTransfer, setPriceBox, setPriceBoxOngkosByVendor } from './utilityPurchaseReceive';
+import { calculateSetor, calculateTotalPrice, calculateTransfer, setPriceBox, setPriceBoxOngkosByVendor, totalTableBiaya, totalTableInventori, totalTableItemMati, totalTablePenguranganBiaya } from './utilityPurchaseReceive';
 
 export default function AddPurchaseReceive(props) {
     reloadToHomeNotAuthorize(addPurchaseReceive_Permission, 'TRANSACTION');
@@ -1394,6 +1394,7 @@ export default function AddPurchaseReceive(props) {
         setSelArea(id);
     }
 
+    
     return (
         <Formik
             initialValues={
@@ -2102,6 +2103,7 @@ export default function AddPurchaseReceive(props) {
                                                         )
                                                     })
                                                 }
+                                                {totalTableItemMati(ListItemsPurchaseReceiveMati)}
                                             </tbody>
                                         </table>
                                     </div>
@@ -2188,6 +2190,7 @@ export default function AddPurchaseReceive(props) {
                                                         )
                                                     })
                                                 }
+                                                {totalTableBiaya(ListItemsPurchaseReceiveBiaya)}
                                             </tbody>
                                         </table>
                                     </div>
@@ -2272,6 +2275,7 @@ export default function AddPurchaseReceive(props) {
                                                         )
                                                     })
                                                 }
+                                                {totalTablePenguranganBiaya(ListItemsPurchaseReceivePenguranganBiaya)}
                                             </tbody>
                                         </table>
                                     </div>
@@ -2361,6 +2365,7 @@ export default function AddPurchaseReceive(props) {
                                                         )
                                                     })
                                                 }
+                                                {totalTableInventori(ListItemsInventori)}
                                             </tbody>
                                         </table>
                                     </div>

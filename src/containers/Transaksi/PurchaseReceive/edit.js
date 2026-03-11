@@ -21,7 +21,7 @@ import '../../CSS/table.css';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
-import { calculateSetor, calculateTotalPrice, calculateTransfer, setPriceBoxOngkosByVendor } from './utilityPurchaseReceive';
+import { calculateSetor, calculateTotalPrice, calculateTransfer, setPriceBoxOngkosByVendor, totalTableBiaya, totalTableInventori, totalTableItemMati, totalTablePenguranganBiaya } from './utilityPurchaseReceive';
 
 export default function EditPurchaseReceive(props) {
     reloadToHomeNotAuthorize(editPurchaseReceive_Permission, 'TRANSACTION');
@@ -1879,6 +1879,7 @@ export default function EditPurchaseReceive(props) {
                                                         )
                                                     })
                                                 }
+                                                {totalTableItemMati(ListItemsPurchaseReceiveMati)}
                                             </tbody>
                                         </table>
                                     </div>
@@ -1965,6 +1966,7 @@ export default function EditPurchaseReceive(props) {
                                                         )
                                                     })
                                                 }
+                                                {totalTableBiaya(ListItemsPurchaseReceiveBiaya)}
                                             </tbody>
                                         </table>
                                     </div>
@@ -2049,6 +2051,7 @@ export default function EditPurchaseReceive(props) {
                                                         )
                                                     })
                                                 }
+                                                {totalTablePenguranganBiaya(ListItemsPurchaseReceivePenguranganBiaya)}
                                             </tbody>
                                         </table>
                                     </div>
@@ -2138,6 +2141,7 @@ export default function EditPurchaseReceive(props) {
                                                         )
                                                     })
                                                 }
+                                                {totalTableInventori(ListItemsInventori)}
                                             </tbody>
                                         </table>
                                     </div>
