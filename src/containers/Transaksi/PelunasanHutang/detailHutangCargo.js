@@ -295,7 +295,14 @@ import React, {useState,
                             </strong>
                             </div>
 
-                           
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Tanggal')}</span>
+                            <strong className="col-md-7">
+                                {value.detailCargo?(value.detailCargo.date?moment(value.detailCargo.date).format(formatdate):""):''}
+                            </strong>
+                            </div>
+                            
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Total Amount')}</span>
