@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { formatRupiah, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
+import { formatRupiah, numToMoneyNegative, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { editKomisi_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -34,6 +34,7 @@ export default function EditBayarKomisi(props) {
 
     const [ListItems, setListItems] = useState([]);
     const [ErrItems, setErrItems] = useState("");
+    const [TotalKomisi, setTotalKomisi] = useState("");
 
     const id = props.match.params.id;
     useEffect(() => {
@@ -51,7 +52,7 @@ export default function EditBayarKomisi(props) {
     }
 
     function setLisPR(listpr) {
-        setListItems(listpr.reduce((obj, el) => [
+        let list = listpr.reduce((obj, el) => [
             ...obj,
             {
                 'id': el.id,
@@ -62,7 +63,21 @@ export default function EditBayarKomisi(props) {
                 'komisiperkoli': el.komisi?formatRupiah((el.komisi?new String(el.komisi).replaceAll('.',','):''),2):0,
                 'subtotalkomisi': el.subTotalkomisi?formatRupiah((el.subTotalkomisi?new String(el.subTotalkomisi).replaceAll('.',','):''),2):0,
             }
-        ], []));
+        ], []);
+        setListItems(list);
+        calcTotalKomisi(list);
+        
+    }
+    function calcTotalKomisi(listitems){
+        let totalKomisi = 0;
+        for(let i=0; i < listitems.length; i++){
+            let det = listitems[i];
+            let subtotalkomisi = det.subtotalkomisi?String(det.subtotalkomisi).replaceAll('.',''):0;
+            subtotalkomisi = String(subtotalkomisi).replaceAll(',','.');
+            subtotalkomisi = parseFloat(subtotalkomisi);
+            totalKomisi = totalKomisi + subtotalkomisi;
+        }
+        setTotalKomisi(totalKomisi);
     }
     const checkColumnMandatory = (values) => {
         let flag = true;
@@ -137,6 +152,7 @@ export default function EditBayarKomisi(props) {
         const list = [...ListItems];
         list.splice(index, 1);
         setListItems(list);
+        calcTotalKomisi(list);
     };
 
     const handleChangeTransDate = (data) => {
@@ -163,6 +179,7 @@ export default function EditBayarKomisi(props) {
             initialValues={
                 {
                     transdate: TransDate,
+                    totalkomisi: TotalKomisi,
                     // kurs: InputKurs,
                 }
             }
@@ -206,6 +223,20 @@ export default function EditBayarKomisi(props) {
                                         value={values.transdate}
                                     />
                                     <div className="invalid-feedback-custom">{ErrTransDate}</div>
+
+                                    <label className="mt-3 form-label required" htmlFor="amount">
+                                        {i18n.t('Total Komisi')}
+                                    </label>
+                                    <Input
+                                        name="totalkomisi"
+                                        type="text"
+                                        id="totalkomisi"
+                                        disabled={true}
+                                        // onChange={handleChange}
+                                        // onBlur={handleBlur}
+                                        value={values.totalkomisi !== '' ? numToMoneyNegative(new String(values.totalkomisi).replaceAll(".", "")) : ''}
+                                        // value={values.amount !== '' ? numToMoney(parseFloat(new String(values.amount).replaceAll(".", ""))) : ''}
+                                    />
                                 </div>
                                 </div>
 

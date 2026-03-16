@@ -444,6 +444,13 @@ import React, {useState,
                             </div> 
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Vendor')}</span>
+                            <strong className="col-md-7">
+                                {ValueDetailPelunasan.aliasvendorPR?ValueDetailPelunasan.aliasvendorPR:''}
+                            </strong>
+                            </div> 
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Tanggal')}</span>
                                 <strong className="col-md-7">
                                 {ValueDetailPelunasan.date ?moment (new Date(ValueDetailPelunasan.date)).format(formatdate):''}
