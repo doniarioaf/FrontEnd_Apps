@@ -61,9 +61,15 @@ const PelunasanPiutangIndex = () => {
             { name: 'amount', title: i18n.t('Amount($)') },
             // { name: 'amountRp', title: i18n.t('Amount(Rp)') },
         ]);
-        const [tableColumnExtensions] = useState([]);
+        const [tableColumnExtensions] = useState([
+            { columnName: 'customer', width: '400' },
+                { columnName: 'nodoc', width: '200' },
+                { columnName: 'nodocpl', width: '200' },
+                { columnName: 'transdate', width: '150' },
+                { columnName: 'amount', width: '150' },
+        ]);
         const [tableColumnExtensionsPiutang] = useState([
-                { columnName: 'customer', width: '200' },
+                { columnName: 'customer', width: '400' },
                 { columnName: 'vendor', width: '300' },
                 { columnName: 'nodoc', width: '200' },
                 { columnName: 'nodocpl', width: '200' },
@@ -181,7 +187,7 @@ const PelunasanPiutangIndex = () => {
                         'nodoc': el.nodocument,
                         'nodocpl': el.noDocumentPL,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
-                        'customer': el.customerName,
+                        'customer': el.customerName+' / '+el.customerAlias,
                         'amount': el.amountInvoice?formatRupiah((el.amountInvoice?new String(el.amountInvoice).replaceAll('.',','):''),2):0,
                         'amountRp': formatRupiah(new String(calculateDolarToRupiah(el.amountInvoice,el.kursInvoice)).replaceAll('.',',')),
                     }

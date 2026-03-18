@@ -37,8 +37,16 @@ function VendorDialog({open, toggle,errorHandler}){
                     'sisaDeposit':el.sisaDeposit?numToMoney(el.sisaDeposit):0,
                 }
             ], []);
-            setVendors(theData);
-            setTotal(data.data.totalElements?data.data.totalElements:0);
+            // setVendors(theData);
+            // setTotal(data.data.totalElements?data.data.totalElements:0);
+             if(theData !== null && theData.length > 0){
+                setVendors(theData);
+                setTotal(data.data.totalElements?data.data.totalElements:0);
+              }else{
+              setVendors(theData);
+              setTotal(data.data.totalElements?data.data.totalElements:0);
+              setPage(page == 0 ?page:page - 1);
+            }
         }
         setLoading(false);
     }
