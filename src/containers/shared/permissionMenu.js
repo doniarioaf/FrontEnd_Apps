@@ -75,6 +75,7 @@ export const deleteStockAdjusment_Permission = ['DELETE_STOCKADJUSMENT'];
 export const addPackingList_Permission = ['READ_PACKINGLIST','CREATE_PACKINGLIST'];
 export const editPackingList_Permission = ['READ_PACKINGLIST','EDIT_PACKINGLIST'];
 export const deletePackingList_Permission = ['DELETE_PACKINGLIST'];
+export const editPackingListItemCheck_Permission = ['EDIT_PACKINGLISTITEM_CHECK'];
 
 export const addInvoice_Permission = ['READ_INVOICE','CREATE_INVOICE'];
 export const editInvoice_Permission = ['READ_INVOICE','EDIT_INVOICE'];

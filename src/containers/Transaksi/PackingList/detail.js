@@ -25,7 +25,7 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
   import { formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { MenuPackingList, cancelPackingList_Permission, deletePackingList_Permission, editPackingList_Permission } from '../../shared/permissionMenu';
+  import { MenuPackingList, cancelPackingList_Permission, deletePackingList_Permission, editPackingListItemCheck_Permission, editPackingList_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
   import '../../CSS/table.css';
@@ -51,7 +51,7 @@ import React, {useState,
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
-
+    let flagCheck = isGetPermissions(editPackingListItemCheck_Permission,'TRANSACTION');
     const id = props.match.params.id;
 
     const [ListItem, setListItem] = useState([]);
@@ -356,6 +356,7 @@ import React, {useState,
                         <th >{i18n.t('Category Product')}</th>
                         <th >{i18n.t('Qty')}</th>
                         <th >{i18n.t('Bruto Weight(Gr)')}</th>
+                        {flagCheck && (<th >{i18n.t('Check')}</th>)}
                         <th >{i18n.t('Allowance(%)')}</th>
                         <th >{i18n.t('Netto Weight(Kg)')}</th>
                         <th >{i18n.t('Price(USD)')}</th>
@@ -370,6 +371,7 @@ import React, {useState,
                                         <td>{x.categoryProductName +' ('+x.categoryProductSize+') ('+x.categoryJumlahitemsperkoli+')'}</td>
                                         <td>{x.qty}</td>
                                         <td>{x.brutoweight?numToMoney(x.brutoweight):0}</td>
+                                        {flagCheck && (<td>{x.check?'Yes':'No'}</td>)}
                                         <td>{x.allowance?numToMoney(x.allowance):0}</td>
                                         <td>{x.nettoweight?formatRupiah(new String(x.nettoweight).replaceAll('.',','),1):0}</td>
                                         {/* <td>{x.nettoweight?numToMoney(x.nettoweight):0}</td> */}

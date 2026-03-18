@@ -9,8 +9,8 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { convertGramToKG, formatRupiah, numToMoney, pembulatanNilai, reloadToHomeNotAuthorize, removeFormatRupiah, roundCeiling } from '../../shared/globalFunc';
-import { editPackingList_Permission } from '../../shared/permissionMenu';
+import { convertGramToKG, formatRupiah, isGetPermissions, numToMoney, pembulatanNilai, reloadToHomeNotAuthorize, removeFormatRupiah, roundCeiling } from '../../shared/globalFunc';
+import { editPackingList_Permission, editPackingListItemCheck_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -58,6 +58,8 @@ export default function EditPackingList(props) {
     const [ListVendor, setListVendor] = useState([]);
     const [SelVendor, setSelVendor] = useState("");
     const [ErrSelVendor, setErrSelVendor] = useState("");
+
+    let flagCheck = isGetPermissions(editPackingListItemCheck_Permission,'TRANSACTION');
 
     const id = props.match.params.id;
 
@@ -129,7 +131,8 @@ export default function EditPackingList(props) {
                 'allowance': el.allowance?formatRupiah(el.allowance,2):0,
                 'nettoweight': el.nettoweight?formatRupiah(new String(el.nettoweight).replaceAll('.',','),4):0,
                 'itemsprice': el.brutoweight?formatRupiah(el.price,2):0,
-                'subtotalprice': el.totalprice?formatRupiah(el.totalprice,1):0
+                'subtotalprice': el.totalprice?formatRupiah(el.totalprice,1):0,
+                'check': el.check?true:false,
             }
         ], []);
         setListItems(listItem);
@@ -279,7 +282,8 @@ export default function EditPackingList(props) {
                         'nettoweight': removeFormatRupiah(el.nettoweight) !== '' ? removeFormatRupiah(el.nettoweight) : '0',
                         'price': removeFormatRupiah(el.itemsprice) !== '' ? removeFormatRupiah(el.itemsprice) : '0',
                         'totalprice': removeFormatRupiah(el.subtotalprice),//new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
-                        'box': el.box
+                        'box': el.box,
+                        'check':el.check?true:false
                     }
                 ], []);
             }
@@ -334,6 +338,15 @@ export default function EditPackingList(props) {
         } else {
             setTransDate(null)
         }
+    }
+
+    const handleInputChangeCheckBoxItems = (e, index) => {
+        const { name, checked } = e.target;
+        const list = [...ListItems];
+        list[index][name] = checked;
+        // setNetto(calculateNetto(list));
+        setListItems(list);
+        // console.log('handleInputChangeCheckBoxItems ',checked);
     }
 
     const handleInputChangeItems = (e, index) => {
@@ -527,7 +540,8 @@ export default function EditPackingList(props) {
                 'allowance': 0,
                 'nettoweight': 0,
                 'itemsprice': 0,
-                'subtotalprice': 0
+                'subtotalprice': 0,
+                'check': false,
             }];
         setListItems(list);
         // setKoli(list.length);
@@ -831,6 +845,7 @@ export default function EditPackingList(props) {
                                                     <th >{i18n.t('Category Product')}</th>
                                                     <th >{i18n.t('Qty')}</th>
                                                     <th >{i18n.t('Bruto Weight(Gr)')}</th>
+                                                    {flagCheck && (<th >{i18n.t('Check')}</th>)}
                                                     <th >{i18n.t('Allowance(%)')}</th>
                                                     <th >{i18n.t('Netto Weight(Kg)')}</th>
                                                     <th >{i18n.t('Price(USD)')}</th>
@@ -908,6 +923,16 @@ export default function EditPackingList(props) {
                                                                     value={x.brutoweight}
                                                                     disabled={x.idcategoryproduct == '' || x.idproduct == ''}
                                                                 /></td>
+                                                                {flagCheck && 
+                                                                (<td style={{textAlign:'center',paddingBottom:'30px',paddingLeft:'30px'}}>
+                                                                        <Input type="checkbox" name="check" 
+                                                                    id="checktick" 
+                                                                    onChange={val => handleInputChangeCheckBoxItems(val,i)}
+                                                                    defaultChecked={x.check}
+                                                                    checked={x.check}
+                                                                    style={{transform:'scale(1.5)'}}
+                                                                    />
+                                                                </td>)}
 
                                                                 <td style={{ width: '10%' }}>
                                                                     <Input

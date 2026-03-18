@@ -110,13 +110,13 @@ export const isGetPermissions = (listPermission,action)  =>{
     //         return false;
     //     }
     // }
-
-    if(getPermissions().indexOf('SUPERUSER') > -1){
+    let listPermissionUser = getPermissions();
+    if(listPermissionUser.indexOf('SUPERUSER') > -1){
         return true;
     }else if(listPermission.length > 0){
         let countPermission = 0;
         for (var i = 0; i < listPermission.length; i++) {
-            if(getPermissions().indexOf(listPermission[i]) > -1){
+            if(listPermissionUser.indexOf(listPermission[i]) > -1){
                 countPermission++;
             }
         }
