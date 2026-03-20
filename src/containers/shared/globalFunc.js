@@ -251,9 +251,9 @@ export const numToMoneyNegative = (amount) => {
 };
 
 export const rupiahToNumber = (value) => {
-
+    
     if (!value) return 0;
-
+    // if(!isNaN(String(value))) return parseFloat(value);
     let normalized = value
         .toString()
         .replace(/\./g, "")   // hapus ribuan
@@ -531,6 +531,14 @@ export const terbilang = (nilai) =>{
     return 0;
 
   }
+
+  export const convertGramToKGAndPembulatan = (value) =>{
+    let totalnetto = value;
+        totalnetto = convertGramToKG({nilaigr:totalnetto});
+        totalnetto = pembulatanNilai(totalnetto,{isdown:false,numberdesimal:1});
+
+    return totalnetto;
+}
 
   export const desimal00 = (nilai) =>{
     if(new String(nilai).includes(',')){

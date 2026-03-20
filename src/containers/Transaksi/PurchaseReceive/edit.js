@@ -9,8 +9,8 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { editPurchaseReceive_Permission } from '../../shared/permissionMenu';
+import { convertGramToKGAndPembulatan, isGetPermissions, numToMoney, reloadToHomeNotAuthorize, rupiahToNumber } from '../../shared/globalFunc';
+import { editPurchaseReceive_Permission, editPurchaseReceiveCalcSelisih_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -84,6 +84,12 @@ export default function EditPurchaseReceive(props) {
     const [InputFlightNo, setInputFlightNo] = useState('');
     const [InputNotes2, setInputNotes2] = useState('');
     const [InputSMU, setInputSMU] = useState('');
+
+    const [InputKurs, setInputKurs] = useState(1);
+    const [ErrInputKurs, setErrInputKurs] = useState('');
+    const [InputSelisih, setInputSelisih] = useState(0);
+
+    let flagCalcSelisih = isGetPermissions(editPurchaseReceiveCalcSelisih_Permission,'TRANSACTION');
 
     const id = props.match.params.id;
 
@@ -178,6 +184,8 @@ export default function EditPurchaseReceive(props) {
         setInputTotalPrice(totalprice);
         setInputSetor(setor);
         setIsDefaultSetorTotalPrice(det.isdefaultvaluesetor);
+        setInputKurs(det.kurs?det.kurs:1);
+        setInputSelisih(det.selisih?det.selisih:0)
         // setInputTransfer(transfer);
 
         let listfilteroutputHidup = det.items.filter(output => output.type == 'H');
@@ -198,6 +206,9 @@ export default function EditPurchaseReceive(props) {
         let totalPriceItemHidup = 0;
         let totalQty = 0;
         let totalQtyNota = 0;
+        let grandTotalKg = 0;
+        let grandTotalUSD = 0;
+        let grandTotalRupiah = 0;
         for(let i=0; i < listfilteroutputHidup.length; i++){
             let el = listfilteroutputHidup[i];
             let subtotalprice = el.subtotalprice ? el.subtotalprice : 0;
@@ -206,6 +217,14 @@ export default function EditPurchaseReceive(props) {
             totalPriceItemHidup += parseFloat(subtotalprice);
             totalQty += parseInt(qty);
             totalQtyNota += parseInt(qtynota);
+
+            let weight_udang = el.weight_udang?el.weight_udang:0;
+            let totalusd = el.totalusd?el.totalusd:0;
+            let totalrupiah = el.totalrupiah?el.totalrupiah:0;
+
+            grandTotalKg += weight_udang;
+            grandTotalUSD += totalusd;
+            grandTotalRupiah += totalrupiah;
             theDataItems.push(
                 {
                     'idproduct': el.idproduct,
@@ -215,7 +234,13 @@ export default function EditPurchaseReceive(props) {
                     'qtynota': qtynota,
                     'qtymati': 0,
                     'itemsprice': el.price ? el.price : 0,//numToMoney(parseFloat(el.price)):0,
-                    'subtotalprice': subtotalprice
+                    'subtotalprice': subtotalprice,
+                    'totalkg':weight_udang,
+                    'hargaJual': el.hargajual_terakhir?el.hargajual_terakhir:0,
+                    'hargaJualEdit': el.hargajual?el.hargajual:0,
+                    'totalUSD': totalusd,
+                    'totalRupiah': el.totalrupiah?el.totalrupiah:0,
+                    'idpackinglist_acuan_hargajual_terakhir':el.idpackinglist_acuan_hargajual_terakhir?el.idpackinglist_acuan_hargajual_terakhir:0
                 }
             );
         };
@@ -229,7 +254,11 @@ export default function EditPurchaseReceive(props) {
                     'qtynota': totalQtyNota,
                     'qtymati': 0,
                     'itemsprice': 0,
-                    'subtotalprice': totalPriceItemHidup
+                    'subtotalprice': totalPriceItemHidup,
+                    'hargaJual': 0,
+                    'hargaJualEdit': 0,
+                    'totalUSD': grandTotalUSD,
+                    'totalRupiah': grandTotalRupiah
                 }
             );
         }
@@ -298,6 +327,7 @@ export default function EditPurchaseReceive(props) {
         setErrInputAccNameBank('');
         setErrItemsHidup('');
         setErrSelArea('');
+        setErrInputKurs('');
 
         if (ListItemsPurchaseReceive.length > 0) {
             // for (let i = 0; i < ListItemsPurchaseReceive.length; i++) {
@@ -345,6 +375,11 @@ export default function EditPurchaseReceive(props) {
         }
         if (InputAccNameBank == '') {
             setErrInputAccNameBank(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+
+        if (InputKurs == '') {
+            setErrInputKurs(i18n.t('label_REQUIRED'));
             flag = false;
         }
         // if(ListItemsPurchaseReceive.length == 0){
@@ -430,9 +465,15 @@ export default function EditPurchaseReceive(props) {
                                 'qty': el.qty,
                                 'qtybonus': el.qtybonus,
                                 'qtynota': el.qtynota,
-                                'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
-                                'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
-                                'type': 'H'
+                                'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? rupiahToNumber(el.itemsprice) : '0',
+                                'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? rupiahToNumber(el.subtotalprice) : '0',
+                                'type': 'H',
+                                'hargajual_terakhir':el.hargaJual !== '' ? el.hargaJual : '0',
+                                'hargajual':el.hargaJualEdit !== '' ? el.hargaJualEdit : '0',
+                                'totalusd':el.totalUSD !== '' ? el.totalUSD : '0',
+                                'totalrupiah':el.totalRupiah !== '' ? el.totalRupiah : '0',
+                                'idpackinglist_acuan_hargajual_terakhir':el.idpackinglist_acuan_hargajual_terakhir,
+                                'weight_udang':el.totalkg ?el.totalkg:0,
                             }
                         );
                     }
@@ -463,7 +504,13 @@ export default function EditPurchaseReceive(props) {
                                 'qtynota': 0,
                                 'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
                                 'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
-                                'type': 'M'
+                                'type': 'M',
+                                'hargajual_terakhir':0,
+                                'hargajual':0,
+                                'totalusd':0,
+                                'totalrupiah':0,
+                                'idpackinglist_acuan_hargajual_terakhir':null,
+                                'weight_udang':0,
                             }
                         );
                     // }
@@ -521,6 +568,8 @@ export default function EditPurchaseReceive(props) {
             obj.inventori = inventori;
             obj.iddraftpurchasereceive = SelDraftPurchaseReceive == 'nodata' || SelDraftPurchaseReceive == ''?null:SelDraftPurchaseReceive;
             obj.idarea = SelArea;
+            obj.kurs = values.kurs !== ''?rupiahToNumber(values.kurs):1;
+            obj.selisih = values.selisih !== ''?values.selisih:0;
             dispatch(actions.submitPurchaseReceiveData({ url: '/' + id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -583,6 +632,63 @@ export default function EditPurchaseReceive(props) {
         }
     }
 
+    const calcSelisih = (listitem, totalnota) => {
+    let indexTotal = listitem.findIndex(obj => obj.idproduct == 'TOTAL');
+    if(indexTotal !== null && indexTotal !== undefined && indexTotal > -1){
+        const totalRupiah = parseFloat(listitem[indexTotal]['totalRupiah']);
+        let selisih = totalRupiah - rupiahToNumber(totalnota);
+        console.log('calcSelisih totalRupiah ',totalRupiah);
+        console.log('calcSelisih totalnota ',rupiahToNumber(totalnota));
+        console.log('calcSelisih selisih ',selisih);
+        return selisih;
+    }   
+    let selisih =-rupiahToNumber(totalnota)
+    
+    return selisih;
+}
+const calcItemChangeKurs = (listitem, kurs) => {
+    const list = [...listitem];
+    let kursNumber = rupiahToNumber(kurs);
+    for(let i=0; i < listitem.length; i++){
+        let totalUSD = list[i]['totalUSD'];
+        let totalRupiah = kursNumber * totalUSD ;
+        list[i]['totalRupiah'] = totalRupiah;
+    }
+    setListItemsPurchaseReceive(list);
+    setInputSelisih(calcSelisih(list,InputTotalPrice));
+}
+const handleInputChangeItemsPriceEdit = (e, index, type) => {
+    
+    const { name, value } = e.target;
+    let price = rupiahToNumber(value);
+    const list = [...ListItemsPurchaseReceive];
+    let totalkg = list[index]['totalkg'];
+    totalkg = convertGramToKGAndPembulatan(totalkg);
+
+    let totalUSD = price * totalkg ;
+    let totalRupiah = totalUSD * (InputKurs !== ""?rupiahToNumber(InputKurs):0);
+    list[index][name] = price;
+    list[index]['totalUSD'] = totalUSD;
+    list[index]['totalRupiah'] = totalRupiah;
+
+    let indexTotal = list.findIndex(obj => obj.idproduct == 'TOTAL');
+    if(indexTotal !== null && indexTotal !== undefined && indexTotal > -1){
+    let grandTotalUSD = 0;
+    let grandTotalRp = 0;
+    for(let i=0; i < list.length; i++){
+        let det = list[i];
+        if(det.idproduct !== 'TOTAL'){
+            grandTotalUSD += list[i]['totalUSD'];
+            grandTotalRp += list[i]['totalRupiah'];
+        }
+    }
+    list[indexTotal]['totalUSD'] = grandTotalUSD;
+    list[indexTotal]['totalRupiah'] = grandTotalRp;
+    }
+
+    setListItemsPurchaseReceive(list);
+    setInputSelisih(calcSelisih(list,InputTotalPrice));
+}
 
     const handleInputChangeItems = (e, index, type) => {
         const { name, value } = e.target;
@@ -1227,6 +1333,8 @@ export default function EditPurchaseReceive(props) {
                     smu:InputSMU,
                     flightno:InputFlightNo,
                     notes2:InputNotes2,
+                    kurs: InputKurs,
+                    selisih:InputSelisih,
                 }
             }
             validate={values => {
@@ -1241,6 +1349,8 @@ export default function EditPurchaseReceive(props) {
                 setInputSMU(values.smu);
                 setInputFlightNo(values.flightno);
                 setInputNotes2(values.notes2);
+                setInputKurs(values.kurs);
+                setInputSelisih(values.selisih);
                 return errors;
             }}
             enableReinitialize="true"
@@ -1625,12 +1735,65 @@ export default function EditPurchaseReceive(props) {
                                 <div className="invalid-feedback-custom" style={{ fontSize: 'larger' }}>{ErrItemsHidup}</div>
                                 {
                                     // ListItemsPurchaseReceive.length == 0?'':
-                                    <div className="row justify-content-center">
-                                        <h4>{'Input Item Hidup'}</h4>
-                                        <table id="tablegrid">
+                                    <div >
+                                        <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between'
+                                        }}>
+                                            {/* Kiri */}
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <div hidden={flagCalcSelisih?false:true}>
+                                                <label style={{ margin: 0 }}>Kurs : </label>
+                                                    <Input
+                                                    name="kurs"
+                                                    type="text"
+                                                    id="kurs"
+                                                    maxLength={150}
+                                                    style={{ width: '150px' }}
+                                                    // onChange={handleChange}
+                                                    onChange={val => {
+                                                        let value = val.target.value;
+                                                        setFieldValue("kurs", value);
+                                                        calcItemChangeKurs(ListItemsPurchaseReceive,value)
+                                                    }
+                                                    }
+                                                    onBlur={handleBlur}
+                                                    value={values.kurs !== '' ? numToMoney(parseFloat (new String(values.kurs).replaceAll(".", ""))) : ''}
+                                                />
+                                                </div>
+                                                
+                                            </div>
+
+                                            {/* Tengah */}
+                                            <div style={{ textAlign: 'center', flex: 1 }}>
+                                                <h4 style={{ margin: 0 }}>Input Item Hidup</h4>
+                                            </div>
+
+                                            {/* Kanan (kosong, untuk balance) */}
+                                            <div style={{ width: '150px' }}></div>
+                                            <div hidden={flagCalcSelisih?false:true}>
+                                            <label style={{ margin: 0 }}>Selisih : </label>
+                                            <Input
+                                            name="selisih"
+                                            type="text"
+                                            id="selisih"
+                                            maxLength={150}
+                                            style={{ width: '150px' }}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            disabled={true}
+                                            value={values.selisih !== '' ? numToMoney(parseFloat (values.selisih)) : ''}
+                                            />
+                                            </div>
+
+                                        </div>
+                                        <div className="invalid-feedback-custom">{ErrInputKurs}</div>
+                                        <div style={{ overflowX: 'auto' }} >
+                                        <table style={{ minWidth: (flagCalcSelisih?'1200px':'0PX') }} id="tablegrid">
                                             <tbody>
                                                 <tr>
-                                                    <th style={{ width: '50px' }}>
+                                                    {/* <th style={{ width: '50px' }}>
                                                         <IconButton
                                                             style={{ color: 'white' }}
                                                             onClick={() => handleAddItemsHidup()}
@@ -1638,20 +1801,26 @@ export default function EditPurchaseReceive(props) {
                                                         >
                                                             <AddIcon style={{ fontSize: 25 }} />
                                                         </IconButton>
-                                                    </th>
-                                                    <th >{i18n.t('Product')}</th>
-                                                    <th >{i18n.t('Category Product')}</th>
-                                                    <th >{i18n.t('Qty')}</th>
+                                                    </th> */}
+                                                    <th style={{ minWidth: '150px' }}>{i18n.t('Product')}</th>
+                                                    <th style={{ minWidth: '90px' }}>{i18n.t('Category Product')}</th>
+                                                    <th style={{ minWidth: '70px' }}>{i18n.t('Kg')}</th>
+                                                    <th style={{ minWidth: '60px' }}>{i18n.t('Qty')}</th>
                                                     {/* <th >{i18n.t('Qty Bonus')}</th> */}
-                                                    <th >{i18n.t('Qty Nota')}</th>
-                                                    <th >{i18n.t('Price')}</th>
-                                                    <th >{i18n.t('Subtotal Price')}</th>
+                                                    <th style={{ minWidth: '60px' }}>{i18n.t('Qty Nota')}</th>
+                                                    <th style={{ minWidth: '80px' }}>{i18n.t('Price')}</th>
+                                                    <th style={{ minWidth: '100px' }}>{i18n.t('Subtotal Price')}</th>
+
+                                                    {flagCalcSelisih && (<th style={{ minWidth: '80px' }}>{i18n.t('Harga Jual')}</th>)}
+                                                    {flagCalcSelisih && (<th style={{ minWidth: '80px' }}>{i18n.t('Harga Jual (Edit)')}</th>)}
+                                                    {flagCalcSelisih && (<th style={{ minWidth: '80px' }}>{i18n.t('Total USD')}</th>)}
+                                                    {flagCalcSelisih && (<th style={{ minWidth: '130px' }}>{i18n.t('Total Rp')}</th>)}
                                                 </tr>
                                                 {
                                                     ListItemsPurchaseReceive.map((x, i) => {
                                                         return (
                                                             <tr>
-                                                                <td >
+                                                                {/* <td >
                                                                     <IconButton
                                                                         color={'primary'}
                                                                         // style={{color:'white'}}
@@ -1661,8 +1830,8 @@ export default function EditPurchaseReceive(props) {
                                                                     >
                                                                         <DeleteIcon style={{ fontSize: 18 }} />
                                                                     </IconButton>
-                                                                </td>
-                                                                <td style={{ width: '20%' }}>
+                                                                </td> */}
+                                                                <td>
                                                                     {
                                                                         x.idproduct !== 'TOTAL'?
                                                                         <DropdownList
@@ -1680,7 +1849,7 @@ export default function EditPurchaseReceive(props) {
                                                                     }
                                                                     
                                                                 </td>
-                                                                <td style={{ width: '20%' }}>
+                                                                <td>
                                                                     {
                                                                         x.idproduct !== 'TOTAL'?
                                                                         <DropdownList
@@ -1698,6 +1867,22 @@ export default function EditPurchaseReceive(props) {
                                                                     }
                                                                     
                                                                 </td>
+                                                                 <td >
+                                                                    {
+                                                                        x.idproduct !== 'TOTAL'?
+                                                                        <Input
+                                                                    name="totalkg"
+                                                                    type="text"
+                                                                    id="totalkg"
+                                                                    // onChange={val => handleInputChangeItems(val, i, 'H')}
+                                                                    // onBlur={handleBlur}
+                                                                    value={x.totalkg?numToMoney(convertGramToKGAndPembulatan(x.totalkg)):0}
+                                                                    disabled={true}
+                                                                />:''
+                                                                    }
+                                                                    
+                                                                </td>
+                                                                
                                                                 <td>
                                                                         <Input
                                                                             name="qty"
@@ -1711,17 +1896,7 @@ export default function EditPurchaseReceive(props) {
                                                                     
                                                                     </td>
                                                                 <td>
-                                                                    {/* {
-                                                                        x.idproduct !== 'TOTAL'?
-                                                                        <Input
-                                                                            name="qtybonus"
-                                                                            type="text"
-                                                                            id="qtybonus"
-                                                                            onChange={val => handleInputChangeItems(val, i, 'H')}
-                                                                            // onBlur={handleBlur}
-                                                                            value={x.qtybonus}
-                                                                        />:''
-                                                                    } */}
+                                                                   
 
                                                                         <Input
                                                                             name="qtynota"
@@ -1734,7 +1909,7 @@ export default function EditPurchaseReceive(props) {
                                                                         />
                                                                     </td>
 
-                                                                <td style={{ width: '15%' }}>
+                                                                <td>
                                                                     {
                                                                         x.idproduct !== 'TOTAL'?
                                                                         <Input
@@ -1749,7 +1924,7 @@ export default function EditPurchaseReceive(props) {
                                                                     }
                                                                     </td>
 
-                                                                <td style={{ width: '15%' }}>
+                                                                <td>
                                                                     <Input
                                                                         name="subtotalprice"
                                                                         type="text"
@@ -1760,6 +1935,66 @@ export default function EditPurchaseReceive(props) {
                                                                         value={x.subtotalprice !== '' ? numToMoney(parseFloat(x.subtotalprice)) : ''}
                                                                         disabled={true}
                                                                     /></td>
+                                                            {flagCalcSelisih &&
+                                                            (<td >
+                                                            {
+                                                                x.idproduct !== 'TOTAL'?
+                                                                <Input
+                                                                name="hargaJual"
+                                                                type="text"
+                                                                id="hargaJual"
+                                                                // onChange={val => handleInputChangeItemsPriceEdit(val, i, 'H')}
+                                                                // onBlur={handleBlur}
+                                                                // value={x.subtotalprice}
+                                                                value={x.hargaJual !== '' ? numToMoney(parseFloat(x.hargaJual)) : ''}
+                                                                disabled={true}
+                                                            />:''
+                                                            }
+                                                            </td>)}
+                                                        {flagCalcSelisih &&
+                                                        (<td >
+                                                            {
+                                                                x.idproduct !== 'TOTAL'?
+                                                                <Input
+                                                                name="hargaJualEdit"
+                                                                type="text"
+                                                                id="hargaJualEdit"
+                                                                onChange={val => handleInputChangeItemsPriceEdit(val, i, 'H')}
+                                                                // onBlur={handleBlur}
+                                                                // value={x.subtotalprice}
+                                                                value={x.hargaJualEdit !== '' ? numToMoney(parseFloat(x.hargaJualEdit)) : ''}
+                                                                // disabled={true}
+                                                            />:''
+                                                            }
+                                                            </td>)}
+
+                                                            {flagCalcSelisih &&
+                                                            (<td >
+                                                                <Input
+                                                                name="totalUSD"
+                                                                type="text"
+                                                                id="totalUSD"
+                                                                // onChange={val => handleInputChangeItemsPriceEdit(val, i, 'H')}
+                                                                // onBlur={handleBlur}
+                                                                // value={x.subtotalprice}
+                                                                value={x.totalUSD !== '' ? numToMoney(parseFloat(x.totalUSD)) : ''}
+                                                                disabled={true}
+                                                            />
+                                                            </td>)}
+                                                            
+                                                            {flagCalcSelisih &&
+                                                            (<td >
+                                                            <Input
+                                                                name="totalRupiah"
+                                                                type="text"
+                                                                id="totalRupiah"
+                                                                // onChange={val => handleInputChangeItemsPriceEdit(val, i, 'H')}
+                                                                // onBlur={handleBlur}
+                                                                // value={x.subtotalprice}
+                                                                value={x.totalRupiah !== '' ? numToMoney(parseFloat(x.totalRupiah)) : ''}
+                                                                disabled={true}
+                                                            />
+                                                            </td>)}
 
                                                             </tr>
                                                         )
@@ -1767,6 +2002,8 @@ export default function EditPurchaseReceive(props) {
                                                 }
                                             </tbody>
                                         </table>
+                                        </div>
+
                                     </div>
                                 }
 

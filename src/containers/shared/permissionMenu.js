@@ -104,6 +104,8 @@ export const deletePinjaman_Permission = ['DELETE_PINJAMAN'];
 export const cancelPackingList_Permission = ['CREATE_CANCELPACKINGLIST'];
 export const editcancelPackingList_Permission = ['EDIT_CANCELPACKINGLIST'];
 
+export const editPurchaseReceiveCalcSelisih_Permission = ['EDIT_PURCHASERECEIVE_CALC_SELISIH'];
+
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
 export const MenuBranch = ['READ_BRANCH'];
