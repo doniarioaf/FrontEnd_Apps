@@ -21,7 +21,7 @@ import '../../CSS/table.css';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
-import { calculateSetor, calculateTotalPrice, calculateTransfer, setPriceBox, setPriceBoxOngkosByVendor, totalTableBiaya, totalTableInventori, totalTableItemMati, totalTablePenguranganBiaya } from './utilityPurchaseReceive';
+import { calculateSetor, calculateTotalPrice, calculateTotalPriceForSelisih, calculateTransfer, setPriceBox, setPriceBoxOngkosByVendor, totalTableBiaya, totalTableInventori, totalTableItemMati, totalTablePenguranganBiaya } from './utilityPurchaseReceive';
 
 export default function AddPurchaseReceive(props) {
     reloadToHomeNotAuthorize(addPurchaseReceive_Permission, 'TRANSACTION');
@@ -575,7 +575,12 @@ export default function AddPurchaseReceive(props) {
             list[i]['totalRupiah'] = totalRupiah;
         }
         setListItemsPurchaseReceive(list);
-        setInputSelisih(calcSelisih(list,InputTotalPrice));
+
+        let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        }
+        setInputSelisih(calcSelisih(list,calculateTotalPriceForSelisih(list,listCharge,[]).totalPrice));
     }
     const handleInputChangeItemsPriceEdit = (e, index, type) => {
         
@@ -607,7 +612,12 @@ export default function AddPurchaseReceive(props) {
         }
 
         setListItemsPurchaseReceive(list);
-        setInputSelisih(calcSelisih(list,InputTotalPrice));
+        let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        }
+        setInputSelisih(calcSelisih(list,calculateTotalPriceForSelisih(list,listCharge,[]).totalPrice));
+        // setInputSelisih(calcSelisih(list,InputTotalPrice));
     }
     
     const handleInputChangeItems = (e, index, type) => {
@@ -738,6 +748,7 @@ export default function AddPurchaseReceive(props) {
                 setorValue(totalPrice, IsDefaultSetorTotalPrice);
 
                 setListItemsPurchaseReceive(list);
+                setInputSelisih(calcSelisih(list,calculateTotalPriceForSelisih(list,listCharge,[]).totalPrice));
 
 
 
@@ -822,6 +833,8 @@ export default function AddPurchaseReceive(props) {
             setInputTotalPrice(totalPrice);
             // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
             setorValue(totalPrice, IsDefaultSetorTotalPrice);
+
+            setInputSelisih(calcSelisih(ListItemsPurchaseReceive,calculateTotalPriceForSelisih(ListItemsPurchaseReceive,listCharge,[]).totalPrice));
         }
 
     }
@@ -890,6 +903,9 @@ export default function AddPurchaseReceive(props) {
             setInputTotalPrice(totalPrice);
             // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
             setorValue(totalPrice, IsDefaultSetorTotalPrice);
+
+            setInputSelisih(calcSelisih(ListItemsPurchaseReceive,calculateTotalPriceForSelisih(ListItemsPurchaseReceive,listCharge,[]).totalPrice));
+
         }
 
     }
@@ -1168,7 +1184,13 @@ export default function AddPurchaseReceive(props) {
         if (IsDefaultSetorTotalPrice) {
             setInputSetor(totalPrice);
         }
-        setInputSelisih(calcSelisih(listitemhidup,totalPrice));
+        
+        // let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        // for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+        //     listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        // }
+        setInputSelisih(calcSelisih(listitemhidup,calculateTotalPriceForSelisih(listitemhidup,charges,[]).totalPrice));
+        // setInputSelisih(calcSelisih(listitemhidup,totalPrice));
 
         arrDistinctCP = [];
         let listitemmati = [];
@@ -1469,6 +1491,8 @@ export default function AddPurchaseReceive(props) {
         setInputTotalPrice(totalPrice);
         // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(list,totalPrice));
         setorValue(totalPrice, IsDefaultSetorTotalPrice);
+        
+        setInputSelisih(calcSelisih(ListItemsPurchaseReceive,calculateTotalPriceForSelisih(ListItemsPurchaseReceive,listCharge,[]).totalPrice));
     };
 
     const handleRemovePenguranganBiaya = index => {
@@ -1488,6 +1512,8 @@ export default function AddPurchaseReceive(props) {
         setInputTotalPrice(totalPrice);
         // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(list,totalPrice));
         setorValue(totalPrice, IsDefaultSetorTotalPrice);
+
+        setInputSelisih(calcSelisih(ListItemsPurchaseReceive,calculateTotalPriceForSelisih(ListItemsPurchaseReceive,listCharge,[]).totalPrice));
     };
 
     const handleChangeIsDefaultSetor = (data) => {

@@ -130,6 +130,62 @@ export const calculateTotalPrice = (listitems, listbiaya, listinventori)  =>{
     return  {'totalPrice':totalPrice,'totalPriceItemHidup':totalPriceItemHidup, 'totalqty':totalQty,'totalqtynota':totalQtyNota} ;
 }
 
+export const calculateTotalPriceForSelisih = (listitems, listbiaya, listinventori)  =>{
+    let totalPrice = 0;
+    let totalPriceItemHidup = 0;
+    let totalQty = 0;
+    let totalQtyNota = 0;
+    if(listitems != null && listitems.length > 0){
+        for(let i=0; i < listitems.length > 0; i++){
+            let det = listitems[i];
+            let qty = det.qty?det.qty:0;
+            let qtynota = det.qtynota?det.qtynota:0;
+            let subtotalprice = new String(det.subtotalprice).replaceAll('.','') !== ''?new String(det.subtotalprice).replaceAll('.',''):0;
+            if(det.idproduct !== 'TOTAL'){
+                totalQty += parseInt(qty);
+                totalQtyNota += parseInt(qtynota);
+
+                totalPrice += parseFloat(subtotalprice);
+                totalPriceItemHidup += parseFloat(subtotalprice);
+            }
+            
+        }
+    }
+
+    /**
+     * BOX = + totaprice
+     * BOAT = + totaprice
+     * BANTUAN = + totaprice
+     * ONGKOS = - totaprice
+     * SETOR = - totaprice
+     * SETORPINJAMAN = - totaprice
+     */
+    if(listbiaya != null && listbiaya.length > 0){
+        for(let i=0; i < listbiaya.length > 0; i++){
+            let det = listbiaya[i];
+            if(det.namabiaya !== 'SETOR'){
+                let subtotalprice = new String(det.subtotal).replaceAll('.','') !== ''?new String(det.subtotal).replaceAll('.',''):0;
+                if(det.namabiaya == 'BOX' || det.namabiaya == 'BOAT' || det.namabiaya == 'BANTUAN'){
+                    totalPrice += parseFloat(subtotalprice);
+                }
+                // else {
+                //     totalPrice -= parseFloat(subtotalprice);
+                // }
+            }
+        }
+    }
+    
+    // if(listinventori != null && listinventori.length > 0){
+    //     for(let i=0; i < listinventori.length > 0; i++){
+    //         let det = listinventori[i];
+    //         let subtotalprice = new String(det.subtotalprice).replaceAll('.','') !== ''?new String(det.subtotalprice).replaceAll('.',''):0;
+    //         totalPrice -= parseFloat(subtotalprice);
+    //     }
+    // }
+
+    return  {'totalPrice':totalPrice} ;
+}
+
 export const setPriceBoxOngkosByVendor = (listcharge,pricebox,priceongkos)  =>{
         let listBiaya = [...listcharge];
         let indexBox = listBiaya.findIndex(obj => obj.namabiaya == 'BOX');

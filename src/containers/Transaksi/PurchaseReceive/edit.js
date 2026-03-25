@@ -21,7 +21,7 @@ import '../../CSS/table.css';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
-import { calculateSetor, calculateTotalPrice, calculateTransfer, setPriceBoxOngkosByVendor, totalTableBiaya, totalTableInventori, totalTableItemMati, totalTablePenguranganBiaya } from './utilityPurchaseReceive';
+import { calculateSetor, calculateTotalPrice, calculateTotalPriceForSelisih, calculateTransfer, setPriceBoxOngkosByVendor, totalTableBiaya, totalTableInventori, totalTableItemMati, totalTablePenguranganBiaya } from './utilityPurchaseReceive';
 
 export default function EditPurchaseReceive(props) {
     reloadToHomeNotAuthorize(editPurchaseReceive_Permission, 'TRANSACTION');
@@ -655,7 +655,12 @@ const calcItemChangeKurs = (listitem, kurs) => {
         list[i]['totalRupiah'] = totalRupiah;
     }
     setListItemsPurchaseReceive(list);
-    setInputSelisih(calcSelisih(list,InputTotalPrice));
+    // setInputSelisih(calcSelisih(list,InputTotalPrice));
+    let listCharge = [...ListItemsPurchaseReceiveBiaya];
+    for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+        listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+    }
+    setInputSelisih(calcSelisih(list,calculateTotalPriceForSelisih(list,listCharge,[]).totalPrice));
 }
 const handleInputChangeItemsPriceEdit = (e, index, type) => {
     
@@ -687,7 +692,12 @@ const handleInputChangeItemsPriceEdit = (e, index, type) => {
     }
 
     setListItemsPurchaseReceive(list);
-    setInputSelisih(calcSelisih(list,InputTotalPrice));
+    // setInputSelisih(calcSelisih(list,InputTotalPrice));
+    let listCharge = [...ListItemsPurchaseReceiveBiaya];
+    for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+        listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+    }
+    setInputSelisih(calcSelisih(list,calculateTotalPriceForSelisih(list,listCharge,[]).totalPrice));
 }
 
     const handleInputChangeItems = (e, index, type) => {
@@ -820,6 +830,7 @@ const handleInputChangeItemsPriceEdit = (e, index, type) => {
                 // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
                 setorValue(totalPrice, IsDefaultSetorTotalPrice);
                 setListItemsPurchaseReceive(list);
+                setInputSelisih(calcSelisih(list,calculateTotalPriceForSelisih(list,listCharge,[]).totalPrice));
 
                 const listMati = [...ListItemsPurchaseReceiveMati];
                 let idproductHidup = list[index]['idproduct'];
@@ -902,6 +913,7 @@ const handleInputChangeItemsPriceEdit = (e, index, type) => {
             setInputTotalPrice(totalPrice);
             // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
             setorValue(totalPrice, IsDefaultSetorTotalPrice);
+            setInputSelisih(calcSelisih(ListItemsPurchaseReceive,calculateTotalPriceForSelisih(ListItemsPurchaseReceive,listCharge,[]).totalPrice));
         }
 
     }
@@ -964,6 +976,7 @@ const handleInputChangeItemsPriceEdit = (e, index, type) => {
             setInputTotalPrice(totalPrice);
             // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
             setorValue(totalPrice, IsDefaultSetorTotalPrice);
+            setInputSelisih(calcSelisih(ListItemsPurchaseReceive,calculateTotalPriceForSelisih(ListItemsPurchaseReceive,listCharge,[]).totalPrice));
         }
 
     }
@@ -1274,6 +1287,7 @@ const handleInputChangeItemsPriceEdit = (e, index, type) => {
         setInputTotalPrice(totalPrice);
         // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(list,totalPrice));
         setorValue(totalPrice, IsDefaultSetorTotalPrice);
+        setInputSelisih(calcSelisih(ListItemsPurchaseReceive,calculateTotalPriceForSelisih(ListItemsPurchaseReceive,listCharge,[]).totalPrice));
     };
 
     const handleRemovePenguranganBiaya = index => {
@@ -1293,6 +1307,7 @@ const handleInputChangeItemsPriceEdit = (e, index, type) => {
         setInputTotalPrice(totalPrice);
         // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(list,totalPrice));
         setorValue(totalPrice, IsDefaultSetorTotalPrice);
+        setInputSelisih(calcSelisih(ListItemsPurchaseReceive,calculateTotalPriceForSelisih(ListItemsPurchaseReceive,listCharge,[]).totalPrice));
     };
 
     const handleChangeIsDefaultSetor = (data) => {
