@@ -9,8 +9,8 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { addPackingList_Permission } from '../../shared/permissionMenu';
+import { convertGramToKG, formatRupiah, isGetPermissions, numToMoney, pembulatanNilai, reloadToHomeNotAuthorize, removeFormatRupiah, roundCeiling } from '../../shared/globalFunc';
+import { addPackingList_Permission, editPackingListItemCheck_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -22,6 +22,55 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
 
+export const calculateNetto = (list) => {
+        let totalnetto = 0;
+        for(let i =0; i < list.length; i++){
+            let det = list[i];
+            let netto = det.nettoweight?det.nettoweight:0;
+            let valTemp = '';
+            if(new String(netto).includes(',')){
+                let splitComma = new String(netto).split(','); 
+                let angka = splitComma[0];
+                // let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                let desimal = splitComma[1] !== undefined?splitComma[1]:0;
+                valTemp = removeFormatRupiah(angka)+'.'+desimal;
+            }else{
+                valTemp = removeFormatRupiah(netto);
+            }
+            
+            totalnetto += parseFloat(valTemp);
+        }
+        return formatRupiah(new String(totalnetto).replaceAll(".",','),1);
+}
+
+export const calcNettoWeight = (param) =>{
+    let brutoweight = param.brutoweight?param.brutoweight:0;
+    let allowance = param.allowance?param.allowance:0;//listTemp[index]['allowance']; //InPersen
+    let valTemp = '';
+    if(new String(allowance).includes(',')){
+        let splitComma = new String(allowance).split(','); 
+        let angka = splitComma[0];
+        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+        valTemp = removeFormatRupiah(angka)+'.'+desimal;
+    }else{
+        valTemp = removeFormatRupiah(allowance);
+    }
+    allowance = parseFloat(valTemp) / 100.0;
+
+    valTemp = '';
+    if(new String(brutoweight).includes(',')){
+        let splitComma = new String(brutoweight).split(','); 
+        let angka = splitComma[0];
+        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+        valTemp = removeFormatRupiah(angka)+'.'+desimal;
+    }else{
+        valTemp = removeFormatRupiah(brutoweight);
+    }
+    let netto = parseFloat(valTemp) - (parseFloat(valTemp) * allowance);
+    let pembulatannilai =  roundCeiling(netto,1)//pembulatanNilai(netto,{isdown:false,numberdesimal:1});
+    let valKg = roundCeiling(convertGramToKG({nilaigr:pembulatannilai}),1);
+    return valKg;
+}
 export default function AddPackingList(props) {
     reloadToHomeNotAuthorize(addPackingList_Permission, 'TRANSACTION');
     const { i18n } = useTranslation('translations');
@@ -54,6 +103,11 @@ export default function AddPackingList(props) {
     const [ListProduct, setListProduct] = useState([]);
     // const [ListCategoryProduct, setListCategoryProduct] = useState([]);
 
+    const [ListVendor, setListVendor] = useState([]);
+    const [SelVendor, setSelVendor] = useState("");
+    const [ErrSelVendor, setErrSelVendor] = useState("");
+    let flagCheck = isGetPermissions(editPackingListItemCheck_Permission,'TRANSACTION');
+
 
     useEffect(() => {
         setLoading(true);
@@ -82,10 +136,20 @@ export default function AddPackingList(props) {
                 }
             ], []);
             setListCustomer(theDataProd);
+
+            theDataProd = data.data.vendorOpt.reduce((obj, el) => [
+                ...obj,
+                {
+                    'value': el.id,
+                    'label': el.nama+' / '+el.alias,
+                    'data': el
+                }
+            ], []);
+            setListVendor(theDataProd);
         }
 
-        dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + TransDate.getTime() }, successHandlerPriceList, errorHandler));
-        // setLoading(false);
+        // dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + TransDate.getTime() }, successHandlerPriceList, errorHandler));
+        setLoading(false);
     }
 
     function successHandlerPriceList(data, propsdata) {
@@ -99,7 +163,7 @@ export default function AddPackingList(props) {
                     ...obj,
                     {
                         'value': el.categoryproductid,
-                        'label': el.categoryproductidName+' ('+el.categoryproductSize+')',
+                        'label': el.categoryproductidName+' ('+el.categoryproductSize+') ('+el.jumlahitemsperkoli+')',
                         'data': el
                     }
                 ], []);
@@ -117,6 +181,7 @@ export default function AddPackingList(props) {
         let flag = true;
         setErrTransDate('');
         setErrSelCustomer('');
+        setErrSelVendor('');
         setErrItems('')
 
         let listCatogry = [];
@@ -137,11 +202,11 @@ export default function AddPackingList(props) {
                 // }else{
                 //     listCatogry.push(keyProd);
                 // }
-                if(det.box == ''){
-                    setErrItems(i18n.t('Box Tidak boleh Kosong'));
-                    flag = false;
-                    break;
-                }
+                // if(det.box == ''){
+                //     setErrItems(i18n.t('Box Tidak boleh Kosong'));
+                //     flag = false;
+                //     break;
+                // }
                 // if(listBox.includes(det.box)){
                 //     setErrItems(i18n.t('Box Tidak boleh sama'));
                 //     flag = false;
@@ -163,6 +228,11 @@ export default function AddPackingList(props) {
 
         if (SelCustomer == '') {
             setErrSelCustomer(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+
+        if (SelVendor == '') {
+            setErrSelVendor(i18n.t('label_REQUIRED'));
             flag = false;
         }
 
@@ -194,7 +264,7 @@ export default function AddPackingList(props) {
             obj.attention = values.attention;
             obj.flightnumber = values.flightnumber;
             obj.awbnumber = values.awbnumber;
-            obj.netto = values.netto;
+            obj.netto = removeFormatRupiah(values.netto);
             obj.koli = values.koli;
             obj.idpricelist = idpricelist;
             let items = [];
@@ -205,17 +275,18 @@ export default function AddPackingList(props) {
                         'idproduct': el.idproduct,
                         'idcategoryproduct': el.idcategoryproduct,
                         'qty': el.qty,
-                        'allowance': new String(el.allowance).replaceAll(',', '.') !== '' ? new String(el.allowance).replaceAll(',', '.') : '0',
-                        'brutoweight': new String(el.brutoweight).replaceAll(',', '.') !== '' ? new String(el.brutoweight).replaceAll(',', '.') : '0',
-                        'nettoweight': new String(el.nettoweight).replaceAll(',', '.') !== '' ? new String(el.nettoweight).replaceAll(',', '.') : '0',
-                        'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
-                        'totalprice': el.subtotalprice,//new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
-                        'box': el.box
+                        'allowance': removeFormatRupiah(el.allowance) !== '' ? removeFormatRupiah(el.allowance) : '0',
+                        'brutoweight': removeFormatRupiah(el.brutoweight) !== '' ? removeFormatRupiah(el.brutoweight) : '0',
+                        'nettoweight': removeFormatRupiah(el.nettoweight) !== '' ? removeFormatRupiah(el.nettoweight) : '0',
+                        'price': removeFormatRupiah(el.itemsprice) !== '' ? removeFormatRupiah(el.itemsprice) : '0',
+                        'totalprice': removeFormatRupiah(el.subtotalprice),
+                        'box': el.box,
+                        'check':el.check?true:false
                     }
                 ], []);
             }
             obj.items = items;
-            
+            obj.idvendor = SelVendor;
             dispatch(actions.submitPackingList({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -255,13 +326,24 @@ export default function AddPackingList(props) {
             let datetrans = moment(data, formatdate).toDate();
             setTransDate(datetrans);
 
-            setLoading(true);
-            dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + datetrans.getTime() }, successHandlerPriceList, errorHandler));
+            if(SelCustomer !== ''){
+                setLoading(true);
+                dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + datetrans.getTime()+'&idcustomer='+SelCustomer }, successHandlerPriceList, errorHandler));
+            }
+            // setLoading(true);
+            // dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + datetrans.getTime() }, successHandlerPriceList, errorHandler));
         } else {
             setTransDate(null)
         }
     }
-
+    const handleInputChangeCheckBoxItems = (e, index) => {
+        const { name, checked } = e.target;
+        const list = [...ListItems];
+        list[index][name] = checked;
+        // setNetto(calculateNetto(list));
+        setListItems(list);
+        // console.log('handleInputChangeCheckBoxItems ',checked);
+    }
     const handleInputChangeItems = (e, index) => {
         const { name, value } = e.target;
         const list = [...ListItems];
@@ -277,11 +359,12 @@ export default function AddPackingList(props) {
             }
             
             if(name == 'brutoweight'){
-                valPriceTemp = new String(value).replaceAll(',', '.') !== '' ? new String(value).replaceAll(',', '.') : '0';
-                if (isNaN(valPriceTemp) && valPriceTemp !== '') {
+                if (isNaN(value) && value !== '') {
                     flag = false;
                     if(new String(value).split(',').length >= 3){
                         flag = false;
+                    }else{
+                        flag = true;
                     }
                 }
             }
@@ -289,21 +372,68 @@ export default function AddPackingList(props) {
             if(flag) {
                 if (name == 'qty') {
                     // const listTemp = [...ListItems];
-                    // let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
-                    
-                    // let qtyTemp = parseInt(valPriceTemp)
-                    // subtotal = parseInt(qtyTemp) * parseFloat(pricetemp);
-                    // list[index]['subtotalprice'] = subtotal;
+                    // let pricetemp = new String(listTemp[index]['itemsprice']) !== '' ? listTemp[index]['itemsprice'] : '0';
+                    // let valTemp = '';
+                    // if(new String(pricetemp).includes(',')){
+                    //     let splitComma = new String(pricetemp).split(','); 
+                    //     let angka = splitComma[0];
+                    //     let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                    //     valTemp = removeFormatRupiah(angka)+'.'+desimal;
+                    // }else{
+                    //     valTemp = removeFormatRupiah(pricetemp);
+                    // }
+                    // let qtyTemp = parseInt(valPriceTemp);
+                    // subtotal = parseInt(qtyTemp) * parseFloat(valTemp);
+                    // console.log('subtotal ',subtotal);
+                    // console.log('subtotal ',formatRupiah(subtotal,2));
+                    // list[index]['subtotalprice'] = formatRupiah(subtotal,2);
                 } else if(name == 'brutoweight'){
                     const listTemp = [...ListItems];
-                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
-                    let allowance = parseFloat(listTemp[index]['allowance']); //InPersen
-                    allowance = allowance / 100.0;
-                    let netto = parseFloat(valPriceTemp) - (parseFloat(valPriceTemp) * allowance);
-                    netto = netto.toFixed(2);
-                    let subtotal = parseFloat(netto) * parseFloat(pricetemp);
-                    list[index]['nettoweight'] = netto;
-                    list[index]['subtotalprice'] = subtotal.toFixed(2);
+                    // let allowance = listTemp[index]['allowance']; //InPersen
+                    // let valTemp = '';
+                    // if(new String(allowance).includes(',')){
+                    //     let splitComma = new String(allowance).split(','); 
+                    //     let angka = splitComma[0];
+                    //     let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                    //     valTemp = removeFormatRupiah(angka)+'.'+desimal;
+                    // }else{
+                    //     valTemp = removeFormatRupiah(allowance);
+                    // }
+                    // allowance = parseFloat(valTemp) / 100.0;
+
+                    // valTemp = '';
+                    // if(new String(value).includes(',')){
+                    //     let splitComma = new String(value).split(','); 
+                    //     let angka = splitComma[0];
+                    //     let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                    //     valTemp = removeFormatRupiah(angka)+'.'+desimal;
+                    // }else{
+                    //     valTemp = removeFormatRupiah(value);
+                    // }
+                    // let netto = parseFloat(valTemp) - (parseFloat(valTemp) * allowance);
+                    // let pembulatannilai = pembulatanNilai(netto,{isdown:false,numberdesimal:1});
+                    // let valKg = convertGramToKG({nilaigr:pembulatannilai});
+                    // valKg = pembulatanNilai(valKg,{isdown:false,numberdesimal:1});
+
+                    let brutoweight = value;
+                    let allowance = listTemp[index]['allowance'];
+                    let valKg = calcNettoWeight({brutoweight:brutoweight,allowance:allowance});
+                    
+                    let pricetemp = new String(listTemp[index]['itemsprice']) !== '' ? listTemp[index]['itemsprice'] : '0';
+                    let valPriceTemp = '';
+                    if(new String(pricetemp).includes(',')){
+                        let splitComma = new String(pricetemp).split(','); 
+                        let angka = splitComma[0];
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                        valPriceTemp = removeFormatRupiah(angka)+'.'+desimal;
+                    }else{
+                        valPriceTemp = removeFormatRupiah(pricetemp);
+                    }
+                    subtotal = valKg * parseFloat(valPriceTemp);
+                    subtotal = roundCeiling(subtotal,1);//pembulatanNilai(subtotal,{isdown:false,numberdesimal:1});
+                    
+                    list[index]['subtotalprice'] = formatRupiah(new String(subtotal).replaceAll('.',','),2);
+                    list[index]['nettoweight'] = formatRupiah(new String(valKg).replaceAll('.',','),4);
                 }
                 //
             }
@@ -311,10 +441,14 @@ export default function AddPackingList(props) {
         }
         if (flag) {
             
-            let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
-            list[index][name] = valPrice;
+            // let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
+            list[index][name] = value;
             setNetto(calculateNetto(list));
             setListItems(list);
+            if(name == 'box'){
+                let arrkoli = list.filter(output => output.box !== '');
+                setKoli(arrkoli.length);
+            }
         }
     }
 
@@ -334,26 +468,29 @@ export default function AddPackingList(props) {
         }
         let allowance = 0;
         let amount = 0
-        
+        // let brutoweight = list[index]['brutoweight'];
+        // let allowance = listTemp[index]['allowance'];
         if(listfilteroutput.length > 0){
             let det = listfilteroutput[0];
-            allowance = det.allowance;
+            allowance = det.allowance?numToMoney(det.allowance):0;
             amount = det.amount;
         }
         let qty = list[index]['qty'];
         let brutoweight = list[index]['brutoweight'];
         qty = qty !== ''?qty:0;
-        brutoweight = brutoweight !== ''?brutoweight:0
+        brutoweight = brutoweight !== ''?brutoweight:0;
         brutoweight = new String(brutoweight).replaceAll(',','.');
 
-        let hasil = allowance / 100.0;
-        let netto = parseFloat(brutoweight) + (parseFloat(brutoweight) * hasil);
-        netto = netto.toFixed(2);
-        list[index]['nettoweight'] = netto;
-        let subtotal = parseFloat(netto) * parseFloat(amount);
-        list[index]['subtotalprice'] = subtotal.toFixed(2);
-        list[index]['allowance'] = allowance;
-        list[index]['itemsprice'] = amount;
+        
+        let valKg = calcNettoWeight({brutoweight:brutoweight,allowance:allowance});
+        // netto = netto.toFixed(2);
+        list[index]['nettoweight'] = formatRupiah(new String(valKg).replaceAll('.',','),4);
+        // let subtotal = parseFloat(qty) * parseFloat(amount);
+        let subtotal = valKg * parseFloat(amount);
+        subtotal = roundCeiling(subtotal,1)//pembulatanNilai(subtotal,{isdown:false,numberdesimal:1});
+        list[index]['subtotalprice'] = formatRupiah(subtotal,1);
+        list[index]['allowance'] = formatRupiah(allowance,2);
+        list[index]['itemsprice'] = formatRupiah(amount,2);
         list[index][name] = e.value;
 
         setNetto(calculateNetto(list));
@@ -377,34 +514,38 @@ export default function AddPackingList(props) {
                 'allowance': 0,
                 'nettoweight': 0,
                 'itemsprice': 0,
-                'subtotalprice': 0
+                'subtotalprice': 0,
+                'check': false,
             }];
         setListItems(list);
-        setKoli(list.length);
+        // setKoli(list.length);
     };
 
-    const calculateNetto = (list) => {
-        let totalnetto = 0;
-        for(let i =0; i < list.length; i++){
-            let det = list[i];
-            let netto = det.nettoweight?new String(det.nettoweight).replaceAll(',','.'):0;
-            totalnetto += parseFloat(netto);
-        }
-        return totalnetto.toFixed(2);
-    }
+    
 
     const handleRemoveItems = index => {
         const list = [...ListItems];
         list.splice(index, 1);
         setNetto(calculateNetto(list));
-        setKoli(list.length);
+        let arrkoli = list.filter(output => output.box !== '');
+        setKoli(arrkoli.length);
         setListItems(list);
     };
 
     const handleChangeCustomer = (data) => {
+        setPriceList(null);
+        setListCategoryProduct([]);
+        setListItems([]);
+        
         let id = data?.value ? data.value : '';
         setSelCustomer(id);
+        setLoading(true);
+        dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + TransDate.getTime()+'&idcustomer='+id }, successHandlerPriceList, errorHandler));
+    }
 
+    const handleChangeVendor = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelVendor(id);
     }
 
     const msgInfo = (text) => {
@@ -442,6 +583,7 @@ export default function AddPackingList(props) {
                     awbnumber: InputAwbNumber,
                     netto: Netto,
                     koli: Koli,
+                    vendor:SelVendor,
                 }
             }
             validate={values => {
@@ -490,6 +632,26 @@ export default function AddPackingList(props) {
                                     />
                                     <div className="invalid-feedback-custom">{ErrTransDate}</div>
 
+                                        <label className="mt-3 form-label required" htmlFor="vendor">
+                                            {i18n.t('Vendor UPI')}
+                                        </label>
+                                        <span style={{ color: 'red' }}>*</span>
+
+                                        <DropdownList
+                                            name="vendor"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeVendor(val)}
+                                            onBlur={val => setFieldTouched("vendor", val?.value ? val.value : '')}
+                                            data={ListVendor}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.vendor}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrSelVendor}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="customer">
                                             {i18n.t('Customer')}
@@ -512,7 +674,9 @@ export default function AddPackingList(props) {
                                         />
                                         <div className="invalid-feedback-custom">{ErrSelCustomer}</div>
 
-                                        <label className="mt-3 form-label required" htmlFor="city">
+
+
+                                        {/* <label className="mt-3 form-label required" htmlFor="city">
                                             {i18n.t('City')}
                                         </label>
                                         <Input
@@ -526,12 +690,12 @@ export default function AddPackingList(props) {
                                             // onChange={val => handleInputNama(val)}
                                             onBlur={handleBlur}
                                             value={values.city}
-                                        />
+                                        /> */}
 
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
-                                        <label className="mt-3 form-label required" htmlFor="attention">
+                                        {/* <label className="mt-3 form-label required" htmlFor="attention">
                                             {i18n.t('Attention')}
                                         </label>
                                         <Input
@@ -545,7 +709,7 @@ export default function AddPackingList(props) {
                                             // onChange={val => handleInputNama(val)}
                                             onBlur={handleBlur}
                                             value={values.attention}
-                                        />
+                                        /> */}
 
                                         <label className="mt-3 form-label required" htmlFor="flightnumber">
                                             {i18n.t('Flight Number')}
@@ -638,10 +802,11 @@ export default function AddPackingList(props) {
                                                     <th >{i18n.t('Product')}</th>
                                                     <th >{i18n.t('Category Product')}</th>
                                                     <th >{i18n.t('Qty')}</th>
-                                                    <th >{i18n.t('Bruto Weight')}</th>
-                                                    <th >{i18n.t('Allowance')}</th>
-                                                    <th >{i18n.t('Netto Weight')}</th>
-                                                    <th >{i18n.t('Price')}</th>
+                                                    <th >{i18n.t('Bruto Weight(Gr)')}</th>
+                                                    {flagCheck && (<th >{i18n.t('Check')}</th>)}
+                                                    <th >{i18n.t('Allowance(%)')}</th>
+                                                    <th >{i18n.t('Netto Weight(Kg)')}</th>
+                                                    <th >{i18n.t('Price(USD)')}</th>
                                                     <th >{i18n.t('Subtotal Price')}</th>
                                                 </tr>
                                                 {
@@ -701,7 +866,7 @@ export default function AddPackingList(props) {
                                                                     onChange={val => handleInputChangeItems(val, i)}
                                                                     // onBlur={handleBlur}
                                                                     value={x.qty}
-                                                                    disabled={x.idcategoryproduct == '' || x.idproduct == '' || x.box == ''}
+                                                                    disabled={x.idcategoryproduct == '' || x.idproduct == ''}
                                                                 /></td>
 
                                                                 <td style={{ width: '9%' }}>
@@ -712,8 +877,19 @@ export default function AddPackingList(props) {
                                                                     onChange={val => handleInputChangeItems(val, i)}
                                                                     // onBlur={handleBlur}
                                                                     value={x.brutoweight}
-                                                                    disabled={x.idcategoryproduct == '' || x.idproduct == '' || x.box == ''}
+                                                                    disabled={x.idcategoryproduct == '' || x.idproduct == ''}
                                                                 /></td>
+                                                                {flagCheck && 
+                                                                (<td style={{textAlign:'center',paddingBottom:'30px',paddingLeft:'30px'}}>
+                                                                     <Input type="checkbox" name="check" 
+                                                                    id="checktick" 
+                                                                    onChange={val => handleInputChangeCheckBoxItems(val,i)}
+                                                                    defaultChecked={x.check}
+                                                                    checked={x.check}
+                                                                    style={{transform:'scale(1.5)'}}
+                                                                    />
+                                                                </td>)
+                                                                }
 
                                                                 <td style={{ width: '10%' }}>
                                                                     <Input
@@ -744,7 +920,7 @@ export default function AddPackingList(props) {
                                                                         id="itemsprice"
                                                                         onChange={val => handleInputChangeItems(val, i)}
                                                                         // onBlur={handleBlur}
-                                                                        value={x.itemsprice !== '' ? numToMoney(parseFloat(x.itemsprice)) : ''}
+                                                                        value={x.itemsprice}
                                                                         disabled={true}
                                                                     /></td>
 
@@ -756,7 +932,7 @@ export default function AddPackingList(props) {
                                                                         // onChange={val => handleInputChangePrice(val,i)}
                                                                         // onBlur={handleBlur}
                                                                         // value={x.subtotalprice}
-                                                                        value={x.subtotalprice !== '' ? numToMoney(parseFloat(x.subtotalprice)) : ''}
+                                                                        value={x.subtotalprice}
                                                                         disabled={true}
                                                                     /></td>
 

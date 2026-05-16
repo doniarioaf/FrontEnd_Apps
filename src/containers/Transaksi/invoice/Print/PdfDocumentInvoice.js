@@ -1,7 +1,7 @@
 import React from "react";
 import { Page, Document, StyleSheet, Image, Font,Text } from "@react-pdf/renderer";
 // import GenerateSuratJalan from "./GenerateSuratJalan";
-import GenerateDocumentInvoice from "./GenerateDocumentInvoice";
+import GenerateDocumentInvoice from "./GenerateDocumentInvoiceV2";
 export const styles = StyleSheet.create({
     page: {
         backgroundColor: '#fff',

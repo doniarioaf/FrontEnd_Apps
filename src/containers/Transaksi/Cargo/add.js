@@ -13,6 +13,7 @@ import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { addCargo_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import momentLocalizer from 'react-widgets-moment';
+import moment                          from 'moment';
 import { DatePicker, DropdownList } from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import { formatdate } from '../../shared/constantValue';

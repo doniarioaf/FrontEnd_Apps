@@ -30,7 +30,9 @@ const DraftPackingListIndex = () => {
         { name: 'nodoc', title: i18n.t('No Document') },
         { name: 'customer', title: i18n.t('Customer') },
         // { name: 'city', title: i18n.t('City') },
+        { name: 'updateprice', title: i18n.t('Update Price?') },
         { name: 'transdate', title: i18n.t('Date') },
+        
     ]);
     const [tableColumnExtensions] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -56,6 +58,7 @@ const DraftPackingListIndex = () => {
                     'nodoc': el.nodocument,
                     'customer': el.customerAlias,
                     'transdate': el.date ? moment(el.date).format(formatdate) : '',
+                    'updateprice': el.isalreadyupdateprice ? 'No':'Yes',
                 }
             ], []);
             setRows(theData);

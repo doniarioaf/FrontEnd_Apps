@@ -571,3 +571,66 @@ export const submitPelunasanPiutang = (param, successHandler, errorHandler) => {
         errorHandler,
     }
 }
+
+export const getKomisiData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_KOMISI_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitKomisi = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_KOMISI,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getPinjamanData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_PINJAMANA_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitPinjaman = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_PINJAMAN,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const getCancelPackingListData = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.GET_CANCELPACKINGLIST_DATA,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitCancelPackingList = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_CANCELPACKINGLIST,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}
+
+export const submitJournal = (param, successHandler, errorHandler) => {
+    return {
+        type: actions.SUBMIT_JOURNAL,
+        param: param,
+        successHandler,
+        errorHandler,
+    }
+}

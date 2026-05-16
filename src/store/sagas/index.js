@@ -71,7 +71,14 @@ import {
     submitCargoSaga,
     getPelunasanPiutangDataSaga,
     submitPelunasanPiutangSaga,
-    submitDeleteUserAppsSaga
+    submitDeleteUserAppsSaga,
+    submitKomisiSaga,
+    getKomisiDataSaga,
+    submitPinjamanSaga,
+    getPinjamanDataSaga,
+    getCancelPackingListDataSaga,
+    submitCancelPackingListSaga,
+    submitJournalSaga
 } from './admin';
 
 
@@ -147,5 +154,12 @@ export function* watchAdmin() {
         takeEvery(actions.GET_PELUNASANPIUTANG_DATA, getPelunasanPiutangDataSaga),
         takeEvery(actions.SUBMIT_PELUNASANPIUTANG, submitPelunasanPiutangSaga),
         takeEvery(actions.SUBMIT_DELETE_ROLE, submitDeleteRoleSaga),
+        takeEvery(actions.SUBMIT_KOMISI, submitKomisiSaga),
+        takeEvery(actions.GET_KOMISI_DATA, getKomisiDataSaga),
+        takeEvery(actions.SUBMIT_PINJAMAN, submitPinjamanSaga),
+        takeEvery(actions.GET_PINJAMANA_DATA, getPinjamanDataSaga),
+        takeEvery(actions.GET_CANCELPACKINGLIST_DATA, getCancelPackingListDataSaga),
+        takeEvery(actions.SUBMIT_CANCELPACKINGLIST, submitCancelPackingListSaga),
+        takeEvery(actions.SUBMIT_JOURNAL, submitJournalSaga),
     ]);
 }

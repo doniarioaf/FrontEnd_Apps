@@ -205,9 +205,51 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Area')}</span>
+                            <strong className="col-md-7">
+                                {value.areaName?value.areaName:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Type')}</span>
                             <strong className="col-md-7">
                                 {value.type?value.type:''}
+                            </strong>
+                            </div>
+
+                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Limit Transaction')}</span>
+                            <strong className="col-md-7">
+                                {value.type?(value.limittransaction?'Yes':'No'):''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_ADDRESS')+' 1'}</span>
+                            <strong className="col-md-7">
+                                {value.address1?value.address1:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_ADDRESS')+' 2'}</span>
+                            <strong className="col-md-7">
+                                {value.address2?value.address2:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('NPWP')}</span>
+                            <strong className="col-md-7">
+                                {value.npwp?value.npwp:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Phone')}</span>
+                            <strong className="col-md-7">
+                                {value.phone?value.phone:''}
                             </strong>
                             </div>
 
@@ -243,6 +285,13 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('Parent')}</span>
                                 <strong className="col-md-7">
                                 {value.vendorParentName ?value.vendorParentName:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Broker')}</span>
+                                <strong className="col-md-7">
+                                {value.vendorBrokerName ?value.vendorBrokerName:''}
                                 </strong>
                             </div>
 

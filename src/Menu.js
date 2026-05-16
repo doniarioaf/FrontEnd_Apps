@@ -96,7 +96,7 @@ const handleMenu = () => {
                     name: 'Cargo',
                     path: pathmenu.menucargo,
                     translate: 'Cargo',
-                    permission:permissionmenu.MenuDeposit,
+                    permission:permissionmenu.MenuCargo,
                 },
                 {
                     name: 'Lprn Tagihan Cargo',
@@ -148,16 +148,28 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuDeposit,
                 },
                 {
+                    name: 'Pinjaman',
+                    path: pathmenu.menuPinjaman,
+                    translate: 'Pinjaman',
+                    permission:permissionmenu.MenuPinjaman,
+                },
+                {
                     name: 'Input Penerimaan Barang',
                     path: pathmenu.menudraftpurchasereceive,
                     translate: 'Input Penerimaan Barang',
-                    permission:permissionmenu.MenuPurchaseReceive,
+                    permission:permissionmenu.MenuDraftPurchaseReceive,
                 },
                 {
                     name: 'Nota Pembelian',
                     path: pathmenu.menupurchasereceive,
                     translate: 'Nota Pembelian',
                     permission:permissionmenu.MenuPurchaseReceive,
+                },
+                {
+                    name: 'Komisi',
+                    path: pathmenu.menukomisi,
+                    translate: 'Komisi',
+                    permission:permissionmenu.MenuKomisi,
                 },
                 {
                     name: 'Lprn Pembelian',
@@ -172,6 +184,26 @@ const handleMenu = () => {
                     translate: 'Lprn Kartu Deposit',
                     permission:permissionmenu.MenuReportKartuDeposit,
                 },
+                {
+                    name: 'Lprn Kartu Pinjaman',
+                    path: pathmenu.menuReportKartuPinjaman,
+                    translate: 'Lprn Kartu Pinjaman',
+                    permission:permissionmenu.MenuReportKartuPinjaman,
+                },
+
+                {
+                    name: 'Lprn Komisi',
+                    path: pathmenu.menuReportKomisi,
+                    translate: 'Lprn Kartu Deposit',
+                    permission:permissionmenu.MenuReportKomisi,
+                },
+                {
+                    name: 'Integrasi Saldo',
+                    path: pathmenu.integrasiSaldo,
+                    translate: 'Integrasi Saldo',
+                    permission:permissionmenu.MenuIntegrasi,
+                },
+
             ]
         },
         {
@@ -202,7 +234,7 @@ const handleMenu = () => {
                     name: 'PriceList Harian',
                     path: pathmenu.menupricelist,
                     translate: 'PriceList Harian',
-                    permission:permissionmenu.MenuProduct,
+                    permission:permissionmenu.MenuPriceList,
                 },
                 {
                     name: 'Packing List',
@@ -211,10 +243,22 @@ const handleMenu = () => {
                     permission:permissionmenu.MenuPackingList,
                 },
                 {
+                    name: 'Cancel Packing List',
+                    path: pathmenu.menucancelpackinglist,
+                    translate: 'Packing List',
+                    permission:permissionmenu.MenuCancelPackingList,
+                },
+                {
+                    name: 'Lprn Cancel Packing List',
+                    path: pathmenu.menuReportCancelPackingList,
+                    translate: 'Lprn Penjualan',
+                    permission:permissionmenu.MenuReportCancelPackingList,
+                },
+                {
                     name: 'Invoice',
                     path: pathmenu.menuinvoice,
                     translate: 'Invoice',
-                    permission:permissionmenu.MenuStockAdjusment,
+                    permission:permissionmenu.MenuInvoice,
                 },
                 {
                     name: 'Lprn Penjualan',

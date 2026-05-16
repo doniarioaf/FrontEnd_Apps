@@ -182,14 +182,14 @@ import React, {useState,
                     (
                         <section>
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Category Product')}</span>
+                            <span className="col-md-5">{i18n.t('Category Product Vendor')}</span>
                             <strong className="col-md-7">
                                 {value.categoryproductnama?value.categoryproductnama:''}
                             </strong>
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Category Product (Mapping)')}</span>
+                            <span className="col-md-5">{i18n.t('Category Product Customer')}</span>
                             <strong className="col-md-7">
                                 {value.categoryproductmappingnama?value.categoryproductmappingnama:''}
                             </strong>

@@ -12,7 +12,7 @@ import { useHistory } from 'react-router-dom';
 import { formatRupiah, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addInvoice_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
-// import moment from 'moment';
+import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import { DatePicker, DropdownList } from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
@@ -31,13 +31,14 @@ export default function AddPackingList(props) {
     const [SelPackingList, setSelPackingList] = useState("");
     const [ErrSelPackingList, setErrSelPackingList] = useState("");
 
-    const [TransDate, setTransDate] = useState(null);
+    const [TransDate, setTransDate] = useState(new Date());
     const [ErrTransDate, setErrTransDate] = useState("");
 
     const [InputCustomer, setInputCustomer] = useState("");
     const [InputCustomerID, setInputCustomerID] = useState("");
     const [InputCustomerAddress, setInputCustomerAddress] = useState("");
     const [InputPhone, setInputPhone] = useState("");
+    const [InputVendorUPI, setInputVendorUPI] = useState("");
     const [InputAttention, setInputAttention] = useState("");
     const [InputKurs, setInputKurs] = useState(1);
     const [ErrInputKurs, setErrInputKurs] = useState("");
@@ -152,11 +153,12 @@ export default function AddPackingList(props) {
         let val = data?.data ? data.data : [];
         setSelPackingList(id);
         setListItems([]);
-        setTransDate(val.date?new Date(val.date):null);
+        // setTransDate(val.date?new Date(val.date):null);
         setInputCustomerID(val.idcustomer);
         setInputCustomer(val.customerName+'/'+val.customerALias);
         setInputCustomerAddress(val.customerAddress);
         setInputAttention(val.attention);
+        setInputPhone(val.customerPhone?val.customerPhone:'');
 
         setLoading(true);
         dispatch(actions.getInvoiceData({ url: '/getpackinglist/'+id }, successHandlerPackingList, errorHandler));
@@ -173,6 +175,7 @@ export default function AddPackingList(props) {
         }
         setTotalAmount(totalamount.toFixed(2));
         setListItems(listItems);
+        setInputVendorUPI(det.vendorAlias?det.vendorAlias:'');
         setLoading(false);
     }
 
@@ -200,6 +203,16 @@ export default function AddPackingList(props) {
             setInputKurs(formatRupiah(valPriceTemp,2));
         }
     }
+
+    const handleChangeTransDate = (data) => {
+        //console.log('handleDate ',moment(data).format('DD MMMM YYYY'))
+        if (data !== null) {
+            let datetrans = moment(data, formatdate).toDate();
+            setTransDate(datetrans)
+        } else {
+            setTransDate(null)
+        }
+    }
     
     return (
         <Formik
@@ -209,6 +222,7 @@ export default function AddPackingList(props) {
                     transdate: TransDate,
                     kurs: InputKurs,
                     phone: InputPhone,
+                    VendorUPI: InputVendorUPI,
                     customer: InputCustomer,
                     address: InputCustomerAddress,
                     attention: InputAttention,
@@ -266,6 +280,23 @@ export default function AddPackingList(props) {
                                         />
                                     <div className="invalid-feedback-custom">{ErrSelPackingList}</div>
 
+                                    <label className="mt-3 form-label required" htmlFor="VendorUPI">
+                                        {i18n.t('Vendor UPI')}
+                                    </label>
+                                    <Input
+
+                                        name="VendorUPI"
+                                        type="text"
+                                        id="VendorUPI"
+                                        // maxLength={100}
+
+                                        // onChange={handleChange}
+                                        // onChange={val => handleInputNama(val)}
+                                        // onBlur={handleBlur}
+                                        value={values.VendorUPI}
+                                        disabled={true}
+                                    />
+
                                     <label className="mt-3 form-label required" htmlFor="city">
                                         {i18n.t('Phone')}
                                     </label>
@@ -280,7 +311,7 @@ export default function AddPackingList(props) {
                                         // onChange={val => handleInputNama(val)}
                                         onBlur={handleBlur}
                                         value={values.phone}
-                                        // disabled={true}
+                                        disabled={true}
                                     />
 
                                     <label className="mt-3 form-label required" htmlFor="kurs">
@@ -313,10 +344,10 @@ export default function AddPackingList(props) {
 
                                         <DatePicker
                                             name="transdate"
-                                            // onChange={val => handleChangeTransDate(val)}
+                                            onChange={val => handleChangeTransDate(val)}
                                             format={formatdate}
                                             value={values.transdate}
-                                            disabled={true}
+                                            disabled={false}
                                         />
                                         <div className="invalid-feedback-custom">{ErrTransDate}</div>
 
@@ -401,9 +432,9 @@ export default function AddPackingList(props) {
                                                         <td>{x.qty}</td>
                                                         <td>{x.brutoweight?numToMoney(x.brutoweight):0}</td>
                                                         <td>{x.allowance?numToMoney(x.allowance):0}</td>
-                                                        <td>{x.nettoweight?numToMoney(x.nettoweight):0}</td>
+                                                        <td>{x.nettoweight?formatRupiah(new String(x.nettoweight).replaceAll('.',','),1):0}</td>
                                                         <td>{x.price?numToMoney(x.price):0}</td>
-                                                        <td>{x.totalprice?numToMoney(x.totalprice):0}</td>
+                                                        <td>{x.totalprice?formatRupiah(new String(x.totalprice).replaceAll('.',','),1):0}</td>
                                                     </tr>
                                                 )
                                             })

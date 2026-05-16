@@ -35,6 +35,8 @@ const PelunasanHutangIndex = () => {
         const [columnshutang] = useState([
             { name: 'id', title: 'id' },
             { name: 'nodoc', title: i18n.t('No Document') },
+            { name: 'vendor', title: i18n.t('Vendor') },
+            { name: 'transdate', title: i18n.t('Tanggal') },
             { name: 'total', title: i18n.t('Total') },
             { name: 'outstanding', title: i18n.t('Outstanding') },
         ]);
@@ -79,6 +81,8 @@ const PelunasanHutangIndex = () => {
                             'id': el.nodocument,
                             'iddoc':el.id,
                             'nodoc': el.nodocument,
+                            'vendor': el.vendorAlias,
+                            'transdate':el.transactiondate?moment(el.transactiondate).format(formatdate):"",
                             'total': el.totalprice?numToMoney(el.totalprice):0,
                             'outstanding': el.outstanding?numToMoney(el.outstanding):0,
                             'type':'PR'
@@ -94,6 +98,8 @@ const PelunasanHutangIndex = () => {
                                 'id': el.id+'CARGO',
                                 'iddoc':el.id,
                                 'nodoc': el.invoicenumber,
+                                'vendor': el.vendorAlias,
+                                'transdate':el.date?moment(el.date).format(formatdate):"",
                                 'total': el.netamount?numToMoney(el.netamount):0,
                                 'outstanding': el.outstanding?numToMoney(el.outstanding):0,
                                 'type':'CARGO'
@@ -121,7 +127,7 @@ const PelunasanHutangIndex = () => {
                         'id': el.id,
                         'nodoc': el.nodocument,
                         'noinv': el.nodocumentPR?el.nodocumentPR:el.nodocumentCargo,
-                        'vendor': el.namavendorPR?el.namavendorPR:el.namavendorCargo,
+                        'vendor': el.aliasvendorPR?el.aliasvendorPR:el.aliasvendorCargo,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
                         'amount': el.amount?numToMoney(el.amount):0,
                     }

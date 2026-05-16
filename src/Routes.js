@@ -133,6 +133,7 @@ const menuInternalUser = lazy(() => import('./containers/Admin/InternalUser'));
 const addInternalUser = lazy(() => import('./containers/Admin/InternalUser/addFormInternalUser'));
 const detailInternalUser = lazy(() => import('./containers/Admin/InternalUser/detail'));
 const editInternalUser = lazy(() => import('./containers/Admin/InternalUser/editFormInternalUser'));
+const changePasswordForm = lazy(() => import('./containers/Admin/InternalUser/changePasswordForm'));
 
 
 const menuUserMobile = lazy(() => import('./containers/Admin/UserMobile'));
@@ -180,8 +181,9 @@ const addPriceList = lazy(() => import('./containers/Master/PriceList/add'));
 const detailPriceList = lazy(() => import('./containers/Master/PriceList/detail'));
 const editPriceList = lazy(() => import('./containers/Master/PriceList/edit'));
 
-const menuPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive'));
+const menuPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/indexnew'));
 const addPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/add'));
+const addPrFromTabDpr = lazy(() => import('./containers/Transaksi/PurchaseReceive/addPrFromTabDpr'));
 const printNota = lazy(() => import('./containers/Transaksi/PurchaseReceive/printNota'));
 const detailPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/detail'));
 const editPurchaseReceive = lazy(() => import('./containers/Transaksi/PurchaseReceive/edit'));
@@ -244,7 +246,32 @@ const reportPiutang = lazy(() => import('./containers/Report/reportPiutang'));
 const reportPenjualan = lazy(() => import('./containers/Report/reportPenjualan'));
 const reportPelunasanPiutang = lazy(() => import('./containers/Report/reportPelunasanPiutang'));
 const reportKartuDeposit = lazy(() => import('./containers/Report/reportKartuDeposit'));
+const reportKartuPinjaman = lazy(() => import('./containers/Report/reportKartuPinjaman'));
 const reportKartuStock = lazy(() => import('./containers/Report/reportKartuStock'));
+
+const menuKomisi = lazy(() => import('./containers/Transaksi/Komisi'));
+const bayarKomisi = lazy(() => import('./containers/Transaksi/Komisi/BayarKomisi'));
+const detailKomisi = lazy(() => import('./containers/Transaksi/Komisi/detail'));
+const editbayarKomisi = lazy(() => import('./containers/Transaksi/Komisi/editBayarKomisi'));
+const printNotaKomisi = lazy(() => import('./containers/Transaksi/Komisi/Print'));
+const reportKomisi = lazy(() => import('./containers/Report/reportKomisi'));
+const printDraftPr = lazy(() => import('./containers/Transaksi/DraftPurchaseReceive/print'));
+const printStockAdjusmentUdangMati = lazy(() => import('./containers/Transaksi/StockAdjusment/print'));
+
+const menuPinjaman = lazy(() => import('./containers/Transaksi/Pinjaman'));
+const addPinjaman = lazy(() => import('./containers/Transaksi/Pinjaman/add'));
+const detailPinjaman = lazy(() => import('./containers/Transaksi/Pinjaman/detail'));
+const editPinjaman = lazy(() => import('./containers/Transaksi/Pinjaman/edit'));
+
+const cancelPackingList = lazy(() => import('./containers/Transaksi/PackingList/cancelPackingList'));
+
+const menuCancelPackingList = lazy(() => import('./containers/Transaksi/CancelPackingList'));
+const detailCancelPackingList = lazy(() => import('./containers/Transaksi/CancelPackingList/detail'));
+const editCancelPackingList = lazy(() => import('./containers/Transaksi/CancelPackingList/edit'));
+const printPdfCancelPackingList = lazy(() => import('./containers/Transaksi/CancelPackingList/print'));
+
+const reportCancelPackingList = lazy(() => import('./containers/Report/reportCancelPackingList'));
+const integrasiSaldo = lazy(() => import('./containers/Transaksi/Integrasi/integrasiSaldo'));
 
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
@@ -389,6 +416,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.addinternaluser} component={waitFor(addInternalUser)} />
                                         <Route path={pathmenu.detailinternaluser + '/:id'} component={waitFor(detailInternalUser)} />
                                         <Route path={pathmenu.editinternaluser + '/:id'} component={waitFor(editInternalUser)} />
+                                        <Route path={pathmenu.changePasswordInternalUser + '/:id'} component={waitFor(changePasswordForm)} />
 
                                         <Route path={pathmenu.menuusermobile} component={waitFor(menuUserMobile)} />
                                         <Route path={pathmenu.addusermobile} component={waitFor(addUserMobile)} />
@@ -438,6 +466,7 @@ const Routes = ({ location, ...props }) => {
 
                                         <Route path={pathmenu.menupurchasereceive} component={waitFor(menuPurchaseReceive)} />
                                         <Route path={pathmenu.addpurchasereceive} component={waitFor(addPurchaseReceive)} />
+                                        <Route path={pathmenu.addpurchasereceivefromtabpenerimaanbarang+ '/:id'} component={waitFor(addPrFromTabDpr)} />
                                         <Route path={pathmenu.printnota + '/:id'} component={waitFor(printNota)} />
                                         <Route path={pathmenu.detailpurchasereceive + '/:id'} component={waitFor(detailPurchaseReceive)} />
                                         <Route path={pathmenu.editpurchasereceive + '/:id'} component={waitFor(editPurchaseReceive)} />
@@ -500,7 +529,31 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.menuReportPenjualan} component={waitFor(reportPenjualan)} />
                                         <Route path={pathmenu.menuReportPelunasanPiutang} component={waitFor(reportPelunasanPiutang)} />
                                         <Route path={pathmenu.menuReportKartuDeposit} component={waitFor(reportKartuDeposit)} />
+                                        <Route path={pathmenu.menuReportKartuPinjaman} component={waitFor(reportKartuPinjaman)} />
                                         <Route path={pathmenu.menuReportKartuStock} component={waitFor(reportKartuStock)} />
+
+                                        <Route path={pathmenu.menukomisi} component={waitFor(menuKomisi)} />
+                                        <Route path={pathmenu.bayarkomisi+ '/:id'} component={waitFor(bayarKomisi)} />
+                                        <Route path={pathmenu.detailkomisi+ '/:id'} component={waitFor(detailKomisi)} />
+                                        <Route path={pathmenu.editbayarkomisi+ '/:id'} component={waitFor(editbayarKomisi)} />
+                                        <Route path={pathmenu.printkomisi+ '/:id'} component={waitFor(printNotaKomisi)} />
+                                        <Route path={pathmenu.menuReportKomisi} component={waitFor(reportKomisi)} />
+                                        <Route path={pathmenu.printdraftpurchasereceive+ '/:id'} component={waitFor(printDraftPr)} />
+                                        <Route path={pathmenu.printstockadjusmentstockmati+ '/:id'} component={waitFor(printStockAdjusmentUdangMati)} />
+
+                                        <Route path={pathmenu.menuPinjaman} component={waitFor(menuPinjaman)} />
+                                        <Route path={pathmenu.addpinjaman} component={waitFor(addPinjaman)} />
+                                        <Route path={pathmenu.detailpinjaman+ '/:id'} component={waitFor(detailPinjaman)} />
+                                        <Route path={pathmenu.editpinjaman+ '/:id'} component={waitFor(editPinjaman)} />
+
+                                        <Route path={pathmenu.cancelpackinglist+ '/:id'} component={waitFor(cancelPackingList)} />
+                                        <Route path={pathmenu.menucancelpackinglist} component={waitFor(menuCancelPackingList)} />
+                                        <Route path={pathmenu.detailcancelpackinglist+ '/:id'} component={waitFor(detailCancelPackingList)} />
+                                        <Route path={pathmenu.editcancelpackinglist+ '/:id'} component={waitFor(editCancelPackingList)} />
+                                        <Route path={pathmenu.printpdfcancelpackinglist+ '/:id'} component={waitFor(printPdfCancelPackingList)} />
+                                        
+                                        <Route path={pathmenu.menuReportCancelPackingList} component={waitFor(reportCancelPackingList)} />
+                                        <Route path={pathmenu.integrasiSaldo} component={waitFor(integrasiSaldo)} />
                                         
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
 

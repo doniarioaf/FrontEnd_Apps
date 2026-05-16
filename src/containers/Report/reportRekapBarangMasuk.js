@@ -26,6 +26,8 @@ export default function ReportPembelian(props) {
     const history = useHistory();
     momentLocalizer();
 
+    const [ListShowNol, setListShowNol] = useState([{value:'Y',label:'Yes'},{value:'N',label:'No'}]);
+    const [SelShowNol, setSelShowNol] = useState('Y');
     
     const [start, setStart] = useState(new Date());
     const [end, setEnd] = useState(new Date());
@@ -46,11 +48,16 @@ export default function ReportPembelian(props) {
         }
     }
 
+    const handleChangeShowNol = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelShowNol(id);
+    }
+
     const submitHandler = () => {
         if( start != null && end != null){
            
             setLoading(true);
-            dispatch(actions.getReport({ url: '/reportrekapbarangmasuk?from=' + start.getTime(),type:'GETFILE',typefile:'application/vnd.ms-excel' }, successHandlerReport, errorHandler));
+            dispatch(actions.getReport({ url: '/reportrekapbarangmasuk?from=' + start.getTime()+'&shownol='+SelShowNol,type:'GETFILE',typefile:'application/vnd.ms-excel' }, successHandlerReport, errorHandler));
             // dispatch(actions.submitPurchaseReceiveData({ url: '/reportpembelian', payload: obj, type: 'GETFILE',typefile:'application/vnd.ms-excel' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -96,6 +103,7 @@ export default function ReportPembelian(props) {
             {
                 startdate:start !== null ? moment(start, formatdate).toDate() : new Date(),
                 enddate:end !== null ? moment(end, formatdate).toDate(): new Date(),
+                shownol:SelShowNol
                 // vendor:SelVendor,
                 // area:SelArea
             }
@@ -145,6 +153,25 @@ export default function ReportPembelian(props) {
                                     max={values.enddate}
                                     // style={{width: '25%'}}
                                     // disabled={ values.allmember}                                    
+                            />
+                        <label className="mt-3 form-label required" htmlFor="shownol">
+                            {i18n.t('Show 0?')}
+                            
+                        </label>
+
+                            <DropdownList
+                                name="shownol"
+                                filter='contains'
+                                placeholder={i18n.t('select.SELECT_OPTION')}
+                                
+                                onChange={val => handleChangeShowNol(val)}
+                                onBlur={val => setFieldTouched("shownol", val?.value ? val.value : '')}
+                                data={ListShowNol}
+                                textField={'label'}
+                                valueField={'value'}
+                                // style={{width: '25%'}}
+                                // disabled={values.isdisabledcountry}
+                                value={values.shownol}
                             />
 
                             {/* <label className="mt-3 form-label required" htmlFor="startdate">

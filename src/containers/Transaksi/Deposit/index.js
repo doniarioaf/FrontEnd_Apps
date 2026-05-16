@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Card, CardBody } from 'reactstrap';
+import { Container, Card, CardBody} from 'reactstrap';
+import VendorDialog from "./VendorDepositDialog";
 import { useTranslation } from 'react-i18next';
 import Grid from '../../../components/TableGrid';
 import ContentWrapper from '../../../components/Layout/ContentWrapper';
@@ -11,13 +12,14 @@ import * as pathmenu from '../../shared/pathMenu';
 import { reloadToHomeNotAuthorize, isGetPermissions, firstAndLastDateInMonth } from '../../shared/globalFunc';
 import { MenuDeposit, addDeposit_Permission } from '../../shared/permissionMenu';
 import { useHistory } from 'react-router-dom';
-import { DatePicker } from 'react-widgets';
+import { DatePicker,DropdownList } from 'react-widgets';
 import { formatdate } from '../../shared/constantValue';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import "react-widgets/dist/css/react-widgets.css";
 import SearchIcon from '@material-ui/icons/Search';
 import { IconButton } from '@material-ui/core';
+import ButtonMUI from '@material-ui/core/Button';
 
 const DepositIndex = () => {
     reloadToHomeNotAuthorize(MenuDeposit, 'READ');
@@ -29,6 +31,7 @@ const DepositIndex = () => {
         { name: 'id', title: 'id' },
         {name:'nodocument', title: 'No Document'},
         { name: 'vendor', title: i18n.t('Vendor') },
+        { name: 'status', title: i18n.t('Status') },
         { name: 'transdate', title: i18n.t('Date') },
     ]);
     const [tableColumnExtensions] = useState([]);
@@ -36,7 +39,16 @@ const DepositIndex = () => {
     let getdate = firstAndLastDateInMonth();
     const [from, setFrom] = useState(getdate.first);
     const [to, setTo] = useState(getdate.last);
+
+    const [ListIsActive, setListIsActive] = useState([{value:'Y',label:'Aktif'},{value:'N',label:'Non Aktif'}]);
+    const [SelIsActive, setSelIsActive] = useState('Y');
+
     const dispatch = useDispatch();
+     const [openVendor,setOpenVendor] = useState(false);
+
+    const toggleVendor = ()=>{
+        setOpenVendor(!openVendor);
+    }
 
     useEffect(() => {
         setLoading(true);
@@ -44,6 +56,7 @@ const DepositIndex = () => {
         obj.from = from.getTime();
         obj.to = to.getTime();
         obj.idvendor = null;
+        obj.isactive = SelIsActive;
         dispatch(actions.getDepositData({ url: '/list', type: 'POST', payload: obj }, successHandler, errorHandler));
     }, []);
 
@@ -54,7 +67,8 @@ const DepositIndex = () => {
                 {
                     'id': el.id,
                     'nodocument':el.nodocument,
-                    'vendor': el.vendorName,
+                    'vendor': el.vendorName+' ('+el.vendorAlias+')',
+                    'status':el.isactive?'Aktif':'Non Aktif',
                     'transdate': el.depositdate ? moment(el.depositdate).format(formatdate) : '',
                 }
             ], []);
@@ -65,11 +79,17 @@ const DepositIndex = () => {
 
     function errorHandler(error, propsdata) {
         setLoading(false);
+        setOpenVendor(false);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: '' + error
         })
+    }
+
+    const handleChangeStatus = (data) =>{
+        let id = data?.value ? data.value : '';
+        setSelIsActive(id);
     }
 
     function onClickAdd() {
@@ -104,18 +124,32 @@ const DepositIndex = () => {
             obj.from = from.getTime();
             obj.to = to.getTime();
             obj.idvendor = null;
+            obj.isactive = SelIsActive;
             dispatch(actions.getDepositData({ url: '/list', type: 'POST', payload: obj }, successHandler, errorHandler));
         }
 
     }
-
     return (
         <ContentWrapper>
             <ContentHeading history={history} removehistorylink={true} link={pathmenu.menudeposit} label={'Deposit'} labeldefault={'Deposit'} />
+            <ButtonMUI
+                // ref={anchorRef}
+                color="white"
+                // backgroundColor="primary"
+                // aria-controls={open ? 'menu-list-grow' : undefined}
+                // aria-haspopup="true"
+                onClick={() => setOpenVendor(true)}
+                style={{float: 'right',marginRight:'0.2%',backgroundColor:'#05105d'}}
+            >
+                <span style={{color:'white',fontSize:'13px'}}>
+                {i18n.t('List Deposit')}
+                </span>
+            </ButtonMUI>
             <Container fluid>
                 <table>
                     <th>{'From'}</th>
                     <th style={{ paddingLeft: '10px' }}>{'To'}</th>
+                    <th style={{ paddingLeft: '10px' }}>{'Status'}</th>
                     <tbody>
                         <tr>
                             <td><DatePicker
@@ -146,6 +180,22 @@ const DepositIndex = () => {
                                     value={to}
                                 // max={new Date()}
                                 // style={{width: '25%'}}
+                                />
+                            </td>
+                            <td style={{ paddingLeft: '10px',width:'130px' }}>
+                                <DropdownList
+                                    name="SelIsActive"
+                                    filter='contains'
+                                    placeholder={i18n.t('select.SELECT_OPTION')}
+                                    
+                                    onChange={val => handleChangeStatus(val)}
+                                    // onBlur={val => setFieldTouched("shownol", val?.value ? val.value : '')}
+                                    data={ListIsActive}
+                                    textField={'label'}
+                                    valueField={'value'}
+                                    // style={{width: '25%'}}
+                                    // disabled={values.isdisabledcountry}
+                                    value={SelIsActive}
                                 />
                             </td>
                             <td>
@@ -182,8 +232,16 @@ const DepositIndex = () => {
                     </CardBody>
                 </Card>
             </Container>
+
+           <VendorDialog
+                open={openVendor}
+                toggle={toggleVendor}
+                errorHandler={errorHandler}
+            />
+
         </ContentWrapper>
 
+        
     );
 };
 export default DepositIndex;

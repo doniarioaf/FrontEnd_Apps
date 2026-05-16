@@ -16,7 +16,7 @@ import "react-widgets/dist/css/react-widgets.css";
 import { PDFViewer } from '@react-pdf/renderer';
 import PdfDocumentInvoice from './PdfDocumentInvoice';
 
-import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../../shared/constantValue';
+import { formatdate, formatdatetime, formatdateYYYYMMDD, formattimeHHmm } from '../../../shared/constantValue';
 import moment from 'moment';
 import '../../PurchaseReceive/printNota/App.css';
 
@@ -55,6 +55,11 @@ export default function PrintNotaInvoice(props) {
         let dettemp = data.data;
         dettemp.date = det.date ? moment(new Date(det.date)).format(formatdate) : '';
         dettemp.currdatetime = moment(new Date()).format(formatdatetime);
+        dettemp.currtime = moment(new Date()).format(formattimeHHmm);
+        
+        let packinglist = det.packinglist;
+        packinglist.date = det.packinglist.date?moment(new Date(det.packinglist.date)).format(formatdate) : '';
+        dettemp.packinglist = packinglist;
         setValue(dettemp);
 
         setTimeout(() => {
@@ -131,8 +136,8 @@ export default function PrintNotaInvoice(props) {
                                             <div className="App">
                                                 <div className='download-link'>
                                                     {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? 'SuratJalan-' + Value.nodocument : fileName))}>{"Download"}</div> */}
-                                                    <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div>
-                                                    {/* <div onClick={() => handleDownloadPDF()}>{"Download"}</div> */}
+                                                    {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div> */}
+                                                    <div onClick={() => handleDownloadPDF()}>{"Download"}</div>
                                                 </div>
                                                 {/* <div style={{backgroundColor:'#343439',width:'20%',height:'9%',position:'absolute',right:'15px', display: visible ? 'block' : 'none' }}></div> */}
     

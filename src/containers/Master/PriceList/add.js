@@ -38,6 +38,10 @@ export default function AddPriceList(props) {
     
     const [InputNotes, setInputNotes] = useState("");
 
+    const [ListCustomer, setListCustomer] = useState([]);
+    const [SelCustomer, setSelCustomer] = useState('');
+    const [ErrSelCustomer, setErrSelCustomer] = useState('');
+
     useEffect(() => {
         setLoading(true);
         dispatch(actions.getPriceListData({ url: '/template' }, successHandler, errorHandler));
@@ -55,6 +59,16 @@ export default function AddPriceList(props) {
                 }
             ], []);
             setListProduct(theDataProduct);
+
+            const theDataCust = data.data.custopt.reduce((obj, el) => [
+                ...obj,
+                {
+                        
+                    'value': el.id,
+                    'label': el.nama+' ('+el.alias+')',
+                }
+            ], []);
+            setListCustomer(theDataCust);
 
             // const theData = data.data.categoryProductOpt.reduce((obj, el) => [
             //     ...obj,
@@ -102,12 +116,18 @@ export default function AddPriceList(props) {
         let flag = true;
         setErrPriceDate('');
         setErrPriceThruDate('');
+        setErrSelCustomer('');
         if (PriceDate == null) {
             setErrPriceDate(i18n.t('label_REQUIRED'));
             flag = false;
         }
         if (PriceThruDate == null) {
             setErrPriceThruDate(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+
+        if (SelCustomer == '') {
+            setErrSelCustomer(i18n.t('label_REQUIRED'));
             flag = false;
         }
         
@@ -138,6 +158,7 @@ export default function AddPriceList(props) {
                 obj.pricedate = PriceDate.getTime();
                 obj.pricedatethru = PriceThruDate.getTime();
                 obj.notes = values.notes;
+                obj.idcustomer = SelCustomer;
                 let items = [];
                 if (ListCategoryProduct.length > 0) {
                     items = ListCategoryProduct.reduce((obj, el) => [
@@ -202,6 +223,11 @@ export default function AddPriceList(props) {
         } else {
             setPriceThruDate(null)
         }
+    }
+
+    const handleChangeCustomer = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelCustomer(id);
     }
 
     function successCheckData(data, propsdata) {
@@ -270,7 +296,8 @@ export default function AddPriceList(props) {
                     listCategoryProduct: ListCategoryProduct,
                     pricedate: PriceDate,
                     pricethrudate: PriceThruDate,
-                    notes:InputNotes
+                    notes:InputNotes,
+                    customer:SelCustomer
                 }
             }
             validate={values => {
@@ -330,6 +357,26 @@ export default function AddPriceList(props) {
                                             min={values.pricedate}
                                         />
                                         <div className="invalid-feedback-custom">{ErrPriceThruDate}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="customer">
+                                            {i18n.t('Customer')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <DropdownList
+                                            name="customer"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeCustomer(val)}
+                                            onBlur={val => setFieldTouched("customer", val?.value ? val.value : '')}
+                                            data={ListCustomer}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.customer}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrSelCustomer}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="notes">
                                             {i18n.t('Notes')}

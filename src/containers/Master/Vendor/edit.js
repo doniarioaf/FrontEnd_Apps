@@ -16,6 +16,7 @@ import momentLocalizer from 'react-widgets-moment';
 import { DropdownList } from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import Select from 'react-select';
+import { validasiType } from './add';
 
 export default function EditVendor(props) {
     reloadToHomeNotAuthorize(editVendor_Permission, 'TRANSACTION');
@@ -59,6 +60,21 @@ export default function EditVendor(props) {
 
     const [CheckIsParent, setCheckIsParent] = useState(false);
 
+    const [ListVendorBroker, setListVendorBroker] = useState([]);
+    const [SelVendorBroker, setSelVendorBroker] = useState('nodata');
+
+    const [ListArea, setListArea] = useState([]);
+    const [SelArea, setSelArea] = useState('');
+    const [ErrSelArea, setErrSelArea] = useState('');
+
+    const [InputAddress1, setInputAddress1] = useState('');
+    const [InputAddress2, setInputAddress2] = useState('');
+    const [InputNpwp, setInputNpwp] = useState('');
+    const [InputPhone, setInputPhone] = useState('');
+
+    const [ListLimitTransaksi, setListLimitTransaksi] = useState([{value:'Y',label:'Yes'},{value:'N',label:'No'}]);
+    const [SelLimitTransaksi, setSelLimitTransaksi] = useState("N");
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -79,6 +95,7 @@ export default function EditVendor(props) {
         setInputNama(val.nama);
         setInputAlias(val.alias);
         setSelType(val.type);
+        setSelArea(val.idarea?val.idarea:'');
         setInputBankName(val.bank);
         setInputNoAkunBank(val.accountnobank);
         setInputNamaAkunBank(val.accountnamebank);
@@ -92,6 +109,13 @@ export default function EditVendor(props) {
         setInputValue1(val.value1 ? val.value1 : '0');
         setCheckIsParent(val.isparent);
         setSelVendorParent(val.idvendorparent?val.idvendorparent:'');
+        setSelVendorBroker(val.idvendorbroker?val.idvendorbroker:'nodata');
+
+        setInputAddress1(val.address1 ? val.address1 : '');
+        setInputAddress2(val.address2 ? val.address2 : '');
+        setInputNpwp(val.npwp ? val.npwp : '');
+        setInputPhone(val.phone ? val.phone : '');
+        setSelLimitTransaksi(val.limittransaction?'Y':'N');
 
         let selectedData = [];
         let VendorNotInlcueCategoryProd = [];
@@ -125,6 +149,32 @@ export default function EditVendor(props) {
             setListVendorParent(theDataVend);
         }
 
+        let theDataVendBroker = [];
+            if(data.data.vendorBrokerOpt){
+                theDataVendBroker = data.data.vendorBrokerOpt.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        value: el.id,
+                        label: el.nama ,
+                    }
+                ], []);
+            }
+            theDataVendBroker.push({
+                value: 'nodata',
+                label: 'No Data' , 
+            });
+            
+            setListVendorBroker(theDataVendBroker);
+
+            let dataArea = data.data.areaOpt.reduce((obj, el) => [
+                    ...obj,
+                    {
+                        value: el.id,
+                        label: el.nama ,
+                    }
+                ], []);
+            setListArea(dataArea);
+
         setLoading(false);
     }
     const checkColumnMandatory = (values) => {
@@ -133,6 +183,7 @@ export default function EditVendor(props) {
         setErrInputAlias('');
         setErrSelType('');
         setErrSelVendorParent('');
+        setErrSelArea('');
         if (values.nama == '') {
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
@@ -146,7 +197,11 @@ export default function EditVendor(props) {
             setErrSelType(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        if(!CheckIsParent){
+        if (SelArea == '') {
+            setErrSelArea(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+        if(!CheckIsParent && SelType !== 'BROKER'){
             if (SelVendorParent == '') {
                 setErrSelVendorParent(i18n.t('label_REQUIRED'));
                 flag = false;
@@ -193,6 +248,18 @@ export default function EditVendor(props) {
                 idvendorparent = SelVendorParent;
             }
             obj.idvendorparent = idvendorparent;
+
+            let idvendorbroker = null;
+            if(SelType == 'UDANG'){
+                idvendorbroker = SelVendorBroker !== '' && SelVendorBroker !== 'nodata'?SelVendorBroker:null;
+            }
+            obj.idvendorbroker = idvendorbroker;
+            obj.idarea = SelArea;
+            obj.address1 = values.address1;
+            obj.address2 = values.address2;
+            obj.npwp = values.npwp;
+            obj.phone = values.phone;
+            obj.limittransaction = SelLimitTransaksi;
             dispatch(actions.submitVendorData({ url: '/' + id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -250,13 +317,37 @@ export default function EditVendor(props) {
         setInputPriceOngkos(ongkos);
 
     }
+
+    function setKosongInputanType(){
+        setInputPricebox('');
+        setInputPacking('');
+        setInputKurir('');
+        setInputKomisi('');
+        setInputProfit('');
+        setInputValue1('');
+    }
+
+    const handleChangeLimitTransaksi = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelLimitTransaksi(id);
+    }
+
     const handleChangeType = (data) => {
         let id = data?.value ? data.value : '';
         setSelType(id);
+        setKosongInputanType();
     }
     const handleChangeVendorParent = (data) => {
         let id = data?.value ? data.value : '';
         setSelVendorParent(id);
+    }
+    const handleChangeVendorBroker = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelVendorBroker(id);
+    }
+    const handleChangeArea = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelArea(id);
     }
     return (
         <Formik
@@ -276,7 +367,14 @@ export default function EditVendor(props) {
                     profit: InputProfit,
                     value1: InputValue1,
                     isparent: CheckIsParent,
-                    vendorparent:SelVendorParent
+                    vendorparent:SelVendorParent,
+                    vendorbroker:SelVendorBroker,
+                    area:SelArea,
+                    address1:InputAddress1,
+                    address2:InputAddress2,
+                    npwp:InputNpwp,
+                    phone:InputPhone,
+                    LimitTransaksi:SelLimitTransaksi,
                 }
             }
             validate={values => {
@@ -294,6 +392,10 @@ export default function EditVendor(props) {
                 setInputProfit(values.profit);
                 setInputValue1(values.value1);
                 setValueOngkos(values.packing, values.kurir, values.komisi, values.profit, values.value1);
+                setInputAddress1(values.address1);
+                setInputAddress2(values.address2);
+                setInputNpwp(values.npwp);
+                setInputPhone(values.phone);
                 return errors;
             }}
             enableReinitialize="true"
@@ -366,6 +468,26 @@ export default function EditVendor(props) {
                                         />
                                         <div className="invalid-feedback-custom">{ErrInputAlias}</div>
 
+                                        <label className="mt-3 form-label required" htmlFor="area">
+                                            {i18n.t('Area')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <DropdownList
+                                            name="area"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeArea(val)}
+                                            onBlur={val => setFieldTouched("area", val?.value ? val.value : '')}
+                                            data={ListArea}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.area}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrSelArea}</div>
+
                                         <label className="mt-3 form-label required" htmlFor="type">
                                             {i18n.t('Type')}
                                             <span style={{ color: 'red' }}>*</span>
@@ -385,6 +507,24 @@ export default function EditVendor(props) {
                                             value={values.type}
                                         />
                                         <div className="invalid-feedback-custom">{ErrSelType}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="LimitTransaksi">
+                                            {i18n.t('Limit Transaction')}
+                                        </label>
+                                        <DropdownList
+                                            name="LimitTransaksi"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeLimitTransaksi(val)}
+                                            onBlur={val => setFieldTouched("LimitTransaksi", val?.value ? val.value : '')}
+                                            data={ListLimitTransaksi}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.LimitTransaksi}
+                                        />
                                         
 
                                         <label className="mt-3 form-label required" htmlFor="pricebox">
@@ -398,6 +538,7 @@ export default function EditVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.pricebox !== '' ? numToMoney(parseFloat(new String(values.pricebox).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'PRICEBOX')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="packing">
@@ -410,6 +551,7 @@ export default function EditVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.packing !== '' ? numToMoney(parseFloat(new String(values.packing).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'PACKING')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="kurir">
@@ -422,6 +564,7 @@ export default function EditVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.kurir !== '' ? numToMoney(parseFloat(new String(values.kurir).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'KURIR')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="komisi">
@@ -434,6 +577,7 @@ export default function EditVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.komisi !== '' ? numToMoney(parseFloat(new String(values.komisi).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'KOMISI')}
                                         />
 
                                         <FormGroup check style={{marginTop:'20px'}}>
@@ -447,7 +591,7 @@ export default function EditVendor(props) {
                                         <Label for="isparent" check style={{transform:'scale(1.5)',marginLeft:'20px'}}>{i18n.t('Parent?')}</Label>
                                         </FormGroup>
 
-                                        <div hidden={values.isparent}>
+                                        <div hidden={values.isparent || values.type == 'BROKER'}>
                                         <label className="mt-3 form-label required" htmlFor="vendorparent">
                                             {i18n.t('Vendor Parent')}
                                             <span style={{ color: 'red' }}>*</span>
@@ -469,10 +613,82 @@ export default function EditVendor(props) {
                                         <div className="invalid-feedback-custom">{ErrSelVendorParent}</div>
                                         </div>
 
+                                        <div hidden={values.type !== 'UDANG'}>
+                                        <label className="mt-3 form-label required" htmlFor="vendorbroker">
+                                            {i18n.t('Vendor Broker')}
+                                        </label>
+                                        <DropdownList
+                                            name="vendorbroker"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeVendorBroker(val)}
+                                            onBlur={val => setFieldTouched("vendorbroker", val?.value ? val.value : '')}
+                                            data={ListVendorBroker}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            // disabled={values.isdisabledcountry}
+                                            value={values.vendorbroker}
+                                        />
+                                    </div>
 
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                        <label className="mt-3 form-label required" htmlFor="address1">
+                                            {i18n.t('label_ADDRESS')+' 1'}
+                                        </label>
+                                        <Input
+                                            name="address1"
+                                            type="text"
+                                            id="address1"
+                                            // maxLength={150}
+
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.address1}
+                                        />
+                                        <label className="mt-3 form-label required" htmlFor="address1">
+                                            {i18n.t('label_ADDRESS')+' 2'}
+                                        </label>
+                                        <Input
+                                            name="address2"
+                                            type="text"
+                                            id="address2"
+                                            // maxLength={150}
+
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.address2}
+                                        />
+
+                                        <label className="mt-3 form-label required" htmlFor="phone">
+                                            {i18n.t('Phone')}
+                                        </label>
+                                        <Input
+                                            name="phone"
+                                            type="text"
+                                            id="phone"
+                                            // maxLength={150}
+
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.phone}
+                                        />
+                                        <label className="mt-3 form-label required" htmlFor="npwp">
+                                            {i18n.t('NPWP')}
+                                        </label>
+                                        <Input
+                                            name="npwp"
+                                            type="text"
+                                            id="npwp"
+                                            // maxLength={150}
+
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.npwp}
+                                        />
                                         <label className="mt-3 form-label required" htmlFor="bankname">
                                             {i18n.t('Bank')}
                                             {/* <span style={{color:'red'}}>*</span> */}
@@ -539,6 +755,7 @@ export default function EditVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.profit !== '' ? numToMoney(parseFloat(new String(values.profit).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'PROFIT')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="value1">
@@ -551,6 +768,7 @@ export default function EditVendor(props) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             value={values.value1 !== '' ? numToMoney(parseFloat(new String(values.value1).replaceAll(".", ""))) : ''}
+                                            disabled={validasiType(values.type,'VALUE1')}
                                         />
 
                                         <label className="mt-3 form-label required" htmlFor="priceongkos">

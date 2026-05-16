@@ -17,10 +17,11 @@ import "react-widgets/dist/css/react-widgets.css";
 
 import { PDFViewer } from '@react-pdf/renderer';
 import PdfDocumentSupplier from './PdfDocumentSupplier';
-import PdfDocumentInternal from './PdfDocumentInternal';
+import PdfDocumentSupplierLegal from './PdfDocumentSupplierLegal';
+import PdfDocumentPajak from './PdfDocumentPajak';
 // import PdfDocumentPajak from './PdfDocumentPajak';
 
-import { formatdate, formatdatetime } from '../../../shared/constantValue';
+import { formatdate, formatdatetime, formattimeHHmm } from '../../../shared/constantValue';
 import moment from 'moment';
 import './App.css';
 
@@ -31,7 +32,7 @@ export default function PrintNota(props) {
     const dispatch = useDispatch();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
-    const [ListPrintType, setListPrintType] = useState([{ value: 'SUPPLIER', label: 'Supplier' }, { value: 'INTERNAL', label: 'Internal' }, { value: 'PAJAK', label: 'Pajak' }]);
+    const [ListPrintType, setListPrintType] = useState([{ value: 'SUPPLIER', label: 'Supplier' }, { value: 'PAJAK', label: 'Pajak' }]);
     const [SelPrintType, setSelPrintType] = useState('SUPPLIER');
 
     const [Value, setValue] = useState(null);
@@ -66,11 +67,55 @@ export default function PrintNota(props) {
 
     function getData(data){
         let det = data.data;
-
             let dettemp = data.data;
             dettemp.notatype = SelPrintType;
             dettemp.transactiondate = det.transactiondate ? moment(new Date(det.transactiondate)).format(formatdate) : '';
             dettemp.currdatetime = moment(new Date()).format(formatdatetime) ;
+            dettemp.currtime = moment(new Date()).format(formattimeHHmm);
+            dettemp.currdate = moment(new Date()).format(formatdate) ;
+            let deposits = [];
+            if(det.deposits){
+                for(let i=0; i < det.deposits.length; i++){
+                    let detDepo = det.deposits[i];
+                    let dettempDepo = det.deposits[i];
+                    dettempDepo.date = detDepo.date ? moment(new Date(detDepo.date)).format(formatdate) : '';
+                    deposits.push(dettempDepo);
+                }
+            }
+            dettemp.deposits = deposits;
+
+            let items = det.items;
+            let charges = det.charges;
+            let inventori = det.inventori;
+            let totalData = 0;
+            //jika data diatas 10, maka dibikin 2 halaman
+            if(items){
+                let listfilteroutput = items.filter(output => output.qtynota > 0 && output.type == 'H');
+                totalData = totalData + listfilteroutput.length;
+            }
+            if(charges){
+                let listfilteroutputcharges = charges.filter(output => output.qty > 0 && output.chargename !== 'SETORPINJAMAN');
+                totalData = totalData + listfilteroutputcharges.length;
+            }
+            if(inventori){
+                let listfilteroutputinventori = inventori.filter(output => output.qty > 0);
+                totalData = totalData + listfilteroutputinventori.length;
+            }
+            
+            if(totalData > 10){
+                dettemp.totalpage = 2; 
+            }else{
+                dettemp.totalpage = 1; 
+            }
+
+            let sizeHeightBoxInfoDPDLL = 150;
+            let setorPinjaman = det.setorPinjaman?det.setorPinjaman:0;
+            if(setorPinjaman > 0){
+                sizeHeightBoxInfoDPDLL = 180;
+            }
+
+            sizeHeightBoxInfoDPDLL = sizeHeightBoxInfoDPDLL+"px";
+            dettemp.sizeHeightBoxInfoDPDLL = sizeHeightBoxInfoDPDLL;
             setValue(dettemp);
 
             setTimeout(() => {
@@ -97,9 +142,14 @@ export default function PrintNota(props) {
 
         // return <PdfDocumentSupplier data={value} />
         if(printType == 'SUPPLIER'){
-            return <PdfDocumentSupplier data={value} />
-        }else if(printType == 'INTERNAL' || printType == 'PAJAK'){
-            return <PdfDocumentInternal data={value} />
+            if(value.totalpage == 1){
+                return <PdfDocumentSupplier data={value} />
+            }else{
+                return <PdfDocumentSupplierLegal data={value} />
+            }
+            
+        }else if(printType == 'PAJAK'){
+            return <PdfDocumentPajak data={value} />
         }
         // else if(printType == 'PAJAK'){
         //     return <PdfDocumentPajak data={value} />
@@ -134,6 +184,9 @@ export default function PrintNota(props) {
 
     function successHandlerAfterDownload(data, propsdata) {
         if (data.data) {
+            let det = data.data;
+
+            let dettemp = data.data;
             getData(data);
         }
         
@@ -204,8 +257,8 @@ export default function PrintNota(props) {
                                         <div className="App">
                                             <div className='download-link'>
                                                 {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? 'SuratJalan-' + Value.nodocument : fileName))}>{"Download"}</div> */}
-                                                <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div>
-                                                {/* <div onClick={() => handleDownloadPDF()}>{"Download"}</div> */}
+                                                {/* <div onClick={() => handleSuccesPDF(localStorage.getItem("PdfDocument"), (Value != null ? Value.nodocument : fileName))}>{"Download"}</div> */}
+                                                <div onClick={() => handleDownloadPDF()}>{"Download"}</div>
                                             </div>
                                             {/* <div style={{backgroundColor:'#343439',width:'20%',height:'9%',position:'absolute',right:'15px', display: visible ? 'block' : 'none' }}></div> */}
 

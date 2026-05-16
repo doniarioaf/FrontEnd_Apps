@@ -24,8 +24,8 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { MenuPurchaseReceive, deletePurchaseReceive_Permission, editPurchaseReceive_Permission } from '../../shared/permissionMenu';
+  import { convertGramToKGAndPembulatan, formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { MenuPurchaseReceive, deletePurchaseReceive_Permission, editPurchaseReceiveCalcSelisih_Permission, editPurchaseReceive_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime } from '../../shared/constantValue';
   import '../../CSS/table.css';
@@ -57,7 +57,9 @@ import React, {useState,
     const [ListItemHidup, setListItemHidup] = useState([]);
     const [ListItemMati, setListItemMati] = useState([]);
     const [ListItemBiaya, setListItemBiaya] = useState([]);
+    const [ListItemPenguranganBiaya, setListItemPenguranganBiaya] = useState([]);
     const [ListItemInventori, setListItemInventori] = useState([]);
+    let flagCalcSelisih = isGetPermissions(editPurchaseReceiveCalcSelisih_Permission,'TRANSACTION');
 
     const handleToggle = (flag) => {
         setOpen((prevOpen) => !prevOpen);
@@ -98,7 +100,8 @@ import React, {useState,
         let det = data.data;
         let totalprice = det.totalprice?det.totalprice:0;
         let setor = det.setor?det.setor:0;
-        let transfer = parseFloat(totalprice) - parseFloat(setor);
+        let setorPinjaman = det.setor_pinjaman?det.setor_pinjaman:0;
+        let transfer = parseFloat(totalprice) - (parseFloat(setor) + parseFloat(setorPinjaman));
         if(transfer < 1){
             transfer = 0;
         }
@@ -108,9 +111,14 @@ import React, {useState,
         let listItems = det.items?det.items:[];
         let listfilteroutputHidup = listItems.filter(output => output.type == 'H');
         let listfilteroutputMati = listItems.filter(output => output.type == 'M');
+        let listCharge = det.charges?det.charges:[];
+        let listPenambahanBiaya = listCharge.filter(output => output.chargename == 'BOX' || output.chargename == 'BOAT' || output.chargename == 'BANTUAN');
+        let listPenguranganBiaya = listCharge.filter(output => output.chargename == 'ONGKOS' || output.chargename == 'SETOR' || output.chargename == 'SETORPINJAMAN');
+
         setListItemHidup(listfilteroutputHidup);
         setListItemMati(listfilteroutputMati);
-        setListItemBiaya(det.charges?det.charges:[]);
+        setListItemBiaya(listPenambahanBiaya);
+        setListItemPenguranganBiaya(listPenguranganBiaya);
         setListItemInventori(det.inventori?det.inventori:[]);
         setLoading(false);
     }
@@ -153,7 +161,7 @@ import React, {useState,
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: '' + error
+            text: error.msg
         })
     }
 
@@ -212,7 +220,7 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('No Document Draft')}</span>
+                            <span className="col-md-5">{i18n.t('No Document SPB')}</span>
                             <strong className="col-md-7">
                                 {value.nodocumentDraft?value.nodocumentDraft+(value.noSmuDraft !== ''?' ('+value.noSmuDraft+')':''):''}
                             </strong>
@@ -291,7 +299,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Total')}</span>
                                 <strong className="col-md-7">
-                                {value.totalprice ?numToMoney(value.totalprice):''}
+                                {value.totalprice ?formatRupiah(new String(value.totalprice - value.setor_pinjaman).replaceAll('.',',')):''}
                                 </strong>
                             </div>
 
@@ -339,17 +347,48 @@ import React, {useState,
             </div>
 
             {
-                <div className="row justify-content-center">
-                    <h4>{'Item Hidup'}</h4>
+                <div >
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                        }}>
+                        {/* Kiri */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div hidden={flagCalcSelisih?false:true}>
+                            <label style={{ margin: 0 }}>Kurs : {value.kurs?numToMoney(value.kurs):0}</label>
+                            </div>
+                        </div>
+                    
+                    {/* Tengah */}
+                    <div style={{ textAlign: 'center', flex: 1 }}>
+                        <h4 style={{ margin: 0 }}>Item Hidup</h4>
+                    </div>
+
+                    {/* Kanan (kosong, untuk balance) */}
+                    <div style={{ width: '150px' }}>
+                        <div hidden={flagCalcSelisih?false:true}>
+                        <label style={{ margin: 0 }}>Selisih : {value.selisih?numToMoney(value.selisih):0}</label>
+                        </div>
+                    </div>
+                    </div>
+
                     <table id="tablegrid">
                     <tbody>
                         <tr>
-                        <th >{i18n.t('Product')}</th>
-                        <th >{i18n.t('Category Product')}</th>
-                        <th >{i18n.t('Qty')}</th>
-                        <th >{i18n.t('Qty Bonus')}</th>
-                        <th >{i18n.t('Price')}</th>
-                        <th >{i18n.t('Subtotal Price')}</th>
+                        <th style={{ minWidth: '150px' }}>{i18n.t('Product')}</th>
+                        <th style={{ minWidth: '90px' }}>{i18n.t('Category Product')}</th>
+                        <th style={{ minWidth: '60px' }}>{i18n.t('Kg')}</th>
+                        <th style={{ minWidth: '60px' }}>{i18n.t('Qty')}</th>
+                        {/* <th >{i18n.t('Qty Bonus')}</th> */}
+                        <th style={{ minWidth: '60px' }}>{i18n.t('Qty Nota')}</th>
+                        <th style={{ minWidth: '80px' }}>{i18n.t('Price')}</th>
+                        <th style={{ minWidth: '100px' }}>{i18n.t('Subtotal Price')}</th>
+
+                        {flagCalcSelisih && (<th style={{ minWidth: '80px' }}>{i18n.t('Harga Jual')}</th>)}
+                        {flagCalcSelisih && (<th style={{ minWidth: '80px' }}>{i18n.t('Harga Jual (Edit)')}</th>)}
+                        {flagCalcSelisih && (<th style={{ minWidth: '80px' }}>{i18n.t('Total USD')}</th>)}
+                        {flagCalcSelisih && (<th style={{ minWidth: '130px' }}>{i18n.t('Total Rp')}</th>)}
                         </tr>
                         {
                             ListItemHidup.map((x, i) => {
@@ -357,10 +396,15 @@ import React, {useState,
                                     <tr>
                                         <td>{x.productName}</td>
                                         <td>{x.categoryProductName}</td>
+                                        <td>{x.weight_udang?numToMoney(convertGramToKGAndPembulatan(x.weight_udang)):0}</td>
                                         <td>{x.qty}</td>
-                                        <td>{x.qtybonus}</td>
+                                        <td>{x.qtynota}</td>
                                         <td>{x.price?numToMoney(x.price):0}</td>
                                         <td>{x.subtotalprice?numToMoney(x.subtotalprice):0}</td>
+                                        {flagCalcSelisih && (<td>{x.hargajual_terakhir?numToMoney(x.hargajual_terakhir):0}</td>)}
+                                        {flagCalcSelisih && (<td>{x.hargajual?numToMoney(x.hargajual):0}</td>)}
+                                        {flagCalcSelisih && (<td>{x.totalusd?numToMoney(x.totalusd):0}</td>)}
+                                        {flagCalcSelisih && (<td>{x.totalrupiah?numToMoney(x.totalrupiah):0}</td>)}
                                     </tr>
                                 )
                             })
@@ -402,7 +446,7 @@ import React, {useState,
 
             {
                 <div className="row justify-content-center">
-                    <h4>{'Biaya'}</h4>
+                    <h4>{'Penambahan Biaya'}</h4>
                     <table id="tablegrid">
                     <tbody>
                         <tr>
@@ -415,7 +459,35 @@ import React, {useState,
                             ListItemBiaya.map((x, i) => {
                                 return (
                                     <tr>
-                                        <td>{x.chargename}</td>
+                                        <td>{x.chargenamecustom?x.chargenamecustom :(x.chargename == 'SETORPINJAMAN'?'SETOR PINJAMAN':x.chargename)}</td>
+                                        <td>{x.qty}</td>
+                                        <td>{x.price?numToMoney(x.price):0}</td>
+                                        <td>{x.subtotalprice?numToMoney(x.subtotalprice):0}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                    </table>
+                </div>
+            }
+
+            {
+                <div className="row justify-content-center">
+                    <h4>{'Pengurangan Biaya'}</h4>
+                    <table id="tablegrid">
+                    <tbody>
+                        <tr>
+                        <th >{i18n.t('Nama')}</th>
+                        <th >{i18n.t('Qty')}</th>
+                        <th >{i18n.t('Price')}</th>
+                        <th >{i18n.t('Subtotal Price')}</th>
+                        </tr>
+                        {
+                            ListItemPenguranganBiaya.map((x, i) => {
+                                return (
+                                    <tr>
+                                        <td>{x.chargenamecustom?x.chargenamecustom :x.chargename}</td>
                                         <td>{x.qty}</td>
                                         <td>{x.price?numToMoney(x.price):0}</td>
                                         <td>{x.subtotalprice?numToMoney(x.subtotalprice):0}</td>

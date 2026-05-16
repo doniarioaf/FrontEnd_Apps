@@ -38,6 +38,10 @@ export default function EditPriceList(props) {
         
     const [InputNotes, setInputNotes] = useState("");
 
+    const [ListCustomer, setListCustomer] = useState([]);
+    const [SelCustomer, setSelCustomer] = useState('');
+    const [ErrSelCustomer, setErrSelCustomer] = useState('');
+
     const id = props.match.params.id;
 
     useEffect(() => {
@@ -62,6 +66,16 @@ export default function EditPriceList(props) {
             }
         ], []);
         setListProduct(theDataProduct);
+
+        const theDataCust = data.data.custopt.reduce((obj, el) => [
+            ...obj,
+            {
+                    
+                'value': el.id,
+                'label': el.nama+' ('+el.alias+')',
+            }
+        ], []);
+        setListCustomer(theDataCust);
 
         let theData = [];
         if (det.items && template.categoryProductOpt) {
@@ -88,6 +102,7 @@ export default function EditPriceList(props) {
         setPriceDate(det.pricedate ? new Date(det.pricedate) : null);
         setPriceThruDate(det.pricedatethru ? new Date(det.pricedatethru) : null);
         setInputNotes(det.notes);
+        setSelCustomer(det.idcustomer?det.idcustomer:'');
         setLoading(false);
     }
 
@@ -95,6 +110,7 @@ export default function EditPriceList(props) {
         let flag = true;
         setErrPriceDate('');
         setErrPriceThruDate('');
+        setErrSelCustomer('');
         if (PriceDate == null) {
             setErrPriceDate(i18n.t('label_REQUIRED'));
             flag = false;
@@ -103,7 +119,10 @@ export default function EditPriceList(props) {
             setErrPriceThruDate(i18n.t('label_REQUIRED'));
             flag = false;
         }
-        
+        if (SelCustomer == '') {
+            setErrSelCustomer(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
         return flag;
     }
 
@@ -128,6 +147,7 @@ export default function EditPriceList(props) {
             obj.pricedate = PriceDate.getTime();
             obj.pricedatethru = PriceThruDate.getTime();
             obj.notes = values.notes;
+            obj.idcustomer = SelCustomer;
             let items = [];
             if (ListCategoryProduct.length > 0) {
                 items = ListCategoryProduct.reduce((obj, el) => [
@@ -183,6 +203,11 @@ export default function EditPriceList(props) {
         } else {
             setPriceDate(null)
         }
+    }
+
+    const handleChangeCustomer = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelCustomer(id);
     }
 
     function successCheckData(data, propsdata) {
@@ -245,7 +270,8 @@ export default function EditPriceList(props) {
                     listCategoryProduct: ListCategoryProduct,
                     pricedate: PriceDate,
                     pricethrudate: PriceThruDate,
-                    notes:InputNotes
+                    notes:InputNotes,
+                    customer:SelCustomer
                 }
             }
             validate={values => {
@@ -307,6 +333,26 @@ export default function EditPriceList(props) {
 
                                         />
                                         <div className="invalid-feedback-custom">{ErrPriceThruDate}</div>
+
+                                        <label className="mt-3 form-label required" htmlFor="customer">
+                                            {i18n.t('Customer')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <DropdownList
+                                            name="customer"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeCustomer(val)}
+                                            onBlur={val => setFieldTouched("customer", val?.value ? val.value : '')}
+                                            data={ListCustomer}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            // style={{width: '25%'}}
+                                            disabled={true}
+                                            value={values.customer}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrSelCustomer}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="notes">
                                             {i18n.t('Notes')}

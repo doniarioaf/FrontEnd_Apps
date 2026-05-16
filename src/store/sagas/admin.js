@@ -14,7 +14,10 @@ import {baseBranchURL,baseCompanyURL,baseRoleURL,baseUserAppsURL,baseUserMobileU
     baseReportURL,
     basePelunasanHutangURL,
     baseCargoURL,
-    basePelunasanPiutangURL} from '../../containers/shared/apiURL';
+    basePelunasanPiutangURL,
+    baseKomisiURL,basePinjamanURL,
+    baseCancelPackingListURL,
+    baseJournalURL} from '../../containers/shared/apiURL';
 import {handleMessageError} from '../../containers/shared/globalFunc';
 
 export function* getDataBranchSaga(action) {
@@ -687,12 +690,26 @@ export function* getStockAdjusmentSaga(action) {
     let payload = action.param.payload?action.param.payload:'';
     let type = action.param.type?action.param.type:'GET';
     let propsdata = action.param.propsdata?action.param.propsdata:'';
+    let typefile = action.param.typefile?action.param.typefile:'';
     try {
         if(type == 'GET'){
             const response = yield axios.get(baseStockAdjusmentURL(url)).then(response => response.data);
             action.successHandler(response,propsdata);
         }else if(type == 'POST'){
             const response = yield axios.post(baseStockAdjusmentURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'GETFILE'){
+            let resType = '';
+            if(typefile  === 'application/vnd.ms-powerpoint' || typefile === 'application/pdf' || typefile === 'application/vnd.ms-excel' || typefile === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+                resType = 'arraybuffer';
+            }
+            const response = yield axios.get(baseStockAdjusmentURL(url), {
+                //arraybuffer
+                responseType: resType,
+                headers: {
+                    Accept: typefile,
+                },
+            }).then(response => response.data);
             action.successHandler(response,propsdata);
         }
         
@@ -983,4 +1000,166 @@ export function* submitPelunasanPiutangSaga(action) {
     }catch (error) {
         action.errorHandler(handleMessageError(error));
     }
+}
+
+export function* getKomisiDataSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'GET';
+    let propsdata = action.param.propsdata?action.param.propsdata:'';
+    try {
+        if(type == 'GET'){
+            const response = yield axios.get(baseKomisiURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'POST'){
+            const response = yield axios.post(baseKomisiURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error),propsdata);
+    }
+}
+
+export function* submitKomisiSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:[];
+    try {
+        if(type == 'ADD'){
+            const response = yield axios.post(baseKomisiURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'EDIT'){
+            const response = yield axios.put(baseKomisiURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'DELETE'){
+            const response = yield axios.delete(baseKomisiURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error),propsdata);
+    }
+}
+
+    export function* getPinjamanDataSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'GET';
+    let propsdata = action.param.propsdata?action.param.propsdata:'';
+    try {
+        if(type == 'GET'){
+            const response = yield axios.get(basePinjamanURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'POST'){
+            const response = yield axios.post(basePinjamanURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error),propsdata);
+    }
+}
+
+export function* submitPinjamanSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:[];
+    try {
+        if(type == 'ADD'){
+            const response = yield axios.post(basePinjamanURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'EDIT'){
+            const response = yield axios.put(basePinjamanURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'DELETE'){
+            const response = yield axios.delete(basePinjamanURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+
+}
+
+export function* getCancelPackingListDataSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'GET';
+    let typefile = action.param.typefile?action.param.typefile:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:'';
+    try {
+        if(type == 'GET'){
+            const response = yield axios.get(baseCancelPackingListURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'POST'){
+            const response = yield axios.post(baseCancelPackingListURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'GETFILE'){
+            let resType = '';
+            if(typefile  === 'application/vnd.ms-powerpoint' || typefile === 'application/pdf' || typefile === 'application/vnd.ms-excel' || typefile === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+                resType = 'arraybuffer'
+            }
+            const response = yield axios.get(baseCancelPackingListURL(url), {
+                //arraybuffer
+                responseType: resType,
+                headers: {
+                    Accept: typefile,
+                },
+            }).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error),propsdata);
+    }
+}
+
+export function* submitCancelPackingListSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:[];
+    try {
+        if(type == 'ADD'){
+            const response = yield axios.post(baseCancelPackingListURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'EDIT'){
+            const response = yield axios.put(baseCancelPackingListURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'DELETE'){
+            const response = yield axios.delete(baseCancelPackingListURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+
+}
+
+export function* submitJournalSaga(action) {
+    let url = action.param.url?action.param.url:'';
+    let payload = action.param.payload?action.param.payload:'';
+    let type = action.param.type?action.param.type:'';
+    let propsdata = action.param.propsdata?action.param.propsdata:[];
+    try {
+        if(type == 'ADD' || type == 'INTEGRASI'){
+            const response = yield axios.post(baseJournalURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'EDIT'){
+            const response = yield axios.put(baseJournalURL(url),payload).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }else if(type == 'DELETE'){
+            const response = yield axios.delete(baseJournalURL(url)).then(response => response.data);
+            action.successHandler(response,propsdata);
+        }
+        
+    }catch (error) {
+        action.errorHandler(handleMessageError(error));
+    }
+
 }

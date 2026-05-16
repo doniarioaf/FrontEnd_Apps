@@ -228,7 +228,14 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Vendor')}</span>
                             <strong className="col-md-7">
-                                {value.vendorName?value.vendorName:''}
+                                {value.vendorName?value.vendorName+' ('+value.vendorAlias+')':''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Status')}</span>
+                            <strong className="col-md-7">
+                                {value.isactive?(value.isactive?'Aktif':'Non Aktif'):''}
                             </strong>
                             </div>
 
@@ -243,6 +250,14 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('Amount')}</span>
                                 <strong className="col-md-7">
                                 {value.amount ?numToMoney(value.amount):''}
+                                </strong>
+                            </div>
+
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Catatan')}</span>
+                                <strong className="col-md-7">
+                                {value.catatan}
                                 </strong>
                             </div>
 

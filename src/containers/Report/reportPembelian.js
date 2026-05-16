@@ -50,7 +50,8 @@ export default function ReportPembelian(props) {
                 ...obj,
                 {
                     'value': el.id,
-                    'label': el.nama + ' (' + el.alias + ')',
+                    // 'label': el.nama + ' (' + el.alias + ')',
+                    'label': el.alias,
                     'data': el
                 }
             ], []);

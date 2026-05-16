@@ -151,8 +151,6 @@ const PurchaseReceiveIndex = () => {
                     </tbody>
                 </table>
 
-
-
                 <Card>
                     <CardBody>
                         <Container fluid className="center-parent">
@@ -163,8 +161,9 @@ const PurchaseReceiveIndex = () => {
                                     totalCounts={rows.length}
                                     loading={loading}
                                     columnextension={tableColumnExtensions}
-                                    permissionadd={!isGetPermissions(addPurchaseReceive_Permission, 'TRANSACTION')}
-                                    onclickadd={onClickAdd}
+                                    // kenapa add manual dihapus, karena perhitungan stock diubah ke Penerimaan Barang / DraftPurchaserReceive, sehingga ditakutkan tambah manual stok tidak terhitung
+                                    // permissionadd={!isGetPermissions(addPurchaseReceive_Permission, 'TRANSACTION')}
+                                    // onclickadd={onClickAdd}
                                     permissionview={!isGetPermissions(MenuPurchaseReceive, 'READ')}
                                     onclickview={onClickView}
                                     listfilterdisabled={['transdate']}

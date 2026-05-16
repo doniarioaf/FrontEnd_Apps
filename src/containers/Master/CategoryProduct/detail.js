@@ -131,7 +131,7 @@ import React, {useState,
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: '' + error
+            text: error.msg
         })
     }
 
@@ -182,6 +182,13 @@ import React, {useState,
                     (
                         <section>
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('label_FOR_CATEGORY')}</span>
+                            <strong className="col-md-7">
+                                {value.forcategory?value.forcategory:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_NAME')}</span>
                             <strong className="col-md-7">
                                 {value.nama?value.nama:''}
@@ -213,6 +220,13 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('Jumlah Items per koli')}</span>
                             <strong className="col-md-7">
                                 {value.jumlahitemsperkoli?value.jumlahitemsperkoli:''}
+                            </strong>
+                            </div>
+
+                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Sequence')}</span>
+                            <strong className="col-md-7">
+                                {value.sequence?value.sequence:''}
                             </strong>
                             </div>
 

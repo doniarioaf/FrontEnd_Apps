@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { formatRupiah, isValidNumber, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addStockAdjusment_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -21,6 +21,21 @@ import '../../CSS/table.css';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
+
+export const LisTime = [
+    {'value':'00:00-02:00','label':'00:00-02:00'},
+    {'value':'02:00-04:00','label':'02:00-04:00'},
+    {'value':'04:00-06:00','label':'04:00-06:00'},
+    {'value':'06:00-08:00','label':'06:00-08:00'},
+    {'value':'08:00-10:00','label':'08:00-10:00'},
+    {'value':'10:00-12:00','label':'10:00-12:00'},
+    {'value':'12:00-14:00','label':'12:00-14:00'},
+    {'value':'14:00-16:00','label':'14:00-16:00'},
+    {'value':'16:00-18:00','label':'16:00-18:00'},
+    {'value':'18:00-20:00','label':'18:00-20:00'},
+    {'value':'20:00-22:00','label':'20:00-22:00'},
+    {'value':'22:00-24:00','label':'22:00-24:00'},
+    ];
 
 export default function AddStockAdjusment(props) {
     reloadToHomeNotAuthorize(addStockAdjusment_Permission, 'TRANSACTION');
@@ -48,20 +63,7 @@ export default function AddStockAdjusment(props) {
     const [ListProduct, setListProduct] = useState([]);
     const [ListCategoryProduct, setListCategoryProduct] = useState([]);
 
-    const LisTime = [
-        {'value':'00:00-02:00','label':'00:00-02:00'},
-        {'value':'02:00-04:00','label':'02:00-04:00'},
-        {'value':'04:00-06:00','label':'04:00-06:00'},
-        {'value':'06:00-08:00','label':'06:00-08:00'},
-        {'value':'08:00-10:00','label':'08:00-10:00'},
-        {'value':'10:00-12:00','label':'10:00-12:00'},
-        {'value':'12:00-14:00','label':'12:00-14:00'},
-        {'value':'14:00-16:00','label':'14:00-16:00'},
-        {'value':'16:00-18:00','label':'16:00-18:00'},
-        {'value':'18:00-20:00','label':'18:00-20:00'},
-        {'value':'20:00-22:00','label':'20:00-22:00'},
-        {'value':'22:00-24:00','label':'22:00-24:00'},
-        ];
+    
 
 
     useEffect(() => {
@@ -135,18 +137,18 @@ export default function AddStockAdjusment(props) {
         setErrItems('')
 
         if (ListItems.length > 0) {
-            for (let i = 0; i < ListItems.length; i++) {
-                let det = ListItems[i];
-                if(det.idproduct !== 'TOTAL'){
-                    if (parseInt(det.qty) <= 0) {
-                        setErrItems(i18n.t('Qty Harus diatas 0'));
-                        flag = false;
-                        break;
-                    }
+            // for (let i = 0; i < ListItems.length; i++) {
+            //     let det = ListItems[i];
+            //     if(det.idproduct !== 'TOTAL'){
+            //         if (parseInt(det.qty) <= 0) {
+            //             setErrItems(i18n.t('Qty Harus diatas 0'));
+            //             flag = false;
+            //             break;
+            //         }
                     
-                }
+            //     }
                 
-            }
+            // }
         } else {
             setErrItems(i18n.t('label_REQUIRED'));
             flag = false;
@@ -202,8 +204,8 @@ export default function AddStockAdjusment(props) {
                         'idcategoryproduct': el.idcategoryproduct,
                         'qty': el.qty,
                         'stocktime':el.stocktime,
-                        'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
-                        'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
+                        'price': el.itemsprice !== '' ? removeFormatRupiah(el.itemsprice) : '0',
+                        'subtotalprice': el.subtotalprice !== '' ? removeFormatRupiah(el.subtotalprice) : '0',
                         'type': SelType
                     }
                 ], []);
@@ -291,31 +293,30 @@ export default function AddStockAdjusment(props) {
             setPriceDate(null)
         }
     }
-
-
     const handleInputChangeItems = (e, index) => {
         const { name, value } = e.target;
         let flag = true;
         let subtotal = 0;
         if (name == 'qty' || name == 'itemsprice') {
             let valPriceTemp = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
-            if (isNaN(valPriceTemp) && valPriceTemp !== '' ) {
-                flag = false;
-            } 
+            flag = isValidNumber(valPriceTemp);
+            // if (isNaN(valPriceTemp) && valPriceTemp !== '' ) {
+            //     flag = false;
+            // } 
             
             if(flag) {
                 if (name == 'qty') {
                     const listTemp = [...ListItems];
-                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
+                    let pricetemp = listTemp[index]['itemsprice'] !== '' ? removeFormatRupiah(listTemp[index]['itemsprice']): '0';
                     
                     let qtyTemp = parseInt(valPriceTemp)
-                    subtotal = parseInt(qtyTemp) * parseFloat(pricetemp);
+                    subtotal = parseInt(Math.abs(qtyTemp)) * parseFloat(pricetemp);
                 } else if (name == 'itemsprice') {
                     let listTemp = [...ListItems];
                     let qtytemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
                     let totalQty = parseInt(qtytemp) ;
 
-                    subtotal = parseInt(valPriceTemp) * parseFloat(totalQty);
+                    subtotal = parseInt(valPriceTemp) * parseFloat(Math.abs(totalQty));
                 }
                 //
             }
@@ -325,7 +326,7 @@ export default function AddStockAdjusment(props) {
             const list = [...ListItems];
             let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
             list[index][name] = valPrice;
-            list[index]['subtotalprice'] = subtotal;
+            list[index]['subtotalprice'] = formatRupiah(new String(subtotal).replaceAll('.',','),2);
 
             let objCalc = calculateTotal(list);
             let totalPriceItem = objCalc.totalPriceItem;
@@ -360,11 +361,33 @@ export default function AddStockAdjusment(props) {
     };
     function successHandlerGetItem(data, propsdata) {
         let det = data.data;
+        let price = 0;
+        if(det.length > 0){
+            let totalQty = 0;
+            let totalSubtotalPrice = 0;
+            for(let i=0; i < det.length; i++){
+                let val = det[i];
+                let qty = val.qty?Math.abs(val.qty):0;
+                let priceitem = val.price?val.price:0;
+                let subtotalPrice = parseFloat(qty) * parseFloat(priceitem);
+
+                totalQty = totalQty + parseInt(qty);
+                totalSubtotalPrice = totalSubtotalPrice + subtotalPrice;
+            }
+
+            price = totalSubtotalPrice / totalQty;
+            price = formatRupiah(new String(price).replaceAll('.',','),2);
+        }
+        price = parseFloat(removeFormatRupiah(price));
+
         let index = propsdata.index;
         let list = propsdata.list;
         let qty = list[index]['qty'];
-        let price = det.price?det.price:0;
-        let subprice = qty * price;
+        // let price = det.price?det.price:0;
+        let subprice = Math.abs(qty) * price;
+
+        price = formatRupiah(new String(price).replaceAll('.',','),2);
+        subprice = formatRupiah(new String(subprice).replaceAll('.',','),2);
         list[index]['itemsprice'] = price;
         list[index]['subtotalprice'] = subprice;
 
@@ -425,11 +448,12 @@ export default function AddStockAdjusment(props) {
         for(let i=0; i < list.length; i++){
             let det = list[i];
             if(det.idproduct !== 'TOTAL'){
-                totalSubPriceItem = totalSubPriceItem + (det.subtotalprice?parseFloat(new String(det.subtotalprice).replaceAll('.','')):0);
-                totalPriceItem = totalPriceItem + (det.itemsprice?parseFloat(new String(det.itemsprice).replaceAll('.','')):0);
+                totalSubPriceItem = totalSubPriceItem + (det.subtotalprice?parseFloat(removeFormatRupiah(det.subtotalprice)):0);
+                totalPriceItem = totalPriceItem + (det.itemsprice?parseFloat(removeFormatRupiah(det.itemsprice)):0);
             }
-            
         }
+        totalSubPriceItem = formatRupiah(new String(totalSubPriceItem).replaceAll('.',','),2);
+        totalPriceItem = formatRupiah(new String(totalPriceItem).replaceAll('.',','),2);
         return {'totalSubPriceItem':totalSubPriceItem,'totalPriceItem':totalPriceItem}
     }
 
@@ -687,15 +711,20 @@ export default function AddStockAdjusment(props) {
                                                                     </td>
 
                                                                 <td style={{ width: '15%' }}>
+                                                                {
+                                                                        x.idproduct !== 'TOTAL'?
                                                                     <Input
                                                                         name="itemsprice"
                                                                         type="text"
                                                                         id="itemsprice"
-                                                                        onChange={val => handleInputChangeItems(val, i)}
+                                                                        // onChange={val => handleInputChangeItems(val, i)}
                                                                         // onBlur={handleBlur}
-                                                                        value={x.itemsprice !== '' ? numToMoney(parseFloat(x.itemsprice)) : ''}
+                                                                        // value={x.itemsprice !== '' ? numToMoney(parseFloat(x.itemsprice)) : ''}
+                                                                        value={x.itemsprice !== '' ? x.itemsprice : ''}
                                                                         disabled={true}
-                                                                    /></td>
+                                                                    />
+                                                                :''}
+                                                                    </td>
 
                                                                 <td style={{ width: '15%' }}>
                                                                     <Input
@@ -705,7 +734,8 @@ export default function AddStockAdjusment(props) {
                                                                         // onChange={val => handleInputChangePrice(val,i)}
                                                                         // onBlur={handleBlur}
                                                                         // value={x.subtotalprice}
-                                                                        value={x.subtotalprice !== '' ? numToMoney(parseFloat(x.subtotalprice)) : ''}
+                                                                        // value={x.subtotalprice !== '' ? numToMoney(parseFloat(x.subtotalprice)) : ''}
+                                                                        value={x.subtotalprice !== '' ? x.subtotalprice : ''}
                                                                         disabled={true}
                                                                     /></td>
 

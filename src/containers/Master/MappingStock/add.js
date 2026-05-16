@@ -26,6 +26,7 @@ export default function AddMappingStock(props) {
     const [loading, setLoading] = useState(false);
 
     const [ListCategoryProduct, setListCategoryProduct] = useState([]);
+    const [ListCategoryProductCustomer, setListCategoryProductCustomer] = useState([]);
 
     const [SelCategoryProduct, setSelCategoryProduct] = useState('');
     const [ErrSelCategoryProduct, setErrSelCategoryProduct] = useState('');
@@ -39,7 +40,17 @@ export default function AddMappingStock(props) {
 
     function successHandler(data, propsdata) {
         if (data.data) {
-            setListCategoryProduct(data.data.categoryProductOpt.reduce((obj, el) => (
+            let listfilteroutputVendor = data.data.categoryProductOpt.filter(output => output.forcategory == 'VENDOR');
+            let listfilteroutputCustomer = data.data.categoryProductOpt.filter(output => output.forcategory == 'CUSTOMER');
+            
+            setListCategoryProduct(listfilteroutputVendor.reduce((obj, el) => (
+                [...obj, {
+                    value: el.id,
+                    label: el.nama + ' (' + el.size + ')'
+                }]
+            ), []));
+
+            setListCategoryProductCustomer(listfilteroutputCustomer.reduce((obj, el) => (
                 [...obj, {
                     value: el.id,
                     label: el.nama + ' (' + el.size + ')'
@@ -168,7 +179,7 @@ export default function AddMappingStock(props) {
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
                                         <label className="mt-3 form-label required" htmlFor="CategoryProduct">
-                                            {i18n.t('Category Product')}
+                                            {i18n.t('Category Product Vendor')}
                                         </label>
                                         <span style={{ color: 'red' }}>*</span>
 
@@ -187,7 +198,7 @@ export default function AddMappingStock(props) {
                                         <div className="invalid-feedback-custom">{ErrSelCategoryProduct}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="CategoryProductMapping">
-                                            {i18n.t('Category Product (Mapping) ')}
+                                            {i18n.t('Category Product Customer ')}
                                         </label>
                                         <span style={{ color: 'red' }}>*</span>
 
@@ -198,7 +209,7 @@ export default function AddMappingStock(props) {
 
                                             onChange={val => handleChangeCategoryProductMapping(val)}
                                             onBlur={val => setFieldTouched("CategoryProductMapping", val?.value ? val.value : '')}
-                                            data={ListCategoryProduct}
+                                            data={ListCategoryProductCustomer}
                                             textField={'label'}
                                             valueField={'value'}
                                             value={values.CategoryProductMapping}

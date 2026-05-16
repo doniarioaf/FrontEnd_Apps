@@ -9,7 +9,7 @@ import Swal                         from 'sweetalert2';
 import * as actions                 from '../../../store/actions';
 import * as pathmenu           from '../../shared/pathMenu';
 import { reloadToHomeNotAuthorize,isGetPermissions } from '../../shared/globalFunc';
-import { MenuCustomer,addParameterClient_Permission } from '../../shared/permissionMenu';
+import { MenuCustomer,addCustomer_Permission } from '../../shared/permissionMenu';
 import {useHistory}                 from 'react-router-dom';
 
 const CustomerIndex = () => {
@@ -78,7 +78,7 @@ const CustomerIndex = () => {
                 totalCounts={rows.length}
                 loading={loading}
                 columnextension={tableColumnExtensions}
-                permissionadd={!isGetPermissions(addParameterClient_Permission,'TRANSACTION')}
+                permissionadd={!isGetPermissions(addCustomer_Permission,'TRANSACTION')}
                 onclickadd={onClickAdd}
                 permissionview={!isGetPermissions(MenuCustomer,'READ')}
                 onclickview={onClickView}

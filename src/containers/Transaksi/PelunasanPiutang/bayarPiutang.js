@@ -75,10 +75,10 @@ export default function AddStockAdjusment(props) {
                     {
                         'idinvoice':el.id,
                         'nodocument': el.nodocument,
-                        'amount': el.amount?formatRupiah((el.amount?new String(el.amount).replaceAll('.',','):''),2):0,
+                        'amount': el.amount?formatRupiah((el.amount?new String(el.amount).replaceAll('.',','):0),2):0,
                         // 'amountrp': amountRp,
                         'amountrp': formatRupiah(new String(amountRp).replaceAll('.',','),2),
-                        'outstanding': el.outstanding?formatRupiah((el.outstanding?new String(el.outstanding).replaceAll('.',','):''),2):0,
+                        'outstanding': el.outstanding?formatRupiah((el.outstanding?new String(el.outstanding).replaceAll('.',','):0),2):0,
                         'biayabebanudangmati': 0,
                         'biayabank': 0,
                         'pembayaran': 0,
@@ -87,21 +87,22 @@ export default function AddStockAdjusment(props) {
                     }
                 );
             }
-            list.push(
-                {
-                    'idinvoice':0,
-                    'nodocument': 'TOTAL',
-                    'amount': formatRupiah((new String(totalAmount).replaceAll('.',',')),2),
-                    'amountrp': formatRupiah((new String(totalAmountRp).replaceAll('.',',')),2),
-                    'outstanding': formatRupiah((new String(totalOutstanding).replaceAll('.',',')),2),
-                    'biayabebanudangmati': 0,
-                    'biayabank': 0,
-                    'pembayaran': 0,
-                    'pembayaranrp': 0,
-                    'metodepembayaran': '',
-                }
-            );
-            
+            if(list.length > 0){
+                list.push(
+                    {
+                        'idinvoice':0,
+                        'nodocument': 'TOTAL',
+                        'amount': formatRupiah((new String(totalAmount).replaceAll('.',',')),2),
+                        'amountrp': formatRupiah((new String(totalAmountRp).replaceAll('.',',')),2),
+                        'outstanding': formatRupiah((new String(totalOutstanding).replaceAll('.',',')),2),
+                        'biayabebanudangmati': 0,
+                        'biayabank': 0,
+                        'pembayaran': 0,
+                        'pembayaranrp': 0,
+                        'metodepembayaran': '',
+                    }
+                );
+            }
         }
         setListItems(list);
 
@@ -114,7 +115,8 @@ export default function AddStockAdjusment(props) {
         setErrInputKurs('');
         setErrItems('')
 
-        if (ListItems.length > 0) {
+        let listitem = ListItems.filter(output => output.nodocument !== 'TOTAL');
+        if (listitem.length > 0) {
             for (let i = 0; i < ListItems.length; i++) {
                 let det = ListItems[i];
                 if(det.nodocument == 'TOTAL'){
@@ -123,13 +125,16 @@ export default function AddStockAdjusment(props) {
                 let biayabebanudangmati = parseFloat(removeFormatRupiah(det.biayabebanudangmati));
                 let biayabank = parseFloat(removeFormatRupiah(det.biayabank));
                 let pembayaran = parseFloat(removeFormatRupiah(det.pembayaran));
-                let outstanding = parseFloat(det.outstanding);
+                let outstanding = parseFloat(removeFormatRupiah(det.outstanding?det.outstanding:0));
                 let totalPembayaran = biayabebanudangmati + biayabank + pembayaran;
                 if (parseFloat(removeFormatRupiah(det.pembayaranrp)) <= 0) {
                     setErrItems(i18n.t('Pembayaran Harus diatas 0'));
                     flag = false;
                     break;
                 }
+                console.log('det.nodocument ',det.nodocument);
+                console.log('totalPembayaran ',totalPembayaran);
+                console.log('outstanding ',outstanding);
                 if (totalPembayaran > outstanding) {
                     setErrItems(i18n.t('Pembayaran '+det.nodocument+' Lebih besar dari nilai outstanding'));
                     flag = false;
@@ -179,8 +184,9 @@ export default function AddStockAdjusment(props) {
             obj.date = TransDate.getTime();
             obj.kurs = removeFormatRupiah(values.kurs) !== '' ? removeFormatRupiah(values.kurs) : '0';
             let items = [];
-            if (ListItems.length > 0) {
-                let listitem = ListItems.filter(output => output.nodocument !== 'TOTAL');
+            let listitem = ListItems.filter(output => output.nodocument !== 'TOTAL');
+            if (listitem.length > 0) {
+                
                 items = listitem.reduce((obj, el) => [
                     ...obj,
                     {
@@ -349,6 +355,14 @@ export default function AddStockAdjusment(props) {
                 valPrice = removeFormatRupiah(valPrice) !== ''?removeFormatRupiah(valPrice):0
                 list[i]['pembayaranrp'] = formatRupiah(new String(parseFloat(valPrice) * parseFloat(valKurs)).replaceAll('.',','),2);
             }
+            
+            let indexTotal = list.findIndex(obj => obj.nodocument == 'TOTAL');
+            let calc = calculateTotal(list);
+            list[indexTotal]['biayabebanudangmati'] = calc.totalbiayaudangmati;
+            list[indexTotal]['biayabank'] = calc.totalbiayabank;
+            list[indexTotal]['pembayaran'] = calc.totalpembayaran;
+            list[indexTotal]['pembayaranrp'] = calc.totalpembayaranrp;
+
             setListItems(list);
         }
 

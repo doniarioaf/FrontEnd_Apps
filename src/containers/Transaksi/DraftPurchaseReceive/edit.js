@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+import { desimal000, formatRupiah, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { editDraftPurchaseReceive_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -124,9 +124,9 @@ export default function EditDraftPurchaseReceive(props) {
         setInputFlightNo(theData.flightno?theData.flightno:'');
         setInputNotes1(theData.notes1?theData.notes1:'');
         setInputNotes2(theData.notes2?theData.notes2:'');
-        setInputGrandTotalEkor(theData.totalekor);
-        setInputGrandTotalKilo(theData.totalkg);
-        setInputPersentase(theData.persentase);
+        setInputGrandTotalEkor(theData.totalekor?formatRupiah(theData.totalekor,2):0);
+        setInputGrandTotalKilo(theData.totalkg?desimal000(formatRupiah(new String(theData.totalkg).replaceAll('.',','),3),{isShow000:false}):0);
+        setInputPersentase(theData.persentase?formatRupiah(theData.persentase,2):0);
         setInputBox(theData.box);
 
         dispatch(actions.getDraftPurchaseReceiveData({ url: '/searchvendor?idvendor=' + idvendor,propsdata:propsdetail }, successHandlerVendor, errorHandler));
@@ -191,9 +191,9 @@ export default function EditDraftPurchaseReceive(props) {
             obj.arriveltime = values.arrivalhours+':'+values.arrivalminute;
             obj.receivetime = values.receivehours+':'+values.receiveminute;
             obj.smu = values.smu;
-            obj.totalekor = InputGrandTotalEkor !== ''?new String(InputGrandTotalEkor).replaceAll(".",""):0;
-            obj.totalkg = InputGrandTotalKilo !== ''?new String(InputGrandTotalKilo).replaceAll(".",""):0;
-            obj.persentase = InputPersentase;
+            obj.totalekor = InputGrandTotalEkor !== ''?removeFormatRupiah(InputGrandTotalEkor):0;
+            obj.totalkg = InputGrandTotalKilo !== ''?removeFormatRupiah(InputGrandTotalKilo):0;
+            obj.persentase = removeFormatRupiah(InputPersentase);
             let items = [];
             let no = 1;
             if(ListItems.length > 0){
@@ -214,8 +214,8 @@ export default function EditDraftPurchaseReceive(props) {
                         let objItem = new Object();
                         objItem.idproduct = det.idproduct;
                         objItem.idcategoryproduct = det.idcategoryproduct;
-                        objItem.ekor = jumlahEkor;
-                        objItem.kilo = jumlahKg;
+                        objItem.ekor = removeFormatRupiah(jumlahEkor);
+                        objItem.kilo = removeFormatRupiah(jumlahKg);
                         objItem.boxsequence = no;
                         objItem.type = 'H';
                         items.push(objItem);
@@ -232,7 +232,7 @@ export default function EditDraftPurchaseReceive(props) {
                         let objItem = new Object();
                         objItem.idproduct = det.idproduct;
                         objItem.idcategoryproduct = det.idcategoryproduct;
-                        objItem.ekor = det.jumlah && det.jumlah !== ''?det.jumlah:0;
+                        objItem.ekor = det.jumlah && det.jumlah !== ''?removeFormatRupiah(det.jumlah):0;
                         objItem.kilo = 0;
                         objItem.boxsequence = no;
                         objItem.type = 'M';
@@ -306,6 +306,7 @@ export default function EditDraftPurchaseReceive(props) {
         if (ListProduct != null && ListProduct.length > 1) {
             idproduct = ListProduct[0].value;
         }
+        
         if(idvendor == currIdVendor){
             let detailData = detail;
             let listItems = detailData.items?detailData.items:[];
@@ -317,6 +318,10 @@ export default function EditDraftPurchaseReceive(props) {
             let arrDistinctCP = [];
             for(let i =0; i < listfilteroutputHidup.length; i++){
                 let el = listfilteroutputHidup[i];
+                if(idproduct == ''){
+                    idproduct = el.idproduct;
+                }
+                
                 let idcategoryproduct = el.idcategoryproduct;
                 let boxsequence = el.boxsequence;
                 if(listNo.indexOf(boxsequence) == -1){
@@ -328,8 +333,8 @@ export default function EditDraftPurchaseReceive(props) {
                     let totalkg = 0;
                     for(let x =0; x < listfilteroutput.length; x++){
                         let det = listfilteroutput[x];
-                        let jumlahekor = det.ekor?parseInt(det.ekor):0;
-                        let jumlahkilo = det.kilo?parseInt(det.kilo):0;
+                        let jumlahekor = det.ekor?parseFloat(det.ekor):0;
+                        let jumlahkilo = det.kilo?parseFloat(det.kilo):0;
     
                         totalekor += jumlahekor;
                         totalkg += jumlahkilo;
@@ -339,121 +344,14 @@ export default function EditDraftPurchaseReceive(props) {
                             'idcategoryproduct': el.idcategoryproduct,
                             'size': el.sizecategoryproduct,
                             'weight': el.weightfromingramcategoryproduct+'-'+el.weighttoingramcategoryproduct+' Gram',
-                            'listtotal':[{label:'Total Ekor',code:'totalekor',total:totalekor},{label:'Total Kg',code:'totalkg',total:totalkg}]
+                            'listtotal':[{label:'Total Ekor',code:'totalekor',total:formatRupiah(totalekor,2)},{label:'Total Kg',code:'totalkg',total:desimal000(formatRupiah(new String(totalkg).replaceAll('.',','),3),{isShow000:false})}]
                         }
                     );
                     arrDistinctCP.push(idcategoryproduct);
                 }
             }
 
-            
-
-            let listitemshidup = [];
-            for(let i =0; i < listNo.length; i++){
-                let boxseq = listNo[i];
-                let temp = [];
-                let listfilteroutput = listfilteroutputHidup.filter(output => output.boxsequence == boxseq);
-                for(let x =0; x < listfilteroutput.length; x++){
-                    let det = listfilteroutput[x];
-                    temp.push(
-                        {
-                            'idproduct': det.idproduct,
-                            'idcategoryproduct': det.idcategoryproduct,
-                            'jumlah':det.ekor?det.ekor:0,
-                            'jumlahtype':'EKOR'
-                        }
-                    );
-        
-                    temp.push(
-                        {
-                            'idproduct': det.idproduct,
-                            'idcategoryproduct': det.idcategoryproduct,
-                            'jumlah':det.kilo?det.kilo:0,
-                            'jumlahtype':'KG'
-                        }
-                    );
-                }
-                for(let i =0; i < data.data.categoryproductOpt.length; i++){
-                    let el = data.data.categoryproductOpt[i];
-                    let idcategoryproduct = el.id;
-                    let listfilter = listfilteroutput.filter(output => output.idcategoryproduct == idcategoryproduct);
-                    if(arrDistinctCP.indexOf(idcategoryproduct) == -1 && listfilter.length == 0){
-                        temp.push(
-                            {
-                                'idproduct': idproduct,
-                                'idcategoryproduct': idcategoryproduct,
-                                'jumlah':0,
-                                'jumlahtype':'EKOR'
-                            }
-                        );
-            
-                        temp.push(
-                            {
-                                'idproduct': idproduct,
-                                'idcategoryproduct': idcategoryproduct,
-                                'jumlah':0,
-                                'jumlahtype':'KG'
-                            }
-                        );
-                    }
-                }
-                listitemshidup.push(
-                    {
-                        'no':boxseq,
-                        'items':temp
-                    }
-                )
-            }
-            setListItems(listitemshidup);
-
-            let listNoMati = [];
-            let listitemsMati = [];
-            for(let i =0; i < listfilteroutputMati.length; i++){
-                let el = listfilteroutputMati[i];
-                let boxsequence = el.boxsequence;
-                if(listNoMati.indexOf(boxsequence) == -1){
-                    listNoMati.push(boxsequence);
-                }
-            }
-            for(let i =0; i < listNoMati.length; i++){
-                let boxseq = listNoMati[i];
-                let temp = [];
-                let listfilteroutput = listfilteroutputMati.filter(output => output.boxsequence == boxseq);
-                for(let x =0; x < listfilteroutput.length; x++){
-                    let det = listfilteroutput[x];
-                    let idcategoryproduct = det.idcategoryproduct;
-                    temp.push(
-                        {
-                            'idproduct': det.idproduct,
-                            'idcategoryproduct': idcategoryproduct,
-                            'jumlah':det.ekor?det.ekor:0,
-                        }
-                    );
-
-                    for(let i =0; i < data.data.categoryproductOpt.length; i++){
-                        let el = data.data.categoryproductOpt[i];
-                        let idcategoryproduct = el.id;
-                        let listfilter = listfilteroutput.filter(output => output.idcategoryproduct == idcategoryproduct);
-                        if(arrDistinctCP.indexOf(idcategoryproduct) == -1 && listfilter.length == 0){
-                            temp.push(
-                                {
-                                    'idproduct': idproduct,
-                                    'idcategoryproduct': idcategoryproduct,
-                                    'jumlah':0,
-                                }
-                            );
-                        }
-                    }
-                }
-                listitemsMati.push(
-                    {
-                        'items':temp
-                    }
-                )
-            }
-            setListItemsMati(listitemsMati);
-
-            for(let i =0; i < data.data.categoryproductOpt.length; i++){
+             for(let i =0; i < data.data.categoryproductOpt.length; i++){
                 let el = data.data.categoryproductOpt[i];
                 let idcategoryproduct = el.id;
                 if(arrDistinctCP.indexOf(idcategoryproduct) == -1){
@@ -469,6 +367,160 @@ export default function EditDraftPurchaseReceive(props) {
 
             }
             setListCategory(listCP);
+            
+
+            let listitemshidup = [];
+            for(let i =0; i < listNo.length; i++){
+                let boxseq = listNo[i];
+                let temp = [];
+                
+                for(let icp =0; icp < listCP.length; icp++){
+                    let el = listCP[icp];
+                    let idcategoryproduct = el.idcategoryproduct;
+                    
+                    let listfilteroutput = listfilteroutputHidup.filter(output => output.boxsequence == boxseq && output.idcategoryproduct == idcategoryproduct);
+                    if(listfilteroutput.length > 0){
+                            for(let x =0; x < listfilteroutput.length; x++){
+                            let det = listfilteroutput[x];
+                            let kilo = det.kilo?desimal000(new String(det.kilo).replaceAll('.',','),{isShow000:false}):'';
+                            temp.push(
+                                {
+                                    'idproduct': det.idproduct,
+                                    'idcategoryproduct': det.idcategoryproduct,
+                                    'jumlah':det.ekor?det.ekor:'',
+                                    'jumlahtype':'EKOR'
+                                }
+                            );
+                
+                            temp.push(
+                                {
+                                    'idproduct': det.idproduct,
+                                    'idcategoryproduct': det.idcategoryproduct,
+                                    'jumlah':kilo,
+                                    'jumlahtype':'KG'
+                                }
+                            );
+                        }
+                    }else{
+                        temp.push(
+                            {
+                                'idproduct': idproduct,
+                                'idcategoryproduct': idcategoryproduct,
+                                'jumlah':'',
+                                'jumlahtype':'EKOR'
+                            }
+                        );
+            
+                        temp.push(
+                            {
+                                'idproduct': idproduct,
+                                'idcategoryproduct': idcategoryproduct,
+                                'jumlah':'',
+                                'jumlahtype':'KG'
+                            }
+                        );
+                    }
+            }
+                
+
+                // for(let i =0; i < data.data.categoryproductOpt.length; i++){
+                //     let el = data.data.categoryproductOpt[i];
+                //     let idcategoryproduct = el.id;
+                //     let listfilter = listfilteroutput.filter(output => output.idcategoryproduct == idcategoryproduct);
+                //     if(arrDistinctCP.indexOf(idcategoryproduct) == -1 && listfilter.length == 0){
+                //         temp.push(
+                //             {
+                //                 'idproduct': idproduct,
+                //                 'idcategoryproduct': idcategoryproduct,
+                //                 'jumlah':'',
+                //                 'jumlahtype':'EKOR'
+                //             }
+                //         );
+            
+                //         temp.push(
+                //             {
+                //                 'idproduct': idproduct,
+                //                 'idcategoryproduct': idcategoryproduct,
+                //                 'jumlah':'',
+                //                 'jumlahtype':'KG'
+                //             }
+                //         );
+                //     }
+                // }
+                listitemshidup.push(
+                    {
+                        'no':boxseq,
+                        'items':temp
+                    }
+                )
+            }
+            
+            setListItems(listitemshidup);
+
+            let listNoMati = [];
+            let listitemsMati = [];
+            for(let i =0; i < listfilteroutputMati.length; i++){
+                let el = listfilteroutputMati[i];
+                let boxsequence = el.boxsequence;
+                if(listNoMati.indexOf(boxsequence) == -1){
+                    listNoMati.push(boxsequence);
+                }
+            }
+            
+            for(let i =0; i < listNoMati.length; i++){
+                let boxseq = listNoMati[i];
+                let temp = [];
+                for(let icp =0; icp < listCP.length; icp++){
+                    let el = listCP[icp];
+                    let idcategoryproduct = el.idcategoryproduct;
+                let listfilteroutput = listfilteroutputMati.filter(output => output.boxsequence == boxseq && output.idcategoryproduct == idcategoryproduct);
+                if(listfilteroutput.length > 0){
+                for(let x =0; x < listfilteroutput.length; x++){
+                    let det = listfilteroutput[x];
+                    let idcategoryproduct = det.idcategoryproduct;
+                    temp.push(
+                        {
+                            'idproduct': det.idproduct,
+                            'idcategoryproduct': idcategoryproduct,
+                            'jumlah':det.ekor?det.ekor:'',
+                        }
+                    );
+
+                    // for(let i =0; i < data.data.categoryproductOpt.length; i++){
+                    //     let el = data.data.categoryproductOpt[i];
+                    //     let idcategoryproduct = el.id;
+                    //     let listfilter = listfilteroutput.filter(output => output.idcategoryproduct == idcategoryproduct);
+                    //     if(arrDistinctCP.indexOf(idcategoryproduct) == -1 && listfilter.length == 0){
+                    //         temp.push(
+                    //             {
+                    //                 'idproduct': idproduct,
+                    //                 'idcategoryproduct': idcategoryproduct,
+                    //                 'jumlah':'',
+                    //             }
+                    //         );
+                    //     }
+                    // }
+                }
+            }else{
+                temp.push(
+                        {
+                            'idproduct': idproduct,
+                            'idcategoryproduct': idcategoryproduct,
+                            'jumlah':'',
+                        }
+                    );
+                }
+                
+                }
+                listitemsMati.push(
+                    {
+                        'items':temp
+                    }
+                )
+            }
+            setListItemsMati(listitemsMati);
+
+           
 
         }else{
             const theDataCategoryProd = data.data.categoryproductOpt.reduce((obj, el) => [
@@ -498,7 +550,7 @@ export default function EditDraftPurchaseReceive(props) {
                 {
                     'idproduct': idproduct,
                     'idcategoryproduct': det.idcategoryproduct,
-                    'jumlah':0,
+                    'jumlah':'',
                 }
             );
         }
@@ -523,7 +575,7 @@ export default function EditDraftPurchaseReceive(props) {
                 {
                     'idproduct': idproduct,
                     'idcategoryproduct': det.idcategoryproduct,
-                    'jumlah':0,
+                    'jumlah':'',
                     'jumlahtype':'EKOR'
                 }
             );
@@ -532,7 +584,7 @@ export default function EditDraftPurchaseReceive(props) {
                 {
                     'idproduct': idproduct,
                     'idcategoryproduct': det.idcategoryproduct,
-                    'jumlah':0,
+                    'jumlah':'',
                     'jumlahtype':'KG'
                 }
             );
@@ -548,12 +600,28 @@ export default function EditDraftPurchaseReceive(props) {
     };
     const handleInputChangeItemsMati = (e, index, indexcol) => {
         const { name, value } = e.target;
-        const list = [...ListItemsMati];
-        const listitems = list[index]['items'];
-        listitems[indexcol][name] = value;
-        list[index]['items'] = listitems;
-        setListItemsMati(list);
-        calculatePersentase(InputGrandTotalEkor,list);
+
+        let flag = true;
+        let valTemp = '';
+        if(new String(value).includes(',')){
+            let splitComma = new String(value).split(','); 
+            let angka = splitComma[0];
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+            valTemp = removeFormatRupiah(angka)+'.'+desimal;
+        }else{
+            valTemp = removeFormatRupiah(value);
+        }
+        if(isNaN(valTemp) || new String(value).endsWith('.') || new String(value).includes(',')){
+            flag = false;
+        }
+        if(flag){
+            const list = [...ListItemsMati];
+            const listitems = list[index]['items'];
+            listitems[indexcol][name] = value;
+            list[index]['items'] = listitems;
+            setListItemsMati(list);
+            calculatePersentase(InputGrandTotalEkor,list);
+        }
     }
     const handleRemoveItemsMati = (index) => {
         const list = [...ListItemsMati];
@@ -563,83 +631,165 @@ export default function EditDraftPurchaseReceive(props) {
     }
     const handleInputChangeItems = (e, index, indexcol,idcategoryproduct) => {
         const { name, value } = e.target;
-        const list = [...ListItems];
-        const listitems = list[index]['items'];
-        listitems[indexcol]['jumlah'] = value;
-        list[index]['items'] = listitems;
-        setListItems(list);
 
-        let totalekor = 0;
-        let totalkg = 0;
-        for(let i=0; i < list.length; i++){
-            let det = list[i];
-            let listfilteroutput = det.items.filter(output => output.idcategoryproduct == idcategoryproduct && output.jumlahtype == name);
-            for(let y=0; y < listfilteroutput.length; y++){
-                let detItems = listfilteroutput[y];
-                let jumlah = detItems.jumlah && detItems.jumlah !== ''?parseInt(detItems.jumlah):0;
-                if(name == 'EKOR'){
-                    totalekor += jumlah;
-                }else if(name == 'KG'){
-                    totalkg += jumlah;
+        let flag = true;
+        let valTemp = '';
+        if(new String(value).includes(',')){
+            let valEndSubstring = 2;
+            if(name == 'KG'){
+                valEndSubstring = 3;
+            }
+            let splitComma = new String(value).split(','); 
+            let angka = splitComma[0];
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,valEndSubstring):'';
+            valTemp = removeFormatRupiah(angka)+'.'+desimal;
+        }else{
+            valTemp = removeFormatRupiah(value);
+        }
+        if(name == 'EKOR'){
+            if(isNaN(valTemp) || new String(value).endsWith('.') || new String(value).includes(',')){
+                flag = false;
+            }
+        }
+        if(name == 'KG'){
+            if(isNaN(valTemp) || new String(value).includes('.')){
+                flag = false;
+            }else if (isNaN(value) && value !== '') {
+                flag = false;
+                if(new String(value).split(',').length >= 3){
+                    flag = false;
+                }else{
+                    flag = true;
+                    let arr = new String(value).split(',');
+                    if(arr.length > 0){
+                        let valArr1 = arr[1];
+                        if(new String(valArr1).length > 3){
+                            flag = false;
+                        }
+                    }
                 }
             }
         }
-        
-        let listtotal = [...ListCategory];
-        let indexItems = listtotal.findIndex(obj => obj.idcategoryproduct == idcategoryproduct);
-        const listtotalitems = listtotal[indexItems]['listtotal'];
-        let indexTotalItems = -1;
-        if(name == 'EKOR'){
-            indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalekor');
-            listtotalitems[indexTotalItems]['total'] = totalekor;
-        }else if(name == 'KG'){
-            indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalkg');
-            listtotalitems[indexTotalItems]['total'] = totalkg;
+        if(flag){
+            const list = [...ListItems];
+            const listitems = list[index]['items'];
+            // listitems[indexcol]['jumlah'] = formatRupiah(value,2);
+            listitems[indexcol]['jumlah'] = value;
+            list[index]['items'] = listitems;
+            setListItems(list);
+
+            let totalekor = 0;
+            let totalkg = 0;
+            console.log('list ',list);
+            console.log('list[index] ',list[index]);
+            for(let i=0; i < list.length; i++){
+                let det = list[i];
+                let listfilteroutput = det.items.filter(output => output.idcategoryproduct == idcategoryproduct && output.jumlahtype == name);
+                console.log('listfilteroutput ',listfilteroutput);
+                for(let y=0; y < listfilteroutput.length; y++){
+                    let detItems = listfilteroutput[y];
+                    let jumlah = detItems.jumlah && detItems.jumlah !== ''?detItems.jumlah:0;
+                    let valTemp = '';
+                    if(new String(jumlah).includes(',')){
+                        let valEndSubstring = 2;
+                        if(name == 'KG'){
+                            valEndSubstring = 3;
+                        }
+                        let splitComma = new String(jumlah).split(','); 
+                        let angka = splitComma[0];
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,valEndSubstring):'';
+                        valTemp = removeFormatRupiah(angka)+'.'+desimal;
+                    }else{
+                        valTemp = removeFormatRupiah(jumlah);
+                    }
+                    if(name == 'EKOR'){
+                        totalekor += parseFloat(valTemp);
+                    }else if(name == 'KG'){
+                        totalkg += parseFloat(valTemp);
+                    }
+                }
+            }
+            console.log('totalekor ',totalekor+" | "+totalkg);
+            let listtotal = [...ListCategory];
+            let indexItems = listtotal.findIndex(obj => obj.idcategoryproduct == idcategoryproduct);
+            const listtotalitems = listtotal[indexItems]['listtotal'];
+            let indexTotalItems = -1;
+            if(name == 'EKOR'){
+                indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalekor');
+                listtotalitems[indexTotalItems]['total'] = formatRupiah(totalekor,2);
+            }else if(name == 'KG'){
+                indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalkg');
+                listtotalitems[indexTotalItems]['total'] = formatRupiah(new String(totalkg.toFixed(3)).replaceAll('.',','),3);
+            }
+            listtotal[indexItems]['listtotal'] = listtotalitems;
+            let obj = calculateGrandTotal(listtotal);
+            calculatePersentase(obj.grandTotalEkor,ListItemsMati);
+            setListCategory(listtotal);
         }
-        listtotal[indexItems]['listtotal'] = listtotalitems;
-        let obj = calculateGrandTotal(listtotal);
-        calculatePersentase(obj.grandTotalEkor,ListItemsMati);
-        setListCategory(listtotal);
     }
 
     const handleRemoveItems = (index) => {
-        const list = [...ListItems];
-        // const listitems = list[index]['items'];
-
-        let listtotal = [...ListCategory];
-
-        // for(let i=0; i < list.length; i++){
-            let det = list[index];
-            let listfilteroutput = det.items;
-            for(let y=0; y < listfilteroutput.length; y++){
-                let detItems = listfilteroutput[y];
-                let jumlah = detItems.jumlah && detItems.jumlah !== ''?parseInt(detItems.jumlah):0;
-
-                let indexItems = listtotal.findIndex(obj => obj.idcategoryproduct == detItems.idcategoryproduct);
-                const listtotalitems = listtotal[indexItems]['listtotal'];
-                let indexTotalItems = -1;
-                if(detItems.jumlahtype == 'EKOR'){
-                    indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalekor');
-                    let totalekor = listtotalitems[indexTotalItems]['total'];
-                    totalekor = totalekor && totalekor !== ''?parseInt(totalekor):0;
-
-                    listtotalitems[indexTotalItems]['total'] = totalekor - jumlah;
-                }else if(detItems.jumlahtype == 'KG'){
-                    indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalkg');
-                    let totalkg = listtotalitems[indexTotalItems]['total'];
-                    totalkg = totalkg && totalkg !== ''?parseInt(totalkg):0;
-
-                    listtotalitems[indexTotalItems]['total'] = totalkg - jumlah;
+            const list = [...ListItems];
+            // const listitems = list[index]['items'];
+    
+            let listtotal = [...ListCategory];
+    
+            // for(let i=0; i < list.length; i++){
+                let det = list[index];
+                let listfilteroutput = det.items;
+                for(let y=0; y < listfilteroutput.length; y++){
+                    let detItems = listfilteroutput[y];
+                    let jumlah = detItems.jumlah && detItems.jumlah !== ''?detItems.jumlah:0;
+                    if(new String(jumlah).includes(',')){
+                        let splitComma = new String(jumlah).split(','); 
+                        let angka = splitComma[0];
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                        jumlah = removeFormatRupiah(angka)+'.'+desimal;
+                    }else{
+                        jumlah = removeFormatRupiah(jumlah);
+                    }
+    
+                    let indexItems = listtotal.findIndex(obj => obj.idcategoryproduct == detItems.idcategoryproduct);
+                    const listtotalitems = listtotal[indexItems]['listtotal'];
+                    let indexTotalItems = -1;
+                    if(detItems.jumlahtype == 'EKOR'){
+                        indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalekor');
+                        let totalekor = listtotalitems[indexTotalItems]['total'];
+                        totalekor = totalekor && totalekor !== ''?totalekor:0;
+                        if(new String(totalekor).includes(',')){
+                            let splitComma = new String(totalekor).split(','); 
+                            let angka = splitComma[0];
+                            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                            totalekor = removeFormatRupiah(angka)+'.'+desimal;
+                        }else{
+                            totalekor = removeFormatRupiah(totalekor);
+                        }
+    
+                        listtotalitems[indexTotalItems]['total'] = formatRupiah(parseFloat(totalekor) - parseFloat(jumlah),2);
+                    }else if(detItems.jumlahtype == 'KG'){
+                        indexTotalItems = listtotalitems.findIndex(obj => obj.code == 'totalkg');
+                        let totalkg = listtotalitems[indexTotalItems]['total'];
+                        totalkg = totalkg && totalkg !== ''?totalkg:0;
+                        if(new String(totalkg).includes(',')){
+                            let splitComma = new String(totalkg).split(','); 
+                            let angka = splitComma[0];
+                            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                            totalkg = removeFormatRupiah(angka)+'.'+desimal;
+                        }else{
+                            totalkg = removeFormatRupiah(totalkg);
+                        }
+    
+                        listtotalitems[indexTotalItems]['total'] = formatRupiah(parseFloat(totalkg) - parseFloat(jumlah),2);
+                    }
+                    listtotal[indexItems]['listtotal'] = listtotalitems;
                 }
-                listtotal[indexItems]['listtotal'] = listtotalitems;
-            }
-        // }
-        setListCategory(listtotal);
-
-        list.splice(index, 1);
-        let obj = calculateGrandTotal(listtotal);
-        calculatePersentase(obj.grandTotalEkor,ListItemsMati);
-        setListItems(list);
+            // }
+            setListCategory(listtotal);
+    
+            list.splice(index, 1);
+            let obj = calculateGrandTotal(listtotal);
+            calculatePersentase(obj.grandTotalEkor,ListItemsMati);
+            setListItems(list);
     }
 
     function calculateGrandTotal(listcategory){
@@ -650,17 +800,35 @@ export default function EditDraftPurchaseReceive(props) {
             let indexTotalItemsEkor = det.listtotal.findIndex(obj => obj.code == 'totalekor');
             let indexTotalItemsKg = det.listtotal.findIndex(obj => obj.code == 'totalkg');
             let totalEkor = det.listtotal[indexTotalItemsEkor]['total'];
-            totalEkor = totalEkor && totalEkor !== ''?parseInt(totalEkor):0;
+            totalEkor = totalEkor && totalEkor !== ''?totalEkor:0;
+
+            if(new String(totalEkor).includes(',')){
+                let splitComma = new String(totalEkor).split(','); 
+                let angka = splitComma[0];
+                let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                totalEkor = removeFormatRupiah(angka)+'.'+desimal;
+            }else{
+                totalEkor = removeFormatRupiah(totalEkor);
+            }
 
             let totalKg = det.listtotal[indexTotalItemsKg]['total'];
-            totalKg = totalKg && totalKg !== ''?parseInt(totalKg):0;
+            totalKg = totalKg && totalKg !== ''?totalKg:0;
 
-            grandTotalEkor += totalEkor;
-            grandTotalKg += totalKg;
+            if(new String(totalKg).includes(',')){
+                let splitComma = new String(totalKg).split(','); 
+                let angka = splitComma[0];
+                let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,3):'';
+                totalKg = removeFormatRupiah(angka)+'.'+desimal;
+            }else{
+                totalKg = removeFormatRupiah(totalKg);
+            }
+
+            grandTotalEkor += parseFloat(totalEkor);
+            grandTotalKg += parseFloat(totalKg);
         }
         
-        setInputGrandTotalEkor(grandTotalEkor);
-        setInputGrandTotalKilo(grandTotalKg);
+        setInputGrandTotalEkor(formatRupiah(grandTotalEkor,2));
+        setInputGrandTotalKilo(formatRupiah(new String(grandTotalKg.toFixed(3)).replaceAll('.',','),3));
 
         return {'grandTotalEkor':grandTotalEkor,'grandTotalKg':grandTotalKg}
     }
@@ -673,18 +841,35 @@ export default function EditDraftPurchaseReceive(props) {
                 let detItems = det.items[y];
                     //items
                 let jumlah = detItems.jumlah?detItems.jumlah:0;
-                totalItemMati += parseInt(jumlah);
+                let valTemp = '';
+                if(new String(jumlah).includes(',')){
+                    let splitComma = new String(jumlah).split(','); 
+                    let angka = splitComma[0];
+                    let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                    valTemp = removeFormatRupiah(angka)+'.'+desimal;
+                }else{
+                    valTemp = removeFormatRupiah(jumlah);
+                }
+                totalItemMati += parseFloat(valTemp);
             }
         }
-        let grandtotalekorTemp = grandtotalekor && grandtotalekor !== ''?parseFloat(grandtotalekor):0
+        let grandtotalekorTemp = grandtotalekor && grandtotalekor !== ''?grandtotalekor:0
+        if(new String(grandtotalekorTemp).includes(',')){
+            let splitComma = new String(grandtotalekorTemp).split(','); 
+            let angka = splitComma[0];
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+            grandtotalekorTemp = removeFormatRupiah(angka)+'.'+desimal;
+        }else{
+            grandtotalekorTemp = removeFormatRupiah(grandtotalekorTemp);
+        }
         let persentase = 0;
         if(totalItemMati > 0 && grandtotalekorTemp > 0){
             persentase = (parseFloat(totalItemMati / grandtotalekorTemp)) * 100;
         }else if(totalItemMati > 0){
             persentase = 100;
         }
-         
-        setInputPersentase(parseFloat(persentase).toFixed(2));
+            
+        setInputPersentase(formatRupiah(persentase,2));
     }
 
     return (
@@ -1018,7 +1203,7 @@ export default function EditDraftPurchaseReceive(props) {
                                             {
                                                 ListCategory.map((x, i) => {
                                                     return(
-                                                        <th colSpan={2} style={{textAlign:'center',width:'210px'}}>{i18n.t(x.size)} <br></br>{x.weight} </th>
+                                                        <th colSpan={2} style={{textAlign:'center',width:'210px'}}>{i18n.t(x.size+' | '+x.idcategoryproduct)} <br></br>{x.weight} </th>
                                                     )
                                                 })
                                             }
@@ -1057,7 +1242,7 @@ export default function EditDraftPurchaseReceive(props) {
                                                                 <td >
                                                                     <Input
                                                                         name={xx.jumlahtype}
-                                                                        type="number"
+                                                                        type="text"
                                                                         id={xx.jumlahtype}
                                                                         onChange={val => handleInputChangeItems(val, i, ii,xx.idcategoryproduct)}
                                                                         // onBlur={handleBlur}
@@ -1119,7 +1304,7 @@ export default function EditDraftPurchaseReceive(props) {
                                                                 <td >
                                                                     <Input
                                                                         name={'jumlah'}
-                                                                        type="number"
+                                                                        type="text"
                                                                         id={'jumlah'}
                                                                         onChange={val => handleInputChangeItemsMati(val, i, ii)}
                                                                         // onBlur={handleBlur}

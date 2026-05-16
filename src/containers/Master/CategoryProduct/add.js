@@ -13,6 +13,7 @@ import { reloadToHomeNotAuthorize } from '../../shared/globalFunc';
 import { addCategoryProduct_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import momentLocalizer from 'react-widgets-moment';
+import { DropdownList } from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 
 export default function AddCategoryProduct(props) {
@@ -34,11 +35,19 @@ export default function AddCategoryProduct(props) {
     const [InputWeightTo, setInputWeightTo] = useState('');
     const [InputJumlahItemsPerKoli, setInputJumlahItemsPerKoli] = useState('');
 
+    const [ListForCategory, setListForCategory] = useState([{'value':'VENDOR','label':'Vendor'},{'value':'CUSTOMER','label':'Customer'}]);
+    const [SelForCategory, setSelForCategory] = useState('');
+    const [ErrSelForCategory, setErrSelForCategory] = useState('');
+    const [InputSequence, setInputSequence] = useState('');
+    const [ErrInputSequence, setErrInputSequence] = useState('');
+
     const checkColumnMandatory = (values) => {
         let flag = true;
         setErrInputNama('');
         setErrInputSize('');
         setErrInputWeight('');
+        setErrSelForCategory('');
+        setErrInputSequence('');
         if (values.nama == '') {
             setErrInputNama(i18n.t('label_REQUIRED'));
             flag = false;
@@ -51,9 +60,21 @@ export default function AddCategoryProduct(props) {
             setErrInputWeight(i18n.t('label_REQUIRED'));
             flag = false;
         }
+        if (values.sequence == '') {
+            setErrInputSequence(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+        if(SelForCategory == ''){
+            setErrSelForCategory(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
         return flag;
     }
 
+    const handleChangeForCategory = (data) => {
+        let id = data?.value ? data.value : '';
+        setSelForCategory(id);
+    }
     const succesHandlerSubmit = (data, propsdata) => {
         setLoading(false);
         Swal.fire({
@@ -77,6 +98,8 @@ export default function AddCategoryProduct(props) {
             obj.weightfromingram = values.weightfrom !== '' ? values.weightfrom : 0;
             obj.weighttoingram = values.weightto !== '' ? values.weightto : 0;
             obj.jumlahitemsperkoli = values.jumlahitemsperkoli !== '' ? values.jumlahitemsperkoli : 0;
+            obj.forcategory = SelForCategory;
+            obj.sequence = values.sequence !== '' ? values.sequence : 1;
             dispatch(actions.submitCategoryProductData({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -116,7 +139,9 @@ export default function AddCategoryProduct(props) {
                     size: InputSize,
                     weightfrom: InputWeightFrom,
                     weightto: InputWeightTo,
+                    sequence:InputSequence,
                     jumlahitemsperkoli: InputJumlahItemsPerKoli,
+                    forcategory:SelForCategory
                 }
             }
             validate={values => {
@@ -125,6 +150,7 @@ export default function AddCategoryProduct(props) {
                 setInputSize(values.size)
                 setInputWeightFrom(values.weightfrom);
                 setInputWeightTo(values.weightto);
+                setInputSequence(values.sequence);
                 setInputJumlahItemsPerKoli(values.jumlahitemsperkoli);
                 return errors;
             }}
@@ -153,6 +179,25 @@ export default function AddCategoryProduct(props) {
 
                                 <div className="row mt-2">
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
+
+                                        <label className="mt-3 form-label required" htmlFor="forcategory">
+                                            {i18n.t('label_FOR_CATEGORY')}
+                                        </label>
+                                        <span style={{ color: 'red' }}>*</span>
+
+                                        <DropdownList
+                                            name="forcategory"
+                                            filter='contains'
+                                            placeholder={i18n.t('select.SELECT_OPTION')}
+
+                                            onChange={val => handleChangeForCategory(val)}
+                                            onBlur={val => setFieldTouched("forcategory", val?.value ? val.value : '')}
+                                            data={ListForCategory}
+                                            textField={'label'}
+                                            valueField={'value'}
+                                            value={values.forcategory}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrSelForCategory}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="nama">
                                             {i18n.t('label_NAME')}
@@ -245,6 +290,26 @@ export default function AddCategoryProduct(props) {
                                             value={values.jumlahitemsperkoli}
                                         />
                                         {/* <div className="invalid-feedback-custom">{ErrInputWeight}</div> */}
+
+                                        <label className="mt-3 form-label required" htmlFor="sequence">
+                                            {i18n.t('Sequence')}
+                                            <span style={{ color: 'red' }}>*</span>
+                                        </label>
+                                        <Input
+                                            name="sequence"
+                                            type="text"
+                                            id="sequence"
+                                            onChange={val => {
+                                                let value = val.target.value;
+                                                if (!isNaN(value) || value == '') {
+                                                    setFieldValue("sequence", value);
+                                                }
+                                            }
+                                            }
+                                            onBlur={handleBlur}
+                                            value={values.sequence}
+                                        />
+                                        <div className="invalid-feedback-custom">{ErrInputSequence}</div>
 
                                     </div>
 

@@ -128,6 +128,7 @@
     "label_RECEIVE_FROM":"Diterima Dari",
     "label_ACC_NO":"No Akun Bank",
     "label_ACC_NAME":"Nama Akun Bank",
+    "label_FOR_CATEGORY":"Untuk Kategori",
     "validation": {
       "employeemanggala":{
         "noidentitas":{

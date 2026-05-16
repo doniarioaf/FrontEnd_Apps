@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import "react-widgets/dist/css/react-widgets.css"
 import CryptoJS from 'crypto-js';
 import * as key from '../../../containers/shared/constantKey';
+import { dataLoginEnc } from '../../shared/processInfoLogin';
 
 export default function FormLogin(props) {
     const { i18n } = useTranslation('translations');
@@ -127,6 +128,7 @@ export default function FormLogin(props) {
                 }
             })
         } else {
+            dataLoginEnc(data.dataresponse,{username:user});
             history.push('/home');
         }
     }
@@ -195,6 +197,12 @@ export default function FormLogin(props) {
                                                             name="branch"
                                                             filter='contains'
                                                             placeholder={i18n.t('select.SELECT_OPTION')}
+                                                            onKeyPress={
+                                                                event => {
+                                                                    if (event.key === "Enter") {
+                                                                        SubmitLogin()
+                                                                    }
+                                                            }}
 
                                                             onChange={val => handleChangeBranch(val)}
                                                             onBlur={val => setFieldTouched("branch", val?.value ? val.value : '')}
@@ -224,6 +232,12 @@ export default function FormLogin(props) {
                                                                 name="user"
                                                                 className="border-right-0"
                                                                 placeholder="Enter user"
+                                                                onKeyPress={
+                                                                    event => {
+                                                                        if (event.key === "Enter") {
+                                                                            SubmitPreLogin()
+                                                                        }
+                                                                }}
                                                                 // invalid={this.hasError('formLogin','email','required')||this.hasError('formLogin','email','email')}
                                                                 // onChange={this.validateOnChange}
                                                                 onChange={val => handleChangeUser(val)}
@@ -244,6 +258,12 @@ export default function FormLogin(props) {
                                                                 name="password"
                                                                 className="border-right-0"
                                                                 placeholder="Password"
+                                                                onKeyPress={
+                                                                    event => {
+                                                                        if (event.key === "Enter") {
+                                                                            SubmitPreLogin()
+                                                                        }
+                                                                }}
                                                                 // invalid={this.hasError('formLogin','password','required')}
                                                                 onChange={val => handlePassword(val)}
                                                                 data-validate='["required"]'

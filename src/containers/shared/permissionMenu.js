@@ -13,6 +13,8 @@ export const deleteRole_Permission = ['DELETE_ROLE'];
 export const addInternalUser_Permission = ['READ_USER','CREATE_USER'];
 export const editInternalUser_Permission = ['READ_USER','EDIT_USER'];
 export const deleteInternalUser_Permission = ['DELETE_USER'];
+export const changePasswordInternalUser_Permission = ['READ_USER','EDIT_CHANGE_PASSWORD_USER'];
+export const changePasswordInternalUser_user_Permission = ['EDIT_CHANGE_PASSWORD_USER'];
 
 export const addUserMobile_Permission = ['READ_USER_MOBILE','CREATE_USER_MOBILE'];
 export const editUserMobile_Permission = ['READ_USER_MOBILE','EDIT_USER_MOBILE'];
@@ -73,6 +75,7 @@ export const deleteStockAdjusment_Permission = ['DELETE_STOCKADJUSMENT'];
 export const addPackingList_Permission = ['READ_PACKINGLIST','CREATE_PACKINGLIST'];
 export const editPackingList_Permission = ['READ_PACKINGLIST','EDIT_PACKINGLIST'];
 export const deletePackingList_Permission = ['DELETE_PACKINGLIST'];
+export const editPackingListItemCheck_Permission = ['EDIT_PACKINGLISTITEM_CHECK'];
 
 export const addInvoice_Permission = ['READ_INVOICE','CREATE_INVOICE'];
 export const editInvoice_Permission = ['READ_INVOICE','EDIT_INVOICE'];
@@ -90,6 +93,18 @@ export const addPelunasanPiutang_Permission = ['READ_PELUNASANPIUTANG','CREATE_P
 export const editPelunasanPiutang_Permission = ['READ_PELUNASANPIUTANG','EDIT_PELUNASANPIUTANG'];
 export const deletePelunasanPiutang_Permission = ['DELETE_PELUNASANPIUTANG'];
 
+export const addKomisi_Permission = ['READ_KOMISI','CREATE_KOMISI'];
+export const editKomisi_Permission = ['READ_KOMISI','EDIT_KOMISI'];
+export const deleteKomisi_Permission = ['DELETE_KOMISI'];
+
+export const addPinjaman_Permission = ['READ_PINJAMAN','CREATE_PINJAMAN'];
+export const editPinjaman_Permission = ['READ_PINJAMAN','EDIT_PINJAMAN'];
+export const deletePinjaman_Permission = ['DELETE_PINJAMAN'];
+
+export const cancelPackingList_Permission = ['CREATE_CANCELPACKINGLIST'];
+export const editcancelPackingList_Permission = ['EDIT_CANCELPACKINGLIST'];
+
+export const editPurchaseReceiveCalcSelisih_Permission = ['EDIT_PURCHASERECEIVE_CALC_SELISIH'];
 
 //Menu
 export const MenuCompany = ['READ_COMPANY'];
@@ -124,9 +139,11 @@ export const MenuReportPiutang = ['READ_REPORT_PIUTANG'];
 export const MenuReportPenjualan = ['READ_REPORT_PENJUALAN'];
 export const MenuReportPelunasanPiutang = ['READ_REPORT_PELUNASAN_PIUTANG'];
 export const MenuReportKartuDeposit = ['READ_REPORT_KARTUDEPOSIT'];
+export const MenuReportKartuPinjaman = ['READ_REPORT_KARTUPINJAMAN'];
 export const MenuReportKartuStock = ['READ_REPORT_KARTUSTOCK'];
-
-
-
-
-
+export const MenuKomisi = ['READ_KOMISI'];
+export const MenuReportKomisi = ['READ_REPORT_KOMISI'];
+export const MenuPinjaman = ['READ_PINJAMAN'];
+export const MenuCancelPackingList = ['READ_CANCELPACKINGLIST'];
+export const MenuReportCancelPackingList = ['READ_REPORT_CANCELPACKINGLIST'];
+export const MenuIntegrasi = ['CREATE_INTEGRASI'];

@@ -9,8 +9,8 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { numToMoney, reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-import { editPurchaseReceive_Permission } from '../../shared/permissionMenu';
+import { convertGramToKGAndPembulatan, isGetPermissions, numToMoney, reloadToHomeNotAuthorize, rupiahToNumber } from '../../shared/globalFunc';
+import { editPurchaseReceive_Permission, editPurchaseReceiveCalcSelisih_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
@@ -21,7 +21,7 @@ import '../../CSS/table.css';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
-import { calculateSetor, calculateTotalPrice, calculateTransfer, setPriceBoxOngkosByVendor } from './utilityPurchaseReceive';
+import { calculateSetor, calculateTotalPrice, calculateTotalPriceForSelisih, calculateTransfer, setPriceBoxOngkosByVendor, totalTableBiaya, totalTableInventori, totalTableItemMati, totalTablePenguranganBiaya } from './utilityPurchaseReceive';
 
 export default function EditPurchaseReceive(props) {
     reloadToHomeNotAuthorize(editPurchaseReceive_Permission, 'TRANSACTION');
@@ -54,13 +54,16 @@ export default function EditPurchaseReceive(props) {
     const [ListItemsPurchaseReceive, setListItemsPurchaseReceive] = useState([]);
     const [ListItemsPurchaseReceiveMati, setListItemsPurchaseReceiveMati] = useState([]);
     const [ListItemsPurchaseReceiveBiaya, setListItemsPurchaseReceiveBiaya] = useState([]);
+    const [ListItemsPurchaseReceivePenguranganBiaya, setListItemsPurchaseReceivePenguranganBiaya] = useState([]);
     const [ListProduct, setListProduct] = useState([]);
     const [ListCategoryProduct, setListCategoryProduct] = useState([]);
 
     const [InputTotalPrice, setInputTotalPrice] = useState(0);
     const [IsDefaultSetorTotalPrice, setIsDefaultSetorTotalPrice] = useState(true);
     const [InputSetor, setInputSetor] = useState(0);
+    const [InputSetorPinjaman, setInputSetorPinjaman] = useState(0);
     const [SisaDeposit, setSisaDeposit] = useState(0);
+    const [SisaPinjaman, setSisaPinjaman] = useState(0);
     const [TambahDeposit, setTambahDeposit] = useState(0);
     const [IsTambahDeposit, setIsTambahDeposit] = useState(false);
 
@@ -81,6 +84,12 @@ export default function EditPurchaseReceive(props) {
     const [InputFlightNo, setInputFlightNo] = useState('');
     const [InputNotes2, setInputNotes2] = useState('');
     const [InputSMU, setInputSMU] = useState('');
+
+    const [InputKurs, setInputKurs] = useState(1);
+    const [ErrInputKurs, setErrInputKurs] = useState('');
+    const [InputSelisih, setInputSelisih] = useState(0);
+
+    let flagCalcSelisih = isGetPermissions(editPurchaseReceiveCalcSelisih_Permission,'TRANSACTION');
 
     const id = props.match.params.id;
 
@@ -117,6 +126,7 @@ export default function EditPurchaseReceive(props) {
                 {
                     'idcharge': el.id,
                     'namabiaya': el.nama,
+                    'namabiayacustom': el.nama,
                     'qty': el.nama == 'SETOR' ? 1 : 0,
                     'price': 0,
                     'subtotal': 0
@@ -162,15 +172,21 @@ export default function EditPurchaseReceive(props) {
         setInputFlightNo(det.flightno?det.flightno:'');
         setInputSMU(det.smu?det.smu:'');
         let sisaDeposit = det.sisaDeposit ? det.sisaDeposit : 0;
+        let sisaPinjaman = det.sisaPinjaman ? det.sisaPinjaman : 0;
         let setor = det.setor ? det.setor : 0;
+        let setorPinjaman = det.setor_pinjaman ? det.setor_pinjaman : 0;
         let totalSisaDeposit = parseFloat(sisaDeposit) + parseFloat(setor);
-        let totalprice = det.totalprice ? det.totalprice : 0;
-        let transfer = totalprice - setor; 
+        let totalSisaPinjaman = parseFloat(sisaPinjaman) + parseFloat(setorPinjaman);
+        let totalprice = det.totalprice ? det.totalprice - setorPinjaman: 0;
+        let transfer = totalprice - (setor + setorPinjaman); 
         setSisaDeposit(totalSisaDeposit);
+        setSisaPinjaman(totalSisaPinjaman);
         setInputTotalPrice(totalprice);
         setInputSetor(setor);
         setIsDefaultSetorTotalPrice(det.isdefaultvaluesetor);
-        setInputTransfer(transfer);
+        setInputKurs(det.kurs?det.kurs:1);
+        setInputSelisih(det.selisih?det.selisih:0)
+        // setInputTransfer(transfer);
 
         let listfilteroutputHidup = det.items.filter(output => output.type == 'H');
         let listfilteroutputMati = det.items.filter(output => output.type == 'M');
@@ -188,19 +204,43 @@ export default function EditPurchaseReceive(props) {
         //     }
         // ], []);
         let totalPriceItemHidup = 0;
+        let totalQty = 0;
+        let totalQtyNota = 0;
+        let grandTotalKg = 0;
+        let grandTotalUSD = 0;
+        let grandTotalRupiah = 0;
         for(let i=0; i < listfilteroutputHidup.length; i++){
             let el = listfilteroutputHidup[i];
             let subtotalprice = el.subtotalprice ? el.subtotalprice : 0;
+            let qty = el.qty?el.qty:0;
+            let qtynota = el.qtynota?el.qtynota:0;
             totalPriceItemHidup += parseFloat(subtotalprice);
+            totalQty += parseInt(qty);
+            totalQtyNota += parseInt(qtynota);
+
+            let weight_udang = el.weight_udang?el.weight_udang:0;
+            let totalusd = el.totalusd?el.totalusd:0;
+            let totalrupiah = el.totalrupiah?el.totalrupiah:0;
+
+            grandTotalKg += weight_udang;
+            grandTotalUSD += totalusd;
+            grandTotalRupiah += totalrupiah;
             theDataItems.push(
                 {
                     'idproduct': el.idproduct,
                     'idcategoryproduct': el.idcategoryproduct,
-                    'qty': el.qty,
+                    'qty': qty,
                     'qtybonus': el.qtybonus,
+                    'qtynota': qtynota,
                     'qtymati': 0,
                     'itemsprice': el.price ? el.price : 0,//numToMoney(parseFloat(el.price)):0,
-                    'subtotalprice': subtotalprice
+                    'subtotalprice': subtotalprice,
+                    'totalkg':weight_udang,
+                    'hargaJual': el.hargajual_terakhir?el.hargajual_terakhir:0,
+                    'hargaJualEdit': el.hargajual?el.hargajual:0,
+                    'totalUSD': totalusd,
+                    'totalRupiah': el.totalrupiah?el.totalrupiah:0,
+                    'idpackinglist_acuan_hargajual_terakhir':el.idpackinglist_acuan_hargajual_terakhir?el.idpackinglist_acuan_hargajual_terakhir:0
                 }
             );
         };
@@ -209,11 +249,16 @@ export default function EditPurchaseReceive(props) {
                 {
                     'idproduct': 'TOTAL',
                     'idcategoryproduct': '',
-                    'qty': 0,
+                    'qty': totalQty,
                     'qtybonus': 0,
+                    'qtynota': totalQtyNota,
                     'qtymati': 0,
                     'itemsprice': 0,
-                    'subtotalprice': totalPriceItemHidup
+                    'subtotalprice': totalPriceItemHidup,
+                    'hargaJual': 0,
+                    'hargaJualEdit': 0,
+                    'totalUSD': grandTotalUSD,
+                    'totalRupiah': grandTotalRupiah
                 }
             );
         }
@@ -238,12 +283,17 @@ export default function EditPurchaseReceive(props) {
             {
                 'idcharge': el.idcharge,
                 'namabiaya': el.chargename,
+                'namabiayacustom': el.chargenamecustom?el.chargenamecustom:el.chargename,
                 'qty': el.qty ? el.qty : 0,
                 'price': el.price ? el.price : 0,
                 'subtotal': el.subtotalprice ? el.subtotalprice : 0
             }
         ], []);
-        setListItemsPurchaseReceiveBiaya(theDataCharge);
+        let listPenambahanBiaya = theDataCharge.filter(output => output.namabiaya == 'BOX' || output.namabiaya == 'BOAT' || output.namabiaya == 'BANTUAN');
+        let listPenguranganBiaya = theDataCharge.filter(output => output.namabiaya == 'ONGKOS' || output.namabiaya == 'SETOR' || output.namabiaya == 'SETORPINJAMAN');
+
+        setListItemsPurchaseReceiveBiaya(listPenambahanBiaya);
+        setListItemsPurchaseReceivePenguranganBiaya(listPenguranganBiaya);
 
         const theDataInventori = det.inventori.reduce((obj, el) => [
             ...obj,
@@ -277,6 +327,7 @@ export default function EditPurchaseReceive(props) {
         setErrInputAccNameBank('');
         setErrItemsHidup('');
         setErrSelArea('');
+        setErrInputKurs('');
 
         if (ListItemsPurchaseReceive.length > 0) {
             // for (let i = 0; i < ListItemsPurchaseReceive.length; i++) {
@@ -324,6 +375,11 @@ export default function EditPurchaseReceive(props) {
         }
         if (InputAccNameBank == '') {
             setErrInputAccNameBank(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
+
+        if (InputKurs == '') {
+            setErrInputKurs(i18n.t('label_REQUIRED'));
             flag = false;
         }
         // if(ListItemsPurchaseReceive.length == 0){
@@ -374,8 +430,11 @@ export default function EditPurchaseReceive(props) {
             setLoading(true);
 
             let sisadeposit = values.sisadeposit;
+            let sisapinjaman = values.sisapinjaman;
             let totalprice = new String(values.totalprice).replaceAll('.', '') !== '' ? new String(values.totalprice).replaceAll('.', '') : 0;
-            let setor = calculateSetor(totalprice,sisadeposit);
+            let objCalc = calculateSetor(totalprice,sisadeposit,sisapinjaman);
+            let setor = objCalc.setordeposit;
+            let setorPinjaman = 0;//objCalc.setorpinjaman;
 
             let obj = new Object();
             obj.idvendor = SelVendor;
@@ -388,24 +447,33 @@ export default function EditPurchaseReceive(props) {
             obj.bank = values.bank;
             obj.accountnobank = values.accnobank;
             obj.accountnamebank = values.accnamabank;
-            obj.totalprice = totalprice;//new String(values.totalprice).replaceAll('.', '') !== '' ? new String(values.totalprice).replaceAll('.', '') : 0;
+            // obj.totalprice = totalprice;
             obj.setor = setor;//new String(values.setor).replaceAll('.', '') !== '' ? new String(values.setor).replaceAll('.', '') : 0;
+            
             obj.isdefaultvaluesetor = IsDefaultSetorTotalPrice;
             obj.tambahdeposit = new String(values.tambahdeposit).replaceAll('.', '') !== '' ? new String(values.tambahdeposit).replaceAll('.', '') : 0;
             let items = [];
             if (ListItemsPurchaseReceive.length > 0) {
                 for (let i = 0; i < ListItemsPurchaseReceive.length; i++) {
                     let el = ListItemsPurchaseReceive[i];
-                    if (parseInt(el.qty) > 0) {
+                    // if (parseInt(el.qty) > 0 && el.idproduct !== 'TOTAL') {
+                    if (el.idproduct !== 'TOTAL') {
                         items.push(
                             {
                                 'idproduct': el.idproduct,
                                 'idcategoryproduct': el.idcategoryproduct,
                                 'qty': el.qty,
                                 'qtybonus': el.qtybonus,
-                                'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
-                                'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
-                                'type': 'H'
+                                'qtynota': el.qtynota,
+                                'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? rupiahToNumber(el.itemsprice) : '0',
+                                'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? rupiahToNumber(el.subtotalprice) : '0',
+                                'type': 'H',
+                                'hargajual_terakhir':el.hargaJual !== '' ? el.hargaJual : '0',
+                                'hargajual':el.hargaJualEdit !== '' ? el.hargaJualEdit : '0',
+                                'totalusd':el.totalUSD !== '' ? el.totalUSD : '0',
+                                'totalrupiah':el.totalRupiah !== '' ? el.totalRupiah : '0',
+                                'idpackinglist_acuan_hargajual_terakhir':el.idpackinglist_acuan_hargajual_terakhir,
+                                'weight_udang':el.totalkg ?el.totalkg:0,
                             }
                         );
                     }
@@ -425,39 +493,63 @@ export default function EditPurchaseReceive(props) {
 
                 for (let i = 0; i < ListItemsPurchaseReceiveMati.length; i++) {
                     let el = ListItemsPurchaseReceiveMati[i];
-                    if (parseInt(el.qtymati) > 0) {
+                    // if (parseInt(el.qtymati) > 0) {
+                    // if (true) {
                         items.push(
                             {
                                 'idproduct': el.idproduct,
                                 'idcategoryproduct': el.idcategoryproduct,
                                 'qty': el.qtymati,
                                 'qtybonus': el.qtybonus,
+                                'qtynota': 0,
                                 'price': new String(el.itemsprice).replaceAll('.', '') !== '' ? new String(el.itemsprice).replaceAll('.', '') : '0',
                                 'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0',
-                                'type': 'M'
+                                'type': 'M',
+                                'hargajual_terakhir':0,
+                                'hargajual':0,
+                                'totalusd':0,
+                                'totalrupiah':0,
+                                'idpackinglist_acuan_hargajual_terakhir':null,
+                                'weight_udang':0,
                             }
                         );
-                    }
+                    // }
                 }
 
             }
             obj.items = items;
 
             let charges = [];
-            if (ListItemsPurchaseReceiveBiaya.length > 0) {
-                for (let i = 0; i < ListItemsPurchaseReceiveBiaya.length; i++) {
-                    let el = ListItemsPurchaseReceiveBiaya[i];
+            let listCharge = [...ListItemsPurchaseReceiveBiaya];
+            for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+                listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+            }
+            if (listCharge.length > 0) {
+                for (let i = 0; i < listCharge.length; i++) {
+                    let el = listCharge[i];
+                    let namaCharge = null;
+                    if(el.namabiayacustom !== ''){
+                        if(new String(el.namabiayacustom).toLowerCase() !== new String(el.namabiaya).toLowerCase()){
+                            namaCharge = el.namabiayacustom;
+                        }
+                    }
+                    if(el.namabiaya == 'SETORPINJAMAN'){
+                        setorPinjaman = new String(el.subtotal).replaceAll('.', '') !== '' ? new String(el.subtotal).replaceAll('.', '') : '0';
+                    }
                     charges.push(
                         {
                             'idcharge': el.idcharge,
                             'qty': el.qty,
                             'price': new String(el.price).replaceAll('.', '') !== '' ? new String(el.price).replaceAll('.', '') : '0',
-                            'subtotalprice': new String(el.subtotal).replaceAll('.', '') !== '' ? new String(el.subtotal).replaceAll('.', '') : '0'
+                            'subtotalprice': new String(el.subtotal).replaceAll('.', '') !== '' ? new String(el.subtotal).replaceAll('.', '') : '0',
+                            'chargenamecustom':namaCharge
                         }
                     );
                 }
             }
             obj.charges = charges;
+            obj.totalprice = parseFloat(totalprice) + parseFloat(setorPinjaman);
+            obj.setor_pinjaman = setorPinjaman;
 
             let inventori = [];
             if (ListItemsInventori.length > 0) {
@@ -466,7 +558,7 @@ export default function EditPurchaseReceive(props) {
                     inventori.push(
                         {
                             'idinventori': el.idinventori,
-                            'qty': el.qty,
+                            'qty': el.qty?parseInt(el.qty):0,
                             'price': new String(el.price).replaceAll('.', '') !== '' ? new String(el.price).replaceAll('.', '') : '0',
                             'subtotalprice': new String(el.subtotalprice).replaceAll('.', '') !== '' ? new String(el.subtotalprice).replaceAll('.', '') : '0'
                         }
@@ -476,6 +568,8 @@ export default function EditPurchaseReceive(props) {
             obj.inventori = inventori;
             obj.iddraftpurchasereceive = SelDraftPurchaseReceive == 'nodata' || SelDraftPurchaseReceive == ''?null:SelDraftPurchaseReceive;
             obj.idarea = SelArea;
+            obj.kurs = values.kurs !== ''?rupiahToNumber(values.kurs):1;
+            obj.selisih = values.selisih !== ''?values.selisih:0;
             dispatch(actions.submitPurchaseReceiveData({ url: '/' + id, payload: obj, type: 'EDIT' }, succesHandlerSubmit, errorHandler));
         }
     }
@@ -538,12 +632,80 @@ export default function EditPurchaseReceive(props) {
         }
     }
 
+    const calcSelisih = (listitem, totalnota) => {
+    let indexTotal = listitem.findIndex(obj => obj.idproduct == 'TOTAL');
+    if(indexTotal !== null && indexTotal !== undefined && indexTotal > -1){
+        const totalRupiah = parseFloat(listitem[indexTotal]['totalRupiah']);
+        let selisih = totalRupiah - rupiahToNumber(totalnota);
+        console.log('calcSelisih totalRupiah ',totalRupiah);
+        console.log('calcSelisih totalnota ',rupiahToNumber(totalnota));
+        console.log('calcSelisih selisih ',selisih);
+        return selisih;
+    }   
+    let selisih =-rupiahToNumber(totalnota)
+    
+    return selisih;
+}
+const calcItemChangeKurs = (listitem, kurs) => {
+    const list = [...listitem];
+    let kursNumber = rupiahToNumber(kurs);
+    for(let i=0; i < listitem.length; i++){
+        let totalUSD = list[i]['totalUSD'];
+        let totalRupiah = kursNumber * totalUSD ;
+        list[i]['totalRupiah'] = totalRupiah;
+    }
+    setListItemsPurchaseReceive(list);
+    // setInputSelisih(calcSelisih(list,InputTotalPrice));
+    let listCharge = [...ListItemsPurchaseReceiveBiaya];
+    for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+        listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+    }
+    setInputSelisih(calcSelisih(list,calculateTotalPriceForSelisih(list,listCharge,[]).totalPrice));
+}
+const handleInputChangeItemsPriceEdit = (e, index, type) => {
+    
+    const { name, value } = e.target;
+    let price = rupiahToNumber(value);
+    const list = [...ListItemsPurchaseReceive];
+    let totalkg = list[index]['totalkg'];
+    totalkg = convertGramToKGAndPembulatan(totalkg);
+
+    let totalUSD = price * totalkg ;
+    let totalRupiah = totalUSD * (InputKurs !== ""?rupiahToNumber(InputKurs):0);
+    list[index][name] = price;
+    list[index]['totalUSD'] = totalUSD;
+    list[index]['totalRupiah'] = totalRupiah;
+
+    let indexTotal = list.findIndex(obj => obj.idproduct == 'TOTAL');
+    if(indexTotal !== null && indexTotal !== undefined && indexTotal > -1){
+    let grandTotalUSD = 0;
+    let grandTotalRp = 0;
+    for(let i=0; i < list.length; i++){
+        let det = list[i];
+        if(det.idproduct !== 'TOTAL'){
+            grandTotalUSD += list[i]['totalUSD'];
+            grandTotalRp += list[i]['totalRupiah'];
+        }
+    }
+    list[indexTotal]['totalUSD'] = grandTotalUSD;
+    list[indexTotal]['totalRupiah'] = grandTotalRp;
+    }
+
+    setListItemsPurchaseReceive(list);
+    // setInputSelisih(calcSelisih(list,InputTotalPrice));
+    let listCharge = [...ListItemsPurchaseReceiveBiaya];
+    for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+        listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+    }
+    setInputSelisih(calcSelisih(list,calculateTotalPriceForSelisih(list,listCharge,[]).totalPrice));
+}
 
     const handleInputChangeItems = (e, index, type) => {
         const { name, value } = e.target;
         let flag = true;
         let subtotal = 0;
-        if (name == 'qty' || name == 'qtybonus' || name == 'qtymati' || name == 'itemsprice') {
+        let subtotalMati = 0;
+        if (name == 'qty' || name == 'qtynota' || name == 'qtybonus' || name == 'qtymati' || name == 'itemsprice') {
             let valPriceTemp = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
             if (isNaN(valPriceTemp) && valPriceTemp !== '' && name !== 'qtybonus') {
                 flag = false;
@@ -568,6 +730,13 @@ export default function EditPurchaseReceive(props) {
                     let qtybonustemp = new String(listTemp[index]['qtybonus']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qtybonus']).replaceAll('.', '') : '0';
                     let qtyTemp = parseInt(valPriceTemp) + parseInt(qtybonustemp);
                     subtotal = parseInt(qtyTemp) * parseFloat(pricetemp);
+                } else if (name == 'qtynota') {
+                    const listTemp = [...ListItemsPurchaseReceive];
+                    let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
+
+                    // let qtytemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
+                    // let qtyBonusTemp = parseInt(valPriceTemp) + parseInt(qtytemp);
+                    subtotal = parseInt(valPriceTemp) * parseFloat(pricetemp);
                 } else if (name == 'qtybonus') {
                     const listTemp = [...ListItemsPurchaseReceive];
                     let pricetemp = new String(listTemp[index]['itemsprice']).replaceAll('.', '') !== '' ? new String(listTemp[index]['itemsprice']).replaceAll('.', '') : '0';
@@ -583,9 +752,13 @@ export default function EditPurchaseReceive(props) {
                 } else if (name == 'itemsprice') {
                     let listTemp = [];
                     let qtytemp = 0;
+
+                    let listTempMati = [];
+                    let qtytempMati = 0;
                     if (type == 'H') {
                         listTemp = [...ListItemsPurchaseReceive];
-                        qtytemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
+                        // qtytemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
+                        qtytemp = new String(listTemp[index]['qtynota']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qtynota']).replaceAll('.', '') : '0';
                     } else {
                         listTemp = [...ListItemsPurchaseReceiveMati];
                         qtytemp = new String(listTemp[index]['qtymati']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qtymati']).replaceAll('.', '') : '0';
@@ -595,6 +768,39 @@ export default function EditPurchaseReceive(props) {
                     let totalQty = parseInt(qtytemp) + parseInt(qtybonustemp);
 
                     subtotal = parseInt(valPriceTemp) * parseFloat(totalQty);
+
+                    
+                    if (type == 'H') {
+                        listTempMati = [...ListItemsPurchaseReceiveMati];
+                        let idproductHidup = listTemp[index]['idproduct'];
+                        let idcategoryproductHidup = listTemp[index]['idcategoryproduct'];
+
+                        let indexMati = listTempMati.findIndex(obj => obj.idproduct == idproductHidup && obj.idcategoryproduct == idcategoryproductHidup);
+                        if(indexMati !== null && indexMati !== undefined && indexMati > -1){
+                            qtytempMati = new String(listTempMati[indexMati]['qtymati']).replaceAll('.', '') !== '' ? new String(listTempMati[indexMati]['qtymati']).replaceAll('.', '') : '0';
+                            qtybonustemp = new String(listTempMati[indexMati]['qtybonus']).replaceAll('.', '') !== '' ? new String(listTempMati[indexMati]['qtybonus']).replaceAll('.', '') : '0';
+                            totalQty = parseInt(qtytempMati) + parseInt(qtybonustemp);
+
+                            subtotalMati = parseInt(valPriceTemp) * parseFloat(totalQty);
+                        }
+                        
+                    }
+
+                    // let listTemp = [];
+                    // let qtytemp = 0;
+                    // if (type == 'H') {
+                    //     listTemp = [...ListItemsPurchaseReceive];
+                    //     // qtytemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
+                    //     qtytemp = new String(listTemp[index]['qtynota']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qtynota']).replaceAll('.', '') : '0';
+                    // } else {
+                    //     listTemp = [...ListItemsPurchaseReceiveMati];
+                    //     qtytemp = new String(listTemp[index]['qtymati']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qtymati']).replaceAll('.', '') : '0';
+                    // }
+
+                    // let qtybonustemp = new String(listTemp[index]['qtybonus']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qtybonus']).replaceAll('.', '') : '0';
+                    // let totalQty = parseInt(qtytemp) + parseInt(qtybonustemp);
+
+                    // subtotal = parseInt(valPriceTemp) * parseFloat(totalQty);
                 }
                 //
             }
@@ -608,14 +814,34 @@ export default function EditPurchaseReceive(props) {
                 list[index]['subtotalprice'] = subtotal;
                 
                 let indexTotal = list.findIndex(obj => obj.idproduct == 'TOTAL');
-                let objPrice =calculateTotalPrice(list, ListItemsPurchaseReceiveBiaya, ListItemsInventori);
+                let listCharge = [...ListItemsPurchaseReceiveBiaya];
+                for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+                    listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+                }
+                let objPrice =calculateTotalPrice(list, listCharge, ListItemsInventori);
                 let totalPrice = objPrice.totalPrice;
                 let totalPriceItemHidup = objPrice.totalPriceItemHidup;
+                let totalqty = objPrice.totalqty;
+                let totalqtynota = objPrice.totalqtynota;
+                list[indexTotal]['qty'] = totalqty;
+                list[indexTotal]['qtynota'] = totalqtynota;
                 list[indexTotal]['subtotalprice'] = totalPriceItemHidup;
                 setInputTotalPrice(totalPrice);
                 // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
                 setorValue(totalPrice, IsDefaultSetorTotalPrice);
                 setListItemsPurchaseReceive(list);
+                setInputSelisih(calcSelisih(list,calculateTotalPriceForSelisih(list,listCharge,[]).totalPrice));
+
+                const listMati = [...ListItemsPurchaseReceiveMati];
+                let idproductHidup = list[index]['idproduct'];
+                let idcategoryproductHidup = list[index]['idcategoryproduct'];
+                let indexMati = listMati.findIndex(obj => obj.idproduct == idproductHidup && obj.idcategoryproduct == idcategoryproductHidup);
+                if(indexMati !== null && indexMati !== undefined && indexMati > -1){
+                    listMati[indexMati][name] = valPrice;
+                    listMati[indexMati]['subtotalprice'] = subtotalMati;
+                    setListItemsPurchaseReceiveMati(listMati);
+                }
+
             } else if (type == 'M') {
                 const list = [...ListItemsPurchaseReceiveMati];
                 let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
@@ -658,16 +884,99 @@ export default function EditPurchaseReceive(props) {
 
 
         }
+         if (name == 'namabiaya') {
+            const list = [...ListItemsPurchaseReceiveBiaya];
+            list[index]['namabiayacustom'] = value;
+            setListItemsPurchaseReceiveBiaya(list);
+            flag =false;
+        }
         if (flag) {
             const list = [...ListItemsPurchaseReceiveBiaya];
+            const listTemp = [...ListItemsPurchaseReceiveBiaya];
             let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
+            listTemp[index][name] = valPrice;
+            listTemp[index]['subtotal'] = subtotal;
+
             list[index][name] = valPrice;
             list[index]['subtotal'] = subtotal;
+            
             setListItemsPurchaseReceiveBiaya(list);
-            let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive, list, ListItemsInventori);
+
+            let listCharge = listTemp;
+            for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+                listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+            }
+
+            let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, listCharge, ListItemsInventori);
+            let totalPrice = objPrice.totalPrice;
+            let totalPriceItemHidup = objPrice.totalPriceItemHidup;
             setInputTotalPrice(totalPrice);
             // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
             setorValue(totalPrice, IsDefaultSetorTotalPrice);
+            setInputSelisih(calcSelisih(ListItemsPurchaseReceive,calculateTotalPriceForSelisih(ListItemsPurchaseReceive,listCharge,[]).totalPrice));
+        }
+
+    }
+
+    const handleInputChangePenguranganBiaya = (e, index) => {
+        const { name, value } = e.target;
+        let flag = true;
+        let subtotal = 0;
+        if (name == 'qty' || name == 'price') {
+            let valPriceTemp = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
+
+            if (isNaN(valPriceTemp) && valPriceTemp !== '') {
+                flag = false;
+            } else {
+                const listTemp = [...ListItemsPurchaseReceivePenguranganBiaya];
+
+                if (name == 'qty') {
+                    let namaBiaya = listTemp[index]['namabiaya'];
+                    if (namaBiaya == 'SETOR' && valPriceTemp !== '') {
+                        if (parseInt(valPriceTemp) > 1) {
+                            flag = false;
+                        }
+                    }
+                    if (flag) {
+                        let pricetemp = new String(listTemp[index]['price']).replaceAll('.', '') !== '' ? new String(listTemp[index]['price']).replaceAll('.', '') : '0';
+                        subtotal = parseInt(valPriceTemp) * parseFloat(pricetemp);
+                    }
+                } else if (name == 'price') {
+                    let qtyemp = new String(listTemp[index]['qty']).replaceAll('.', '') !== '' ? new String(listTemp[index]['qty']).replaceAll('.', '') : '0';
+                    subtotal = parseInt(qtyemp) * parseFloat(valPriceTemp);
+                }
+            }
+
+
+        }
+        if (name == 'namabiaya') {
+            const list = [...ListItemsPurchaseReceivePenguranganBiaya];
+            list[index]['namabiayacustom'] = value;
+            setListItemsPurchaseReceivePenguranganBiaya(list);
+            flag =false;
+        }
+        if (flag) {
+            const list = [...ListItemsPurchaseReceivePenguranganBiaya];
+            const listTemp = [...ListItemsPurchaseReceivePenguranganBiaya];
+            let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '';
+            listTemp[index][name] = valPrice;
+            listTemp[index]['subtotal'] = subtotal;
+
+            list[index][name] = valPrice;
+            list[index]['subtotal'] = subtotal;
+            setListItemsPurchaseReceivePenguranganBiaya(list);
+
+            let listCharge = [...ListItemsPurchaseReceiveBiaya];
+            for(let i=0; i < listTemp.length; i++){
+                listCharge.push(listTemp[i]);
+            }
+            let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, listCharge, ListItemsInventori);
+            let totalPrice = objPrice.totalPrice;
+            let totalPriceItemHidup = objPrice.totalPriceItemHidup;
+            setInputTotalPrice(totalPrice);
+            // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
+            setorValue(totalPrice, IsDefaultSetorTotalPrice);
+            setInputSelisih(calcSelisih(ListItemsPurchaseReceive,calculateTotalPriceForSelisih(ListItemsPurchaseReceive,listCharge,[]).totalPrice));
         }
 
     }
@@ -715,7 +1024,14 @@ export default function EditPurchaseReceive(props) {
             list[index]['subtotalprice'] = subtotal;
             setListItemsInventori(list);
 
-            let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive, ListItemsPurchaseReceiveBiaya, list);
+            let listCharge = [...ListItemsPurchaseReceiveBiaya];
+            for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+                listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+            }
+
+            let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, listCharge, list);
+            let totalPrice = objPrice.totalPrice;
+            let totalPriceItemHidup = objPrice.totalPriceItemHidup;
             setInputTotalPrice(totalPrice);
             setorValue(totalPrice, IsDefaultSetorTotalPrice);
         }
@@ -735,6 +1051,7 @@ export default function EditPurchaseReceive(props) {
         let valdata = data?.data ? data.data : '';
         
         setInputSetor(0);
+        setInputSetorPinjaman(0);
 
         setListCategoryProduct([]);
         setListItemsPurchaseReceive([]);
@@ -750,9 +1067,22 @@ export default function EditPurchaseReceive(props) {
 
 
         setLoading(true);
-        let listCharge = setPriceBoxOngkosByVendor(ListItemsPurchaseReceiveBiaya, valdata.pricebox, valdata.priceongkos);
-        setListItemsPurchaseReceiveBiaya(listCharge);
-        let totalPrice = calculateTotalPrice([], listCharge, []);
+        let listCharge1 = [...ListItemsPurchaseReceiveBiaya];
+        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+            listCharge1.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        }
+
+        let listCharge = setPriceBoxOngkosByVendor(listCharge1, valdata.pricebox, valdata.priceongkos);
+
+        let listPenambahanBiaya = listCharge.filter(output => output.namabiaya == 'BOX' || output.namabiaya == 'BOAT' || output.namabiaya == 'BANTUAN');
+        setListItemsPurchaseReceiveBiaya(listPenambahanBiaya);
+
+        let listPenguranganBiaya = listCharge.filter(output => output.namabiaya == 'ONGKOS' || output.namabiaya == 'SETOR' || output.namabiaya == 'SETORPINJAMAN');
+        setListItemsPurchaseReceivePenguranganBiaya(listPenguranganBiaya);
+
+        let objPrice = calculateTotalPrice([], listCharge1, []);
+        let totalPrice = objPrice.totalPrice;
+        let totalPriceItemHidup = objPrice.totalPriceItemHidup;
         setInputTotalPrice(totalPrice);
         if (IsDefaultSetorTotalPrice) {
             setInputSetor(totalPrice);
@@ -761,6 +1091,17 @@ export default function EditPurchaseReceive(props) {
         dispatch(actions.getPurchaseReceiveData({ url: '/searchvendor?idvendor=' + id }, successHandlerVendor, errorHandler));
     }
     function successHandlerVendor(data, propsdata) {
+
+        //penggunaan usedDeposit ini harus di cek lagi, sementara dibiarin karena vendor nya disabled atau tidak bisa diubah
+        //jika bisa diubah, harusnya usedDeposit di tambahkan ke sisa deposit ke vendor yg sama atau sub dari vendor parent(jika vendor parent)
+        //jika tidak bisa tertambah  ke deposit vendor yang lain
+        let usedDeposit = 0;
+        let usedPinjaman = 0;
+        if(propsdata.detail){
+            let dateDet = propsdata.detail ?propsdata.detail:null;
+            usedDeposit = dateDet.setor?parseFloat(dateDet.setor):0;
+            usedPinjaman = dateDet.setor_pinjaman?parseFloat(dateDet.setor_pinjaman):0;
+        }
 
         const theDataProd = data.data.categoryproductOpt.reduce((obj, el) => [
             ...obj,
@@ -771,7 +1112,15 @@ export default function EditPurchaseReceive(props) {
             }
         ], []);
         setListCategoryProduct(theDataProd);
-        setSisaDeposit(data.data.sisaDeposit ? data.data.sisaDeposit : 0);
+
+        // let sisaDeposit = data.data.sisaDeposit ? data.data.sisaDeposit : 0;
+        // sisaDeposit = sisaDeposit + usedDeposit;
+        // setSisaDeposit(sisaDeposit);
+
+        // let sisaPinjaman = data.data.sisaPinjaman ? data.data.sisaPinjaman : 0;
+        // sisaPinjaman = sisaPinjaman + usedPinjaman;
+        // setSisaPinjaman(sisaPinjaman);
+        
 
         const theDataDraftPR = data.data.draftPurchaseReceiveOpt.reduce((obj, el) => [
             ...obj,
@@ -814,6 +1163,7 @@ export default function EditPurchaseReceive(props) {
                 'categoryproductname': '',
                 'qty': 0,
                 'qtybonus': 0,
+                'qtynota': 0,
                 'qtymati': 0,
                 'itemsprice': 0,
                 'subtotalprice': 0
@@ -831,6 +1181,7 @@ export default function EditPurchaseReceive(props) {
                     'categoryproductname': '',
                     'qty': 0,
                     'qtybonus': 0,
+                    'qtynota': 0,
                     'qtymati': 0,
                     'itemsprice': 0,
                     'subtotalprice': totalPriceItemHidup
@@ -846,8 +1197,12 @@ export default function EditPurchaseReceive(props) {
         list.splice(index, 1);
         let indexTotal = list.findIndex(obj => obj.idproduct == 'TOTAL');
 
+        let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        }
         
-        let objPrice =calculateTotalPrice(list, ListItemsPurchaseReceiveBiaya, ListItemsInventori)
+        let objPrice =calculateTotalPrice(list, listCharge, ListItemsInventori);
         let totalPrice = objPrice.totalPrice;
         let totalPriceItemHidup = objPrice.totalPriceItemHidup;
         list[indexTotal]['subtotalprice'] = totalPriceItemHidup;
@@ -885,8 +1240,14 @@ export default function EditPurchaseReceive(props) {
         const list = [...ListItemsInventori];
         list.splice(index, 1);
         setListItemsInventori(list);
+        let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        }
 
-        let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive, ListItemsPurchaseReceiveBiaya, list);
+        let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, listCharge, list);
+        let totalPrice = objPrice.totalPrice;
+        let totalPriceItemHidup = objPrice.totalPriceItemHidup;
         setInputTotalPrice(totalPrice);
         // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(ListItemsPurchaseReceiveBiaya,totalPrice));
         setorValue(totalPrice, IsDefaultSetorTotalPrice);
@@ -909,12 +1270,44 @@ export default function EditPurchaseReceive(props) {
 
     const handleRemoveBiaya = index => {
         const list = [...ListItemsPurchaseReceiveBiaya];
+        const listTemp = [...ListItemsPurchaseReceiveBiaya];
         list.splice(index, 1);
+        listTemp.splice(index, 1);
+
         setListItemsPurchaseReceiveBiaya(list);
-        let totalPrice = calculateTotalPrice(ListItemsPurchaseReceive, list, ListItemsInventori);
+
+        let listCharge = listTemp;
+        for(let i=0; i < ListItemsPurchaseReceivePenguranganBiaya.length; i++){
+            listCharge.push(ListItemsPurchaseReceivePenguranganBiaya[i]);
+        }
+
+        let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, listCharge, ListItemsInventori);
+        let totalPrice = objPrice.totalPrice;
+        let totalPriceItemHidup = objPrice.totalPriceItemHidup;
         setInputTotalPrice(totalPrice);
         // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(list,totalPrice));
         setorValue(totalPrice, IsDefaultSetorTotalPrice);
+        setInputSelisih(calcSelisih(ListItemsPurchaseReceive,calculateTotalPriceForSelisih(ListItemsPurchaseReceive,listCharge,[]).totalPrice));
+    };
+
+    const handleRemovePenguranganBiaya = index => {
+        const list = [...ListItemsPurchaseReceivePenguranganBiaya];
+        const listTemp = [...ListItemsPurchaseReceivePenguranganBiaya];
+        list.splice(index, 1);
+        listTemp.splice(index, 1);
+        setListItemsPurchaseReceivePenguranganBiaya(list);
+
+        let listCharge = [...ListItemsPurchaseReceiveBiaya];
+        for(let i=0; i < listTemp.length; i++){
+            listCharge.push(listTemp[i]);
+        }
+        let objPrice = calculateTotalPrice(ListItemsPurchaseReceive, listCharge, ListItemsInventori);
+        let totalPrice = objPrice.totalPrice;
+        let totalPriceItemHidup = objPrice.totalPriceItemHidup;
+        setInputTotalPrice(totalPrice);
+        // setListItemsPurchaseReceiveBiaya(setSetorValueTotalPrice(list,totalPrice));
+        setorValue(totalPrice, IsDefaultSetorTotalPrice);
+        setInputSelisih(calcSelisih(ListItemsPurchaseReceive,calculateTotalPriceForSelisih(ListItemsPurchaseReceive,listCharge,[]).totalPrice));
     };
 
     const handleChangeIsDefaultSetor = (data) => {
@@ -943,6 +1336,8 @@ export default function EditPurchaseReceive(props) {
                     notes: InputNotes,
                     totalprice: InputTotalPrice,
                     isdefaultsetortotalprice: IsDefaultSetorTotalPrice,
+                    setorpinjaman: InputSetorPinjaman,
+                    sisapinjaman: SisaPinjaman,
                     setor: InputSetor,
                     sisadeposit: SisaDeposit,
                     istambahdeposit: IsTambahDeposit,
@@ -953,6 +1348,8 @@ export default function EditPurchaseReceive(props) {
                     smu:InputSMU,
                     flightno:InputFlightNo,
                     notes2:InputNotes2,
+                    kurs: InputKurs,
+                    selisih:InputSelisih,
                 }
             }
             validate={values => {
@@ -967,6 +1364,8 @@ export default function EditPurchaseReceive(props) {
                 setInputSMU(values.smu);
                 setInputFlightNo(values.flightno);
                 setInputNotes2(values.notes2);
+                setInputKurs(values.kurs);
+                setInputSelisih(values.selisih);
                 return errors;
             }}
             enableReinitialize="true"
@@ -1032,7 +1431,7 @@ export default function EditPurchaseReceive(props) {
                                             textField={'label'}
                                             valueField={'value'}
                                             // style={{width: '25%'}}
-                                            // disabled={values.isdisabledcountry}
+                                            disabled={true}
                                             value={values.area}
                                         />
                                         <div className="invalid-feedback-custom">{ErrSelArea}</div>
@@ -1092,7 +1491,7 @@ export default function EditPurchaseReceive(props) {
                                         <div className="invalid-feedback-custom">{ErrInputAccNameBank}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="draftpurchasereceive">
-                                            {i18n.t('Draft')}
+                                            {i18n.t('SPB')}
                                         </label>
 
                                         <DropdownList
@@ -1111,6 +1510,87 @@ export default function EditPurchaseReceive(props) {
                                             disabled={true}
                                         />
 
+                                        {
+                                            values.istambahdeposit ?
+                                                <table width={'100%'}>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <label className="mt-3 form-label required" htmlFor="sisadeposit">
+                                                                    {i18n.t('Sisa Deposit')}
+                                                                </label>
+                                                                <Input
+                                                                    name="sisadeposit"
+                                                                    type="text"
+                                                                    id="sisadeposit"
+                                                                    maxLength={100}
+
+                                                                    onChange={handleChange}
+                                                                    // onChange={val => handleInputNama(val)}
+                                                                    onBlur={handleBlur}
+                                                                    value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
+                                                                    disabled={true}
+                                                                />
+                                                            </td>
+                                                            <td>
+                                                                <label className="mt-3 form-label required" htmlFor="tambahdeposit">
+                                                                    {i18n.t('Tambah Deposit')}
+                                                                </label>
+                                                                <Input
+                                                                    name="tambahdeposit"
+                                                                    type="text"
+                                                                    id="tambahdeposit"
+                                                                    maxLength={100}
+
+                                                                    onChange={handleChange}
+                                                                    // onChange={val => handleInputNama(val)}
+                                                                    onBlur={handleBlur}
+                                                                    value={new String(values.tambahdeposit).replaceAll(".", "") !== '' ? numToMoney(parseFloat(new String(values.tambahdeposit).replaceAll(".", ""))) : ''}
+                                                                    disabled={false}
+                                                                    style={{ borderColor: 'red' }}
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                :
+                                                <div>
+                                                    <label className="mt-3 form-label required" htmlFor="sisadeposit">
+                                                        {i18n.t('Sisa Deposit')}
+                                                    </label>
+                                                    <Input
+
+                                                        name="sisadeposit"
+                                                        type="text"
+                                                        id="sisadeposit"
+                                                        maxLength={100}
+
+                                                        onChange={handleChange}
+                                                        // onChange={val => handleInputNama(val)}
+                                                        onBlur={handleBlur}
+                                                        value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
+                                                        disabled={true}
+                                                    />
+                                                </div>
+                                        }
+
+                                        <label className="mt-3 form-label required" htmlFor="sisapinjaman">
+                                            {i18n.t('Sisa Pinjaman')}
+                                        </label>
+                                        <Input
+
+                                            name="sisapinjaman"
+                                            type="text"
+                                            id="sisapinjaman"
+                                            maxLength={100}
+
+                                            onChange={handleChange}
+                                            // onChange={val => handleInputNama(val)}
+                                            onBlur={handleBlur}
+                                            value={values.sisapinjaman !== '' ? numToMoney(values.sisapinjaman) : ''}
+                                            disabled={true}
+                                        />
+
                                     </div>
 
                                     <div className="mt-2 col-lg-6 ft-detail mb-5">
@@ -1124,6 +1604,7 @@ export default function EditPurchaseReceive(props) {
                                             onChange={val => handleChangeReceiveDate(val)}
                                             format={formatdate}
                                             value={values.receivedate}
+                                            disabled={values.draftpurchasereceive !== 'nodata' && values.draftpurchasereceive !== ''}
                                         />
                                         <div className="invalid-feedback-custom">{ErrReceiveDate}</div>
 
@@ -1193,69 +1674,7 @@ export default function EditPurchaseReceive(props) {
                                             value={values.notes2}
                                             disabled={values.draftpurchasereceive !== '' && values.draftpurchasereceive !== 'nodata'}
                                         />
-                                        {
-                                            values.istambahdeposit ?
-                                                <table width={'100%'}>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <label className="mt-3 form-label required" htmlFor="sisadeposit">
-                                                                    {i18n.t('Sisa Deposit')}
-                                                                </label>
-                                                                <Input
-                                                                    name="sisadeposit"
-                                                                    type="text"
-                                                                    id="sisadeposit"
-                                                                    maxLength={100}
-
-                                                                    onChange={handleChange}
-                                                                    // onChange={val => handleInputNama(val)}
-                                                                    onBlur={handleBlur}
-                                                                    value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
-                                                                    disabled={true}
-                                                                />
-                                                            </td>
-                                                            <td>
-                                                                <label className="mt-3 form-label required" htmlFor="tambahdeposit">
-                                                                    {i18n.t('Tambah Deposit')}
-                                                                </label>
-                                                                <Input
-                                                                    name="tambahdeposit"
-                                                                    type="text"
-                                                                    id="tambahdeposit"
-                                                                    maxLength={100}
-
-                                                                    onChange={handleChange}
-                                                                    // onChange={val => handleInputNama(val)}
-                                                                    onBlur={handleBlur}
-                                                                    value={new String(values.tambahdeposit).replaceAll(".", "") !== '' ? numToMoney(parseFloat(new String(values.tambahdeposit).replaceAll(".", ""))) : ''}
-                                                                    disabled={false}
-                                                                    style={{ borderColor: 'red' }}
-                                                                />
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                :
-                                                <div>
-                                                    <label className="mt-3 form-label required" htmlFor="sisadeposit">
-                                                        {i18n.t('Sisa Deposit')}
-                                                    </label>
-                                                    <Input
-
-                                                        name="sisadeposit"
-                                                        type="text"
-                                                        id="sisadeposit"
-                                                        maxLength={100}
-
-                                                        onChange={handleChange}
-                                                        // onChange={val => handleInputNama(val)}
-                                                        onBlur={handleBlur}
-                                                        value={values.sisadeposit !== '' ? numToMoney(values.sisadeposit) : ''}
-                                                        disabled={true}
-                                                    />
-                                                </div>
-                                        }
+                                        
 
 
                                         <label className="mt-3 form-label required" htmlFor="totalprice">
@@ -1286,7 +1705,7 @@ export default function EditPurchaseReceive(props) {
                                             onChange={handleChange}
                                             // onChange={val => handleInputNama(val)}
                                             onBlur={handleBlur}
-                                            value={calculateTransfer(values.totalprice,values.sisadeposit)?numToMoney(calculateTransfer(values.totalprice,values.sisadeposit)):0}
+                                            value={calculateTransfer(values.totalprice,values.sisadeposit,values.sisapinjaman)?numToMoney(calculateTransfer(values.totalprice,values.sisadeposit,values.sisapinjaman)):0}
                                             disabled={true}
                                         />
                                         {/* <label className="mt-3 form-label required" htmlFor="totalprice">
@@ -1331,12 +1750,65 @@ export default function EditPurchaseReceive(props) {
                                 <div className="invalid-feedback-custom" style={{ fontSize: 'larger' }}>{ErrItemsHidup}</div>
                                 {
                                     // ListItemsPurchaseReceive.length == 0?'':
-                                    <div className="row justify-content-center">
-                                        <h4>{'Input Item Hidup'}</h4>
-                                        <table id="tablegrid">
+                                    <div >
+                                        <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between'
+                                        }}>
+                                            {/* Kiri */}
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <div hidden={flagCalcSelisih?false:true}>
+                                                <label style={{ margin: 0 }}>Kurs : </label>
+                                                    <Input
+                                                    name="kurs"
+                                                    type="text"
+                                                    id="kurs"
+                                                    maxLength={150}
+                                                    style={{ width: '150px' }}
+                                                    // onChange={handleChange}
+                                                    onChange={val => {
+                                                        let value = val.target.value;
+                                                        setFieldValue("kurs", value);
+                                                        calcItemChangeKurs(ListItemsPurchaseReceive,value)
+                                                    }
+                                                    }
+                                                    onBlur={handleBlur}
+                                                    value={values.kurs !== '' ? numToMoney(parseFloat (new String(values.kurs).replaceAll(".", ""))) : ''}
+                                                />
+                                                </div>
+                                                
+                                            </div>
+
+                                            {/* Tengah */}
+                                            <div style={{ textAlign: 'center', flex: 1 }}>
+                                                <h4 style={{ margin: 0 }}>Input Item Hidup</h4>
+                                            </div>
+
+                                            {/* Kanan (kosong, untuk balance) */}
+                                            <div style={{ width: '150px' }}></div>
+                                            <div hidden={flagCalcSelisih?false:true}>
+                                            <label style={{ margin: 0 }}>Selisih : </label>
+                                            <Input
+                                            name="selisih"
+                                            type="text"
+                                            id="selisih"
+                                            maxLength={150}
+                                            style={{ width: '150px' }}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            disabled={true}
+                                            value={values.selisih !== '' ? numToMoney(parseFloat (values.selisih)) : ''}
+                                            />
+                                            </div>
+
+                                        </div>
+                                        <div className="invalid-feedback-custom">{ErrInputKurs}</div>
+                                        <div style={{ overflowX: 'auto' }} >
+                                        <table style={{ minWidth: (flagCalcSelisih?'1200px':'0PX') }} id="tablegrid">
                                             <tbody>
                                                 <tr>
-                                                    <th style={{ width: '50px' }}>
+                                                    {/* <th style={{ width: '50px' }}>
                                                         <IconButton
                                                             style={{ color: 'white' }}
                                                             onClick={() => handleAddItemsHidup()}
@@ -1344,19 +1816,26 @@ export default function EditPurchaseReceive(props) {
                                                         >
                                                             <AddIcon style={{ fontSize: 25 }} />
                                                         </IconButton>
-                                                    </th>
-                                                    <th >{i18n.t('Product')}</th>
-                                                    <th >{i18n.t('Category Product')}</th>
-                                                    <th >{i18n.t('Qty')}</th>
-                                                    <th >{i18n.t('Qty Bonus')}</th>
-                                                    <th >{i18n.t('Price')}</th>
-                                                    <th >{i18n.t('Subtotal Price')}</th>
+                                                    </th> */}
+                                                    <th style={{ minWidth: '150px' }}>{i18n.t('Product')}</th>
+                                                    <th style={{ minWidth: '90px' }}>{i18n.t('Category Product')}</th>
+                                                    <th style={{ minWidth: '70px' }}>{i18n.t('Kg')}</th>
+                                                    <th style={{ minWidth: '60px' }}>{i18n.t('Qty')}</th>
+                                                    {/* <th >{i18n.t('Qty Bonus')}</th> */}
+                                                    <th style={{ minWidth: '60px' }}>{i18n.t('Qty Nota')}</th>
+                                                    <th style={{ minWidth: '80px' }}>{i18n.t('Price')}</th>
+                                                    <th style={{ minWidth: '100px' }}>{i18n.t('Subtotal Price')}</th>
+
+                                                    {flagCalcSelisih && (<th style={{ minWidth: '80px' }}>{i18n.t('Harga Jual')}</th>)}
+                                                    {flagCalcSelisih && (<th style={{ minWidth: '80px' }}>{i18n.t('Harga Jual (Edit)')}</th>)}
+                                                    {flagCalcSelisih && (<th style={{ minWidth: '80px' }}>{i18n.t('Total USD')}</th>)}
+                                                    {flagCalcSelisih && (<th style={{ minWidth: '130px' }}>{i18n.t('Total Rp')}</th>)}
                                                 </tr>
                                                 {
                                                     ListItemsPurchaseReceive.map((x, i) => {
                                                         return (
                                                             <tr>
-                                                                <td >
+                                                                {/* <td >
                                                                     <IconButton
                                                                         color={'primary'}
                                                                         // style={{color:'white'}}
@@ -1366,8 +1845,8 @@ export default function EditPurchaseReceive(props) {
                                                                     >
                                                                         <DeleteIcon style={{ fontSize: 18 }} />
                                                                     </IconButton>
-                                                                </td>
-                                                                <td style={{ width: '20%' }}>
+                                                                </td> */}
+                                                                <td>
                                                                     {
                                                                         x.idproduct !== 'TOTAL'?
                                                                         <DropdownList
@@ -1385,7 +1864,7 @@ export default function EditPurchaseReceive(props) {
                                                                     }
                                                                     
                                                                 </td>
-                                                                <td style={{ width: '20%' }}>
+                                                                <td>
                                                                     {
                                                                         x.idproduct !== 'TOTAL'?
                                                                         <DropdownList
@@ -1403,9 +1882,23 @@ export default function EditPurchaseReceive(props) {
                                                                     }
                                                                     
                                                                 </td>
-                                                                <td>
+                                                                 <td >
                                                                     {
                                                                         x.idproduct !== 'TOTAL'?
+                                                                        <Input
+                                                                    name="totalkg"
+                                                                    type="text"
+                                                                    id="totalkg"
+                                                                    // onChange={val => handleInputChangeItems(val, i, 'H')}
+                                                                    // onBlur={handleBlur}
+                                                                    value={x.totalkg?numToMoney(convertGramToKGAndPembulatan(x.totalkg)):0}
+                                                                    disabled={true}
+                                                                />:''
+                                                                    }
+                                                                    
+                                                                </td>
+                                                                
+                                                                <td>
                                                                         <Input
                                                                             name="qty"
                                                                             type="text"
@@ -1413,24 +1906,25 @@ export default function EditPurchaseReceive(props) {
                                                                             onChange={val => handleInputChangeItems(val, i, 'H')}
                                                                             // onBlur={handleBlur}
                                                                             value={x.qty}
-                                                                        />:''
-                                                                    }
+                                                                            disabled={values.draftpurchasereceive !== 'nodata'}
+                                                                        />
+                                                                    
                                                                     </td>
                                                                 <td>
-                                                                    {
-                                                                        x.idproduct !== 'TOTAL'?
+                                                                   
+
                                                                         <Input
-                                                                            name="qtybonus"
+                                                                            name="qtynota"
                                                                             type="text"
-                                                                            id="qtybonus"
+                                                                            id="qtynota"
                                                                             onChange={val => handleInputChangeItems(val, i, 'H')}
                                                                             // onBlur={handleBlur}
-                                                                            value={x.qtybonus}
-                                                                        />:''
-                                                                    }
+                                                                            value={x.qtynota}
+                                                                            disabled={x.idproduct == 'TOTAL'}
+                                                                        />
                                                                     </td>
 
-                                                                <td style={{ width: '15%' }}>
+                                                                <td>
                                                                     {
                                                                         x.idproduct !== 'TOTAL'?
                                                                         <Input
@@ -1445,7 +1939,7 @@ export default function EditPurchaseReceive(props) {
                                                                     }
                                                                     </td>
 
-                                                                <td style={{ width: '15%' }}>
+                                                                <td>
                                                                     <Input
                                                                         name="subtotalprice"
                                                                         type="text"
@@ -1456,6 +1950,66 @@ export default function EditPurchaseReceive(props) {
                                                                         value={x.subtotalprice !== '' ? numToMoney(parseFloat(x.subtotalprice)) : ''}
                                                                         disabled={true}
                                                                     /></td>
+                                                            {flagCalcSelisih &&
+                                                            (<td >
+                                                            {
+                                                                x.idproduct !== 'TOTAL'?
+                                                                <Input
+                                                                name="hargaJual"
+                                                                type="text"
+                                                                id="hargaJual"
+                                                                // onChange={val => handleInputChangeItemsPriceEdit(val, i, 'H')}
+                                                                // onBlur={handleBlur}
+                                                                // value={x.subtotalprice}
+                                                                value={x.hargaJual !== '' ? numToMoney(parseFloat(x.hargaJual)) : ''}
+                                                                disabled={true}
+                                                            />:''
+                                                            }
+                                                            </td>)}
+                                                        {flagCalcSelisih &&
+                                                        (<td >
+                                                            {
+                                                                x.idproduct !== 'TOTAL'?
+                                                                <Input
+                                                                name="hargaJualEdit"
+                                                                type="text"
+                                                                id="hargaJualEdit"
+                                                                onChange={val => handleInputChangeItemsPriceEdit(val, i, 'H')}
+                                                                // onBlur={handleBlur}
+                                                                // value={x.subtotalprice}
+                                                                value={x.hargaJualEdit !== '' ? numToMoney(parseFloat(x.hargaJualEdit)) : ''}
+                                                                // disabled={true}
+                                                            />:''
+                                                            }
+                                                            </td>)}
+
+                                                            {flagCalcSelisih &&
+                                                            (<td >
+                                                                <Input
+                                                                name="totalUSD"
+                                                                type="text"
+                                                                id="totalUSD"
+                                                                // onChange={val => handleInputChangeItemsPriceEdit(val, i, 'H')}
+                                                                // onBlur={handleBlur}
+                                                                // value={x.subtotalprice}
+                                                                value={x.totalUSD !== '' ? numToMoney(parseFloat(x.totalUSD)) : ''}
+                                                                disabled={true}
+                                                            />
+                                                            </td>)}
+                                                            
+                                                            {flagCalcSelisih &&
+                                                            (<td >
+                                                            <Input
+                                                                name="totalRupiah"
+                                                                type="text"
+                                                                id="totalRupiah"
+                                                                // onChange={val => handleInputChangeItemsPriceEdit(val, i, 'H')}
+                                                                // onBlur={handleBlur}
+                                                                // value={x.subtotalprice}
+                                                                value={x.totalRupiah !== '' ? numToMoney(parseFloat(x.totalRupiah)) : ''}
+                                                                disabled={true}
+                                                            />
+                                                            </td>)}
 
                                                             </tr>
                                                         )
@@ -1463,6 +2017,8 @@ export default function EditPurchaseReceive(props) {
                                                 }
                                             </tbody>
                                         </table>
+                                        </div>
+
                                     </div>
                                 }
 
@@ -1575,6 +2131,7 @@ export default function EditPurchaseReceive(props) {
                                                         )
                                                     })
                                                 }
+                                                {totalTableItemMati(ListItemsPurchaseReceiveMati)}
                                             </tbody>
                                         </table>
                                     </div>
@@ -1585,7 +2142,7 @@ export default function EditPurchaseReceive(props) {
                                 {
                                     // ListItemsPurchaseReceiveBiaya.length == 0?'':
                                     <div className="row justify-content-center">
-                                        <h4>{'Input Biaya'}</h4>
+                                        <h4>{'Input Penambahan Biaya'}</h4>
                                         <table id="tablegrid">
                                             <tbody>
                                                 <tr>
@@ -1622,8 +2179,9 @@ export default function EditPurchaseReceive(props) {
                                                                     id="namabiaya"
                                                                     // onChange={val => handleInputChangeBiaya(val,i)}
                                                                     // onBlur={handleBlur}
-                                                                    value={x.namabiaya}
-                                                                    disabled={true}
+                                                                    value={x.namabiayacustom}
+                                                                    onChange={val => handleInputChangeBiaya(val, i)}
+                                                                    disabled={x.namabiaya == 'BOAT' || x.namabiaya == 'BANTUAN'?false:true}
                                                                 /></td>
                                                                 <td><Input
                                                                     name="qty"
@@ -1660,6 +2218,92 @@ export default function EditPurchaseReceive(props) {
                                                         )
                                                     })
                                                 }
+                                                {totalTableBiaya(ListItemsPurchaseReceiveBiaya)}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+
+                                {
+                                    // ListItemsPurchaseReceiveBiaya.length == 0?'':
+                                    <div className="row justify-content-center">
+                                        <h4>{'Input Pengurangan Biaya'}</h4>
+                                        <table id="tablegrid">
+                                            <tbody>
+                                                <tr>
+                                                    <th>
+                                                        {/* <IconButton 
+                                            style={{color:'white'}}
+                                                onClick={() => handleAddBiaya()}
+                                            >
+                                                <AddIcon style={{ fontSize: 25 }}/>
+                                            </IconButton> */}
+                                                    </th>
+                                                    <th >{i18n.t('Nama')}</th>
+                                                    <th >{i18n.t('Qty')}</th>
+                                                    <th >{i18n.t('Price')}</th>
+                                                    <th >{i18n.t('Subtotal Price')}</th>
+                                                </tr>
+                                                {
+                                                    ListItemsPurchaseReceivePenguranganBiaya.map((x, i) => {
+                                                        return (
+                                                            <tr>
+                                                                <td >
+                                                                    <IconButton
+                                                                        color={'primary'}
+                                                                        // style={{color:'white'}}
+                                                                        onClick={() => handleRemovePenguranganBiaya(i)}
+                                                                    // hidden={showplusdebit}
+                                                                    >
+                                                                        <DeleteIcon style={{ fontSize: 18 }} />
+                                                                    </IconButton>
+                                                                </td>
+                                                                <td><Input
+                                                                    name="namabiaya"
+                                                                    type="text"
+                                                                    id="namabiaya"
+                                                                    // onChange={val => handleInputChangeBiaya(val,i)}
+                                                                    // onBlur={handleBlur}
+                                                                    value={x.namabiayacustom == 'SETORPINJAMAN'?'SETOR PINJAMAN':x.namabiayacustom}
+                                                                    onChange={val => handleInputChangePenguranganBiaya(val, i)}
+                                                                    disabled={x.namabiaya == 'BOAT' || x.namabiaya == 'BANTUAN'?false:true}
+                                                                /></td>
+                                                                <td><Input
+                                                                    name="qty"
+                                                                    type="text"
+                                                                    id="qty"
+                                                                    onChange={val => handleInputChangePenguranganBiaya(val, i)}
+                                                                    onBlur={handleBlur}
+                                                                    value={x.qty}
+                                                                /></td>
+
+                                                                <td style={{ width: '15%' }}>
+                                                                    <Input
+                                                                        name="price"
+                                                                        type="text"
+                                                                        id="price"
+                                                                        onChange={val => handleInputChangePenguranganBiaya(val, i)}
+                                                                        onBlur={handleBlur}
+                                                                        value={x.price !== '' ? numToMoney(parseFloat(x.price)) : ''}
+                                                                        disabled={x.namabiaya == 'BOX' || x.namabiaya == 'ONGKOS'}
+                                                                    /></td>
+
+                                                                <td style={{ width: '15%' }}>
+                                                                    <Input
+                                                                        name="subtotal"
+                                                                        type="text"
+                                                                        id="subtotal"
+                                                                        // onChange={val => handleInputChangePrice(val,i)}
+                                                                        onBlur={handleBlur}
+                                                                        value={x.subtotal !== '' ? numToMoney(parseFloat(x.subtotal)) : ''}
+                                                                        disabled={true}
+                                                                    /></td>
+
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                                {totalTablePenguranganBiaya(ListItemsPurchaseReceivePenguranganBiaya)}
                                             </tbody>
                                         </table>
                                     </div>
@@ -1749,6 +2393,7 @@ export default function EditPurchaseReceive(props) {
                                                         )
                                                     })
                                                 }
+                                                {totalTableInventori(ListItemsInventori)}
                                             </tbody>
                                         </table>
                                     </div>

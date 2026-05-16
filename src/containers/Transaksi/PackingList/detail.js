@@ -24,8 +24,8 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { MenuPackingList, deletePackingList_Permission, editPackingList_Permission } from '../../shared/permissionMenu';
+  import { formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { MenuPackingList, cancelPackingList_Permission, deletePackingList_Permission, editPackingListItemCheck_Permission, editPackingList_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
   import '../../CSS/table.css';
@@ -51,7 +51,7 @@ import React, {useState,
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
-
+    let flagCheck = isGetPermissions(editPackingListItemCheck_Permission,'TRANSACTION');
     const id = props.match.params.id;
 
     const [ListItem, setListItem] = useState([]);
@@ -118,6 +118,38 @@ import React, {useState,
             //   Swal.fire('Changes are not saved', '', 'info')
             }
           })
+    }
+
+    const updatePrice = () => {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                setLoading(true);
+                dispatch(actions.getPackingListData( {url:'/updateprice/'+id,type:'GET'},succesHandlerSubmitUpdatePrice, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+        
+    }
+    const succesHandlerSubmitUpdatePrice = (data) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(0);
+            }
+        })
     }
 
     const succesHandlerSubmit = (data) => {
@@ -222,6 +254,13 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Vendor UPI')}</span>
+                                <strong className="col-md-7">
+                                {value.vendorName ?value.vendorName+'/'+value.vendorAlias:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Customer')}</span>
                                 <strong className="col-md-7">
                                 {value.customerName ?value.customerName+'/'+value.customerAlias:''}
@@ -259,7 +298,7 @@ import React, {useState,
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Netto')}</span>
                                 <strong className="col-md-7">
-                                {value.netto ?numToMoney(value.netto):''}
+                                {value.netto ?formatRupiah(new String(value.netto).replaceAll('.',','),1):''}
                                 </strong>
                             </div>
 
@@ -316,10 +355,11 @@ import React, {useState,
                         <th >{i18n.t('Product')}</th>
                         <th >{i18n.t('Category Product')}</th>
                         <th >{i18n.t('Qty')}</th>
-                        <th >{i18n.t('Bruto Weight')}</th>
-                        <th >{i18n.t('Allowance')}</th>
-                        <th >{i18n.t('Netto Weight')}</th>
-                        <th >{i18n.t('Price')}</th>
+                        <th >{i18n.t('Bruto Weight(Gr)')}</th>
+                        {flagCheck && (<th >{i18n.t('Check')}</th>)}
+                        <th >{i18n.t('Allowance(%)')}</th>
+                        <th >{i18n.t('Netto Weight(Kg)')}</th>
+                        <th >{i18n.t('Price(USD)')}</th>
                         <th >{i18n.t('Subtotal Price')}</th>
                         </tr>
                         {
@@ -328,13 +368,15 @@ import React, {useState,
                                     <tr>
                                         <td>{x.box}</td>
                                         <td>{x.productName}</td>
-                                        <td>{x.categoryProductName +' ('+x.categoryProductSize+')'}</td>
+                                        <td>{x.categoryProductName +' ('+x.categoryProductSize+') ('+x.categoryJumlahitemsperkoli+')'}</td>
                                         <td>{x.qty}</td>
                                         <td>{x.brutoweight?numToMoney(x.brutoweight):0}</td>
+                                        {flagCheck && (<td>{x.check?'Yes':'No'}</td>)}
                                         <td>{x.allowance?numToMoney(x.allowance):0}</td>
-                                        <td>{x.nettoweight?numToMoney(x.nettoweight):0}</td>
+                                        <td>{x.nettoweight?formatRupiah(new String(x.nettoweight).replaceAll('.',','),1):0}</td>
+                                        {/* <td>{x.nettoweight?numToMoney(x.nettoweight):0}</td> */}
                                         <td>{x.price?numToMoney(x.price):0}</td>
-                                        <td>{x.totalprice?numToMoney(x.totalprice):0}</td>
+                                        <td>{x.totalprice?formatRupiah(new String(x.totalprice).replaceAll('.',','),1):0}</td>
                                     </tr>
                                 )
                             })
@@ -366,7 +408,9 @@ import React, {useState,
                         :(<div>
                             <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => history.push(pathmenu.printpdfpackinglist+'/'+id)}>{i18n.t('PDF Packing List')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => downloadExcelPL()}>{i18n.t('Excel Packing List')}</MenuItem>
+                            <MenuItem hidden={value.isalreadyupdateprice != null && value.isalreadyupdateprice != undefined? (isGetPermissions(editPackingList_Permission,'TRANSACTION')?value.isalreadyupdateprice: true):true}  onClick={() => updatePrice()}>{i18n.t('Update Price')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editPackingList_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editpackinglist+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(cancelPackingList_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.cancelpackinglist+'/'+id)}>{i18n.t('Cancel Packing List')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deletePackingList_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={!isGetPermissions(MenuPurchaseReceive,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Nota')}</MenuItem> */}
                             

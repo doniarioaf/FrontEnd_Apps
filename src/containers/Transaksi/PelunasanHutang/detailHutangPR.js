@@ -368,6 +368,22 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Vendor')}</span>
+                            <strong className="col-md-7">
+                                {value.detailPR?value.detailPR.vendoralias:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Tanggal')}</span>
+                            <strong className="col-md-7">
+                                {value.detailPR?(value.detailPR.transactiondate?moment(value.detailPR.transactiondate).format(formatdate):""):''}
+                            </strong>
+                            </div>
+
+                            
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Total Udang')}</span>
                             <strong className="col-md-7">
                                 {getTotalUdang((value.detailPR?value.detailPR.items:[]))}

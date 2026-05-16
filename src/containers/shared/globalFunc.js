@@ -2,6 +2,7 @@ import numeral from 'numeral';
 import * as key from '../../containers/shared/constantKey';
 import CryptoJS from 'crypto-js';
 import * as pathmenu           from './pathMenu';
+import { param } from 'jquery';
 
 export const deleteSessionAndLocalStorage = () =>{
     localStorage.removeItem(key.token);
@@ -109,13 +110,13 @@ export const isGetPermissions = (listPermission,action)  =>{
     //         return false;
     //     }
     // }
-
-    if(getPermissions().indexOf('SUPERUSER') > -1){
+    let listPermissionUser = getPermissions();
+    if(listPermissionUser.indexOf('SUPERUSER') > -1){
         return true;
     }else if(listPermission.length > 0){
         let countPermission = 0;
         for (var i = 0; i < listPermission.length; i++) {
-            if(getPermissions().indexOf(listPermission[i]) > -1){
+            if(listPermissionUser.indexOf(listPermission[i]) > -1){
                 countPermission++;
             }
         }
@@ -207,6 +208,76 @@ export const numToMoney = (amount) =>{
         }
 };
 
+export const numToMoneyNegative = (amount) => {
+     if (amount === null || amount === undefined) return "";
+
+    let value = amount.toString();
+
+    // kondisi sementara
+    if (value === "-" || value === "," || value.endsWith(",")) {
+        return value;
+    }
+
+    // hapus separator ribuan lama
+    value = value.replace(/\./g, "");
+
+    let isNegative = value.startsWith("-");
+    if (isNegative) {
+        value = value.substring(1);
+    }
+
+    let parts = value.split(",");
+
+    let integerPart = parts[0];
+    let decimalPart = parts[1];
+
+    if (!isNaN(integerPart)) {
+        integerPart = parseInt(integerPart || 0)
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    let result = integerPart;
+
+    if (decimalPart !== undefined) {
+        result += "," + decimalPart;
+    }
+
+    if (isNegative) {
+        result = "-" + result;
+    }
+
+    return result;
+};
+
+export const rupiahToNumber = (value) => {
+    
+    if (!value) return 0;
+    // if(!isNaN(String(value))) return parseFloat(value);
+    let normalized = value
+        .toString()
+        .replace(/\./g, "")   // hapus ribuan
+        .replace(",", ".");   // ubah desimal
+
+    return parseFloat(normalized);
+};
+
+export const isValidNumber = (value) => {
+    const regex = /^-?\d*$/;
+    return regex.test(value);
+    }
+export const isValidRupiahValue = (value) => {
+    if (!value) return false;
+    //  const regex = /^-?\d{1,3}(\.\d{3})*(,\d+)?$/;
+
+    // if (!regex.test(value)) return false;
+
+    return Number(
+        value.replace(/\./g, "").replace(",", ".")
+    );
+    // const normalized = rupiahToNumber(value);
+    // return !isNaN(normalized);
+};
 export const formatMoney = (amount) => {
     const returnamount = amount;
     amount = amount.replaceAll('.','');
@@ -399,6 +470,76 @@ export const terbilang = (nilai) =>{
     return numToMoney(parseFloat(nilai));
   }
 
+  export const pembulatanNilai = (nilai,param) =>{
+    let down = param.isdown?param.isdown:false;
+    let numberdesimal = param.numberdesimal?param.numberdesimal:0;
+    let pembagian = 10;
+    if(numberdesimal == 2){
+        pembagian = 100;
+    }else if(numberdesimal == 3){
+        pembagian = 1000;
+    }
+    
+    if(new String(nilai).includes(',')){
+        let splitComma = new String(nilai).split(','); 
+        let valNilai = nilai;
+        if(splitComma.length > numberdesimal){
+            let start = 0;
+            let end = numberdesimal+1;
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(start,end):'';
+            valNilai = splitComma[0]+","+desimal;
+        }
+        let nilNumber = removeFormatRupiah(valNilai);
+        // if(down){
+        //     return Math.floor(parseFloat(nilNumber) * pembagian) / pembagian;
+        // }
+        // return Math.ceil(parseFloat(nilNumber) * pembagian) / pembagian;
+        return Math.round(parseFloat(nilNumber) * pembagian) / pembagian;
+    }else{
+        let splitComma = new String(nilai).split('.'); 
+        let valNilai = nilai;
+        if(splitComma.length > numberdesimal){
+            let start = 0;
+            let end = numberdesimal+1;
+            let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(start,end):'';
+            valNilai = splitComma[0]+"."+desimal;
+        }
+        // if(down){
+        //     return Math.floor(parseFloat(valNilai) * pembagian) / pembagian;
+        // }
+        // return Math.ceil(parseFloat(valNilai) * pembagian) / pembagian;
+        
+        return Math.round(parseFloat(valNilai) * pembagian) / pembagian;
+    }
+    // dibagi 10, jadinya 1 desimal
+    // dibagi 100, jadinya 2 desimal
+    // dst
+  }
+
+  export const roundCeiling = (value, decimals = 0) => {
+    // ga usah bingung sama penamaan ceiling, tadinya ceiling diganti halfup, biar ga ribet
+    const factor = Math.pow(10, decimals);
+    // tambahkan 0.5 lalu floor → hasilnya seperti HALF_UP
+    return Math.floor(value * factor + 0.5) / factor;
+}
+
+  export const convertGramToKG = (param) =>{
+    let nilaigr = param.nilaigr?param.nilaigr:'';
+    if(nilaigr !== ''){
+        return parseFloat(nilaigr) / 1000;
+    }
+    return 0;
+
+  }
+
+  export const convertGramToKGAndPembulatan = (value) =>{
+    let totalnetto = value;
+        totalnetto = convertGramToKG({nilaigr:totalnetto});
+        totalnetto = pembulatanNilai(totalnetto,{isdown:false,numberdesimal:1});
+
+    return totalnetto;
+}
+
   export const desimal00 = (nilai) =>{
     if(new String(nilai).includes(',')){
         let splitComma = new String(nilai).split(','); 
@@ -413,6 +554,35 @@ export const terbilang = (nilai) =>{
         }   
     }
     return nilai+',00';
+  }
+
+  export const desimal000 = (nilai,param) =>{
+    let isShow000 = param.isShow000?param.isShow000:false;
+    if(new String(nilai).includes(',')){
+        let splitComma = new String(nilai).split(','); 
+        let angka = splitComma[0];
+        let desimal = splitComma[1] !== undefined?splitComma[1]:'';
+        if(new String(desimal).length > 2){
+            return nilai;
+        }else if(new String(desimal).length == 2){
+            return angka+','+desimal+'0';
+        }else if(new String(desimal).length == 1){
+            return angka+','+desimal+'00';
+        }else if(new String(desimal).length == 0){
+            if(isShow000){
+                return angka+',000';
+            }else{
+                return angka;
+            }
+            
+        }   
+    }
+    if(isShow000){
+        return nilai+',000';
+    }else{
+        return nilai;
+    }
+    
   }
 
   export const getFormatFile = (filename) => {

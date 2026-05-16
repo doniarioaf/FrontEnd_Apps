@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { MenuInvoice, deleteInvoice_Permission, editInvoice_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
@@ -47,6 +47,7 @@ import React, {useState,
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState([]);
+    const [TotalAmount, setTotalAmount] = useState(0);
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
@@ -98,6 +99,15 @@ import React, {useState,
         let packinglist = det.packinglist;
         let listItems = packinglist.items?packinglist.items:[];
         setListItem(listItems);
+        if(listItems.length > 0){
+            let totalamount = 0;
+            for(let i=0; i < listItems.length; i++){
+                let det = listItems[i];
+                let totalprice = det.totalprice?det.totalprice:0;
+                totalamount += parseFloat(totalprice);
+            }
+            setTotalAmount(totalamount.toFixed(2));
+        }
         setLoading(false);
     }
 
@@ -121,6 +131,44 @@ import React, {useState,
           })
     }
 
+    const submitHandlerRecalculate = () => {
+        Swal.fire({
+            title: i18n.t('label_DIALOG_ALERT_SURE'),
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+            denyButtonText: `Don't save`,
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                setLoading(true);
+                let obj = new Object();
+                obj.date = null;
+                obj.kurs = null;
+                obj.idpackinglist = null;
+                obj.phone = null;
+                obj.totalamount = TotalAmount;
+                dispatch(actions.submitInvoice({ url: '/recalculate/'+id, payload: obj, type: 'EDIT' }, succesHandlerSubmitRefresh, errorHandler));
+            //   Swal.fire('Saved!', '', 'success')
+            } else if (result.isDenied) {
+            //   Swal.fire('Changes are not saved', '', 'info')
+            }
+          })
+        
+    }
+
+    const succesHandlerSubmitRefresh = (data) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(0);
+            }
+        })
+    }
     const succesHandlerSubmit = (data) => {
         setLoading(false);
         Swal.fire({
@@ -135,23 +183,23 @@ import React, {useState,
     }
 
     const downloadExcel = () => {
-            setLoading(true);
-            dispatch(actions.getInvoiceData( {url:'/printexcel/'+id,type:'GETFILE',typefile:'application/vnd.ms-excel'},successHandlerExcel, errorHandler));
-        }
+        setLoading(true);
+        dispatch(actions.getInvoiceData( {url:'/printexcel/'+id,type:'GETFILE',typefile:'application/vnd.ms-excel'},successHandlerExcel, errorHandler));
+    }
     
-        function successHandlerExcel(data,propsdata) {
-            var blob = new Blob([data],{ type: 'application/vnd.ms-excel'});
-            var dataUrl = URL.createObjectURL(blob);
-            var fileLink = document.createElement('a');
-            fileLink.href = dataUrl;
-    
-            // it forces the name of the downloaded file
-            // fileLink.download = 'Invoice.xlsx';
-            fileLink.download = 'Invoice-'+moment(new Date()).format(formatdateYYYYMMDD)+'-'+value.nodocument+'.xlsx';
-            fileLink.click();
-            fileLink.remove();
-            setLoading(false);
-        }
+    function successHandlerExcel(data,propsdata) {
+        var blob = new Blob([data],{ type: 'application/vnd.ms-excel'});
+        var dataUrl = URL.createObjectURL(blob);
+        var fileLink = document.createElement('a');
+        fileLink.href = dataUrl;
+
+        // it forces the name of the downloaded file
+        // fileLink.download = 'Invoice.xlsx';
+        fileLink.download = 'Invoice-'+moment(new Date()).format(formatdateYYYYMMDD)+'-'+value.nodocument+'.xlsx';
+        fileLink.click();
+        fileLink.remove();
+        setLoading(false);
+    }
     
 
     function errorHandler(error,propsdata) {
@@ -221,6 +269,13 @@ import React, {useState,
                             <span className="col-md-5">{i18n.t('No Document PL')}</span>
                             <strong className="col-md-7">
                                 {value.packinglist?value.packinglist.nodocument:''}
+                            </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Vendor UPI')}</span>
+                            <strong className="col-md-7">
+                                {value.packinglist?value.packinglist.vendorAlias:''}
                             </strong>
                             </div>
 
@@ -328,9 +383,9 @@ import React, {useState,
                                         <td>{x.qty}</td>
                                         <td>{x.brutoweight?numToMoney(x.brutoweight):0}</td>
                                         <td>{x.allowance?numToMoney(x.allowance):0}</td>
-                                        <td>{x.nettoweight?numToMoney(x.nettoweight):0}</td>
+                                        <td>{x.nettoweight?formatRupiah(new String(x.nettoweight).replaceAll('.',','),1):0}</td>
                                         <td>{x.price?numToMoney(x.price):0}</td>
-                                        <td>{x.totalprice?numToMoney(x.totalprice):0}</td>
+                                        <td>{x.totalprice?formatRupiah(new String(x.totalprice).replaceAll('.',','),1):0}</td>
                                     </tr>
                                 )
                             })
@@ -363,6 +418,7 @@ import React, {useState,
                             <MenuItem hidden={!isGetPermissions(MenuInvoice,'TRANSACTION')}  onClick={() => history.push(pathmenu.printpdfinvoice+'/'+id)}>{i18n.t('PDF Invoice')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(MenuInvoice,'TRANSACTION')}  onClick={() => downloadExcel()}>{i18n.t('Excel Invoice')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editInvoice_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editinvoice+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(editInvoice_Permission,'TRANSACTION') == false?(value !== null?!value.ispackinglistupdate:true) :true}  onClick={() => submitHandlerRecalculate()}>{i18n.t('Recalculate')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteInvoice_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={!isGetPermissions(MenuPurchaseReceive,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Nota')}</MenuItem> */}
                             

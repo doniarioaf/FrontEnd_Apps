@@ -44,21 +44,38 @@ const PelunasanPiutangIndex = () => {
         const [columnspiutang] = useState([
             { name: 'id', title: 'id' },
             { name: 'nodoc', title: i18n.t('No Document') },
+            { name: 'nodocpl', title: i18n.t('No Packing List') },
             { name: 'customer', title: i18n.t('Customer') },
+            { name: 'vendor', title: i18n.t('Vendor') },
             { name: 'transdate', title: i18n.t('Tanggal') },
             { name: 'amount', title: i18n.t('Amount($)') },
-            { name: 'amountRp', title: i18n.t('Amount(Rp)') },
+            // { name: 'amountRp', title: i18n.t('Amount(Rp)') },
             { name: 'outstanding', title: i18n.t('Outstanding($)') },
         ]);
         const [columns] = useState([
             { name: 'id', title: 'id' },
             { name: 'nodoc', title: i18n.t('No Document') },
+            { name: 'nodocpl', title: i18n.t('No Packing List') },
             { name: 'customer', title: i18n.t('Customer') },
             { name: 'transdate', title: i18n.t('Tanggal') },
             { name: 'amount', title: i18n.t('Amount($)') },
-            { name: 'amountRp', title: i18n.t('Amount(Rp)') },
+            // { name: 'amountRp', title: i18n.t('Amount(Rp)') },
         ]);
-        const [tableColumnExtensions] = useState([]);
+        const [tableColumnExtensions] = useState([
+            { columnName: 'customer', width: '400' },
+                { columnName: 'nodoc', width: '200' },
+                { columnName: 'nodocpl', width: '200' },
+                { columnName: 'transdate', width: '150' },
+                { columnName: 'amount', width: '150' },
+        ]);
+        const [tableColumnExtensionsPiutang] = useState([
+                { columnName: 'customer', width: '400' },
+                { columnName: 'vendor', width: '300' },
+                { columnName: 'nodoc', width: '200' },
+                { columnName: 'nodocpl', width: '200' },
+                { columnName: 'transdate', width: '150' },
+                { columnName: 'outstanding', width: '150' },
+            ]);
         const [loading, setLoading] = useState(false);
 
         let getdate = firstAndLastDateInMonth();
@@ -100,7 +117,9 @@ const PelunasanPiutangIndex = () => {
                     {
                         'id': el.id,
                         'nodoc': el.nodocument,
-                        'customer': el.customerName,
+                        'nodocpl': el.nodocumentPL,
+                        'customer': el.customerName+' / '+el.customerAlias,
+                        'vendor': el.vendorName+' / '+el.vendorAlias,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
                         'amount': el.amount?formatRupiah((el.amount?new String(el.amount).replaceAll('.',','):''),2):0,
                         'amountRp': formatRupiah(new String(calculateDolarToRupiah(el.amount,el.kurs)).replaceAll('.',','),2),
@@ -119,7 +138,9 @@ const PelunasanPiutangIndex = () => {
                     {
                         'id': el.id,
                         'nodoc': el.nodocument,
-                        'customer': el.customerName,
+                        'nodocpl': el.nodocumentPL,
+                        'customer': el.customerName+' / '+el.customerAlias,
+                        'vendor': el.vendorName+' / '+el.vendorAlias,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
                         'amount': el.amount?formatRupiah((el.amount?new String(el.amount).replaceAll('.',','):''),2):0,
                         'amountRp': formatRupiah(new String(calculateDolarToRupiah(el.amount,el.kurs)).replaceAll('.',','),2),
@@ -164,8 +185,9 @@ const PelunasanPiutangIndex = () => {
                     {
                         'id': el.id,
                         'nodoc': el.nodocument,
+                        'nodocpl': el.noDocumentPL,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
-                        'customer': el.customerName,
+                        'customer': el.customerName+' / '+el.customerAlias,
                         'amount': el.amountInvoice?formatRupiah((el.amountInvoice?new String(el.amountInvoice).replaceAll('.',','):''),2):0,
                         'amountRp': formatRupiah(new String(calculateDolarToRupiah(el.amountInvoice,el.kursInvoice)).replaceAll('.',',')),
                     }
@@ -263,7 +285,7 @@ const PelunasanPiutangIndex = () => {
             let list = [];
             if(selection.length > 0){
                 for(let i=0; i < selection.length; i++){
-                    let val = rowspiutang[i];
+                    let val = rowspiutang[selection[i]];
                     list.push(val.id);
                 }
                 localStorage.setItem('meo!kmadmasku',list.join(','));
@@ -441,7 +463,7 @@ const PelunasanPiutangIndex = () => {
                                     columns={columnspiutang}
                                     totalCounts={rowspiutang.length}
                                     loading={loading}
-                                    columnextension={tableColumnExtensions}
+                                    columnextension={tableColumnExtensionsPiutang}
                                     selection={selection}
                                     setselection={setSelection}
                                     // permissionadd={!isGetPermissions(addDraftPurchaseReceive_Permission, 'TRANSACTION')}

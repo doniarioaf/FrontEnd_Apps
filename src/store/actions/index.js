@@ -75,5 +75,12 @@ export {
     getCargoData,
     submitCargo,
     getPelunasanPiutangData,
-    submitPelunasanPiutang
+    submitPelunasanPiutang,
+    getKomisiData,
+    submitKomisi,
+    getPinjamanData,
+    submitPinjaman,
+    getCancelPackingListData,
+    submitCancelPackingList,
+    submitJournal
 } from './admin';
