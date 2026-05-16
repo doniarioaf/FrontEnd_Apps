@@ -133,6 +133,7 @@ const convertkg = (value) =>{
 }
 
 const calcNettoHeader = (value) =>{
+    
     let packinglist = value.packinglist;
     let items = packinglist.items;
 
@@ -141,12 +142,32 @@ const calcNettoHeader = (value) =>{
     for(let i=0; i < listfilteroutput.length; i++){
         let det = listfilteroutput[i];
         let nettoweight = det.nettoweight?det.nettoweight:0;
-            nettoweight = convertkg(nettoweight);
+            // nettoweight = convertkg(nettoweight);
 
         //kenapa totalan netto tidak ambil dari value.netto / total netto header karena ketika gr convert ke kg terjadi pembulatan sehingga ketika netto header di convert ke kg menjadi tidak sama desimal nya
         totalnetto += nettoweight;
     }
+    
     return totalnetto;
+}
+
+const getMaxBox = (value) =>{
+    //ambil box yang paling
+    let packinglist = value.packinglist;
+    let items = packinglist.items;
+
+    let listfilteroutput = items;
+    // let totalnetto = 0;
+    let valBox = 0;
+    for(let i=0; i < listfilteroutput.length; i++){
+        let det = listfilteroutput[i];
+        let box = det.box?det.box:0;
+        if(parseInt(box) > valBox){
+            valBox = parseInt(box);
+        }
+    }
+    
+    return valBox;
 }
 
 const setItems = (value) =>{
@@ -175,7 +196,7 @@ const setItems = (value) =>{
             let rowItem = [];
             
             let nettoweight = det.nettoweight?det.nettoweight:0;
-            nettoweight = convertkg(nettoweight);
+            // nettoweight = convertkg(nettoweight);
 
             totalnetto += nettoweight;
 
@@ -252,9 +273,10 @@ const setItems = (value) =>{
         );
         rowItem.push(
             <View style={[styles.tableColWidth, { width:styles.width.noofbox, height: "25px" }]}>
-                <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{listfilteroutput.length}</Text>
+                <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{getMaxBox(value)}</Text>
             </View>
         );
+        
         rowItem.push(
             <View style={[styles.tableColWidth, { borderRight:0,width:styles.width.harga, height: "25px" }]}>
                 <Text style={[styles.tableCell, {  width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{'USD'}</Text>
