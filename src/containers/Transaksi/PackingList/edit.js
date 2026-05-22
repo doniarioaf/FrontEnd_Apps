@@ -59,6 +59,8 @@ export default function EditPackingList(props) {
     const [SelVendor, setSelVendor] = useState("");
     const [ErrSelVendor, setErrSelVendor] = useState("");
 
+    const [DataItemDB, setDataItemDB] = useState([]);
+
     let flagCheck = isGetPermissions(editPackingListItemCheck_Permission,'TRANSACTION');
 
     const id = props.match.params.id;
@@ -135,6 +137,7 @@ export default function EditPackingList(props) {
                 'check': el.check?true:false,
             }
         ], []);
+        setDataItemDB({idcustomer:det.idcustomer,items:listItem});
         setListItems(listItem);
 
         let theDataProd = det.items.reduce((obj, el) => [
@@ -154,6 +157,7 @@ export default function EditPackingList(props) {
         // setLoading(false);
     }
     function successHandlerPriceList(data, propsdata) {
+        let isrecalculate = propsdata.isrecalculate?propsdata.isrecalculate:false;
         if(data.data){
             let items = data.data.items?data.data.items:[]; 
             
@@ -171,6 +175,11 @@ export default function EditPackingList(props) {
                 setListCategoryProduct(theDataProd);
 
                 setPriceList(data.data);
+
+                if(isrecalculate){
+                    setListItems(recalculateItems(ListItems,data.data));
+                }
+
             }
         }else{
             msgInfo("Tidak ada dokumen pricelist pada tanggal tersebut");
@@ -581,8 +590,50 @@ export default function EditPackingList(props) {
         setSelCustomer(id);
 
         setLoading(true);
-        dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + TransDate.getTime()+'&idcustomer='+id }, successHandlerPriceList, errorHandler));
+        dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + TransDate.getTime()+'&idcustomer='+id,propsdata:{isrecalculate:true} }, successHandlerPriceList, errorHandler));
 
+    }
+
+    const recalculateItems = (items,pricelist) => {
+        let listitems = [...items];
+        let listpricelist = pricelist.items?pricelist.items:[];
+        let newList = [];
+        if(listitems !== null && listitems.length > 0){
+            for(let i=0; i < listitems.length; i++){
+                let detItems = listitems[i];
+                let idproduct = detItems['idproduct'];
+                let idcategoryproduct = detItems['idcategoryproduct'];
+                let brutoweight = detItems['brutoweight'];
+                let pricetemp = new String(detItems['itemsprice']) !== '' ? detItems['itemsprice'] : '0';
+                let checkItem = listpricelist.filter(output => output.idproduct === idproduct && output.categoryproductid === idcategoryproduct);
+                if(checkItem !== null && checkItem !== undefined && checkItem.length > 0){
+                    let detPriceList = checkItem[0];
+                    let allowance = detPriceList.allowance?detPriceList.allowance:0;
+                    detItems['allowance'] = allowance;
+                    let valKg = calcNettoWeight({brutoweight:brutoweight,allowance:allowance});
+
+                     let valPriceTemp = '';
+                    if(new String(pricetemp).includes(',')){
+                        let splitComma = new String(pricetemp).split(','); 
+                        let angka = splitComma[0];
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                        valPriceTemp = removeFormatRupiah(angka)+'.'+desimal;
+                    }else{
+                        valPriceTemp = removeFormatRupiah(pricetemp);
+                    }
+
+                    detItems['allowance'] = allowance;
+                    let subtotal = valKg * parseFloat(valPriceTemp);
+                    subtotal = roundCeiling(subtotal,1);
+
+                    detItems['subtotalprice'] = formatRupiah(new String(subtotal).replaceAll('.',','),2);
+                    detItems['nettoweight'] = formatRupiah(new String(valKg).replaceAll('.',','),4);
+                    newList.push(detItems);
+                }
+            }
+        }
+
+        return newList;
     }
 
     const handleChangeVendor = (data) => {

@@ -229,6 +229,15 @@ export default function EditPriceList(props) {
         })
     }
 
+    const infoPopUp = (message) => {
+            setLoading(false);
+        Swal.fire({
+            icon: 'info',
+            title: 'Information',
+            text: message
+        })
+    }
+
     const handleInputChangePrice = (e, index) => {
         const { name, value } = e.target;
         let flag = true;
@@ -424,6 +433,13 @@ export default function EditPriceList(props) {
                                                                                     id="allowance"
                                                                                     onChange={val => handleInputChangePrice(val, i)}
                                                                                     onBlur={handleBlur}
+                                                                                    onKeyDown={e => {
+                                                                                        // Cegah input titik dari keyboard
+                                                                                        if (e.key === '.') {
+                                                                                            e.preventDefault();
+                                                                                            infoPopUp('Gunakan tanda , (koma) jika ingin menambahkan desimal');
+                                                                                        }
+                                                                                    }}
                                                                                     value={x.allowance}
                                                                                     // value={x.allowance !== '' ? numToMoney(parseFloat(x.allowance)) : ''}
                                                                                 />
