@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 // import roboto from '../../../../components/';
 import roboto from '../../../components/Fonts/Roboto/Roboto-Bold.ttf';
-import { numToMoney } from '../../shared/globalFunc';
+import { desimal00, numToMoney } from '../../shared/globalFunc';
 // import { LisTime } from '../add';
 
 // import logo from "img/logo.png";
@@ -146,7 +146,7 @@ const setItems = (items) =>{
 
             rowItem.push(
                 <View style={[styles.tableColWidth, { width:styles.width.totalkoli, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthtotalkoli, maxWidth: styles.width.widthtotalkoli, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.totalkoli}</Text>
+                    <Text style={[styles.tableCell, { width: styles.width.widthtotalkoli, maxWidth: styles.width.widthtotalkoli, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.totalkoli?desimal00(numToMoney(det.totalkoli)):0}</Text>
                 </View>
             );
             
