@@ -34,6 +34,9 @@ export default function EditPackingList(props) {
     const [TransDate, setTransDate] = useState(new Date());
     const [ErrTransDate, setErrTransDate] = useState("");
 
+    const [TransDateStock, setTransDateStock] = useState(new Date());
+    const [ErrTransDateStock, setErrTransDateStock] = useState("");
+
     const [ListCustomer, setListCustomer] = useState([]);
     const [SelCustomer, setSelCustomer] = useState("");
     const [ErrSelCustomer, setErrSelCustomer] = useState("");
@@ -111,7 +114,9 @@ export default function EditPackingList(props) {
     function successHandlerDetail(data, propsdata) {
         let det = data.data;
         let transDate = det.date?new Date(det.date):null;
+        let transDateStock = det.datestock?new Date(det.datestock):null;
         setTransDate(transDate);
+        setTransDateStock(transDateStock);
         setSelVendor(det.idvendor);
         setSelCustomer(det.idcustomer);
         setInputCity(det.city);
@@ -190,6 +195,7 @@ export default function EditPackingList(props) {
     const checkColumnMandatory = (values) => {
         let flag = true;
         setErrTransDate('');
+        setErrTransDateStock('');
         setErrSelCustomer('');
         setErrSelVendor('');
         setErrItems('')
@@ -234,6 +240,11 @@ export default function EditPackingList(props) {
             setErrTransDate(i18n.t('label_REQUIRED'));
             flag = false;
         }
+
+        if (TransDateStock == null) {
+            setErrTransDateStock(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
         
 
         if (SelCustomer == '') {
@@ -270,6 +281,7 @@ export default function EditPackingList(props) {
             let idpricelist = PriceList !== null?PriceList.id:null;
             let obj = new Object();
             obj.date = TransDate.getTime();
+            obj.datestock = TransDateStock.getTime();
             obj.idcustomer = SelCustomer;
             obj.city = values.city;
             obj.attention = values.attention;
@@ -346,6 +358,15 @@ export default function EditPackingList(props) {
             // dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + datetrans.getTime() }, successHandlerPriceList, errorHandler));
         } else {
             setTransDate(null)
+        }
+    }
+
+    const handleChangeTransDateStock = (data) => {
+        if (data !== null) {
+            let datetrans = moment(data, formatdate).toDate();
+            setTransDateStock(datetrans);
+        } else {
+            setTransDateStock(null)
         }
     }
 
@@ -669,6 +690,7 @@ export default function EditPackingList(props) {
             initialValues={
                 {
                     transdate: TransDate,
+                    transdatestock: TransDateStock,
                     customer: SelCustomer,
                     city: InputCity,
                     attention: InputAttention,
@@ -722,6 +744,19 @@ export default function EditPackingList(props) {
                                         // onChange={val => handleChangeTransDate(val)}
                                         format={formatdate}
                                         value={values.transdate}
+                                        disabled={true}
+                                    />
+
+                                    <label className="mt-3 form-label required" htmlFor="transdatestock">
+                                        {i18n.t('Tanggal Stock')}
+                                    </label>
+                                    <span style={{ color: 'red' }}>*</span>
+
+                                    <DatePicker
+                                        name="transdatestock"
+                                        // onChange={val => handleChangeTransDate(val)}
+                                        format={formatdate}
+                                        value={values.transdatestock}
                                         disabled={true}
                                     />
                                     <div className="invalid-feedback-custom">{ErrTransDate}</div>

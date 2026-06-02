@@ -254,6 +254,13 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Tanggal Stock')}</span>
+                                <strong className="col-md-7">
+                                {value.datestock ?moment (new Date(value.datestock)).format(formatdate):''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Vendor UPI')}</span>
                                 <strong className="col-md-7">
                                 {value.vendorName ?value.vendorName+'/'+value.vendorAlias:''}
