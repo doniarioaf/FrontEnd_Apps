@@ -20,6 +20,8 @@ import { formatdate } from '../../shared/constantValue';
 import '../../CSS/table.css';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
+import { InputAmountIDR } from '../../../components/Common/InputAmount';
+import InputText from '../../../components/Common/InputText';
 
 export default function EditBayarKomisi(props) {
     reloadToHomeNotAuthorize(editKomisi_Permission, 'TRANSACTION');
@@ -36,6 +38,9 @@ export default function EditBayarKomisi(props) {
     const [ErrItems, setErrItems] = useState("");
     const [TotalKomisi, setTotalKomisi] = useState("");
 
+    const [addKomisi, setAddKomisi] = useState(0);
+    const [Description, setDescription] = useState("");
+
     const id = props.match.params.id;
     useEffect(() => {
         setLoading(true);
@@ -45,13 +50,17 @@ export default function EditBayarKomisi(props) {
 
     function successHandler(data, propsdata) {
         let det = data.data;
+        let addkomisi = det.additional_commission?parseFloat(det.additional_commission):0;
+        setAddKomisi(addkomisi);
+        setDescription(det.description?det.description:'');
         let listpr = det.items?det.items:[];
-        setLisPR(listpr);
+        setLisPR(listpr,det);
         setLoading(false);
 
     }
 
-    function setLisPR(listpr) {
+    function setLisPR(listpr,detail) {
+        let addkomisi = detail.additional_commission?parseFloat(detail.additional_commission):0;
         let list = listpr.reduce((obj, el) => [
             ...obj,
             {
@@ -65,10 +74,10 @@ export default function EditBayarKomisi(props) {
             }
         ], []);
         setListItems(list);
-        calcTotalKomisi(list);
+        calcTotalKomisi(list,addkomisi);
         
     }
-    function calcTotalKomisi(listitems){
+    function calcTotalKomisi(listitems,addkomisi){
         let totalKomisi = 0;
         for(let i=0; i < listitems.length; i++){
             let det = listitems[i];
@@ -77,6 +86,7 @@ export default function EditBayarKomisi(props) {
             subtotalkomisi = parseFloat(subtotalkomisi);
             totalKomisi = totalKomisi + subtotalkomisi;
         }
+        totalKomisi =  totalKomisi + (addkomisi !== ''?parseFloat(addkomisi):0);
         setTotalKomisi(totalKomisi);
     }
     const checkColumnMandatory = (values) => {
@@ -99,6 +109,8 @@ export default function EditBayarKomisi(props) {
             setLoading(true);
             let obj = new Object();
             obj.date = TransDate.getTime();
+            obj.additional_commission = addKomisi;
+            obj.description = Description;
             obj.note = '';
             let items = [];
             if (ListItems.length > 0) {
@@ -152,7 +164,8 @@ export default function EditBayarKomisi(props) {
         const list = [...ListItems];
         list.splice(index, 1);
         setListItems(list);
-        calcTotalKomisi(list);
+        let addkomisi = addKomisi !== ''?addKomisi:0;
+        calcTotalKomisi(list,addkomisi);
     };
 
     const handleChangeTransDate = (data) => {
@@ -163,6 +176,12 @@ export default function EditBayarKomisi(props) {
         } else {
             setTransDate(null)
         }
+    }
+
+    const handleChangeAddKomisi = (data) =>{
+        setAddKomisi(data);
+        calcTotalKomisi(ListItems,data);
+        // setTotalKomisi(total);
     }
 
     function errorHandler(error, propsdata) {
@@ -180,10 +199,13 @@ export default function EditBayarKomisi(props) {
                 {
                     transdate: TransDate,
                     totalkomisi: TotalKomisi,
+                    addkomisi: addKomisi,
+                    description: Description,
                     // kurs: InputKurs,
                 }
             }
             validate={values => {
+                setDescription(values.description)
                 const errors = {};
                 return errors;
             }}
@@ -238,6 +260,28 @@ export default function EditBayarKomisi(props) {
                                         // value={values.amount !== '' ? numToMoney(parseFloat(new String(values.amount).replaceAll(".", ""))) : ''}
                                     />
                                 </div>
+
+                                <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                    <label className="mt-3 form-label required" htmlFor="penambahanamount">
+                                    {i18n.t('Penambahan Komisi')}
+                                </label>
+                                <InputAmountIDR  value={values.addkomisi} 
+                                onChange={(raw) => handleChangeAddKomisi(raw)}
+                                placeholder="0"
+                                />
+
+                                <label className="mt-3 form-label required" htmlFor="description">
+                                    {i18n.t('Deskripsi')}
+                                </label>
+                                    <InputText
+                                id="description"
+                                name="description"
+                                // label="Deskripsi"
+                                value={values.description}
+                                onChange={(val) => setFieldValue('description', val)}
+                                onBlur={handleBlur}
+                                />
+                            </div>
                                 </div>
 
                                 <div className="invalid-feedback-custom" style={{ fontSize: 'larger' }}>{ErrItems}</div>

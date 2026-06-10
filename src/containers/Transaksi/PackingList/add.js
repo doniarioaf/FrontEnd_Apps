@@ -972,6 +972,54 @@ export default function AddPackingList(props) {
                                                         )
                                                     })
                                                 }
+                                                {
+                                                    ListItems.length > 0 && (() => {
+                                                        let totalNettoWeight = ListItems.reduce((sum, item) => {
+                                                            let val = item.nettoweight ? item.nettoweight : 0;
+                                                            let valTemp = '';
+                                                            if (new String(val).includes(',')) {
+                                                                let splitComma = new String(val).split(',');
+                                                                let angka = splitComma[0];
+                                                                let desimal = splitComma[1] !== undefined ? splitComma[1] : 0;
+                                                                valTemp = removeFormatRupiah(angka) + '.' + desimal;
+                                                            } else {
+                                                                valTemp = removeFormatRupiah(val);
+                                                            }
+                                                            return sum + parseFloat(valTemp || 0);
+                                                        }, 0);
+                                                        totalNettoWeight         = Math.round(totalNettoWeight         * 10) / 10;
+
+                                                        const totalSubtotalPrice = ListItems.reduce((sum, item) => {
+                                                            let val = item.subtotalprice ? item.subtotalprice : 0;
+                                                            let valTemp = '';
+                                                            if (new String(val).includes(',')) {
+                                                                let splitComma = new String(val).split(',');
+                                                                let angka = splitComma[0];
+                                                                let desimal = splitComma[1] !== undefined ? splitComma[1] : 0;
+                                                                valTemp = removeFormatRupiah(angka) + '.' + desimal;
+                                                            } else {
+                                                                valTemp = removeFormatRupiah(val);
+                                                            }
+                                                            return sum + parseFloat(valTemp || 0);
+                                                        }, 0);
+
+                                                        return (
+                                                            <tr style={{ fontWeight: 'bold', backgroundColor: '#f5f5f5', fontSize: '1rem' }}>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td style={{ width: '15%' }}>{'Total'}</td>
+                                                                <td style={{ width: '18%' }}></td>
+                                                                <td style={{ width: '7%' }}></td>
+                                                                <td style={{ width: '9%' }}></td>
+                                                                {flagCheck && <td></td>}
+                                                                <td style={{ width: '10%' }}></td>
+                                                                <td style={{ width: '10%' }}>{formatRupiah(new String(totalNettoWeight).replaceAll('.', ','), 4)}</td>
+                                                                <td style={{ width: '11%' }}></td>
+                                                                <td style={{ width: '13%' }}>{formatRupiah(new String(totalSubtotalPrice).replaceAll('.', ','), 2)}</td>
+                                                            </tr>
+                                                        );
+                                                    })()
+                                                }
                                             </tbody>
                                         </table>
                                     </div>

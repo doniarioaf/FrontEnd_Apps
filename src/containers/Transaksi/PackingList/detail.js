@@ -388,6 +388,33 @@ import React, {useState,
                                 )
                             })
                         }
+                        {
+                            ListItem.length > 0 && (() => {
+                                let totalNettoWeight = ListItem.reduce((sum, item) => {
+                                    return sum + parseFloat(item.nettoweight || 0);
+                                }, 0);
+                                totalNettoWeight         = Math.round(totalNettoWeight         * 10) / 10;
+
+                                const totalSubtotalPrice = ListItem.reduce((sum, item) => {
+                                    return sum + parseFloat(item.totalprice || 0);
+                                }, 0);
+
+                                return (
+                                    <tr style={{ fontWeight: 'bold', backgroundColor: '#f5f5f5', fontSize: '1rem' }}>
+                                        <td></td>
+                                        <td>{'Total'}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        {flagCheck && <td></td>}
+                                        <td></td>
+                                        <td>{formatRupiah(new String(totalNettoWeight).replaceAll('.', ','), 1)}</td>
+                                        <td></td>
+                                        <td>{formatRupiah(new String(totalSubtotalPrice).replaceAll('.', ','), 1)}</td>
+                                    </tr>
+                                );
+                            })()
+                        }
                     </tbody>
                     </table>
                 </div>

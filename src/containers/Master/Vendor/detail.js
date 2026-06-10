@@ -281,10 +281,20 @@ import React, {useState,
                                 </strong>
                             </div>
 
-                            <div className="row mt-3">
+                            <div className="row mt-3" hidden={value.isparent}>
                             <span className="col-md-5">{i18n.t('Parent')}</span>
                                 <strong className="col-md-7">
                                 {value.vendorParentName ?value.vendorParentName:''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3" hidden={!value.isparent}>
+                            <span className="col-md-5">{i18n.t('Sub Parent')}</span>
+                                <strong className="col-md-7">
+                                {value.listSubParent ?value.listSubParent
+                                .map(item => item?.alias)
+                                .filter(Boolean)
+                                .join(", "):''}
                                 </strong>
                             </div>
 

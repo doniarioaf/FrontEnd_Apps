@@ -74,14 +74,17 @@ export default function PrintNotaInvoice(props) {
           setLoading(false);
     }
 
-    const handleSuccesPDF = (dataUrl, namaFile) => {
+    const handleSuccesPDF = (dataUrl, namaFile,data) => {
         // var blob = new Blob([data,{ type: 'application/pdf' }]);
         // var dataUrl = URL.createObjectURL(blob);
         var fileLink = document.createElement('a');
         fileLink.href = dataUrl;//URL.createObjectURL(dataUrl);
 
+        let customerName = data.packinglist?.customerName?data.packinglist.customerName:'Invoice';
+        let vendorName = data.packinglist?.vendorName?data.packinglist.vendorName:'Invoice';
+        
         // it forces the name of the downloaded file
-        fileLink.download = 'Invoice-'+moment(new Date()).format(formatdateYYYYMMDD)+'-'+namaFile + '.pdf';
+        fileLink.download = vendorName+'-'+moment(new Date()).format(formatdateYYYYMMDD)+'-'+namaFile + '.pdf';
         fileLink.click();
         fileLink.remove();
 
@@ -108,7 +111,7 @@ export default function PrintNotaInvoice(props) {
             
             setTimeout(() => {
                 // generatePDF(det);
-                handleSuccesPDF(localStorage.getItem("PdfDocument"), (data.data != null ? data.data.nodocument : fileName));
+                handleSuccesPDF(localStorage.getItem("PdfDocument"), (data.data != null ? data.data.nodocument : fileName), (data.data != null ? data.data : {}));
                 setLoading(false);
                 // setFile(downloadLink(det));
             }, 2000);

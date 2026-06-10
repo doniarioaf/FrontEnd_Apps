@@ -144,6 +144,7 @@ const calcNettoHeader = (value) =>{
         //kenapa totalan netto tidak ambil dari value.netto / total netto header karena ketika gr convert ke kg terjadi pembulatan sehingga ketika netto header di convert ke kg menjadi tidak sama desimal nya
         totalnetto += nettoweight;
     }
+    totalnetto         = Math.round(totalnetto         * 10) / 10; // 1 desimal
     return totalnetto;
 }
 
@@ -304,8 +305,18 @@ const setItems = (value) => {
     items.forEach(det => {
         totalQty           += parseInt(det.qty         ? det.qty         : 0);
         totalSubtotalPrice += parseFloat(det.totalprice ? det.totalprice : 0);
-        totalnetto         += det.nettoweight ? det.nettoweight : 0;
+        totalnetto         += parseFloat(det.nettoweight ? det.nettoweight : 0);
     });
+    // info bugs kenapa di set totalnetto = Math.round
+    //  pada javascript saya menjumlahkan 2 nilai,
+    // nilai a = 12.1,
+    // nilai b = 11.7
+    // kenapa hasilnya jadi 23.799999999999997
+    //nilainya jad 23,7
+    totalnetto         = Math.round(totalnetto         * 10) / 10; // 1 desimal
+    //
+    
+    console.log('totalnetto items ',totalnetto);
     
     const firstPageCount = calcFirstPageCount(items.length);
     const firstSlice  = items.slice(0, firstPageCount);

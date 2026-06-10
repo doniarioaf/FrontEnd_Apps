@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
 import * as actions from '../../../store/actions';
 import * as pathmenu from '../../shared/pathMenu';
-import { reloadToHomeNotAuthorize, isGetPermissions, firstAndLastDateInMonth, numToMoney, formatRupiah } from '../../shared/globalFunc';
+import { reloadToHomeNotAuthorize, isGetPermissions, firstAndLastDateInMonth, numToMoney, formatRupiah, desimal00 } from '../../shared/globalFunc';
 import { MenuPelunasanPiutang,addPelunasanPiutang_Permission } from '../../shared/permissionMenu';
 import { useHistory } from 'react-router-dom';
 import { DropdownList, DatePicker } from 'react-widgets';
@@ -188,8 +188,8 @@ const PelunasanPiutangIndex = () => {
                         'nodocpl': el.noDocumentPL,
                         'transdate': el.date ? moment(el.date).format(formatdate) : '',
                         'customer': el.customerName+' / '+el.customerAlias,
-                        'amount': el.amountInvoice?formatRupiah((el.amountInvoice?new String(el.amountInvoice).replaceAll('.',','):''),2):0,
-                        'amountRp': formatRupiah(new String(calculateDolarToRupiah(el.amountInvoice,el.kursInvoice)).replaceAll('.',',')),
+                        'amount': el.totalpembayaran?desimal00(formatRupiah((el.totalpembayaran?new String(el.totalpembayaran).replaceAll('.',','):''),2)):0,
+                        // 'amountRp': formatRupiah(new String(calculateDolarToRupiah(el.amountInvoice,el.kursInvoice)).replaceAll('.',',')),
                     }
                 ], []);
             }

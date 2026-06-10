@@ -183,6 +183,11 @@ import React, {useState,
         setLoading(false);
     }
 
+    const calcKomisAndAddKomisi = (totalkomisi,addkomisi) => {
+        let komisiitem = TotalKomisi !== '' && TotalKomisi !== null && TotalKomisi !== undefined?parseFloat(TotalKomisi):0;
+        let addkomisitemp = parseFloat(addkomisi);
+        return komisiitem + addkomisitemp;
+    }
     return (
         <ContentWrapper>
             <ContentHeading history={history} link={pathmenu.detailkomisi+'/'+id} label={'Detail'} labeldefault={'Detail'} />
@@ -245,9 +250,30 @@ import React, {useState,
                             </div>
 
                              <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Total Komisi')}</span>
+                            <span className="col-md-5">{i18n.t('Komisi')}</span>
                                 <strong className="col-md-7">
                                 {TotalKomisi !== '' && TotalKomisi !== null && TotalKomisi !== undefined?numToMoneyNegative(TotalKomisi):''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Penamabahan Komisi')}</span>
+                                <strong className="col-md-7">
+                                {value.additional_commission ?numToMoneyNegative(value.additional_commission):0}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Total Komisi')}</span>
+                                <strong className="col-md-7">
+                                {numToMoneyNegative(calcKomisAndAddKomisi(TotalKomisi, (value.additional_commission ?value.additional_commission:0) ))}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Description')}</span>
+                                <strong className="col-md-7">
+                                {value.description ?value.description:''}
                                 </strong>
                             </div>
 

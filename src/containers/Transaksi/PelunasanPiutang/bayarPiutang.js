@@ -277,6 +277,20 @@ export default function AddStockAdjusment(props) {
                 if(name == 'pembayaran'){
                     list[index]['pembayaranrp'] = removeFormatRupiah(value) !== ''?formatRupiah(new String(parseFloat(removeFormatRupiah(value))* parseFloat(kurs)).replaceAll('.',','),2):'';
                 }
+                if(name == 'biayabebanudangmati' || name == 'biayabank'){
+                    let biaya = 0;
+                    if(name == 'biayabebanudangmati'){
+                        biaya = parseFloat(removeFormatRupiah(list[index]['biayabank']));
+                    }else{
+                        biaya = parseFloat(removeFormatRupiah(list[index]['biayabebanudangmati']));
+                    }
+                    let amountDollar = parseFloat(removeFormatRupiah(list[index]['amount']));
+                    let pembayaran = amountDollar - (removeFormatRupiah(value) !== ''? parseFloat(removeFormatRupiah(value)):0) - biaya;
+                    let pembayaranRp = pembayaran * parseFloat(kurs);
+                    list[index]['pembayaran'] = formatRupiah(pembayaran,2);
+                    list[index]['pembayaranrp'] = formatRupiah(pembayaranRp,2);
+                    //amount
+                }
                 let calc = calculateTotal(list);
                 list[indexTotal]['biayabebanudangmati'] = calc.totalbiayaudangmati;
                 list[indexTotal]['biayabank'] = calc.totalbiayabank;

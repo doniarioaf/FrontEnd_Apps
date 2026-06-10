@@ -29,7 +29,7 @@ const DraftPackingListIndex = () => {
         { name: 'id', title: 'id' },
         { name: 'nodoc', title: i18n.t('No Document') },
         { name: 'customer', title: i18n.t('Customer') },
-        // { name: 'city', title: i18n.t('City') },
+        { name: 'isallchecked', title: i18n.t('Checked?') },
         { name: 'updateprice', title: i18n.t('Update Price?') },
         { name: 'transdate', title: i18n.t('Date') },
         
@@ -59,6 +59,7 @@ const DraftPackingListIndex = () => {
                     'customer': el.customerAlias,
                     'transdate': el.date ? moment(el.date).format(formatdate) : '',
                     'updateprice': el.isalreadyupdateprice ? 'No':'Yes',
+                    'isallchecked':el.isallchecked === 'N'? 'No':'Yes',
                 }
             ], []);
             setRows(theData);

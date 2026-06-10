@@ -20,6 +20,8 @@ import { formatdate } from '../../shared/constantValue';
 import '../../CSS/table.css';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton } from '@material-ui/core';
+import { InputAmountIDR } from '../../../components/Common/InputAmount';
+import InputText from '../../../components/Common/InputText';
 
 export default function BayarKomisi(props) {
     reloadToHomeNotAuthorize(addKomisi_Permission, 'TRANSACTION');
@@ -40,6 +42,8 @@ export default function BayarKomisi(props) {
     const [ListMsgError, setListMsgError] = useState([]);
 
     const [TotalKomisi, setTotalKomisi] = useState("");
+    const [addKomisi, setAddKomisi] = useState(0);
+    const [Description, setDescription] = useState("");
 
     const id = props.match.params.id;
     useEffect(() => {
@@ -166,6 +170,8 @@ export default function BayarKomisi(props) {
         let obj = new Object();
             obj.date = TransDate.getTime();
             obj.note = '';
+            obj.additional_commission = addKomisi;
+            obj.description = Description;
             let items = [];
             if (listitem.length > 0) {
                 items = listitem.reduce((obj, el) => [
@@ -294,9 +300,12 @@ export default function BayarKomisi(props) {
         const list = [...ListItems];
         list.splice(index, 1);
         setListItems(list);
+
+        let addkomisi = addKomisi !== ''?addKomisi:0;
         let total = list.reduce((sum, item) => {
         return sum + (item.subtotalkomisinominal?item.subtotalkomisinominal:0);
         }, 0);
+        total = total + parseFloat(addkomisi);
         total = String(total).replaceAll('.',',');
         setTotalKomisi(total);
     };
@@ -309,6 +318,19 @@ export default function BayarKomisi(props) {
         } else {
             setTransDate(null)
         }
+    }
+
+    const handleChangeAddKomisi = (data) =>{
+        setAddKomisi(data);
+
+        let total = ListItems.reduce((sum, item) => {
+        return sum + (item.subtotalkomisinominal?item.subtotalkomisinominal:0);
+        }, 0);
+        if(data !== ''){
+        total = parseFloat(total) + parseFloat(data);
+        }
+        total = String(total).replaceAll('.',',');
+        setTotalKomisi(total);
     }
     
 
@@ -327,10 +349,13 @@ export default function BayarKomisi(props) {
                 {
                     transdate: TransDate,
                     totalkomisi: TotalKomisi,
+                    addkomisi: addKomisi,
+                    description: Description,
                     // kurs: InputKurs,
                 }
             }
             validate={values => {
+                setDescription(values.description)
                 const errors = {};
                 return errors;
             }}
@@ -385,6 +410,29 @@ export default function BayarKomisi(props) {
                                         // value={values.amount !== '' ? numToMoney(parseFloat(new String(values.amount).replaceAll(".", ""))) : ''}
                                     />
                                 </div>
+
+                                <div className="mt-2 col-lg-6 ft-detail mb-5">
+                                     <label className="mt-3 form-label required" htmlFor="penambahanamount">
+                                        {i18n.t('Penambahan Komisi')}
+                                    </label>
+                                    <InputAmountIDR  value={values.addkomisi} 
+                                    onChange={(raw) => handleChangeAddKomisi(raw)}
+                                    placeholder="0"
+                                    />
+
+                                    <label className="mt-3 form-label required" htmlFor="description">
+                                        {i18n.t('Deskripsi')}
+                                    </label>
+                                     <InputText
+                                    id="description"
+                                    name="description"
+                                    // label="Deskripsi"
+                                    value={values.description}
+                                    onChange={(val) => setFieldValue('description', val)}
+                                    onBlur={handleBlur}
+                                    />
+                                </div>
+
                                 </div>
 
                                 <div className="invalid-feedback-custom" style={{ fontSize: 'larger' }}>{ErrItems}</div>
