@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { formatRupiah, isGetPermissions,numToMoneyNegative,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { formatRupiah, isGetPermissions,numToMoneyNegative,reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
   import { MenuKomisi, deleteKomisi_Permission, editKomisi_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
@@ -183,6 +183,11 @@ import React, {useState,
         setLoading(false);
     }
 
+    const calcKomisAndAddKomisi = (totalkomisi,addkomisi) => {
+        let komisiitem = TotalKomisi !== '' && TotalKomisi !== null && TotalKomisi !== undefined?parseFloat(TotalKomisi):0;
+        let addkomisitemp = parseFloat(addkomisi);
+        return komisiitem + addkomisitemp;
+    }
     return (
         <ContentWrapper>
             <ContentHeading history={history} link={pathmenu.detailkomisi+'/'+id} label={'Detail'} labeldefault={'Detail'} />
@@ -245,9 +250,30 @@ import React, {useState,
                             </div>
 
                              <div className="row mt-3">
-                            <span className="col-md-5">{i18n.t('Total Komisi')}</span>
+                            <span className="col-md-5">{i18n.t('Komisi')}</span>
                                 <strong className="col-md-7">
                                 {TotalKomisi !== '' && TotalKomisi !== null && TotalKomisi !== undefined?numToMoneyNegative(TotalKomisi):''}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Penamabahan Komisi')}</span>
+                                <strong className="col-md-7">
+                                {value.additional_commission ?numToMoneyNegative(value.additional_commission):0}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Total Komisi')}</span>
+                                <strong className="col-md-7">
+                                {numToMoneyNegative(calcKomisAndAddKomisi(TotalKomisi, (value.additional_commission ?value.additional_commission:0) ))}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Description')}</span>
+                                <strong className="col-md-7">
+                                {value.description ?value.description:''}
                                 </strong>
                             </div>
 
@@ -313,6 +339,25 @@ import React, {useState,
                                     </tr>
                                 )
                             })
+                        }
+                        {                                                                          
+                            ListItem.length > 0 && (() => {
+                                let total = ListItem.reduce((sum, item) => {
+                                return sum + (item.subtotalkomisi?parseFloat(removeFormatRupiah(item.subtotalkomisi)):0);
+                                }, 0);
+                                // total = String(total).replaceAll('.',',');
+                                return (
+                                    <tr style={{ fontWeight: 'bold', backgroundColor: '#f5f5f5', fontSize: '1rem' }}>
+                                        <td >{'Total'}</td>
+                                        <td ></td>
+                                        <td ></td>
+                                        <td ></td>
+                                        
+                                        <td ></td>
+                                        <td >{formatRupiah(new String(total).replaceAll('.', ','), 2)}</td>
+                                    </tr>
+                                );
+                            })()
                         }
                     </tbody>
                     </table>

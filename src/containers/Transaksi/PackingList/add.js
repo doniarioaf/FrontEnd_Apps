@@ -82,6 +82,9 @@ export default function AddPackingList(props) {
     const [TransDate, setTransDate] = useState(new Date());
     const [ErrTransDate, setErrTransDate] = useState("");
 
+    const [TransDateStock, setTransDateStock] = useState(new Date());
+    const [ErrTransDateStock, setErrTransDateStock] = useState("");
+
     const [ListCustomer, setListCustomer] = useState([]);
     const [SelCustomer, setSelCustomer] = useState("");
     const [ErrSelCustomer, setErrSelCustomer] = useState("");
@@ -180,6 +183,7 @@ export default function AddPackingList(props) {
     const checkColumnMandatory = (values) => {
         let flag = true;
         setErrTransDate('');
+        setErrTransDateStock('');
         setErrSelCustomer('');
         setErrSelVendor('');
         setErrItems('')
@@ -224,6 +228,10 @@ export default function AddPackingList(props) {
             setErrTransDate(i18n.t('label_REQUIRED'));
             flag = false;
         }
+        if (TransDateStock == null) {
+            setErrTransDateStock(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
         
 
         if (SelCustomer == '') {
@@ -259,6 +267,7 @@ export default function AddPackingList(props) {
             let idpricelist = PriceList !== null?PriceList.id:null;
             let obj = new Object();
             obj.date = TransDate.getTime();
+            obj.datestock = TransDateStock.getTime();
             obj.idcustomer = SelCustomer;
             obj.city = values.city;
             obj.attention = values.attention;
@@ -336,6 +345,16 @@ export default function AddPackingList(props) {
             setTransDate(null)
         }
     }
+
+    const handleChangeTransDateStock = (data) => {
+        if (data !== null) {
+            let datetrans = moment(data, formatdate).toDate();
+            setTransDateStock(datetrans);
+        } else {
+            setTransDateStock(null)
+        }
+    }
+
     const handleInputChangeCheckBoxItems = (e, index) => {
         const { name, checked } = e.target;
         const list = [...ListItems];
@@ -576,6 +595,7 @@ export default function AddPackingList(props) {
             initialValues={
                 {
                     transdate: TransDate,
+                    transdatestock: TransDateStock,
                     customer: SelCustomer,
                     city: InputCity,
                     attention: InputAttention,
@@ -630,7 +650,19 @@ export default function AddPackingList(props) {
                                         format={formatdate}
                                         value={values.transdate}
                                     />
-                                    <div className="invalid-feedback-custom">{ErrTransDate}</div>
+
+                                    <label className="mt-3 form-label required" htmlFor="transdatestock">
+                                        {i18n.t('Tanggal Stock')}
+                                    </label>
+                                    <span style={{ color: 'red' }}>*</span>
+
+                                    <DatePicker
+                                        name="transdatestock"
+                                        onChange={val => handleChangeTransDateStock(val)}
+                                        format={formatdate}
+                                        value={values.transdatestock}
+                                    />
+                                    <div className="invalid-feedback-custom">{ErrTransDateStock}</div>
 
                                         <label className="mt-3 form-label required" htmlFor="vendor">
                                             {i18n.t('Vendor UPI')}
@@ -939,6 +971,54 @@ export default function AddPackingList(props) {
                                                             </tr>
                                                         )
                                                     })
+                                                }
+                                                {
+                                                    ListItems.length > 0 && (() => {
+                                                        let totalNettoWeight = ListItems.reduce((sum, item) => {
+                                                            let val = item.nettoweight ? item.nettoweight : 0;
+                                                            let valTemp = '';
+                                                            if (new String(val).includes(',')) {
+                                                                let splitComma = new String(val).split(',');
+                                                                let angka = splitComma[0];
+                                                                let desimal = splitComma[1] !== undefined ? splitComma[1] : 0;
+                                                                valTemp = removeFormatRupiah(angka) + '.' + desimal;
+                                                            } else {
+                                                                valTemp = removeFormatRupiah(val);
+                                                            }
+                                                            return sum + parseFloat(valTemp || 0);
+                                                        }, 0);
+                                                        totalNettoWeight         = Math.round(totalNettoWeight         * 10) / 10;
+
+                                                        const totalSubtotalPrice = ListItems.reduce((sum, item) => {
+                                                            let val = item.subtotalprice ? item.subtotalprice : 0;
+                                                            let valTemp = '';
+                                                            if (new String(val).includes(',')) {
+                                                                let splitComma = new String(val).split(',');
+                                                                let angka = splitComma[0];
+                                                                let desimal = splitComma[1] !== undefined ? splitComma[1] : 0;
+                                                                valTemp = removeFormatRupiah(angka) + '.' + desimal;
+                                                            } else {
+                                                                valTemp = removeFormatRupiah(val);
+                                                            }
+                                                            return sum + parseFloat(valTemp || 0);
+                                                        }, 0);
+
+                                                        return (
+                                                            <tr style={{ fontWeight: 'bold', backgroundColor: '#f5f5f5', fontSize: '1rem' }}>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td style={{ width: '15%' }}>{'Total'}</td>
+                                                                <td style={{ width: '18%' }}></td>
+                                                                <td style={{ width: '7%' }}></td>
+                                                                <td style={{ width: '9%' }}></td>
+                                                                {flagCheck && <td></td>}
+                                                                <td style={{ width: '10%' }}></td>
+                                                                <td style={{ width: '10%' }}>{formatRupiah(new String(totalNettoWeight).replaceAll('.', ','), 4)}</td>
+                                                                <td style={{ width: '11%' }}></td>
+                                                                <td style={{ width: '13%' }}>{formatRupiah(new String(totalSubtotalPrice).replaceAll('.', ','), 2)}</td>
+                                                            </tr>
+                                                        );
+                                                    })()
                                                 }
                                             </tbody>
                                         </table>

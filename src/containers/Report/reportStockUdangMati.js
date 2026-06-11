@@ -52,6 +52,7 @@ export default function ReportPembelian(props) {
             setStart(new Date());
             // setEnd(new Date());
         }
+        setIsReady(false);
     }
 
     const submitHandler = () => {
@@ -126,6 +127,7 @@ export default function ReportPembelian(props) {
         }else{
             setEnd(new Date());
         }
+        setIsReady(false);
         // setEnd(moment(data, "DD MMMM YYYY").toDate())
     }
 

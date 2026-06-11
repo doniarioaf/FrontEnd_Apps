@@ -102,7 +102,7 @@ export default function AddPriceList(props) {
                         'categoryproductid': el.id,
                         'categoryproduct': el.nama + ' (' + el.size + ')',
                         'price': amount,
-                        'allowance':allowance
+                        'allowance':formatRupiah(allowance,1)
                     }
                 );
             }
@@ -192,6 +192,15 @@ export default function AddPriceList(props) {
             } else if (result.isDenied) {
                 //   Swal.fire('Changes are not saved', '', 'info')
             }
+        })
+    }
+
+    const infoPopUp = (message) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'info',
+            title: 'Information',
+            text: message
         })
     }
 
@@ -450,6 +459,13 @@ export default function AddPriceList(props) {
                                                                                     id="allowance"
                                                                                     onChange={val => handleInputChangePrice(val, i)}
                                                                                     onBlur={handleBlur}
+                                                                                    onKeyDown={e => {
+                                                                                        // Cegah input titik dari keyboard
+                                                                                        if (e.key === '.') {
+                                                                                            e.preventDefault();
+                                                                                            infoPopUp('Gunakan tanda , (koma) jika ingin menambahkan desimal');
+                                                                                        }
+                                                                                    }}
                                                                                     value={x.allowance}
                                                                                     // value={x.allowance !== '' ? numToMoney(parseFloat(x.allowance)) : ''}
                                                                                 />

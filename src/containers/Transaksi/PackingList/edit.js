@@ -34,6 +34,9 @@ export default function EditPackingList(props) {
     const [TransDate, setTransDate] = useState(new Date());
     const [ErrTransDate, setErrTransDate] = useState("");
 
+    const [TransDateStock, setTransDateStock] = useState(new Date());
+    const [ErrTransDateStock, setErrTransDateStock] = useState("");
+
     const [ListCustomer, setListCustomer] = useState([]);
     const [SelCustomer, setSelCustomer] = useState("");
     const [ErrSelCustomer, setErrSelCustomer] = useState("");
@@ -58,6 +61,8 @@ export default function EditPackingList(props) {
     const [ListVendor, setListVendor] = useState([]);
     const [SelVendor, setSelVendor] = useState("");
     const [ErrSelVendor, setErrSelVendor] = useState("");
+
+    const [DataItemDB, setDataItemDB] = useState([]);
 
     let flagCheck = isGetPermissions(editPackingListItemCheck_Permission,'TRANSACTION');
 
@@ -109,7 +114,9 @@ export default function EditPackingList(props) {
     function successHandlerDetail(data, propsdata) {
         let det = data.data;
         let transDate = det.date?new Date(det.date):null;
+        let transDateStock = det.datestock?new Date(det.datestock):null;
         setTransDate(transDate);
+        setTransDateStock(transDateStock);
         setSelVendor(det.idvendor);
         setSelCustomer(det.idcustomer);
         setInputCity(det.city);
@@ -135,6 +142,7 @@ export default function EditPackingList(props) {
                 'check': el.check?true:false,
             }
         ], []);
+        setDataItemDB({idcustomer:det.idcustomer,items:listItem});
         setListItems(listItem);
 
         let theDataProd = det.items.reduce((obj, el) => [
@@ -154,6 +162,7 @@ export default function EditPackingList(props) {
         // setLoading(false);
     }
     function successHandlerPriceList(data, propsdata) {
+        let isrecalculate = propsdata.isrecalculate?propsdata.isrecalculate:false;
         if(data.data){
             let items = data.data.items?data.data.items:[]; 
             
@@ -171,6 +180,11 @@ export default function EditPackingList(props) {
                 setListCategoryProduct(theDataProd);
 
                 setPriceList(data.data);
+
+                if(isrecalculate){
+                    setListItems(recalculateItems(ListItems,data.data));
+                }
+
             }
         }else{
             msgInfo("Tidak ada dokumen pricelist pada tanggal tersebut");
@@ -181,6 +195,7 @@ export default function EditPackingList(props) {
     const checkColumnMandatory = (values) => {
         let flag = true;
         setErrTransDate('');
+        setErrTransDateStock('');
         setErrSelCustomer('');
         setErrSelVendor('');
         setErrItems('')
@@ -225,6 +240,11 @@ export default function EditPackingList(props) {
             setErrTransDate(i18n.t('label_REQUIRED'));
             flag = false;
         }
+
+        if (TransDateStock == null) {
+            setErrTransDateStock(i18n.t('label_REQUIRED'));
+            flag = false;
+        }
         
 
         if (SelCustomer == '') {
@@ -261,6 +281,7 @@ export default function EditPackingList(props) {
             let idpricelist = PriceList !== null?PriceList.id:null;
             let obj = new Object();
             obj.date = TransDate.getTime();
+            obj.datestock = TransDateStock.getTime();
             obj.idcustomer = SelCustomer;
             obj.city = values.city;
             obj.attention = values.attention;
@@ -337,6 +358,15 @@ export default function EditPackingList(props) {
             // dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + datetrans.getTime() }, successHandlerPriceList, errorHandler));
         } else {
             setTransDate(null)
+        }
+    }
+
+    const handleChangeTransDateStock = (data) => {
+        if (data !== null) {
+            let datetrans = moment(data, formatdate).toDate();
+            setTransDateStock(datetrans);
+        } else {
+            setTransDateStock(null)
         }
     }
 
@@ -581,8 +611,50 @@ export default function EditPackingList(props) {
         setSelCustomer(id);
 
         setLoading(true);
-        dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + TransDate.getTime()+'&idcustomer='+id }, successHandlerPriceList, errorHandler));
+        dispatch(actions.getPackingListData({ url: '/pricelist?pricedate=' + TransDate.getTime()+'&idcustomer='+id,propsdata:{isrecalculate:true} }, successHandlerPriceList, errorHandler));
 
+    }
+
+    const recalculateItems = (items,pricelist) => {
+        let listitems = [...items];
+        let listpricelist = pricelist.items?pricelist.items:[];
+        let newList = [];
+        if(listitems !== null && listitems.length > 0){
+            for(let i=0; i < listitems.length; i++){
+                let detItems = listitems[i];
+                let idproduct = detItems['idproduct'];
+                let idcategoryproduct = detItems['idcategoryproduct'];
+                let brutoweight = detItems['brutoweight'];
+                let pricetemp = new String(detItems['itemsprice']) !== '' ? detItems['itemsprice'] : '0';
+                let checkItem = listpricelist.filter(output => output.idproduct === idproduct && output.categoryproductid === idcategoryproduct);
+                if(checkItem !== null && checkItem !== undefined && checkItem.length > 0){
+                    let detPriceList = checkItem[0];
+                    let allowance = detPriceList.allowance?detPriceList.allowance:0;
+                    detItems['allowance'] = allowance;
+                    let valKg = calcNettoWeight({brutoweight:brutoweight,allowance:allowance});
+
+                     let valPriceTemp = '';
+                    if(new String(pricetemp).includes(',')){
+                        let splitComma = new String(pricetemp).split(','); 
+                        let angka = splitComma[0];
+                        let desimal = splitComma[1] !== undefined?new String(splitComma[1]).substring(0,2):'';
+                        valPriceTemp = removeFormatRupiah(angka)+'.'+desimal;
+                    }else{
+                        valPriceTemp = removeFormatRupiah(pricetemp);
+                    }
+
+                    detItems['allowance'] = allowance;
+                    let subtotal = valKg * parseFloat(valPriceTemp);
+                    subtotal = roundCeiling(subtotal,1);
+
+                    detItems['subtotalprice'] = formatRupiah(new String(subtotal).replaceAll('.',','),2);
+                    detItems['nettoweight'] = formatRupiah(new String(valKg).replaceAll('.',','),4);
+                    newList.push(detItems);
+                }
+            }
+        }
+
+        return newList;
     }
 
     const handleChangeVendor = (data) => {
@@ -618,6 +690,7 @@ export default function EditPackingList(props) {
             initialValues={
                 {
                     transdate: TransDate,
+                    transdatestock: TransDateStock,
                     customer: SelCustomer,
                     city: InputCity,
                     attention: InputAttention,
@@ -671,6 +744,19 @@ export default function EditPackingList(props) {
                                         // onChange={val => handleChangeTransDate(val)}
                                         format={formatdate}
                                         value={values.transdate}
+                                        disabled={true}
+                                    />
+
+                                    <label className="mt-3 form-label required" htmlFor="transdatestock">
+                                        {i18n.t('Tanggal Stock')}
+                                    </label>
+                                    <span style={{ color: 'red' }}>*</span>
+
+                                    <DatePicker
+                                        name="transdatestock"
+                                        // onChange={val => handleChangeTransDate(val)}
+                                        format={formatdate}
+                                        value={values.transdatestock}
                                         disabled={true}
                                     />
                                     <div className="invalid-feedback-custom">{ErrTransDate}</div>
@@ -982,6 +1068,54 @@ export default function EditPackingList(props) {
                                                             </tr>
                                                         )
                                                     })
+                                                }
+                                                {
+                                                    ListItems.length > 0 && (() => {
+                                                        let totalNettoWeight = ListItems.reduce((sum, item) => {
+                                                            let val = item.nettoweight ? item.nettoweight : 0;
+                                                            let valTemp = '';
+                                                            if (new String(val).includes(',')) {
+                                                                let splitComma = new String(val).split(',');
+                                                                let angka = splitComma[0];
+                                                                let desimal = splitComma[1] !== undefined ? splitComma[1] : 0;
+                                                                valTemp = removeFormatRupiah(angka) + '.' + desimal;
+                                                            } else {
+                                                                valTemp = removeFormatRupiah(val);
+                                                            }
+                                                            return sum + parseFloat(valTemp || 0);
+                                                        }, 0);
+                                                        totalNettoWeight         = Math.round(totalNettoWeight         * 10) / 10;
+
+                                                        const totalSubtotalPrice = ListItems.reduce((sum, item) => {
+                                                            let val = item.subtotalprice ? item.subtotalprice : 0;
+                                                            let valTemp = '';
+                                                            if (new String(val).includes(',')) {
+                                                                let splitComma = new String(val).split(',');
+                                                                let angka = splitComma[0];
+                                                                let desimal = splitComma[1] !== undefined ? splitComma[1] : 0;
+                                                                valTemp = removeFormatRupiah(angka) + '.' + desimal;
+                                                            } else {
+                                                                valTemp = removeFormatRupiah(val);
+                                                            }
+                                                            return sum + parseFloat(valTemp || 0);
+                                                        }, 0);
+
+                                                        return (
+                                                            <tr style={{ fontWeight: 'bold', backgroundColor: '#f5f5f5', fontSize: '1rem' }}>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td style={{ width: '15%' }}>{'Total'}</td>
+                                                                <td style={{ width: '18%' }}></td>
+                                                                <td style={{ width: '7%' }}></td>
+                                                                <td style={{ width: '9%' }}></td>
+                                                                {flagCheck && <td></td>}
+                                                                <td style={{ width: '10%' }}></td>
+                                                                <td style={{ width: '10%' }}>{formatRupiah(new String(totalNettoWeight).replaceAll('.', ','), 4)}</td>
+                                                                <td style={{ width: '11%' }}></td>
+                                                                <td style={{ width: '13%' }}>{formatRupiah(new String(totalSubtotalPrice).replaceAll('.', ','), 2)}</td>
+                                                            </tr>
+                                                        );
+                                                    })()
                                                 }
                                             </tbody>
                                         </table>

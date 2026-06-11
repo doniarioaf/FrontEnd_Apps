@@ -144,6 +144,7 @@ const calcNettoHeader = (value) =>{
         //kenapa totalan netto tidak ambil dari value.netto / total netto header karena ketika gr convert ke kg terjadi pembulatan sehingga ketika netto header di convert ke kg menjadi tidak sama desimal nya
         totalnetto += nettoweight;
     }
+    totalnetto         = Math.round(totalnetto         * 10) / 10; // 1 desimal
     return totalnetto;
 }
 
@@ -162,135 +163,203 @@ const calcNettoHeader = (value) =>{
 //     return totalnetto;
 // }
 
-const setItems = (value) =>{
+// ─── Pagination constants ──────────────────────────────────────────────────────
+const ITEMS_SINGLE_PAGE    = 13;  // jika total <= 13 → semua di 1 halaman
+const ITEMS_MAX_FIRST_PAGE = 17;  // maksimal item di halaman pertama (saat multi-page)
+const ITEMS_PER_NEXT_PAGE  = 23;  // maksimal item di halaman berikutnya
+
+// Hitung berapa item yang masuk halaman pertama:
+// - total <= 13 : single page, semua di hal.1
+// - total 14–18 : hal.1 = total - 1  (sisakan 1 untuk hal.2)
+// - total >= 19 : hal.1 = 17 (max), sisanya ke hal.2+
+// Contoh: 13 → 13 | 14 → 13 | 18 → 17 | 19 → 17+2 | 20 → 17+3
+const calcFirstPageCount = (total) => {
+    if (total <= ITEMS_SINGLE_PAGE) return total;          // single page
+    return Math.min(total - 1, ITEMS_MAX_FIRST_PAGE);      // multi-page
+};
+
+// Single page jika total item muat semua di halaman 1
+const isSinglePage = (total) => total <= ITEMS_SINGLE_PAGE;
+
+// ─── Helper: satu baris item ────────────────────────────────────────────────
+const buildItemRow = (det) => {
+    const qty         = det.qty         ? det.qty         : 0;
+    const nettoweight = det.nettoweight ? det.nettoweight : 0;
+    const heightVal = "23px";
+    const marginTopVal = "5px";
+    return (
+        <View style={[styles.tableRow]}>
+            <View style={[styles.tableColWidth, { width:styles.width.noofbox, height:heightVal }]}>
+                <Text style={[styles.tableCell, { width:styles.width.widthnoofbox, maxWidth:styles.width.widthnoofbox, textAlign:'center', marginTop:marginTopVal, fontSize:fontSizeBig }]}>{det.box}</Text>
+            </View>
+            <View style={[styles.tableColWidth, { width:styles.width.namabarang, height:heightVal }]}>
+                <Text style={[styles.tableCell, { width:styles.width.widthnamabarang, maxWidth:styles.width.widthnamabarang, textAlign:'center', marginTop:marginTopVal, fontSize:fontSizeBig }]}>{det.productName}</Text>
+            </View>
+            <View style={[styles.tableColWidth, { width:styles.width.ukuran, height:heightVal }]}>
+                <Text style={[styles.tableCell, { width:styles.width.widthukuran, maxWidth:styles.width.widthukuran, textAlign:'center', marginTop:marginTopVal, fontSize:fontSizeBig }]}>{det.categoryProductSize}</Text>
+            </View>
+            <View style={[styles.tableColWidth, { width:styles.width.gram, height:heightVal }]}>
+                <Text style={[styles.tableCell, { width:styles.width.widthgram, maxWidth:styles.width.widthgram, textAlign:'center', marginTop:marginTopVal, fontSize:fontSizeBig }]}>{det.categoryProductFromGr+' - '+det.categoryProductThruGr}</Text>
+            </View>
+            <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height:heightVal }]}>
+                <Text style={[styles.tableCell, { width:styles.width.widthkuantitas, maxWidth:styles.width.widthkuantitas, textAlign:'center', marginTop:marginTopVal, fontSize:fontSizeBig }]}>{qty}</Text>
+            </View>
+            <View style={[styles.tableColWidth, { width:styles.width.weightkg, height:heightVal }]}>
+                <Text style={[styles.tableCell, { width:styles.width.widthweightkg, maxWidth:styles.width.widthweightkg, textAlign:'center', marginTop:marginTopVal, fontSize:fontSizeBig }]}>{formatRupiah(new String(nettoweight).replaceAll('.',','),1)}</Text>
+            </View>
+            <View style={[styles.tableColWidth, { width:styles.width.harga, height:heightVal }]}>
+                <Text style={[styles.tableCell, { width:styles.width.widthharga, maxWidth:styles.width.widthharga, textAlign:'right', marginTop:marginTopVal, fontSize:fontSizeBig }]}>{det.price?desimal00(formatRupiah(new String(det.price).replaceAll('.',','),2)):0}</Text>
+            </View>
+            <View style={[styles.tableColWidth, { width:styles.width.jumlah, height:heightVal }]}>
+                <Text style={[styles.tableCell, { width:styles.width.widthjumlah, maxWidth:styles.width.widthjumlah, textAlign:'right', marginTop:marginTopVal, fontSize:fontSizeBig }]}>{det.totalprice?formatRupiah(new String(det.totalprice).replaceAll('.',','),1):0}</Text>
+            </View>
+        </View>
+    );
+};
+
+// ─── Helper: baris Total ────────────────────────────────────────────────────
+const buildTotalRow = (totalQty, totalnetto, totalSubtotalPrice) => (
+    <View style={styles.tableRow}>
+        <View style={[styles.tableColWidth, { width:styles.width.total, height:"25px" }]}>
+            <Text style={[styles.tableCell, { fontFamily:'roboto', width:styles.width.widthtotal, maxWidth:styles.width.widthtotal, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{'Total'}</Text>
+        </View>
+        <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height:"25px" }]}>
+            <Text style={[styles.tableCell, { width:styles.width.widthkuantitas, maxWidth:styles.width.widthkuantitas, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{totalQty}</Text>
+        </View>
+        <View style={[styles.tableColWidth, { width:styles.width.weightkg, height:"25px" }]}>
+            <Text style={[styles.tableCell, { width:styles.width.widthweightkg, maxWidth:styles.width.widthweightkg, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{formatRupiah(new String(totalnetto).replaceAll('.',','),1)}</Text>
+        </View>
+        <View style={[styles.tableColWidth, { borderRight:0, width:styles.width.harga, height:"25px" }]}>
+            <Text style={[styles.tableCell, { width:styles.width.widthharga, maxWidth:styles.width.widthharga, textAlign:'left', marginTop:'5px', fontSize:fontSizeBig }]}>{'USD'}</Text>
+        </View>
+        <View style={[styles.tableColWidth, { width:styles.width.jumlah, height:"25px" }]}>
+            <Text style={[styles.tableCell, { width:styles.width.widthjumlah, maxWidth:styles.width.widthjumlah, textAlign:'right', marginTop:'5px', fontSize:fontSizeBig }]}>{formatRupiah(new String(totalSubtotalPrice).replaceAll('.',','),1)}</Text>
+        </View>
+    </View>
+);
+
+// ─── Helper: header kolom (diulang di tiap halaman lanjutan) ─────────────────
+const buildColumnHeader = () => (
+    <View style={styles.tableRow}>
+        <View style={[styles.tableColWidth, { fontFamily:'roboto', backgroundColor:'#bcd6ed', width:styles.width.noofbox, height:"38px" }]}>
+            <Text style={[styles.tableCell, { width:styles.width.widthnoofbox, maxWidth:styles.width.widthnoofbox, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{"No. Of\nBox"}</Text>
+        </View>
+        <View style={[styles.tableColWidth, { fontFamily:'roboto', backgroundColor:'#bcd6ed', width:styles.width.namabarang, height:"38px" }]}>
+            <Text style={[styles.tableCell, { width:styles.width.widthnamabarang, maxWidth:styles.width.widthnamabarang, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{"Product Name"}</Text>
+        </View>
+        <View style={[styles.tableColWidth, { fontFamily:'roboto', backgroundColor:'#bcd6ed', width:styles.width.ukuran, height:"38px" }]}>
+            <Text style={[styles.tableCell, { width:styles.width.widthukuran, maxWidth:styles.width.widthukuran, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{"Size"}</Text>
+        </View>
+        <View style={[styles.tableColWidth, { fontFamily:'roboto', backgroundColor:'#bcd6ed', width:styles.width.gram, height:"38px" }]}>
+            <Text style={[styles.tableCell, { width:styles.width.widthgram, maxWidth:styles.width.widthgram, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{"Gram"}</Text>
+        </View>
+        <View style={[styles.tableColWidth, { fontFamily:'roboto', backgroundColor:'#bcd6ed', width:styles.width.kuantitas, height:"38px" }]}>
+            <Text style={[styles.tableCell, { width:styles.width.widthkuantitas, maxWidth:styles.width.widthkuantitas, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{"Pieces"}</Text>
+        </View>
+        <View style={[styles.tableColWidth, { fontFamily:'roboto', backgroundColor:'#bcd6ed', width:styles.width.weightkg, height:"38px" }]}>
+            <Text style={[styles.tableCell, { width:styles.width.widthweightkg, maxWidth:styles.width.widthweightkg, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{"Weight Kg"}</Text>
+        </View>
+        <View style={[styles.tableColWidth, { fontFamily:'roboto', backgroundColor:'#bcd6ed', width:styles.width.harga, height:"38px" }]}>
+            <Text style={[styles.tableCell, { width:styles.width.widthharga, maxWidth:styles.width.widthharga, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{"Price"}</Text>
+        </View>
+        <View style={[styles.tableColWidth, { fontFamily:'roboto', backgroundColor:'#bcd6ed', width:styles.width.jumlah, height:"38px" }]}>
+            <Text style={[styles.tableCell, { width:styles.width.widthmati, maxWidth:styles.width.widthjumlah, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{"Total"}</Text>
+        </View>
+    </View>
+);
+
+// ─── Helper: footer (Remarks + Declaration) ──────────────────────────────────
+const buildFooter = (valuedata) => (
+    <Fragment>
+        <View style={[styles.table]}>
+            <View style={styles.tableRow}>
+                <View style={[styles.tableColWidth, { width:"52%", height:"90px" }]}>
+                    <Text style={[styles.tableCell, { width:100, maxWidth:100, marginTop:'5px', fontSize:fontSizeBig }]}>{"Remarks"}</Text>
+                </View>
+                <View style={[styles.tableColWidth, { width:"48%", height:"90px", paddingLeft:'5px' }]}>
+                    <View style={{ flexDirection:'row', paddingTop:'78px' }}>
+                        <View style={{ flexDirection:'row-reverse', marginLeft:'40%' }}>
+                            <Text style={{ fontSize:7, marginRight:'1px' }}>{'Print By : '+(valuedata != null ? valuedata.namaUser+', '+valuedata.currdatetime : '')}</Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+        </View>
+        <View style={[styles.table]}>
+            <View style={styles.tableRow}>
+                <View style={[styles.tableColWidth, { width:"100%", height:"20px" }]}>
+                    <Text style={[styles.tableCell, { width:500, maxWidth:500, marginTop:'5px', fontSize:6 }]}>{"Declaration : We declare that this invoice shows actual price of goods described and that all particulars are true and correct"}</Text>
+                </View>
+            </View>
+        </View>
+        <Text style={{ textAlign:'right', marginRight:"2px", fontSize:7 }}>{"Edit:"}{(valuedata != null ? valuedata.countEdit : '')}{"  Print:"}{(valuedata != null ? (valuedata.countPrint ? valuedata.countPrint : 0) : '')}</Text>
+    </Fragment>
+);
+
+// ─── Main: render item dengan pagination ─────────────────────────────────────
+const setItems = (value) => {
+    const items = value ? value.items : null;
+    if (!items || items.length === 0) return null;
+
+    let totalnetto = 0, totalQty = 0, totalSubtotalPrice = 0;
+    items.forEach(det => {
+        totalQty           += parseInt(det.qty         ? det.qty         : 0);
+        totalSubtotalPrice += parseFloat(det.totalprice ? det.totalprice : 0);
+        totalnetto         += parseFloat(det.nettoweight ? det.nettoweight : 0);
+    });
+    // info bugs kenapa di set totalnetto = Math.round
+    //  pada javascript saya menjumlahkan 2 nilai,
+    // nilai a = 12.1,
+    // nilai b = 11.7
+    // kenapa hasilnya jadi 23.799999999999997
+    //nilainya jad 23,7
+    totalnetto         = Math.round(totalnetto         * 10) / 10; // 1 desimal
+    //
     
-    let items = value.items;
-    // let charges = value.charges
-    // let inventori = value.inventori
-    if(items != undefined && items != null){
-        
-        let totalnetto = 0;//value.netto?value.netto:0;
-        // totalnetto = convertkg(totalnetto);
+    console.log('totalnetto items ',totalnetto);
+    
+    const firstPageCount = calcFirstPageCount(items.length);
+    const firstSlice  = items.slice(0, firstPageCount);
+    const restItems   = items.slice(firstPageCount);
+    const isMultiPage = !isSinglePage(items.length);
 
-        let listRow = [];
-        let totalQty = 0;
-        let totalSubtotalPrice = 0;
-        let no = 1;
-        
-        let listfilteroutput = items;//.filter(output => output.qtynota > 0 && output.type == 'H');
-        console.log('listfilteroutput ',listfilteroutput);
-        // let letListDone = [];
-        for(let i=0; i < listfilteroutput.length; i++){
-            let det = listfilteroutput[i];
-            let qty = det.qty?det.qty:0;
-            let totalprice = det.totalprice?det.totalprice:0;
-            totalQty += parseInt(qty);
-            totalSubtotalPrice += parseFloat(totalprice);
-            let rowItem = [];
-            
-            let nettoweight = det.nettoweight?det.nettoweight:0;
-            // nettoweight = convertkg(nettoweight);
-            // nettoweight = roundCeiling(nettoweight,1);
-
-            console.log('nettoweight ',nettoweight);
-
-            //kenapa totalan netto tidak ambil dari value.netto / total netto header karena ketika gr convert ke kg terjadi pembulatan sehingga ketika netto header di convert ke kg menjadi tidak sama desimal nya
-            totalnetto += nettoweight;
-
-            rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.noofbox, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.box}</Text>
+    // Halaman lanjutan (2, 3, dst) — masing-masing dimulai dengan <View break>
+    const continuationPages = [];
+    let idx = 0;
+    while (idx < restItems.length) {
+        const pageItems   = restItems.slice(idx, idx + ITEMS_PER_NEXT_PAGE);
+        idx              += ITEMS_PER_NEXT_PAGE;
+        const isLastChunk = idx >= restItems.length;
+        continuationPages.push(
+            <View key={`cont-${idx}`} break>
+                <View style={[styles.table]}>
+                    {buildColumnHeader()}
+                    {pageItems.map((det, i) => buildItemRow(det))}
+                    {isLastChunk && buildTotalRow(totalQty, totalnetto, totalSubtotalPrice)}
                 </View>
-            );
-
-            // rowItem.push(
-            //     <View style={[styles.tableColWidth, { width:styles.width.no, height: "25px" }]}>
-            //         <Text style={[styles.tableCell, { width: styles.width.widthno, maxWidth: styles.width.widthno, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{no}</Text>
-            //     </View>
-            // );
-            rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.namabarang, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthnamabarang, maxWidth: styles.width.widthnamabarang, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.productName}</Text>
-                </View>
-            );
-            rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.ukuran, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthukuran, maxWidth: styles.width.widthukuran, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.categoryProductSize}</Text>
-                </View>
-            );
-            rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.gram, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthgram, maxWidth: styles.width.widthgram, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{det.categoryProductFromGr+' - '+det.categoryProductThruGr}</Text>
-                </View>
-            );
-            rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{qty}</Text>
-                </View>
-            );
-            rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.weightkg, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(nettoweight).replaceAll('.',','),1)}</Text>
-                </View>
-            );
-            
-            rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.harga, height: "25px" }]}>
-                    <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.price?desimal00(formatRupiah(new String(det.price).replaceAll('.',','),2)):0}</Text>
-                </View>
-            );
-            rowItem.push(
-                <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: "25px" }]}>
-                    {/* <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.totalprice?desimal00(formatRupiah(new String(det.totalprice).replaceAll('.',','),2)):0}</Text> */}
-                    <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{det.totalprice?formatRupiah(new String(det.totalprice).replaceAll('.',','),1):0}</Text>
-                </View>
-            );
-            
-            listRow.push(<View style={styles.tableRow}>{rowItem}</View>)
-            no++;
-        }
-        let rowItem = [];
-        
-        rowItem.push(
-            <View style={[styles.tableColWidth, { width:styles.width.total, height: "25px" }]}>
-                <Text style={[styles.tableCell, { fontFamily: 'roboto',width: styles.width.widthtotal, maxWidth: styles.width.widthtotal, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{'Total'}</Text>
+                {/* Footer hanya di halaman lanjutan terakhir */}
+                {isLastChunk && buildFooter(value)}
             </View>
         );
-        rowItem.push(
-            <View style={[styles.tableColWidth, { width:styles.width.kuantitas, height: "25px" }]}>
-                <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{totalQty}</Text>
-            </View>
-        );
-        rowItem.push(
-            <View style={[styles.tableColWidth, { width:styles.width.weightkg, height: "25px" }]}>
-                {/* <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{value.netto?desimal000(formatRupiah(new String(value.netto).replaceAll('.',','),3),{isShow000:true}):''}</Text> */}
-                <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(totalnetto).replaceAll('.',','),1)}</Text>
-                
-            </View>
-        );
-        // rowItem.push(
-        //     <View style={[styles.tableColWidth, { width:styles.width.noofbox, height: "25px" }]}>
-        //         <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{listfilteroutput.filter(output => output.box !== '').length}</Text>
-        //     </View>
-        // );
-        rowItem.push(
-            <View style={[styles.tableColWidth, { borderRight:0,width:styles.width.harga, height: "25px" }]}>
-                <Text style={[styles.tableCell, {  width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'left', marginTop: '5px', fontSize: fontSizeBig }]}>{'USD'}</Text>
-            </View>
-        );
-        rowItem.push(
-            <View style={[styles.tableColWidth, { width:styles.width.jumlah, height: "25px" }]}>
-                {/* <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{desimal00(formatRupiah(new String(totalSubtotalPrice).replaceAll('.',','),2))}</Text> */}
-                <Text style={[styles.tableCell, { width: styles.width.widthjumlah, maxWidth: styles.width.widthjumlah, textAlign:'right', marginTop: '5px', fontSize: fontSizeBig }]}>{formatRupiah(new String(totalSubtotalPrice).replaceAll('.',','),1)}</Text>
-            </View>
-        );
-        
-        listRow.push(<View style={styles.tableRow}>{rowItem}</View>);
-
-        
-        return listRow;
     }
-    return null;
+
+    return (
+        <Fragment>
+            {/* Item halaman pertama */}
+            <View key={`cont-1`}>
+                <View style={[styles.table, isMultiPage ? {marginBottom:'250px', borderBottomWidth:1} : {borderBottomWidth:1}]}>
+                    {buildColumnHeader()}
+                    {firstSlice.map((det, i) => buildItemRow(det))}
+                    {/* Baris Total hanya di sini jika single page (tidak ada halaman lanjutan) */}
+                    {!isMultiPage && buildTotalRow(totalQty, totalnetto, totalSubtotalPrice)}
+                </View>
+                {/* Footer di halaman 1 jika single page */}
+                {!isMultiPage && buildFooter(value)}
+            </View>
+            {/* Halaman lanjutan (masing-masing di page baru, Total + Footer di halaman terakhir) */}
+            {continuationPages}
+        </Fragment>
+    );
 }
 
 const getCodeAndCountryDest = (value) =>{
@@ -469,70 +538,11 @@ const GenerateDocumentPackingListV2 = ({ valuedata }) => {
                             </View>
                             </View>
 
-                            <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.noofbox, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthnoofbox, maxWidth: styles.width.widthnoofbox, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"No. Of\n"}{"Box"}</Text>
-                            </View>
-                            {/* <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.no, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthno, maxWidth: styles.width.widthno, marginTop: '5px', fontSize: fontSizeBig }]}>{"No"}</Text>
-                            </View> */}
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.namabarang, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthnamabarang, maxWidth: styles.width.widthnamabarang, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Product Name"}</Text>
-                            </View>
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed',width:styles.width.ukuran, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthukuran, maxWidth: styles.width.widthukuran, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Size"}</Text>
-                            </View>
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.gram, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthgram, maxWidth: styles.width.widthgram, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Gram"}</Text>
-                            </View>
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.kuantitas, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthkuantitas, maxWidth: styles.width.widthkuantitas, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Pieces"}</Text>
-                            </View>
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.weightkg, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthweightkg, maxWidth: styles.width.widthweightkg, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Weight Kg"}</Text>
-                            </View>
-                            
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.harga, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthharga, maxWidth: styles.width.widthharga, textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Price"}</Text>
                             </View>
 
-                            <View style={[styles.tableColWidth, {fontFamily: 'roboto',backgroundColor:'#bcd6ed', width:styles.width.jumlah, height: "38px" }]}>
-                                <Text style={[styles.tableCell, { width: styles.width.widthmati, maxWidth: styles.width.widthjumlah,textAlign:'center', marginTop: '5px', fontSize: fontSizeBig }]}>{"Total"}</Text>
-                            </View>
-
-                            </View>
+                            {/* Tabel item — setItems mengatur column header + item rows */}
                             {setItems(valuedata != null ? valuedata : [])}
 
-                            </View>
-
-                            <View style={[styles.table]}>
-                            <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, { width:"52%", height: "90px" }]}>
-                                <Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '5px', fontSize: fontSizeBig }]}>{"Remarks"}</Text>
-                            </View>
-                            <View style={[styles.tableColWidth, { width:"48%", height: "90px", paddingLeft:'5px' }]}>
-                            <View style={{ flexDirection: 'row',paddingTop:'78px' }}>
-                                
-
-                                <View style={{ flexDirection: 'row-reverse', marginLeft: '40%' }}>
-                                <Text style={{ fontSize: 7,marginRight:'1px' }}>{'Print By : '+(valuedata != null?valuedata.namaUser+', '+valuedata.currdatetime:'')}</Text>
-                                    {/* <Text style={{ fontSize: 7 }}>{'Edit : '}{(valuedata != null?valuedata.countEdit:'')}{' Print : '+(valuedata != null?(valuedata.countPrint?valuedata.countPrint+1:1):'')}{' Dicetak Oleh: '+(valuedata != null?valuedata.namaUser+' ,'+valuedata.currdatetime:'')}</Text> */}
-                                </View>
-                            </View>
-
-                                {/* <Text style={[styles.tableCell, { width: 100, maxWidth: 100, marginTop: '5px', fontSize: fontSizeBig }]}>{""}</Text> */}
-                            </View>
-                            </View>
-                            </View>
-
-                            <View style={[styles.table]}>
-                            <View style={styles.tableRow}>
-                            <View style={[styles.tableColWidth, { width:"100%", height: "20px" }]}>
-                                <Text style={[styles.tableCell, { width: 500, maxWidth: 500, marginTop: '5px', fontSize: 6 }]}>{"Declaration : We declare that this invoice shows actual price of goods described and that all particulars are true and correct"}</Text>
-                            </View>
-                            </View>
-                            </View>
-                            <Text style={{textAlign:'right',marginRight:"2px",fontSize:7}}>{"Edit:"}{(valuedata != null?valuedata.countEdit:'')}{"  Print:"}{(valuedata != null?(valuedata.countPrint?valuedata.countPrint:0):'')}</Text>
 
                         </View>
                     :
