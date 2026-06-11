@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { formatRupiah, isGetPermissions,numToMoneyNegative,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { formatRupiah, isGetPermissions,numToMoneyNegative,reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
   import { MenuKomisi, deleteKomisi_Permission, editKomisi_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
@@ -339,6 +339,25 @@ import React, {useState,
                                     </tr>
                                 )
                             })
+                        }
+                        {                                                                          
+                            ListItem.length > 0 && (() => {
+                                let total = ListItem.reduce((sum, item) => {
+                                return sum + (item.subtotalkomisi?parseFloat(removeFormatRupiah(item.subtotalkomisi)):0);
+                                }, 0);
+                                // total = String(total).replaceAll('.',',');
+                                return (
+                                    <tr style={{ fontWeight: 'bold', backgroundColor: '#f5f5f5', fontSize: '1rem' }}>
+                                        <td >{'Total'}</td>
+                                        <td ></td>
+                                        <td ></td>
+                                        <td ></td>
+                                        
+                                        <td ></td>
+                                        <td >{formatRupiah(new String(total).replaceAll('.', ','), 2)}</td>
+                                    </tr>
+                                );
+                            })()
                         }
                     </tbody>
                     </table>

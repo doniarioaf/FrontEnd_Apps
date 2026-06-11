@@ -485,6 +485,29 @@ export default function BayarKomisi(props) {
                                                     )
                                                 })
                                             }
+                                            {
+                                                
+                                                ListItems.length > 0 && (() => {
+                                                    let total = ListItems.reduce((sum, item) => {
+                                                    return sum + (item.subtotalkomisinominal?item.subtotalkomisinominal:0);
+                                                    }, 0);
+                                                    // total = String(total).replaceAll('.',',');
+                                                    return (
+                                                        <tr style={{ fontWeight: 'bold', backgroundColor: '#f5f5f5', fontSize: '1rem' }}>
+                                                            <td></td>
+                                                            <td >{'Total'}</td>
+                                                            <td ></td>
+                                                            <td ></td>
+                                                            <td ></td>
+                                                            
+                                                            <td ></td>
+                                                            <td >{formatRupiah(new String(total).replaceAll('.', ','), 2)}</td>
+                                                        </tr>
+                                                    );
+                                                })()
+
+                                                
+                                            }
                                         </tbody>
                                         </table>
                                     </div>
