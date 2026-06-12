@@ -395,7 +395,7 @@ import React, {useState,
                                 }, 0);
                                 totalNettoWeight         = Math.round(totalNettoWeight         * 10) / 10;
 
-                                const totalSubtotalPrice = ListItem.reduce((sum, item) => {
+                                let totalSubtotalPrice = ListItem.reduce((sum, item) => {
                                     return sum + parseFloat(item.totalprice || 0);
                                 }, 0);
                                 totalSubtotalPrice         = Math.round(totalSubtotalPrice         * 10) / 10;
