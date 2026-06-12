@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { decryptObjectNotLocalStorage, formatRupiah, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
+import { decryptObjectNotLocalStorage, formatRupiah, getFormatFile, numToMoney, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addPelunasanPiutang_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -38,6 +38,10 @@ export default function AddStockAdjusment(props) {
 
     const [ListItems, setListItems] = useState([]);
     const [ErrItems, setErrItems] = useState("");
+
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [isSelected, setIsSelected] = useState(false);
+    const [ErrUploadFile, setErrUploadFile] = useState("");
     
     const id = props.match.params.id;
 
@@ -113,7 +117,8 @@ export default function AddStockAdjusment(props) {
         let flag = true;
         setErrTransDate('');
         setErrInputKurs('');
-        setErrItems('')
+        setErrItems('');
+        setErrUploadFile('');
 
         let listitem = ListItems.filter(output => output.nodocument !== 'TOTAL');
         if (listitem.length > 0) {
@@ -132,9 +137,7 @@ export default function AddStockAdjusment(props) {
                     flag = false;
                     break;
                 }
-                console.log('det.nodocument ',det.nodocument);
-                console.log('totalPembayaran ',totalPembayaran);
-                console.log('outstanding ',outstanding);
+                
                 if (totalPembayaran > outstanding) {
                     setErrItems(i18n.t('Pembayaran '+det.nodocument+' Lebih besar dari nilai outstanding'));
                     flag = false;
@@ -157,6 +160,18 @@ export default function AddStockAdjusment(props) {
             let kurs = new String(values.kurs).replaceAll('.','');
             if(parseFloat(kurs) <= 0){
                 setErrInputKurs(i18n.t('Harus Lebih besar dari 0'));
+                flag = false;
+            }
+        }
+
+        if(selectedFile == null){
+            // setErrUploadFile(i18n.t('label_REQUIRED'));
+            // flag = false;
+        }else{
+            let myFile =selectedFile;
+            let formatMyFile = myFile.name?getFormatFile(myFile.name):'';
+            if(formatMyFile !== 'pdf' && formatMyFile !== 'png' && formatMyFile !== 'jpg' && formatMyFile !== 'jpeg'){
+                setErrUploadFile(i18n.t('Format file hanya PDF,PNG,JPG,JPEG'));
                 flag = false;
             }
         }
@@ -199,9 +214,24 @@ export default function AddStockAdjusment(props) {
                 ], []);
             }
             obj.items = items;
-            dispatch(actions.submitPelunasanPiutang({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitPelunasanPiutang({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmitData, errorHandler));
         }
     }
+
+    const succesHandlerSubmitData = (data, propsdata) => {
+        let iddata = data.data;
+        if(isSelected && selectedFile !== undefined && selectedFile !== null){
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            dispatch(actions.submitPelunasanPiutang({ url: '/file/'+iddata, payload: formData, type: 'ADD' }, succesHandlerSubmit, errorHandlerFile));
+        }else{
+            succesHandlerSubmit(data,propsdata);
+        }
+        
+    }
+
+    
 
     const submitHandler = (values) => {
         Swal.fire({
@@ -221,6 +251,18 @@ export default function AddStockAdjusment(props) {
         })
     }
 
+    const errorHandlerFile = (data, propsdata) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops Gagal Upload File...',
+            text: data.msg
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // history.goBack();
+            }
+        })
+    }
     const errorHandler = (data, propsdata) => {
         setLoading(false);
         Swal.fire({
@@ -395,6 +437,18 @@ export default function AddStockAdjusment(props) {
         setListItems(list);
     };
 
+    const changeHandlerFIle = (event) => {
+
+		setSelectedFile(event.target.files[0]);
+
+		setIsSelected(true);
+
+	};
+    function cancelFile(){
+        setSelectedFile(null);
+
+		setIsSelected(false);
+    }
     return (
         <Formik
             initialValues={
@@ -458,6 +512,35 @@ export default function AddStockAdjusment(props) {
                                         onBlur={handleBlur}
                                         value={values.kurs}
                                     />
+
+                                    <label className="mt-3 form-label required" htmlFor="netamount">
+                                        {i18n.t('Upload File')}
+                                    </label>
+                                    <br/>
+                                    {/* <div style={{backgroundColor:'#343439',width:'20%',height:'5%',position:'absolute',right:'15px' }}></div> */}
+                                    <input type="file" name={"file"} 
+                                    accept='.pdf, .jpg, .png, .jpeg' 
+                                    onChange={changeHandlerFIle} />
+                                    
+                                    {isSelected && selectedFile !== undefined && selectedFile !== null ? 
+                                    <div>
+                                        <p>Nama File: {selectedFile.name || selectedFile.name !== undefined?selectedFile.name:''}</p>
+
+                                        <p>Tipe File: {selectedFile.type || selectedFile.type !== undefined?selectedFile.type:''}</p>
+
+                                        <p>Ukuran Dalam KB: {selectedFile.size || selectedFile.size !== undefined?selectedFile.size / 1024:0}</p>
+                                        <Button
+                                // style={{marginLeft:"1%"}}
+                                            color={'primary'}
+                                            onClick={() => cancelFile()}
+                                        >
+                                            {'Cancel File'}
+                                        </Button>
+                                    </div>
+
+                                    
+                                    :<p>Silahkan Pilih File</p> }
+                                    <div className="invalid-feedback-custom">{ErrUploadFile}</div>
                                     </div>
                                 </div>
 

@@ -120,6 +120,7 @@ export default function BayarKomisi(props) {
     const checkColumnMandatory = (values) => {
         let flag = true;
         setErrTransDate('');
+        setErrUploadFile('');
         if (ListItems.length <= 0) {
             setErrItems(i18n.t('label_REQUIRED'));
             flag = false;

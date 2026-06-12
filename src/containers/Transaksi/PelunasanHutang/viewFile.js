@@ -14,7 +14,7 @@ import Swal             from "sweetalert2";
 import {useHistory}                 from 'react-router-dom';
 import {useTranslation}             from 'react-i18next';
 
-export default function ViewFileKomisi(props) {
+export default function ViewFilePelunasanHutang(props) {
     const dispatch = useDispatch();
     const i18n = useTranslation('translations');
     const history = useHistory();
@@ -27,7 +27,7 @@ export default function ViewFileKomisi(props) {
 
     useEffect(() => {
         setLoading(true);
-        dispatch(actions.getKomisiData( {url:'/downloadfile/'+id},successHandlerDownload, errorHandler));
+        dispatch(actions.getPelunasanHutangData( {url:'/downloadfile/'+id},successHandlerDownload, errorHandler));
     }, []);
     function successHandlerDownload(data,propsdata) {
         let det = data.data;
@@ -48,7 +48,7 @@ export default function ViewFileKomisi(props) {
     }
     return (
         <ContentWrapper>
-            <ContentHeading history={history} link={pathmenu.viewFilekomisi+'/'+id} label={'View File'} labeldefault={'View File'} />
+            <ContentHeading history={history} link={pathmenu.viewfiledetailpelunasanhutang+'/'+id} label={'View File'} labeldefault={'View File'} />
             <Container fluid>
                 <Card>
                     <CardBody>

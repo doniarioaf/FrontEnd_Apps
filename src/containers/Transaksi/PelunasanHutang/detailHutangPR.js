@@ -24,7 +24,7 @@ import React, {useState,
   import MenuList from '@material-ui/core/MenuList';
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
-  import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
+  import { getFormatFile, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { addPelunasanHutang_Permission,MenuPelunasanHutang } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate } from '../../shared/constantValue';
@@ -65,6 +65,10 @@ import React, {useState,
 
     const [InputKurangBayar, setInputKurangBayar] = useState(0);
     const [ShowBayar, setShowBayar] = useState(false);
+
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [isSelected, setIsSelected] = useState(false);
+    const [ErrUploadFile, setErrUploadFile] = useState("");
 
     const id = props.match.params.id;
 
@@ -262,6 +266,7 @@ import React, {useState,
         let flag = true;
         setErrInputAmount('');
         setErrInputDates('');
+        setErrUploadFile('');
         let amount = new String(values.amount).replaceAll('.','');
         if(amount == ''){
             setErrInputAmount(i18n.t('label_REQUIRED'));
@@ -279,6 +284,17 @@ import React, {useState,
             setErrInputDates(i18n.t('label_REQUIRED'));
             flag = false;
         }
+        if(selectedFile == null){
+            // setErrUploadFile(i18n.t('label_REQUIRED'));
+            // flag = false;
+        }else{
+            let myFile =selectedFile;
+            let formatMyFile = myFile.name?getFormatFile(myFile.name):'';
+            if(formatMyFile !== 'pdf' && formatMyFile !== 'png' && formatMyFile !== 'jpg' && formatMyFile !== 'jpeg'){
+                setErrUploadFile(i18n.t('Format file hanya PDF,PNG,JPG,JPEG'));
+                flag = false;
+            }
+        }
         return flag;
     }
 
@@ -292,9 +308,22 @@ import React, {useState,
             obj.amount = new String(values.amount).replaceAll('.','');
             obj.notes = values.notes;
             setLoading(true);
-            dispatch(actions.submitPelunasanHutang({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmit, errorHandler));
+            dispatch(actions.submitPelunasanHutang({ url: '', payload: obj, type: 'ADD' }, succesHandlerSubmitData, errorHandler));
         }
     }
+
+    const succesHandlerSubmitData = (data, propsdata) => {
+    let iddata = data.data;
+    if(isSelected && selectedFile !== undefined && selectedFile !== null){
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        
+        dispatch(actions.submitPelunasanHutang({ url: '/file/'+iddata, payload: formData, type: 'ADD' }, succesHandlerSubmit, errorHandlerFile));
+    }else{
+        succesHandlerSubmit(data,propsdata);
+    }
+    
+}
 
     const submitHandler = (values) => {
         Swal.fire({
@@ -312,6 +341,32 @@ import React, {useState,
                 //   Swal.fire('Changes are not saved', '', 'info')
             }
         })
+    }
+
+    const errorHandlerFile = (data, propsdata) => {
+        setLoading(false);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops Gagal Upload File...',
+            text: data.msg
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // history.goBack();
+            }
+        })
+    }
+
+     const changeHandlerFIle = (event) => {
+
+		setSelectedFile(event.target.files[0]);
+
+		setIsSelected(true);
+
+	};
+    function cancelFile(){
+        setSelectedFile(null);
+
+		setIsSelected(false);
     }
 
     return (
@@ -502,6 +557,35 @@ import React, {useState,
                                             value={values.notes}
                                             style={{width:'200%'}}
                                         />
+
+                                        <label className="mt-3 form-label required" htmlFor="netamount">
+                                            {i18n.t('Upload File')}
+                                        </label>
+                                        <br/>
+                                        {/* <div style={{backgroundColor:'#343439',width:'20%',height:'5%',position:'absolute',right:'15px' }}></div> */}
+                                        <input type="file" name={"file"} 
+                                        accept='.pdf, .jpg, .png, .jpeg' 
+                                        onChange={changeHandlerFIle} />
+                                        
+                                        {isSelected && selectedFile !== undefined && selectedFile !== null ? 
+                                        <div>
+                                            <p>Nama File: {selectedFile.name || selectedFile.name !== undefined?selectedFile.name:''}</p>
+    
+                                            <p>Tipe File: {selectedFile.type || selectedFile.type !== undefined?selectedFile.type:''}</p>
+    
+                                            <p>Ukuran Dalam KB: {selectedFile.size || selectedFile.size !== undefined?selectedFile.size / 1024:0}</p>
+                                            <Button
+                                    // style={{marginLeft:"1%"}}
+                                                color={'primary'}
+                                                onClick={() => cancelFile()}
+                                            >
+                                                {'Cancel File'}
+                                            </Button>
+                                        </div>
+    
+                                        
+                                        :<p>Silahkan Pilih File</p> }
+                                        <div className="invalid-feedback-custom">{ErrUploadFile}</div>
                                     </div>
                                     </div>
 

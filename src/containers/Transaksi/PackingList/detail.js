@@ -398,6 +398,7 @@ import React, {useState,
                                 const totalSubtotalPrice = ListItem.reduce((sum, item) => {
                                     return sum + parseFloat(item.totalprice || 0);
                                 }, 0);
+                                totalSubtotalPrice         = Math.round(totalSubtotalPrice         * 10) / 10;
 
                                 return (
                                     <tr style={{ fontWeight: 'bold', backgroundColor: '#f5f5f5', fontSize: '1rem' }}>

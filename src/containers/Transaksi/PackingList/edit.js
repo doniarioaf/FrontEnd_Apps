@@ -1099,6 +1099,7 @@ export default function EditPackingList(props) {
                                                             }
                                                             return sum + parseFloat(valTemp || 0);
                                                         }, 0);
+                                                        totalSubtotalPrice         = Math.round(totalSubtotalPrice         * 10) / 10;
 
                                                         return (
                                                             <tr style={{ fontWeight: 'bold', backgroundColor: '#f5f5f5', fontSize: '1rem' }}>
