@@ -314,9 +314,8 @@ const setItems = (value) => {
     // kenapa hasilnya jadi 23.799999999999997
     //nilainya jad 23,7
     totalnetto         = Math.round(totalnetto         * 10) / 10; // 1 desimal
+    totalSubtotalPrice         = Math.round(totalSubtotalPrice         * 10) / 10; // 1 desimal
     //
-    
-    console.log('totalnetto items ',totalnetto);
     
     const firstPageCount = calcFirstPageCount(items.length);
     const firstSlice  = items.slice(0, firstPageCount);
