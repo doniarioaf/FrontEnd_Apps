@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { Loading } from '../../../components/Common/Loading';
 import Swal from "sweetalert2";
 import { useHistory } from 'react-router-dom';
-import { formatRupiah, numToMoneyNegative, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
+import { formatRupiah, getFormatFile, numToMoneyNegative, reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
 import { addKomisi_Permission } from '../../shared/permissionMenu';
 import * as pathmenu from '../../shared/pathMenu';
 import moment from 'moment';
@@ -44,6 +44,10 @@ export default function BayarKomisi(props) {
     const [TotalKomisi, setTotalKomisi] = useState("");
     const [addKomisi, setAddKomisi] = useState(0);
     const [Description, setDescription] = useState("");
+
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [isSelected, setIsSelected] = useState(false);
+    const [ErrUploadFile, setErrUploadFile] = useState("");
 
     const id = props.match.params.id;
     useEffect(() => {
@@ -125,6 +129,17 @@ export default function BayarKomisi(props) {
             setErrTransDate(i18n.t('label_REQUIRED'));
             flag = false;
         }
+        if(selectedFile == null){
+            // setErrUploadFile(i18n.t('label_REQUIRED'));
+            // flag = false;
+        }else{
+            let myFile =selectedFile;
+            let formatMyFile = myFile.name?getFormatFile(myFile.name):'';
+            if(formatMyFile !== 'pdf' && formatMyFile !== 'png' && formatMyFile !== 'jpg' && formatMyFile !== 'jpeg'){
+                setErrUploadFile(i18n.t('Format file hanya PDF,PNG,JPG,JPEG'));
+                flag = false;
+            }
+        }
         return flag;
     }
     const executeSubmit = (values) => {
@@ -185,9 +200,21 @@ export default function BayarKomisi(props) {
                 ], []);
             }
             obj.items = items;
-            dispatch(actions.submitKomisi({ url: '', payload: obj, type: 'ADD', propsdata:propsdata }, succesHandlerSubmit, errorHandlerSubmit));
+            dispatch(actions.submitKomisi({ url: '', payload: obj, type: 'ADD', propsdata:propsdata }, succesHandlerSubmitData, errorHandlerSubmit));
     }
 
+    const succesHandlerSubmitData = (data, propsdata) => {
+        let iddata = data.data;
+        if(isSelected && selectedFile !== undefined && selectedFile !== null){
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            dispatch(actions.submitKomisi({ url: '/file/'+iddata, payload: formData, type: 'ADD',propsdata:propsdata }, succesHandlerSubmit, errorHandlerFile));
+        }else{
+            succesHandlerSubmit(data,propsdata);
+        }
+        
+    }
     const succesHandlerSubmit = (data, propsdata) => {
         let index = propsdata.index;
         let length = ListIdVendorBroker.length - 1;
@@ -332,7 +359,22 @@ export default function BayarKomisi(props) {
         total = String(total).replaceAll('.',',');
         setTotalKomisi(total);
     }
-    
+
+    const changeHandlerFIle = (event) => {
+
+		setSelectedFile(event.target.files[0]);
+
+		setIsSelected(true);
+
+	};
+    function cancelFile(){
+        setSelectedFile(null);
+
+		setIsSelected(false);
+    }
+    const errorHandlerFile = (data, propsdata) => {
+        succesHandlerSubmit(data,propsdata);   
+    }
 
     function errorHandler(error, propsdata) {
         setLoading(false);
@@ -409,6 +451,35 @@ export default function BayarKomisi(props) {
                                         value={values.totalkomisi !== '' ? numToMoneyNegative(new String(values.totalkomisi).replaceAll(".", "")) : ''}
                                         // value={values.amount !== '' ? numToMoney(parseFloat(new String(values.amount).replaceAll(".", ""))) : ''}
                                     />
+
+                                    <label className="mt-3 form-label required" htmlFor="netamount">
+                                        {i18n.t('Upload File')}
+                                    </label>
+                                    <br/>
+                                    {/* <div style={{backgroundColor:'#343439',width:'20%',height:'5%',position:'absolute',right:'15px' }}></div> */}
+                                    <input type="file" name={"file"} 
+                                    accept='.pdf, .jpg, .png, .jpeg' 
+                                    onChange={changeHandlerFIle} />
+                                    
+                                    {isSelected && selectedFile !== undefined && selectedFile !== null ? 
+                                    <div>
+                                        <p>Nama File: {selectedFile.name || selectedFile.name !== undefined?selectedFile.name:''}</p>
+
+                                        <p>Tipe File: {selectedFile.type || selectedFile.type !== undefined?selectedFile.type:''}</p>
+
+                                        <p>Ukuran Dalam KB: {selectedFile.size || selectedFile.size !== undefined?selectedFile.size / 1024:0}</p>
+                                        <Button
+                                // style={{marginLeft:"1%"}}
+                                            color={'primary'}
+                                            onClick={() => cancelFile()}
+                                        >
+                                            {'Cancel File'}
+                                        </Button>
+                                    </div>
+
+                                    
+                                    :<p>Silahkan Pilih File</p> }
+                                    <div className="invalid-feedback-custom">{ErrUploadFile}</div>
                                 </div>
 
                                 <div className="mt-2 col-lg-6 ft-detail mb-5">

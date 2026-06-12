@@ -112,6 +112,7 @@ export const menuReportKartuStock = `/reportKartuStock`;
 export const menukomisi = `/komisi`;
 export const bayarkomisi = `/form/bayar/komisi`;
 export const detailkomisi = `/form/detail/komisi`;
+export const viewFilekomisi = `/form/viewfile/komisi`;
 export const editbayarkomisi = `/form/editbayar/komisi`;
 export const printkomisi = `/form/print/komisi`;
 export const menuReportKomisi = `/reportKomisi`;

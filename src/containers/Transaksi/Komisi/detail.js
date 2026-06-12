@@ -25,10 +25,20 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
   import { formatRupiah, isGetPermissions,numToMoneyNegative,reloadToHomeNotAuthorize, removeFormatRupiah } from '../../shared/globalFunc';
-  import { MenuKomisi, deleteKomisi_Permission, editKomisi_Permission } from '../../shared/permissionMenu';
+  import { MenuKomisi, addKomisi_Permission, deleteKomisi_Permission, editKomisi_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
   import '../../CSS/table.css';
+
+  import DialogUploadFile from './dialogUploadFile';
+  import styled                       from "styled-components";
+  import Dialog                       from '@material-ui/core/Dialog';
+
+  const StyledDialog = styled(Dialog)`
+    & > .MuiDialog-container > .MuiPaper-root {
+        height: 500px;
+    }
+    `;
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -52,10 +62,13 @@ import React, {useState,
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef(null);
     const [isprint, setIsPrint] = useState(false);
+    const [LoadingSend, setLoadingSend] = useState(false);
 
     const id = props.match.params.id;
 
     const [ListItem, setListItem] = useState([]);
+
+    const [ShowDialog, setShowDialog] = useState(false);
 
     const handleToggle = (flag) => {
         setOpen((prevOpen) => !prevOpen);
@@ -156,6 +169,58 @@ import React, {useState,
         })
     }
 
+    function viewFile(){
+        history.push(pathmenu.viewFilekomisi+'/'+id);
+    }
+    function downloadFile(){
+        setLoading(true);
+        dispatch(actions.getKomisiData( {url:'/downloadfile/'+id},successHandlerDownload, errorHandler));
+    }
+    function successHandlerDownload(data,propsdata) {
+        let det = data.data;
+
+        let contenttype = det.filecontenttype;
+        if(contenttype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+            contenttype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,';
+        }
+        var base64str = det.filedocument;
+
+        // decode base64 string, remove space for IE compatibility
+        var binary = window.atob(base64str.replace(/\s/g, ''));
+        var len = binary.length;
+        var buffer = new ArrayBuffer(len);
+        var view = new Uint8Array(buffer);
+        for (var i = 0; i < len; i++) {
+            view[i] = binary.charCodeAt(i);
+        }
+        var blob = new Blob([view,{ type: contenttype }]);
+        var dataUrl = URL.createObjectURL(blob);
+
+        var fileLink = document.createElement('a');
+        fileLink.href = dataUrl;
+
+        // it forces the name of the downloaded file
+        fileLink.download = det.filename;
+        fileLink.click();
+        fileLink.remove();
+
+        setLoading(false);
+
+    }
+
+    const succesHandlerSubmitFile = (data) => {
+        setLoading(false);
+        setShowDialog(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(0);
+            }
+        })
+    }
     function errorHandler(error,propsdata) {
         setLoading(false);
         Swal.fire({
@@ -278,6 +343,22 @@ import React, {useState,
                             </div>
 
                             <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('File')}</span>
+                                {/* <strong className="col-md-7" onClick={() => downloadFile()} style={{cursor:'pointer',color:'blue'}} > */}
+                                <strong className="col-md-7" hidden={value.fileName ?false:true}>
+                                {value.fileName ?value.fileName:''}
+                                 <div className="mt-2">
+                                    <span onClick={() => downloadFile()} style={{cursor:'pointer', color:'blue', marginRight:'15px'}}>
+                                        <i className="fa fa-download" /> {i18n.t('Download')}
+                                    </span>
+                                    <span onClick={() => viewFile()} style={{cursor:'pointer', color:'blue'}}>
+                                        <i className="fa fa-eye" /> {i18n.t('View File')}
+                                    </span>
+                                </div>
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('label_CREATED')}</span>
                                 <strong className="col-md-7">
                                 {value.createdbyName ?value.createdbyName:''}
@@ -386,6 +467,7 @@ import React, {useState,
                         :(<div>
                             <MenuItem hidden={!isGetPermissions(MenuKomisi,'TRANSACTION')}  onClick={() => history.push(pathmenu.printkomisi+'/'+id)}>{i18n.t('Print')}</MenuItem>
                             {/* <MenuItem hidden={!isGetPermissions(MenuPackingList,'TRANSACTION')}  onClick={() => downloadExcelPL()}>{i18n.t('Excel Packing List')}</MenuItem> */}
+                            <MenuItem hidden={!isGetPermissions(addKomisi_Permission,'TRANSACTION')}  onClick={() => setShowDialog(true)}>{i18n.t('Upload File')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(editKomisi_Permission,'TRANSACTION')}  onClick={() => history.push(pathmenu.editbayarkomisi+'/'+id)}>{i18n.t('grid.EDIT')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deleteKomisi_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             {/* <MenuItem hidden={!isGetPermissions(MenuPurchaseReceive,'TRANSACTION')}  onClick={() => history.push(pathmenu.printnota+'/'+id)}>{i18n.t('Nota')}</MenuItem> */}
@@ -404,6 +486,25 @@ import React, {useState,
         </div>
 
             {loading && <Loading/>}
+
+            <StyledDialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                maxWidth="sm"
+                fullWidth={true}
+                style={{height: '80%'}}
+                open={ShowDialog}
+            >
+                <DialogUploadFile
+                    showflag = {setShowDialog}
+                    flagloadingsend = {setLoadingSend}
+                    errorhandler = {errorHandler}
+                    idparam = {id}
+                    handlesubmit = {succesHandlerSubmitFile}
+                    // getAutoDebitid= {getAutoDebitid}
+                />
+                {LoadingSend && <Loading/>}
+            </StyledDialog>
         </ContentWrapper>
     )
   }
