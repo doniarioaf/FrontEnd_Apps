@@ -8,3 +8,4 @@ export const months = [{value:1,label:"Januari"},{value:2,label:"Februari"},{val
 export const colourPrimaryInHexa = "#5d9cec";
 export const formatdateYYYYMMDD = 'YYYYMMDD';
 export const formattimeHHmm = 'HH:mm';// HH = 24 Jam, hh=12 jam
+export const decimalsdefaultInvoice = 1; 

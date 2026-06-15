@@ -5,6 +5,8 @@ import roboto from '../../../../components/Fonts/Roboto/Roboto-Bold.ttf';
 import robotoitalic from '../../../../components/Fonts/Roboto/Roboto-BoldItalic.ttf';
 import robotononbolditalic from '../../../../components/Fonts/Roboto/Roboto-Italic.ttf';
 import { convertGramToKG, desimal00, desimal000, formatRupiah, numToMoney, pembulatanNilai, terbilangRupiah } from '../../../shared/globalFunc';
+import { calcUtility } from '../../../shared/utility';
+import { decimalsdefaultInvoice } from '../../../shared/constantValue';
 // import { addKurungBukaPadaValue } from '../utilityPurchaseReceive';
 
 // import logo from "img/logo.png";
@@ -145,7 +147,8 @@ const calcNettoHeader = (value) =>{
             // nettoweight = convertkg(nettoweight);
 
         //kenapa totalan netto tidak ambil dari value.netto / total netto header karena ketika gr convert ke kg terjadi pembulatan sehingga ketika netto header di convert ke kg menjadi tidak sama desimal nya
-        totalnetto += nettoweight;
+        // totalnetto += nettoweight;
+        totalnetto = calcUtility(totalnetto,'+',nettoweight,{ decimals: decimalsdefaultInvoice, rounding: 'truncate' })
     }
     
     return totalnetto;
@@ -231,7 +234,7 @@ const buildTotalRowsInv = (totalQty, totalnetto, totalSubtotalPrice, value) => (
                 <Text style={[styles.tableCell, { width:styles.width.widthkuantitas, maxWidth:styles.width.widthkuantitas, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{totalQty}</Text>
             </View>
             <View style={[styles.tableColWidth, { width:styles.width.weightkg, height:"25px" }]}>
-                <Text style={[styles.tableCell, { width:styles.width.widthweightkg, maxWidth:styles.width.widthweightkg, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{formatRupiah(new String(totalnetto).replaceAll('.',','),1)}</Text>
+                <Text style={[styles.tableCell, { width:styles.width.widthweightkg, maxWidth:styles.width.widthweightkg, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{formatRupiah(new String(totalnetto).replaceAll('.',','),decimalsdefaultInvoice)}</Text>
             </View>
             <View style={[styles.tableColWidth, { width:styles.width.noofbox, height:"25px" }]}>
                 <Text style={[styles.tableCell, { width:styles.width.widthnoofbox, maxWidth:styles.width.widthnoofbox, textAlign:'center', marginTop:'5px', fontSize:fontSizeBig }]}>{getMaxBox(value)}</Text>
@@ -240,7 +243,7 @@ const buildTotalRowsInv = (totalQty, totalnetto, totalSubtotalPrice, value) => (
                 <Text style={[styles.tableCell, { width:styles.width.widthharga, maxWidth:styles.width.widthharga, textAlign:'left', marginTop:'5px', fontSize:fontSizeBig }]}>{'USD'}</Text>
             </View>
             <View style={[styles.tableColWidth, { width:styles.width.jumlah, height:"25px" }]}>
-                <Text style={[styles.tableCell, { width:styles.width.widthjumlah, maxWidth:styles.width.widthjumlah, textAlign:'right', marginTop:'5px', fontSize:fontSizeBig }]}>{formatRupiah(new String(totalSubtotalPrice).replaceAll('.',','),1)}</Text>
+                <Text style={[styles.tableCell, { width:styles.width.widthjumlah, maxWidth:styles.width.widthjumlah, textAlign:'right', marginTop:'5px', fontSize:fontSizeBig }]}>{formatRupiah(new String(totalSubtotalPrice).replaceAll('.',','),decimalsdefaultInvoice)}</Text>
             </View>
         </View>
         <View style={styles.tableRow}>
@@ -251,7 +254,7 @@ const buildTotalRowsInv = (totalQty, totalnetto, totalSubtotalPrice, value) => (
                 <Text style={[styles.tableCell, { width:styles.width.widthharga, maxWidth:styles.width.widthharga, textAlign:'left', marginTop:'5px', fontSize:fontSizeBig }]}>{'IDR'}</Text>
             </View>
             <View style={[styles.tableColWidth, { width:styles.width.jumlah, height:"25px" }]}>
-                <Text style={[styles.tableCell, { width:styles.width.widthjumlah, maxWidth:styles.width.widthjumlah, textAlign:'right', marginTop:'5px', fontSize:fontSizeBig }]}>{value.kurs?formatRupiah(new String(value.kurs).replaceAll('.',','),1):0}</Text>
+                <Text style={[styles.tableCell, { width:styles.width.widthjumlah, maxWidth:styles.width.widthjumlah, textAlign:'right', marginTop:'5px', fontSize:fontSizeBig }]}>{value.kurs?formatRupiah(new String(value.kurs).replaceAll('.',','),decimalsdefaultInvoice):0}</Text>
             </View>
         </View>
         <View style={styles.tableRow}>
@@ -262,7 +265,7 @@ const buildTotalRowsInv = (totalQty, totalnetto, totalSubtotalPrice, value) => (
                 <Text style={[styles.tableCell, { width:styles.width.widthharga, maxWidth:styles.width.widthharga, textAlign:'left', marginTop:'5px', fontSize:fontSizeBig }]}>{'IDR'}</Text>
             </View>
             <View style={[styles.tableColWidth, { width:styles.width.jumlah, height:"25px" }]}>
-                <Text style={[styles.tableCell, { width:styles.width.widthjumlah, maxWidth:styles.width.widthjumlah, textAlign:'right', marginTop:'5px', fontSize:fontSizeBig }]}>{value.kurs?formatRupiah(new String(totalSubtotalPrice * value.kurs).replaceAll('.',','),1):0}</Text>
+                <Text style={[styles.tableCell, { width:styles.width.widthjumlah, maxWidth:styles.width.widthjumlah, textAlign:'right', marginTop:'5px', fontSize:fontSizeBig }]}>{value.kurs?formatRupiah(new String(totalSubtotalPrice * value.kurs).replaceAll('.',','),decimalsdefaultInvoice):0}</Text>
             </View>
         </View>
     </Fragment>
@@ -318,8 +321,8 @@ const setItems = (value) => {
     let totalnetto = 0, totalQty = 0, totalSubtotalPrice = 0;
     items.forEach(det => {
         totalQty           += parseInt(det.qty        ? det.qty        : 0);
-        totalSubtotalPrice += parseFloat(det.totalprice ? det.totalprice : 0);
-        totalnetto         += det.nettoweight ? det.nettoweight : 0;
+        totalSubtotalPrice = calcUtility(totalSubtotalPrice,'+',parseFloat(det.totalprice ? det.totalprice : 0),{ decimals: decimalsdefaultInvoice, rounding: 'truncate' }) ;
+        totalnetto         = calcUtility(totalnetto,'+',(det.nettoweight ? det.nettoweight : 0),{ decimals: decimalsdefaultInvoice, rounding: 'truncate' });
     });
 
     const firstPageCount = calcFirstPageCountInv(items.length);
