@@ -229,6 +229,7 @@ const menuPelunasanHutang = lazy(() => import('./containers/Transaksi/PelunasanH
 const detailHutangPR = lazy(() => import('./containers/Transaksi/PelunasanHutang/detailHutangPR'));
 const detailpelunasanhutang = lazy(() => import('./containers/Transaksi/PelunasanHutang/detailpelunasanhutang'));
 const detailHutangCargo = lazy(() => import('./containers/Transaksi/PelunasanHutang/detailHutangCargo'));
+const viewFilepelunasanhutang = lazy(() => import('./containers/Transaksi/PelunasanHutang/viewFile'));
 
 const menuCargo = lazy(() => import('./containers/Transaksi/Cargo'));
 const addCargo = lazy(() => import('./containers/Transaksi/Cargo/add'));
@@ -238,6 +239,7 @@ const editCargo = lazy(() => import('./containers/Transaksi/Cargo/edit'));
 const menuPelunasanPiutang = lazy(() => import('./containers/Transaksi/PelunasanPiutang'));
 const bayarPelunasanPiutang = lazy(() => import('./containers/Transaksi/PelunasanPiutang/bayarPiutang'));
 const detailPelunasanPiutang = lazy(() => import('./containers/Transaksi/PelunasanPiutang/detail'));
+const viewFilePelunasanPiutang = lazy(() => import('./containers/Transaksi/PelunasanPiutang/viewFile'));
 const editPelunasanPiutang = lazy(() => import('./containers/Transaksi/PelunasanPiutang/edit'));
 
 const reportStatusTagihanCargo = lazy(() => import('./containers/Report/reportStatusTagihanCargo'));
@@ -252,6 +254,7 @@ const reportKartuStock = lazy(() => import('./containers/Report/reportKartuStock
 const menuKomisi = lazy(() => import('./containers/Transaksi/Komisi'));
 const bayarKomisi = lazy(() => import('./containers/Transaksi/Komisi/BayarKomisi'));
 const detailKomisi = lazy(() => import('./containers/Transaksi/Komisi/detail'));
+const viewFileKomisi = lazy(() => import('./containers/Transaksi/Komisi/viewFile'));
 const editbayarKomisi = lazy(() => import('./containers/Transaksi/Komisi/editBayarKomisi'));
 const printNotaKomisi = lazy(() => import('./containers/Transaksi/Komisi/Print'));
 const reportKomisi = lazy(() => import('./containers/Report/reportKomisi'));
@@ -511,6 +514,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.menupelunasanhutang} component={waitFor(menuPelunasanHutang)} />
                                         <Route path={pathmenu.detailhutangpr+ '/:id'} component={waitFor(detailHutangPR)} />
                                         <Route path={pathmenu.detailpelunasanhutang+ '/:id'} component={waitFor(detailpelunasanhutang)} />
+                                        <Route path={pathmenu.viewfiledetailpelunasanhutang+ '/:id'} component={waitFor(viewFilepelunasanhutang)} />
                                         <Route path={pathmenu.detailhutangcargo+ '/:id'} component={waitFor(detailHutangCargo)} />
 
                                         <Route path={pathmenu.menucargo} component={waitFor(menuCargo)} />
@@ -521,6 +525,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.menupelunasanpiutang} component={waitFor(menuPelunasanPiutang)} />
                                         <Route path={pathmenu.bayarpelunasanpiutang+ '/:id'} component={waitFor(bayarPelunasanPiutang)} />
                                         <Route path={pathmenu.detailpelunasanpiutang+ '/:id'} component={waitFor(detailPelunasanPiutang)} />
+                                        <Route path={pathmenu.viewfilepelunasanpiutang+ '/:id'} component={waitFor(viewFilePelunasanPiutang)} />
                                         <Route path={pathmenu.editpelunasanpiutang+ '/:id'} component={waitFor(editPelunasanPiutang)} />
 
                                         <Route path={pathmenu.menuReportStatusTagihanCargo} component={waitFor(reportStatusTagihanCargo)} />
@@ -535,6 +540,7 @@ const Routes = ({ location, ...props }) => {
                                         <Route path={pathmenu.menukomisi} component={waitFor(menuKomisi)} />
                                         <Route path={pathmenu.bayarkomisi+ '/:id'} component={waitFor(bayarKomisi)} />
                                         <Route path={pathmenu.detailkomisi+ '/:id'} component={waitFor(detailKomisi)} />
+                                        <Route path={pathmenu.viewFilekomisi+ '/:id'} component={waitFor(viewFileKomisi)} />
                                         <Route path={pathmenu.editbayarkomisi+ '/:id'} component={waitFor(editbayarKomisi)} />
                                         <Route path={pathmenu.printkomisi+ '/:id'} component={waitFor(printNotaKomisi)} />
                                         <Route path={pathmenu.menuReportKomisi} component={waitFor(reportKomisi)} />

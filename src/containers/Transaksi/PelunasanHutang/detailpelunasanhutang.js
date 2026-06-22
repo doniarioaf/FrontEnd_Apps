@@ -25,13 +25,23 @@ import React, {useState,
   import { makeStyles } from '@material-ui/core/styles';
   import {Loading}                    from '../../../components/Common/Loading';
   import { isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
-  import { editPelunasanHutang_Permission,deletePelunasanHutang_Permission,MenuPelunasanHutang } from '../../shared/permissionMenu';
+  import { editPelunasanHutang_Permission,deletePelunasanHutang_Permission,MenuPelunasanHutang, addPelunasanHutang_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
   import { formatdate, formatdatetime } from '../../shared/constantValue';
   import { Formik } from 'formik';
   import momentLocalizer from 'react-widgets-moment';
-    import {DatePicker } from 'react-widgets';
-    import "react-widgets/dist/css/react-widgets.css";
+import {DatePicker } from 'react-widgets';
+import "react-widgets/dist/css/react-widgets.css";
+
+import DialogUploadFile from './dialogUploadFile';
+  import styled                       from "styled-components";
+  import Dialog                       from '@material-ui/core/Dialog';
+
+  const StyledDialog = styled(Dialog)`
+    & > .MuiDialog-container > .MuiPaper-root {
+        height: 500px;
+    }
+    `;
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,6 +60,7 @@ import React, {useState,
     const dispatch = useDispatch();
     momentLocalizer();
     const [loading, setLoading] = useState(false);
+    const [LoadingSend, setLoadingSend] = useState(false);
     const [value, setValue] = useState([]);
     const [ValueDetailPelunasan, setValueDetailPelunasan] = useState([]);
     const [valueCargo, setValueCargo] = useState([]);
@@ -69,6 +80,8 @@ import React, {useState,
 
     const [InputKurangBayar, setInputKurangBayar] = useState(0);
     const [ShowBayar, setShowBayar] = useState(false);
+
+    const [ShowDialog, setShowDialog] = useState(false);
 
     const id = props.match.params.id;
 
@@ -390,6 +403,60 @@ import React, {useState,
         })
     }
 
+    function viewFile(){
+        history.push(pathmenu.viewfiledetailpelunasanhutang+'/'+id);
+    }
+    function downloadFile(){
+        setLoading(true);
+        dispatch(actions.getPelunasanHutangData( {url:'/downloadfile/'+id},successHandlerDownload, errorHandler));
+    }
+
+    function successHandlerDownload(data,propsdata) {
+        let det = data.data;
+
+        let contenttype = det.filecontenttype;
+        if(contenttype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+            contenttype == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,';
+        }
+        var base64str = det.filedocument;
+
+        // decode base64 string, remove space for IE compatibility
+        var binary = window.atob(base64str.replace(/\s/g, ''));
+        var len = binary.length;
+        var buffer = new ArrayBuffer(len);
+        var view = new Uint8Array(buffer);
+        for (var i = 0; i < len; i++) {
+            view[i] = binary.charCodeAt(i);
+        }
+        var blob = new Blob([view,{ type: contenttype }]);
+        var dataUrl = URL.createObjectURL(blob);
+
+        var fileLink = document.createElement('a');
+        fileLink.href = dataUrl;
+
+        // it forces the name of the downloaded file
+        fileLink.download = det.filename;
+        fileLink.click();
+        fileLink.remove();
+
+        setLoading(false);
+
+    }
+
+    const succesHandlerSubmitFile = (data) => {
+        setLoading(false);
+        setShowDialog(false);
+        Swal.fire({
+            icon: 'success',
+            title: 'SUCCESS',
+            text: i18n.t('label_SUCCESS')
+        }).then((result) => {
+            if (result.isConfirmed) {
+                history.push(0);
+            }
+        })
+    }
+
     return (
         <ContentWrapper>
             <ContentHeading history={history} link={pathmenu.detailpelunasanhutang+'/'+id} label={'Detail Pelunasan Hutang'} labeldefault={'Detail Pelunasan Hutang'} />
@@ -449,6 +516,22 @@ import React, {useState,
                                 {ValueDetailPelunasan.aliasvendorPR?ValueDetailPelunasan.aliasvendorPR:''}
                             </strong>
                             </div> 
+
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('File')}</span>
+                                {/* <strong className="col-md-7" onClick={() => downloadFile()} style={{cursor:'pointer',color:'blue'}} > */}
+                                <strong className="col-md-7" hidden={ValueDetailPelunasan.fileName ?false:true}>
+                                {ValueDetailPelunasan.fileName ?ValueDetailPelunasan.fileName:''}
+                                 <div className="mt-2">
+                                    <span onClick={() => downloadFile()} style={{cursor:'pointer', color:'blue', marginRight:'15px'}}>
+                                        <i className="fa fa-download" /> {i18n.t('Download')}
+                                    </span>
+                                    <span onClick={() => viewFile()} style={{cursor:'pointer', color:'blue'}}>
+                                        <i className="fa fa-eye" /> {i18n.t('View File')}
+                                    </span>
+                                </div>
+                                </strong>
+                            </div>
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Tanggal')}</span>
@@ -706,6 +789,7 @@ import React, {useState,
                         </div>)
                         :(<div>
                             <MenuItem hidden={!isGetPermissions(editPelunasanHutang_Permission,'TRANSACTION')?true:InputKurangBayar == 0}  onClick={() => clickBayar()}>{i18n.t('Edit')}</MenuItem>
+                            <MenuItem hidden={!isGetPermissions(addPelunasanHutang_Permission,'TRANSACTION')}  onClick={() => setShowDialog(true)}>{i18n.t('Upload File')}</MenuItem>
                             <MenuItem hidden={!isGetPermissions(deletePelunasanHutang_Permission,'TRANSACTION')}  onClick={() => submitHandlerDelete()}>{i18n.t('grid.DELETE')}</MenuItem>
                             
                         </div>)
@@ -722,6 +806,24 @@ import React, {useState,
         </div>
 
             {loading && <Loading/>}
+            <StyledDialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                maxWidth="sm"
+                fullWidth={true}
+                style={{height: '80%'}}
+                open={ShowDialog}
+            >
+                <DialogUploadFile
+                    showflag = {setShowDialog}
+                    flagloadingsend = {setLoadingSend}
+                    errorhandler = {errorHandler}
+                    idparam = {id}
+                    handlesubmit = {succesHandlerSubmitFile}
+                    // getAutoDebitid= {getAutoDebitid}
+                />
+                {LoadingSend && <Loading/>}
+            </StyledDialog>
         </ContentWrapper>
     )
   }
