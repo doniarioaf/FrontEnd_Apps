@@ -989,7 +989,7 @@ export default function AddPackingList(props) {
                                                         }, 0);
                                                         totalNettoWeight         = Math.round(totalNettoWeight         * 10) / 10;
 
-                                                        const totalSubtotalPrice = ListItems.reduce((sum, item) => {
+                                                        let totalSubtotalPrice = ListItems.reduce((sum, item) => {
                                                             let val = item.subtotalprice ? item.subtotalprice : 0;
                                                             let valTemp = '';
                                                             if (new String(val).includes(',')) {
