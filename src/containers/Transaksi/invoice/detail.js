@@ -27,7 +27,7 @@ import React, {useState,
   import { formatRupiah, isGetPermissions,numToMoney,reloadToHomeNotAuthorize } from '../../shared/globalFunc';
   import { MenuInvoice, deleteInvoice_Permission, editInvoice_Permission } from '../../shared/permissionMenu';
   import moment                          from 'moment';
-  import { formatdate, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
+  import { formatdate, formatdateDDMMYY, formatdatetime, formatdateYYYYMMDD } from '../../shared/constantValue';
   import '../../CSS/table.css';
 
   const useStyles = makeStyles((theme) => ({
@@ -195,7 +195,7 @@ import React, {useState,
 
         // it forces the name of the downloaded file
         // fileLink.download = 'Invoice.xlsx';
-        fileLink.download = 'Invoice-'+moment(new Date()).format(formatdateYYYYMMDD)+'-'+value.nodocument+'.xlsx';
+        fileLink.download = value.packinglist.vendorAlias+'-'+moment(new Date()).format(formatdateDDMMYY)+'-'+value.nodocument+'.xlsx';
         fileLink.click();
         fileLink.remove();
         setLoading(false);

@@ -16,7 +16,7 @@ import "react-widgets/dist/css/react-widgets.css";
 import { PDFViewer } from '@react-pdf/renderer';
 import PdfDocumentInvoice from './PdfDocumentInvoice';
 
-import { formatdate, formatdatetime, formatdateYYYYMMDD, formattimeHHmm } from '../../../shared/constantValue';
+import { formatdate, formatdateDDMMYY, formatdatetime, formattimeHHmm } from '../../../shared/constantValue';
 import moment from 'moment';
 import '../../PurchaseReceive/printNota/App.css';
 
@@ -84,7 +84,7 @@ export default function PrintNotaInvoice(props) {
         let vendorName = data.packinglist?.vendorName?data.packinglist.vendorName:'Invoice';
         
         // it forces the name of the downloaded file
-        fileLink.download = vendorName+'-'+moment(new Date()).format(formatdateYYYYMMDD)+'-'+namaFile + '.pdf';
+        fileLink.download = vendorName+'-'+moment(new Date()).format(formatdateDDMMYY)+'-'+namaFile + '.pdf';
         fileLink.click();
         fileLink.remove();
 
