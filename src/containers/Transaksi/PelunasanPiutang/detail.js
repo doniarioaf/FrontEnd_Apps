@@ -132,6 +132,7 @@ import DialogUploadFile from './dialogUploadFile';
                 {
                     'idinvoice':el.idinvoice,
                     'nodocument': el.nodocumentInvoice,
+                    'invoiceDate': el.invoiceDate?moment (new Date(el.invoiceDate)).format(formatdate):'',
                     'amount': el.amountInvoice,
                     'amountrp': parseFloat(amountRp).toFixed(2),
                     'outstanding': parseFloat(el.outstandingInvoice).toFixed(2),
@@ -147,6 +148,7 @@ import DialogUploadFile from './dialogUploadFile';
             {
                 'idinvoice':0,
                 'nodocument': 'TOTAL',
+                'invoiceDate':'',
                 'amount': parseFloat(totalAmount).toFixed(2),
                 'amountrp': parseFloat(totalAmountRp).toFixed(2),
                 'outstanding': parseFloat(totalOutstanding).toFixed(2),
@@ -301,6 +303,12 @@ import DialogUploadFile from './dialogUploadFile';
                     loading ?<Skeleton count={7} height={21} style={{marginTop: '1rem'}}/> :
                     (
                         <section>
+                            <div className="row mt-3">
+                            <span className="col-md-5">{i18n.t('Customer')}</span>
+                            <strong className="col-md-7">
+                                {value.customerName?value.customerName:''}
+                            </strong>
+                            </div>
 
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('No Document')}</span>
@@ -382,6 +390,7 @@ import DialogUploadFile from './dialogUploadFile';
                     <tbody>
                         <tr>
                         <th >{i18n.t('No Document')}</th>
+                        <th >{i18n.t('Tanggal Invoice')}</th>
                         <th >{i18n.t('Amount($)')}</th>
                         <th >{i18n.t('Amount(Rp)')}</th>
                         <th >{i18n.t('Oustanding')}</th>
@@ -396,6 +405,7 @@ import DialogUploadFile from './dialogUploadFile';
                                 return (
                                     <tr>
                                         <td>{x.nodocument}</td>
+                                        <td>{x.invoiceDate}</td>
                                         <td>{x.amount?formatRupiah(new String(x.amount).replaceAll('.',','),2):0}</td>
                                         <td>{x.amountrp?formatRupiah(new String(x.amountrp).replaceAll('.',','),2):0}</td>
                                         <td>{x.outstanding?formatRupiah(new String(x.outstanding).replaceAll('.',','),2):0}</td>

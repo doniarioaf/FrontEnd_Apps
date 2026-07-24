@@ -18,6 +18,7 @@ import { DatePicker ,DropdownList} from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import { formatdate } from '../../shared/constantValue';
 import '../../CSS/table.css';
+import { InputAmountIDR } from '../../../components/Common/InputAmount';
 
 export default function EditPriceList(props) {
     reloadToHomeNotAuthorize(editPriceList_Permission, 'TRANSACTION');
@@ -155,7 +156,7 @@ export default function EditPriceList(props) {
                     {
                         'idproduct':el.idproduct,
                         'categoryproductid': el.categoryproductid,
-                        'amount': new String(el.price).replaceAll('.', '') !== '' ? new String(el.price).replaceAll('.', '') : '0',
+                        'amount': new String(el.price).replaceAll('.', '') !== '' ? el.price : '0',
                         // 'allowance': new String(el.allowance).replaceAll('.', '') !== '' ? new String(el.allowance).replaceAll('.', '') : '0',
                         'allowance': removeFormatRupiah(el.allowance) !== '' ? removeFormatRupiah(el.allowance) : '0',
                     }
@@ -265,7 +266,7 @@ export default function EditPriceList(props) {
             }
                 list[index][name] = formatRupiah(valAllowanceTemp,1);
             }else{
-                let valPrice = new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
+                let valPrice = value;//new String(value).replaceAll('.', '') !== '' ? new String(value).replaceAll('.', '') : '0';
                 list[index][name] = valPrice;
             }
             setListCategoryProduct(list);
@@ -416,14 +417,27 @@ export default function EditPriceList(props) {
                                                                             <td>{x.categoryproduct}</td>
                                                                             <td>
 
-                                                                                <Input
+                                                                            <InputAmountIDR allowDecimal={true}  value={x.price} 
+                                                                            name="price" id="price"
+                                                                            onChange={(raw) => handleInputChangePrice({target:{name:'price', value:raw}} ,i)}
+                                                                            placeholder="0"
+                                                                            onKeyDown={e => {
+                                                                                // Cegah input titik dari keyboard
+                                                                                if (e.key === '.') {
+                                                                                    e.preventDefault();
+                                                                                    infoPopUp('Gunakan tanda , (koma) jika ingin menambahkan desimal');
+                                                                                }
+                                                                            }}
+                                                                            />
+
+                                                                                {/* <Input
                                                                                     name="price"
                                                                                     type="text"
                                                                                     id="price"
                                                                                     onChange={val => handleInputChangePrice(val, i)}
                                                                                     onBlur={handleBlur}
                                                                                     value={x.price !== '' ? numToMoney(parseFloat(x.price)) : ''}
-                                                                                />
+                                                                                /> */}
 
                                                                             </td>
                                                                             <td>
