@@ -79,6 +79,7 @@ export default function AddStockAdjusment(props) {
                     {
                         'idinvoice':el.id,
                         'nodocument': el.nodocument,
+                        'invoiceDate': el.date?moment (new Date(el.date)).format(formatdate):'',
                         'amount': el.amount?formatRupiah((el.amount?new String(el.amount).replaceAll('.',','):0),2):0,
                         // 'amountrp': amountRp,
                         'amountrp': formatRupiah(new String(amountRp).replaceAll('.',','),2),
@@ -95,6 +96,7 @@ export default function AddStockAdjusment(props) {
                 list.push(
                     {
                         'idinvoice':0,
+                        'invoiceDate':'',
                         'nodocument': 'TOTAL',
                         'amount': formatRupiah((new String(totalAmount).replaceAll('.',',')),2),
                         'amountrp': formatRupiah((new String(totalAmountRp).replaceAll('.',',')),2),
@@ -555,6 +557,7 @@ export default function AddStockAdjusment(props) {
                                                 <tr>
                                                     <th>{''}</th>
                                                     <th >{i18n.t('No Document')}</th>
+                                                    <th >{i18n.t('Tanggal Invoice')}</th>
                                                     <th >{i18n.t('Amount($)')}</th>
                                                     <th >{i18n.t('Amount(Rp)')}</th>
                                                     <th >{i18n.t('Oustanding')}</th>
@@ -580,6 +583,9 @@ export default function AddStockAdjusment(props) {
                                                                     </td>
                                                                     <td >
                                                                         {x.nodocument}
+                                                                    </td>
+                                                                    <td>
+                                                                        {x.invoiceDate}
                                                                     </td>
                                                                     <td >
                                                                         {x.amount}
