@@ -298,6 +298,20 @@ import React, {useState,
                                 </strong>
                             </div>
 
+                            <div className="row mt-3" hidden={value.isparent}>
+                                <span className="col-md-5">{i18n.t('Izinkan Pinjaman?')}</span>
+                                <strong className="col-md-7">
+                                {value.canloan ?'Yes':'No'}
+                                </strong>
+                            </div>
+
+                            <div className="row mt-3" hidden={value.isparent}>
+                                <span className="col-md-5">{i18n.t('Izinkan Deposit?')}</span>
+                                <strong className="col-md-7">
+                                {value.candeposit ?'Yes':'No'}
+                                </strong>
+                            </div>
+
                             <div className="row mt-3">
                             <span className="col-md-5">{i18n.t('Broker')}</span>
                                 <strong className="col-md-7">
