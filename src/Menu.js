@@ -319,6 +319,19 @@ const handleMenu = () => {
                 // }
             ]
         },
+        {
+            name: 'System',
+            icon: 'icon-user',
+            translate: 'System',
+            submenu:[
+                {
+                    name: 'BackUp DB',
+                    path: pathmenu.backUpDB,
+                    translate: 'BackUp DB',
+                    permission:permissionmenu.MenuBackUpDB,
+                }
+            ]
+        }
         // {
         //     name: 'Transaksi',
         //     icon: 'icon-user',

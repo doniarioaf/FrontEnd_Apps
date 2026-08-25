@@ -147,3 +147,4 @@ export const MenuPinjaman = ['READ_PINJAMAN'];
 export const MenuCancelPackingList = ['READ_CANCELPACKINGLIST'];
 export const MenuReportCancelPackingList = ['READ_REPORT_CANCELPACKINGLIST'];
 export const MenuIntegrasi = ['CREATE_INTEGRASI'];
+export const MenuBackUpDB = ['CREATE_FILE_BACKUP_DB'];
