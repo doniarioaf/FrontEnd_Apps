@@ -276,6 +276,8 @@ const printPdfCancelPackingList = lazy(() => import('./containers/Transaksi/Canc
 const reportCancelPackingList = lazy(() => import('./containers/Report/reportCancelPackingList'));
 const integrasiSaldo = lazy(() => import('./containers/Transaksi/Integrasi/integrasiSaldo'));
 
+const backUpDB = lazy(() => import('./containers/Admin/DB/backUpDB'));
+
 const unauthorized = lazy(() => import('./containers/Page/home/unauthorized'));
 
 // List of routes that uses the page layout
@@ -560,6 +562,8 @@ const Routes = ({ location, ...props }) => {
                                         
                                         <Route path={pathmenu.menuReportCancelPackingList} component={waitFor(reportCancelPackingList)} />
                                         <Route path={pathmenu.integrasiSaldo} component={waitFor(integrasiSaldo)} />
+
+                                        <Route path={pathmenu.backUpDB} component={waitFor(backUpDB)} />
                                         
                                         <Route exact path={pathmenu.unauthorized} component={waitFor(unauthorized)} />
 
